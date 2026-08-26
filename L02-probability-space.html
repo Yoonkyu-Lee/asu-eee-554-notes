@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EEE 554 · Module 2 — Probability Spaces</title>
+<style>
+:root{
+  --paper:#FAFAF8;
+  --card:#FFFFFF;
+  --ink:#14161A;
+  --ink2:#565D66;
+  --ink3:#8A9099;
+  --rule:#E2E1DB;
+  --blue:#1250C4;
+  --pink:#D9147A;
+  --violet:#6B2FA8;
+  --green:#00845F;
+  --amber:#B26A00;
+  --amber-bg:#FDF6E9;
+  --red:#C02626;
+  --sel:#4A1D8C;
+  --mono:ui-monospace,"Cascadia Mono","Cascadia Code",Consolas,"SFMono-Regular",monospace;
+  --sans:"Pretendard","Pretendard Variable",-apple-system,"Segoe UI Variable Text","Segoe UI","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --serif:"Cambria Math","STIX Two Math","Latin Modern Math",Cambria,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 120px;display:grid;grid-template-columns:210px minmax(0,1fr);gap:56px}
+@media(max-width:900px){.wrap{grid-template-columns:1fr;gap:0;padding:0 18px 80px}}
+
+header.top{grid-column:1/-1;padding:64px 0 40px;border-bottom:1px solid var(--rule);margin-bottom:48px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+h1.title{font-size:clamp(30px,5vw,50px);line-height:1.1;letter-spacing:-.025em;font-weight:800;margin:14px 0 6px}
+.subtitle{font-size:17px;color:var(--ink2);margin:0}
+.meta{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--mono);font-size:11px;letter-spacing:.05em;padding:5px 11px;border:1px solid var(--rule);border-radius:999px;color:var(--ink2);background:var(--card)}
+.chip.hot{border-color:var(--amber);color:var(--amber);background:var(--amber-bg)}
+.backlink{display:inline-block;margin-top:20px;font-family:var(--mono);font-size:11.5px;color:var(--blue);text-decoration:none;letter-spacing:.04em}
+.backlink:hover{text-decoration:underline}
+
+nav.toc{position:sticky;top:24px;align-self:start;font-size:13.5px;line-height:1.5}
+nav.toc .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:14px}
+nav.toc a{display:flex;gap:9px;padding:5px 0;color:var(--ink2);text-decoration:none;border-left:2px solid transparent;padding-left:11px;margin-left:-13px}
+nav.toc a:hover{color:var(--ink);border-left-color:var(--blue)}
+nav.toc a .n{font-family:var(--mono);font-size:11px;color:var(--ink3);padding-top:2px;min-width:14px}
+@media(max-width:900px){nav.toc{position:static;margin-bottom:44px;padding-bottom:28px;border-bottom:1px solid var(--rule)}}
+
+section{margin-bottom:76px;scroll-margin-top:20px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+.sec-num{font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:.1em;padding-top:4px}
+h2{font-size:clamp(22px,3vw,29px);letter-spacing:-.02em;font-weight:750;margin:0;line-height:1.25}
+.sec-sub{color:var(--ink2);font-size:15px;margin:0 0 30px 0}
+h3{font-size:17.5px;font-weight:700;letter-spacing:-.01em;margin:38px 0 12px}
+h4{font-size:15px;font-weight:700;margin:26px 0 8px;color:var(--ink)}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 16px;padding-left:22px}
+li{margin-bottom:7px}
+code{font-family:var(--mono);font-size:.87em;background:#F0EFEA;padding:1px 5px;border-radius:4px}
+
+.m{font-family:var(--serif);font-style:normal;font-size:1.07em;white-space:nowrap}
+.m i{font-style:italic}
+.eq{font-family:var(--serif);font-size:19px;text-align:center;margin:22px 0;line-height:1.9}
+.eq i{font-style:italic}
+.eq .note{font-family:var(--sans);font-size:13px;color:var(--ink3);display:block;margin-top:4px}
+.cA{color:var(--blue);font-weight:600}
+.cB{color:var(--pink);font-weight:600}
+.cC{color:var(--green);font-weight:600}
+
+.def{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--ink);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.def .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:7px}
+.def p:last-child,.def ol:last-child,.def ul:last-child{margin-bottom:0}
+
+.trap{background:var(--amber-bg);border:1px solid #F0E2C4;border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.trap .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:7px;font-weight:600}
+.trap p:last-child,.trap ul:last-child{margin-bottom:0}
+.trap h4{margin-top:18px;font-size:14.5px}
+.trap h4:first-of-type{margin-top:0}
+
+.ex{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:18px 22px;margin:20px 0}
+.ex .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:7px;font-weight:600}
+.ex p:last-child,.ex ul:last-child,.ex ol:last-child{margin-bottom:0}
+details{margin-top:12px;border-top:1px dashed var(--rule);padding-top:12px}
+details summary{cursor:pointer;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--blue);list-style:none;user-select:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"▸ ";display:inline-block}
+details[open] summary::before{content:"▾ "}
+details .body{margin-top:12px}
+details .body p:last-child,details .body ol:last-child{margin-bottom:0}
+
+.callout{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:16px 0;margin:26px 0;font-size:15px;color:var(--ink2)}
+.callout strong{color:var(--ink)}
+
+figure{margin:28px 0;background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:22px}
+figure svg{display:block;width:100%;height:auto;max-width:100%}
+figcaption{font-size:13px;color:var(--ink2);margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:720px){.grid2,.grid3{grid-template-columns:1fr}}
+.mini{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px}
+.mini .cap{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--ink2);text-align:center;margin-top:8px;line-height:1.4}
+.mini svg{display:block;width:100%;height:auto}
+.svgtxt{font-family:var(--serif);font-size:15px;fill:var(--ink)}
+.svgtxt.it{font-style:italic}
+.svglab{font-family:var(--mono);font-size:11px;fill:var(--ink2)}
+.svgnum{font-family:var(--mono);font-size:13px;font-weight:600}
+
+/* sigma-algebra checker */
+.play{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:22px;margin:28px 0}
+.plab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin:20px 0 9px}
+.plab:first-child{margin-top:0}
+.subsets{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+@media(max-width:560px){.subsets{grid-template-columns:repeat(2,1fr)}}
+.sub{font-family:var(--serif);font-size:15px;padding:9px 6px;text-align:center;background:var(--paper);border:1px solid var(--rule);border-radius:6px;cursor:pointer;user-select:none;transition:.12s;position:relative}
+.sub:hover{border-color:var(--sel)}
+.sub.on{background:#4A1D8C;border-color:#4A1D8C;color:#fff;font-weight:600}
+.sub.need{background:#FDF6E9;border-color:var(--amber);border-style:dashed;color:var(--amber)}
+.verdict{margin-top:18px;border-radius:8px;padding:15px 18px;font-size:14.5px;line-height:1.65}
+.verdict.ok{background:rgba(0,132,95,.08);border:1px solid rgba(0,132,95,.3);color:#00553E}
+.verdict.bad{background:var(--amber-bg);border:1px solid #F0E2C4;color:#7A4A00}
+.verdict .hd{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:8px}
+.verdict ul{margin:8px 0 0;padding-left:20px}
+.verdict li{margin-bottom:5px;font-size:14px}
+.verdict .m{font-size:1em}
+.presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.presets button{font-family:var(--sans);font-size:12.5px;padding:7px 12px;background:var(--paper);border:1px solid var(--rule);border-radius:6px;color:var(--ink2);cursor:pointer;transition:.13s}
+.presets button:hover{border-color:var(--sel);color:var(--sel);background:#F6F2FB}
+.presets button.act{border-color:var(--green);color:var(--green);background:rgba(0,132,95,.06);font-weight:600}
+.hintline{font-size:13px;color:var(--ink2);margin-top:16px;line-height:1.6;border-top:1px solid var(--rule);padding-top:13px}
+
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14.5px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);font-weight:500}
+
+footer{grid-column:1/-1;border-top:1px solid var(--rule);padding-top:28px;margin-top:20px;font-size:13.5px;color:var(--ink3);line-height:1.7}
+footer a{color:var(--blue)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="eyebrow">EEE 554 · Probability and Random Processes · Michelusi</div>
+  <h1 class="title">Module 2<br>Probability Spaces</h1>
+  <p class="subtitle">집합 위에 드디어 숫자를 얹는다. 삼중항 <span class="m">(<i>Ω</i>, ℱ, <i>P</i>)</span>의 정체.</p>
+  <div class="meta">
+    <span class="chip">슬라이드 39쪽</span>
+    <span class="chip hot">HW1 Problem 4–8 이 범위</span>
+    <span class="chip">Module 1의 06번과 직결</span>
+  </div>
+  <a class="backlink" href="index.html">← 모듈 목록으로</a>
+</header>
+
+<nav class="toc">
+  <div class="lab">목차</div>
+  <a href="#s0"><span class="n">00</span><span>이 모듈이 하는 일</span></a>
+  <a href="#s1"><span class="n">01</span><span>세 가지 재료</span></a>
+  <a href="#s2"><span class="n">02</span><span>ℱ는 왜 필요한가</span></a>
+  <a href="#s3"><span class="n">03</span><span>σ-algebra</span></a>
+  <a href="#s4"><span class="n">04</span><span>직접 검증해보기</span></a>
+  <a href="#s5"><span class="n">05</span><span>생성된 σ-algebra</span></a>
+  <a href="#s6"><span class="n">06</span><span>Kolmogorov 공리</span></a>
+  <a href="#s7"><span class="n">07</span><span>공리에서 나오는 성질</span></a>
+  <a href="#s8"><span class="n">08</span><span>이산 vs 연속</span></a>
+  <a href="#s9"><span class="n">09</span><span>Borel σ-algebra</span></a>
+  <a href="#s10"><span class="n">10</span><span>PMF와 PDF</span></a>
+  <a href="#s11"><span class="n">11</span><span>반복 실험</span></a>
+  <a href="#s12"><span class="n">12</span><span>확률의 연속성</span></a>
+  <a href="#s13"><span class="n">13</span><span>정리 &amp; 다음 모듈</span></a>
+</nav>
+
+<main>
+
+<!-- ══ 00 ══ -->
+<section id="s0">
+  <div class="sec-head"><span class="sec-num">00</span><h2>이 모듈이 하는 일</h2></div>
+  <p class="sec-sub">한 줄 요약: <strong>확률이 뭔지 "정의"한다. 빈도가 아니라 공리로.</strong></p>
+
+  <p>Module 1에서 질문을 집합으로 바꾸는 법을 배웠어. 이제 그 집합에 숫자를 붙일 차례야. 그런데 이 모듈에서 하는 일이 좀 의외인데, <strong>"확률을 계산하는 법"이 아니라 "확률이 되기 위한 자격 요건"을 정하는 거야.</strong></p>
+
+  <p>비유하자면 이런 거야. 어떤 함수가 "거리(distance)"라고 불릴 자격이 있으려면 세 조건을 만족해야 하잖아 (음수가 아니고, 0이면 같은 점이고, 삼각부등식). 확률도 똑같아. 어떤 함수가 "확률"이라고 불리려면 <strong>Kolmogorov의 세 공리</strong>를 만족해야 해. 그 이상도 이하도 아니야.</p>
+
+  <div class="callout">
+    <strong>새로 나오는 단어들:</strong> probability space, event space, σ-algebra, generated σ-algebra, Kolmogorov's axioms, countable additivity, Borel σ-algebra, PMF, PDF, Cartesian product, continuity of probability.<br><br>
+    이 중 <strong>σ-algebra</strong>가 제일 낯설고 제일 중요해. 그리고 Module 1의 <strong>06번(가산/비가산)</strong>을 안 읽었으면 이게 왜 필요한지 절대 안 와닿아. 거기서 "비가산 표본공간에서는 모든 부분집합에 확률을 줄 수 없다"고 했던 게 이 모듈의 전제야.
+  </div>
+
+  <h3>삼중항의 지도</h3>
+  <figure>
+  <svg viewBox="0 0 700 260" role="img" aria-label="확률 공간 삼중항 구조도">
+    <defs>
+      <marker id="a1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#8A9099"/></marker>
+    </defs>
+
+    <!-- Omega -->
+    <rect x="20" y="60" width="170" height="130" rx="10" fill="rgba(18,80,196,.07)" stroke="#1250C4" stroke-width="1.5"/>
+    <text x="105" y="86" text-anchor="middle" class="svgtxt it" style="font-size:20px;fill:#1250C4">Ω</text>
+    <text x="105" y="106" text-anchor="middle" class="svglab" style="font-size:10px;fill:#1250C4;letter-spacing:.08em">SAMPLE SPACE</text>
+    <g class="svgnum" style="font-size:12px;fill:#565D66">
+      <circle cx="55" cy="132" r="3" fill="#1250C4"/><text x="66" y="136">ω₁</text>
+      <circle cx="115" cy="132" r="3" fill="#1250C4"/><text x="126" y="136">ω₂</text>
+      <circle cx="55" cy="160" r="3" fill="#1250C4"/><text x="66" y="164">ω₃</text>
+      <circle cx="115" cy="160" r="3" fill="#1250C4"/><text x="126" y="164">…</text>
+    </g>
+    <text x="105" y="212" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:#565D66">일어날 수 있는 결과들</text>
+
+    <line x1="198" y1="125" x2="240" y2="125" stroke="#8A9099" stroke-width="1.4" marker-end="url(#a1)"/>
+    <text x="219" y="112" text-anchor="middle" class="svglab" style="font-size:9px">부분집합</text>
+
+    <!-- F -->
+    <rect x="248" y="60" width="180" height="130" rx="10" fill="rgba(217,20,122,.07)" stroke="#D9147A" stroke-width="1.5"/>
+    <text x="338" y="86" text-anchor="middle" class="svgtxt it" style="font-size:20px;fill:#D9147A">ℱ</text>
+    <text x="338" y="106" text-anchor="middle" class="svglab" style="font-size:10px;fill:#D9147A;letter-spacing:.08em">EVENT SPACE</text>
+    <g class="svgtxt" style="font-size:12.5px;fill:#565D66">
+      <text x="338" y="130" text-anchor="middle">∅, Ω, <tspan font-style="italic">A</tspan>, <tspan font-style="italic">A</tspan><tspan font-size="9" dy="-4">c</tspan><tspan dy="4">, …</tspan></text>
+      <text x="338" y="152" text-anchor="middle" style="font-size:11.5px;fill:#8A9099">ℱ ⊆ 2^Ω</text>
+    </g>
+    <text x="338" y="212" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:#565D66">물어봐도 되는 질문들</text>
+
+    <line x1="436" y1="125" x2="478" y2="125" stroke="#8A9099" stroke-width="1.4" marker-end="url(#a1)"/>
+    <text x="457" y="112" text-anchor="middle" class="svglab" style="font-size:9px">측도</text>
+
+    <!-- P -->
+    <rect x="486" y="60" width="190" height="130" rx="10" fill="rgba(0,132,95,.07)" stroke="#00845F" stroke-width="1.5"/>
+    <text x="581" y="86" text-anchor="middle" class="svgtxt it" style="font-size:20px;fill:#00845F">P</text>
+    <text x="581" y="106" text-anchor="middle" class="svglab" style="font-size:10px;fill:#00845F;letter-spacing:.08em">PROBABILITY MEASURE</text>
+    <line x1="510" y1="145" x2="652" y2="145" stroke="#00845F" stroke-width="2"/>
+    <line x1="510" y1="139" x2="510" y2="151" stroke="#00845F" stroke-width="2"/>
+    <line x1="652" y1="139" x2="652" y2="151" stroke="#00845F" stroke-width="2"/>
+    <text x="510" y="167" text-anchor="middle" class="svgnum" style="font-size:12px;fill:#00845F">0</text>
+    <text x="652" y="167" text-anchor="middle" class="svgnum" style="font-size:12px;fill:#00845F">1</text>
+    <text x="581" y="212" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:#565D66">각 질문에 붙는 숫자</text>
+
+    <text x="350" y="34" text-anchor="middle" class="svgtxt" style="font-size:16px;fill:#14161A">확률 공간 &nbsp; (<tspan font-style="italic">Ω</tspan>, ℱ, <tspan font-style="italic">P</tspan>)</text>
+    <text x="350" y="248" text-anchor="middle" class="svglab" style="font-size:11px;fill:#8A9099">이 셋이 다 갖춰져야 "확률 문제"가 성립한다</text>
+  </svg>
+  <figcaption>세 칸 중 가운데 <span class="m">ℱ</span>가 이번 모듈의 주인공이야. <span class="m"><i>Ω</i></span>는 Module 1에서 이미 했고, <span class="m"><i>P</i></span>는 공리 세 줄이면 끝나거든.</figcaption>
+  </figure>
+</section>
+
+<!-- ══ 01 ══ -->
+<section id="s1">
+  <div class="sec-head"><span class="sec-num">01</span><h2>확률 모델의 세 가지 재료</h2></div>
+  <p class="sec-sub">슬라이드 4쪽. 이 세 줄이 이번 모듈 전체의 목차야.</p>
+
+  <div class="def">
+    <span class="tag">확률 모델을 만들려면 정해야 할 것</span>
+    <ol style="margin-bottom:0">
+      <li><strong>어떤 결과가 가능한가</strong> &nbsp;→&nbsp; <span class="m"><i>Ω</i></span></li>
+      <li><strong>어떤 사건에 확률을 부여할 것인가</strong> &nbsp;→&nbsp; <span class="m">ℱ</span></li>
+      <li><strong>각 사건에 어떤 확률을 부여할 것인가</strong> &nbsp;→&nbsp; <span class="m"><i>P</i></span></li>
+    </ol>
+  </div>
+
+  <p>1번과 3번은 자연스러워. 그런데 <strong>2번이 이상하지 않아?</strong> "어떤 사건에 확률을 부여할 것인가"라니. 모든 사건에 부여하면 되는 거 아닌가?</p>
+
+  <p>Module 1에서 <span class="m">2<sup><i>Ω</i></sup></span>가 "가능한 모든 질문의 모음"이라고 했잖아. 그러면 그냥 <span class="m">ℱ = 2<sup><i>Ω</i></sup></span>로 두고 끝내면 될 것 같은데, 슬라이드는 굳이 <span class="m">ℱ ⊆ 2<sup><i>Ω</i></sup></span>라고 써. <strong>부분집합 기호가 붙어있어.</strong> 즉 일부만 골라도 된다는 뜻이야.</p>
+
+  <div class="callout">
+    <strong>이 모듈을 관통하는 질문:</strong> 왜 모든 사건에 확률을 주지 않는가? 그리고 일부만 고른다면, 아무렇게나 골라도 되는가?<br>
+    답: 아니. 02번에서 "골라도 되는 방식"에 제약이 생기고, 그 제약의 이름이 σ-algebra야.
+  </div>
+</section>
+
+<!-- ══ 02 ══ -->
+<section id="s2">
+  <div class="sec-head"><span class="sec-num">02</span><h2>ℱ는 왜 필요한가</h2></div>
+  <p class="sec-sub">두 가지 답이 있다. 하나는 실용적, 하나는 수학적.</p>
+
+  <h3>답 1: 질문에는 짝이 있다</h3>
+  <p>슬라이드 7~8쪽의 논리는 이래. <strong>"결과가 <span class="m"><i>A</i></span>에 있는가?"를 물어볼 수 있다면, "<span class="m"><i>A</i></span>에 없는가?"도 당연히 물어볼 수 있어야 해.</strong> 앞의 질문에 답할 수 있는데 뒤의 질문에 답을 못 한다는 건 말이 안 되잖아.</p>
+
+  <p>마찬가지로 <span class="m"><i>A</i></span>와 <span class="m"><i>B</i></span>를 각각 물어볼 수 있다면 "<span class="m"><i>A</i></span> 또는 <span class="m"><i>B</i></span>인가?"도 물어볼 수 있어야 해.</p>
+
+  <figure>
+  <svg viewBox="0 0 700 250" role="img" aria-label="이벤트 스페이스가 연산에 대해 닫혀 있어야 한다는 그림">
+    <defs>
+      <marker id="a2" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#D9147A"/></marker>
+    </defs>
+    <ellipse cx="350" cy="130" rx="290" ry="105" fill="rgba(217,20,122,.05)" stroke="#D9147A" stroke-width="1.6"/>
+    <text x="350" y="42" text-anchor="middle" class="svgtxt it" style="font-size:19px;fill:#D9147A">ℱ</text>
+    <text x="350" y="60" text-anchor="middle" class="svglab" style="font-size:10px;fill:#D9147A;letter-spacing:.1em">물어봐도 되는 질문들</text>
+
+    <g class="svgtxt" style="font-size:15px">
+      <rect x="120" y="98" width="66" height="34" rx="7" fill="#FFF" stroke="#1250C4" stroke-width="1.4"/>
+      <text x="153" y="120" text-anchor="middle" font-style="italic" fill="#1250C4">A</text>
+      <rect x="120" y="148" width="66" height="34" rx="7" fill="#FFF" stroke="#1250C4" stroke-width="1.4"/>
+      <text x="153" y="170" text-anchor="middle" font-style="italic" fill="#1250C4">B</text>
+
+      <rect x="490" y="76" width="90" height="34" rx="7" fill="#FFF" stroke="#6B2FA8" stroke-width="1.4"/>
+      <text x="535" y="98" text-anchor="middle" fill="#6B2FA8"><tspan font-style="italic">A</tspan><tspan font-size="10" dy="-5">c</tspan></text>
+      <rect x="490" y="121" width="90" height="34" rx="7" fill="#FFF" stroke="#6B2FA8" stroke-width="1.4"/>
+      <text x="535" y="143" text-anchor="middle" fill="#6B2FA8"><tspan font-style="italic">A</tspan> ∪ <tspan font-style="italic">B</tspan></text>
+      <rect x="490" y="166" width="90" height="34" rx="7" fill="#FFF" stroke="#6B2FA8" stroke-width="1.4"/>
+      <text x="535" y="188" text-anchor="middle" fill="#6B2FA8"><tspan font-style="italic">A</tspan> ∩ <tspan font-style="italic">B</tspan></text>
+    </g>
+
+    <g stroke="#D9147A" stroke-width="1.4" fill="none">
+      <path d="M 194 112 C 300 100, 380 92, 482 92" marker-end="url(#a2)"/>
+      <path d="M 194 122 C 300 132, 380 137, 482 137" marker-end="url(#a2)"/>
+      <path d="M 194 165 C 300 180, 380 183, 482 182" marker-end="url(#a2)"/>
+    </g>
+    <text x="338" y="108" text-anchor="middle" class="svglab" style="font-size:10px;fill:#D9147A">NOT</text>
+    <text x="338" y="127" text-anchor="middle" class="svglab" style="font-size:10px;fill:#D9147A">OR</text>
+    <text x="338" y="196" text-anchor="middle" class="svglab" style="font-size:10px;fill:#D9147A">AND</text>
+
+    <text x="350" y="232" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:#565D66">연산 결과가 반드시 ℱ 안으로 다시 들어와야 한다 = <tspan font-weight="700" fill="#14161A">닫혀 있다 (closed)</tspan></text>
+  </svg>
+  <figcaption>"닫혀 있다"는 표현이 이 그림이야. 안에 있는 것들끼리 연산해서 밖으로 나가버리면 안 돼. 프로그래밍으로 치면 <code>int + int = int</code>인 것처럼, 타입이 보존되어야 한다는 뜻이지.</figcaption>
+  </figure>
+
+  <h3>답 2: 비가산 공간에서는 2<sup>Ω</sup>가 너무 크다</h3>
+  <p>이게 진짜 이유야. Module 1 06번에서 깔아둔 복선이 여기서 회수돼.</p>
+
+  <p><span class="m"><i>Ω</i></span>가 유한하거나 가산이면 사실 <span class="m">ℱ = 2<sup><i>Ω</i></sup></span>로 두어도 아무 문제가 없어. 주사위면 <span class="m">2<sup>6</sup> = 64</span>개 사건 전부에 확률을 줄 수 있어.</p>
+
+  <p>그런데 <span class="m"><i>Ω</i> = ℝ</span>이면 얘기가 달라져. 슬라이드 26쪽 표현 그대로: <em>"the power set <span class="m">2<sup>ℝ</sup></span> is too large for probability theory."</em> <strong><span class="m">ℝ</span>의 모든 부분집합에 길이(측도)를 일관되게 부여하는 게 수학적으로 불가능해.</strong> 시도하면 모순이 나와 (Vitali set. 09번에서 다시 얘기할게).</p>
+
+  <p>그래서 타협을 해. <strong>확률을 줄 수 있는 사건들만 골라 모으되, 그 모음이 연산에 대해 닫혀 있게 만든다.</strong> 그 모음의 이름이 σ-algebra야.</p>
+</section>
+
+<!-- ══ 03 ══ -->
+<section id="s3">
+  <div class="sec-head"><span class="sec-num">03</span><h2>σ-algebra</h2></div>
+  <p class="sec-sub">세 줄짜리 정의. 그런데 세 번째 줄에 함정이 있다.</p>
+
+  <div class="def">
+    <span class="tag">정의</span>
+    <p>모음 <span class="m">ℱ ⊆ 2<sup><i>Ω</i></sup></span>가 <strong>σ-algebra</strong>라는 것은 다음 셋을 만족한다는 뜻이다.</p>
+    <div class="eq" style="margin:16px 0 8px;text-align:left;font-size:17px">
+      ① &nbsp; <i>Ω</i> ∈ ℱ
+      <span class="note" style="margin-left:0">전체는 반드시 들어있다</span>
+    </div>
+    <div class="eq" style="margin:8px 0;text-align:left;font-size:17px">
+      ② &nbsp; <i>A</i> ∈ ℱ &nbsp;⟹&nbsp; <i>A</i><sup>c</sup> ∈ ℱ
+      <span class="note" style="margin-left:0">여집합에 대해 닫혀 있다</span>
+    </div>
+    <div class="eq" style="margin:8px 0 0;text-align:left;font-size:17px">
+      ③ &nbsp; <i>A</i><sub>1</sub>, <i>A</i><sub>2</sub>, … ∈ ℱ &nbsp;⟹&nbsp; ⋃<sub><i>i</i>=1</sub><sup>∞</sup> <i>A<sub>i</sub></i> ∈ ℱ
+      <span class="note" style="margin-left:0"><strong>가산</strong> 합집합에 대해 닫혀 있다</span>
+    </div>
+  </div>
+
+  <p>이름의 <strong>σ</strong>가 바로 ③의 "가산 무한까지"를 뜻해. 유한 합집합만 닫혀 있으면 그냥 <em>algebra</em>(또는 field)라고 부르고, 무한 개까지 되면 <em>σ-algebra</em>야.</p>
+
+  <h3>공짜로 따라오는 것들</h3>
+  <p>세 조건만 있으면 나머지는 자동으로 따라와. 이게 정의가 짧은 이유야.</p>
+
+  <table>
+    <tr><th>따라오는 성질</th><th>어떻게 나오나</th></tr>
+    <tr><td><span class="m">∅ ∈ ℱ</span></td><td>①에서 <span class="m"><i>Ω</i> ∈ ℱ</span>, ②를 적용하면 <span class="m"><i>Ω</i><sup>c</sup> = ∅ ∈ ℱ</span></td></tr>
+    <tr><td><span class="m"><i>A</i> ∩ <i>B</i> ∈ ℱ</span></td><td>De Morgan: <span class="m"><i>A</i> ∩ <i>B</i> = (<i>A</i><sup>c</sup> ∪ <i>B</i><sup>c</sup>)<sup>c</sup></span>. ②와 ③만으로 만들어짐</td></tr>
+    <tr><td><span class="m">⋂<sub><i>i</i></sub> <i>A<sub>i</sub></i> ∈ ℱ</span></td><td>같은 논리의 무한 버전. 가산 교집합도 닫혀 있다</td></tr>
+    <tr><td><span class="m"><i>A</i> \ <i>B</i> ∈ ℱ</span></td><td><span class="m"><i>A</i> \ <i>B</i> = <i>A</i> ∩ <i>B</i><sup>c</sup></span>. 위 두 개의 조합</td></tr>
+  </table>
+
+  <div class="callout">
+    <strong>Module 1이 여기서 일한다.</strong> "왜 교집합은 정의에 안 넣었지?" 싶으면 De Morgan 때문이야. <span class="m">(<i>A</i><sup>c</sup> ∪ <i>B</i><sup>c</sup>)<sup>c</sup> = <i>A</i> ∩ <i>B</i></span>니까, 여집합과 합집합만 있으면 교집합은 공짜로 나와. 수학에서 정의는 <strong>최소한으로</strong> 쓰는 게 관례라서 중복되는 건 뺀 거야.
+  </div>
+
+  <h3>해석: 물어봐도 되는 질문 목록</h3>
+  <div class="def">
+    <span class="tag">직관</span>
+    <p>σ-algebra는 <strong>우리가 던져도 되는 확률적 질문들의 목록</strong>이다. <span class="m"><i>A</i>, <i>B</i> ∈ ℱ</span>이면:</p>
+    <ul style="margin-bottom:0">
+      <li><span class="m"><i>A</i><sup>c</sup> ∈ ℱ</span> — "A가 <strong>아닌가</strong>?"도 물어봐도 된다 (NOT)</li>
+      <li><span class="m"><i>A</i> ∪ <i>B</i> ∈ ℱ</span> — "A <strong>또는</strong> B인가?"도 된다 (OR)</li>
+      <li><span class="m"><i>A</i> ∩ <i>B</i> ∈ ℱ</span> — "A <strong>이면서</strong> B인가?"도 된다 (AND)</li>
+    </ul>
+  </div>
+
+  <p>정보량 관점에서 보면 더 와닿아. <span class="m">ℱ</span>가 크면 세밀한 질문까지 할 수 있고, 작으면 뭉뚱그린 질문만 할 수 있어.</p>
+
+  <figure>
+  <svg viewBox="0 0 700 200" role="img" aria-label="σ-algebra의 크기 스펙트럼">
+    <line x1="60" y1="150" x2="640" y2="150" stroke="#8A9099" stroke-width="1.4"/>
+    <text x="60" y="176" text-anchor="middle" class="svglab" style="font-size:10.5px">정보 없음</text>
+    <text x="640" y="176" text-anchor="middle" class="svglab" style="font-size:10.5px">완전한 정보</text>
+
+    <g>
+      <circle cx="60" cy="150" r="6" fill="#8A9099"/>
+      <rect x="6" y="52" width="130" height="72" rx="8" fill="#FAFAF8" stroke="#E2E1DB"/>
+      <text x="71" y="76" text-anchor="middle" class="svgtxt" style="font-size:14px">{∅, Ω}</text>
+      <text x="71" y="96" text-anchor="middle" class="svglab" style="font-size:9.5px">trivial σ-algebra</text>
+      <text x="71" y="113" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:#8A9099">질문 2개</text>
+      <line x1="60" y1="124" x2="60" y2="144" stroke="#E2E1DB"/>
+    </g>
+
+    <g>
+      <circle cx="290" cy="150" r="6" fill="#6B2FA8"/>
+      <rect x="215" y="52" width="150" height="72" rx="8" fill="#FAFAF8" stroke="#6B2FA8"/>
+      <text x="290" y="76" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#6B2FA8">{∅, <tspan font-style="italic">A</tspan>, <tspan font-style="italic">A</tspan><tspan font-size="9" dy="-4">c</tspan><tspan dy="4">, Ω}</tspan></text>
+      <text x="290" y="96" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:#6B2FA8">σ(A)</text>
+      <text x="290" y="113" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:#8A9099">질문 4개</text>
+      <line x1="290" y1="124" x2="290" y2="144" stroke="#E2E1DB"/>
+    </g>
+
+    <g>
+      <circle cx="520" cy="150" r="6" fill="#1250C4"/>
+      <rect x="450" y="52" width="140" height="72" rx="8" fill="#FAFAF8" stroke="#E2E1DB"/>
+      <text x="520" y="76" text-anchor="middle" class="svgtxt" style="font-size:13px">{∅,{1},{2,3},…}</text>
+      <text x="520" y="96" text-anchor="middle" class="svglab" style="font-size:9.5px">중간 크기</text>
+      <text x="520" y="113" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:#8A9099">질문 여러 개</text>
+      <line x1="520" y1="124" x2="520" y2="144" stroke="#E2E1DB"/>
+    </g>
+
+    <g>
+      <circle cx="640" cy="150" r="6" fill="#00845F"/>
+      <text x="640" y="120" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#00845F">2^Ω</text>
+      <text x="640" y="136" text-anchor="middle" class="svglab" style="font-size:9px;fill:#00845F">2ⁿ개</text>
+    </g>
+
+    <text x="350" y="28" text-anchor="middle" class="svgtxt" style="font-size:13.5px;fill:#565D66">
+      Ω 하나에 σ-algebra는 <tspan font-weight="700" fill="#14161A">여러 개</tspan> 존재한다. 양 끝 두 개는 언제나 σ-algebra다.
+    </text>
+  </svg>
+  <figcaption>왼쪽 끝 <span class="m">{∅, <i>Ω</i>}</span>는 "아무것도 구별 못 하는" 상태고, 오른쪽 끝 <span class="m">2<sup><i>Ω</i></sup></span>는 "다 구별하는" 상태야. <span class="m">ℱ</span>를 고른다는 건 이 스펙트럼 위에서 위치를 정하는 일이야.</figcaption>
+  </figure>
+
+  <div class="trap">
+    <span class="tag">함정</span>
+
+    <h4>"가산" 합집합이지 "임의의" 합집합이 아니다</h4>
+    <p>③은 <span class="m"><i>A</i><sub>1</sub>, <i>A</i><sub>2</sub>, …</span>처럼 <strong>번호를 매길 수 있는</strong> 무한 개까지만 보장해. <span class="m">⋃<sub><i>t</i>∈ℝ</sub> <i>A<sub>t</sub></i></span>같은 비가산 합집합은 σ-algebra 안에 있으리라는 보장이 없어. 이 제한이 없으면 <span class="m">ℝ</span>의 모든 한 점 집합 <span class="m">{<i>x</i>}</span>을 다 합쳐서 아무 부분집합이나 만들 수 있게 되고, 결국 <span class="m">2<sup>ℝ</sup></span>로 돌아가버려서 정의한 의미가 사라져.</p>
+
+    <h4>ℱ의 원소는 "집합"이지 "결과"가 아니다</h4>
+    <p>Module 1의 07번 함정과 같은 레벨 문제야. <span class="m"><i>Ω</i> = {1,2,3,4}</span>일 때 <span class="m">{1,2} ∈ ℱ</span>는 맞지만 <span class="m">1 ∈ ℱ</span>는 틀려. <span class="m">ℱ</span>는 <span class="m">2<sup><i>Ω</i></sup></span>의 부분집합이니까 원소가 전부 집합이야.</p>
+
+    <h4>Ω ∈ ℱ 를 빼먹으면 안 된다</h4>
+    <p><span class="m">{∅}</span> 하나만으로는 σ-algebra가 아니야. <span class="m"><i>Ω</i></span>가 없거든. 반대로 <span class="m">{<i>Ω</i>}</span>만 있어도 안 돼. 여집합 <span class="m">∅</span>이 없으니까. <strong>가장 작은 σ-algebra는 <span class="m">{∅, <i>Ω</i>}</span>이고 원소가 항상 2개 이상이야</strong> (<span class="m"><i>Ω</i> = ∅</span>인 극단적 경우 제외).</p>
+
+    <h4>"σ-algebra인지 확인하라"는 세 조건을 다 훑으라는 뜻</h4>
+    <p>HW1 Problem 4(a)가 정확히 이 형식이야. <em>"verify that ∅ ∈ ℱ; ℱ is closed under complements; ℱ is closed under countable unions"</em> 라고 세 가지를 명시해뒀어. <strong>하나만 확인하고 넘어가면 감점이야.</strong> 특히 합집합은 <em>모든 쌍</em>을 확인해야 해.</p>
+  </div>
+</section>
+
+<!-- ══ 04 ══ -->
+<section id="s4">
+  <div class="sec-head"><span class="sec-num">04</span><h2>직접 검증해보기</h2></div>
+  <p class="sec-sub">아래 도구로 σ-algebra 조건을 손으로 확인하는 감각을 익혀.</p>
+
+  <p><span class="m"><i>Ω</i> = {1, 2, 3, 4}</span>의 부분집합 16개가 아래에 있어. <strong>클릭해서 <span class="m">ℱ</span>에 넣거나 빼봐.</strong> 세 조건을 실시간으로 검사해서, 안 되면 <em>무엇이 빠졌는지</em>까지 알려줘. 점선으로 표시되는 게 "추가되어야 하는 것"이야.</p>
+
+  <div class="play">
+    <div class="plab">Ω = {1, 2, 3, 4} 의 부분집합 16개 — 클릭해서 ℱ 구성</div>
+    <div class="subsets" id="subs"></div>
+
+    <div class="verdict" id="verdict"></div>
+
+    <div class="plab">예제 불러오기</div>
+    <div class="presets" id="presets"></div>
+
+    <div class="hintline">
+      <strong>추천 실험:</strong> "HW1 4(b)의 G" 를 눌러보면 왜 σ-algebra가 아닌지 정확히 어떤 집합이 빠졌는지 나와. 그다음 <strong>σ(·) 로 닫기</strong>를 누르면 필요한 것들이 자동으로 채워지면서 05번에서 배울 "생성된 σ-algebra"가 뭔지 눈으로 보여.
+    </div>
+  </div>
+
+  <div class="ex">
+    <span class="tag">예제 4.1 — HW1 Problem 4(a) 유형</span>
+    <p><span class="m"><i>Ω</i> = {1,2,3,4}</span>, <span class="m">ℱ = {∅, <i>Ω</i>, {1,2}, {3,4}}</span>. 이것이 σ-algebra인지 확인해라.</p>
+    <details><summary>풀이 — 세 조건 전부 훑기</summary><div class="body">
+      <p><strong>① <span class="m"><i>Ω</i> ∈ ℱ</span>?</strong> 목록에 <span class="m"><i>Ω</i></span>가 있다. ✓ (덤으로 <span class="m">∅</span>도 있음)</p>
+      <p><strong>② 여집합에 닫혀 있나?</strong> 원소 4개를 하나씩:</p>
+      <ul>
+        <li><span class="m">∅<sup>c</sup> = <i>Ω</i> ∈ ℱ</span> ✓</li>
+        <li><span class="m"><i>Ω</i><sup>c</sup> = ∅ ∈ ℱ</span> ✓</li>
+        <li><span class="m">{1,2}<sup>c</sup> = {3,4} ∈ ℱ</span> ✓</li>
+        <li><span class="m">{3,4}<sup>c</sup> = {1,2} ∈ ℱ</span> ✓</li>
+      </ul>
+      <p><strong>③ 합집합에 닫혀 있나?</strong> <span class="m"><i>Ω</i></span>가 유한하므로 가산 합집합 = 유한 합집합이야. 쌍이 <span class="m">4×3/2 = 6</span>개:</p>
+      <ul>
+        <li><span class="m">∅ ∪ (무엇이든) = 그것</span> ✓ (3쌍이 자동 통과)</li>
+        <li><span class="m"><i>Ω</i> ∪ (무엇이든) = <i>Ω</i></span> ✓ (2쌍 통과)</li>
+        <li><span class="m">{1,2} ∪ {3,4} = <i>Ω</i> ∈ ℱ</span> ✓ ← <strong>실질적으로 이거 하나만 확인하면 됨</strong></li>
+      </ul>
+      <p>따라서 <span class="m">ℱ</span>는 σ-algebra다. ✓</p>
+      <p><strong>요령:</strong> <span class="m">∅</span>과 <span class="m"><i>Ω</i></span>가 관련된 쌍은 항상 통과해. 실제로 확인할 건 <em>비자명한 원소들끼리의 쌍</em>뿐이야. 위처럼 한 줄씩 다 적되, 자명한 것들은 "∅과 Ω를 포함한 쌍은 자명하게 성립"이라고 묶어서 써도 돼.</p>
+      <p><strong>의미:</strong> 이 <span class="m">ℱ</span>는 "결과가 <span class="m">{1,2}</span>쪽인가 <span class="m">{3,4}</span>쪽인가"만 구별해. 1과 2를 구별하는 질문은 못 던져. 정보가 절반만 있는 상태야.</p>
+    </div></details>
+  </div>
+
+  <div class="ex">
+    <span class="tag">예제 4.2 — 실패하는 경우</span>
+    <p><span class="m"><i>Ω</i> = {1,2,3,4}</span>, <span class="m">𝒢 = {∅, <i>Ω</i>, {1}, {2}, {3,4}}</span>. σ-algebra인가? 아니라면 어떤 조건이 깨지는지 밝혀라.</p>
+    <details><summary>풀이</summary><div class="body">
+      <p><strong>① </strong><span class="m"><i>Ω</i> ∈ 𝒢</span> ✓</p>
+      <p><strong>② 여집합:</strong> <span class="m">{1}<sup>c</sup> = {2,3,4}</span>. 그런데 <span class="m">{2,3,4} ∉ 𝒢</span>. <strong>✗ 여기서 이미 실패.</strong></p>
+      <p><strong>③ 합집합:</strong> <span class="m">{1} ∪ {2} = {1,2} ∉ 𝒢</span>. <strong>✗ 여기서도 실패.</strong></p>
+      <p>따라서 σ-algebra가 <strong>아니다.</strong> 조건 ②와 ③이 모두 깨져.</p>
+      <p><strong>답안 작성 요령:</strong> 문제가 "identify at least one property that fails"라고 하면 하나만 짚어도 되지만, <strong>반례를 구체적으로 제시해야 해.</strong> "닫혀 있지 않다"라고만 쓰면 부족하고, "<span class="m">{1} ∪ {2} = {1,2}</span>인데 <span class="m">{1,2} ∉ 𝒢</span>이므로 합집합에 닫혀 있지 않다"라고 써야 완결돼.</p>
+      <p>HW1 Problem 4(b)에 나오는 <span class="m">𝒢 = {∅, <i>Ω</i>, {1}, {2,3,4}, {2}}</span>도 같은 방식으로 하면 돼. 위 도구에서 프리셋으로 불러올 수 있어.</p>
+    </div></details>
+  </div>
+</section>
+
+<!-- ══ 05 ══ -->
+<section id="s5">
+  <div class="sec-head"><span class="sec-num">05</span><h2>생성된 σ-algebra</h2></div>
+  <p class="sec-sub">"관심 있는 사건 몇 개"에서 출발해서 최소한으로 부풀리기.</p>
+
+  <p>실무에서는 보통 이래. 내가 관심 있는 사건 몇 개가 있어. 그런데 σ-algebra 조건을 만족시키려면 <em>어쩔 수 없이</em> 몇 개를 더 넣어야 해. <strong>필요한 만큼만 넣어서 만든 게 생성된 σ-algebra야.</strong></p>
+
+  <div class="def">
+    <span class="tag">정의</span>
+    <p><span class="m">𝒜 ⊆ 2<sup><i>Ω</i></sup></span>에 대해, <span class="m">𝒜</span>를 포함하는 <strong>가장 작은</strong> σ-algebra를 <span class="m"><i>σ</i>(𝒜)</span>라 하고 <span class="m">𝒜</span>가 생성한 σ-algebra라 한다. 즉,</p>
+    <div class="eq" style="margin:14px 0 8px">𝒜 ⊆ <i>σ</i>(𝒜)</div>
+    <p style="margin-bottom:0">이고, <span class="m">𝒜 ⊆ ℱ</span>인 임의의 σ-algebra <span class="m">ℱ</span>에 대해 <span class="m"><i>σ</i>(𝒜) ⊆ ℱ</span>이다.</p>
+  </div>
+
+  <p>"가장 작은"이 왜 잘 정의되는지 잠깐 짚자면, <span class="m">𝒜</span>를 포함하는 σ-algebra는 항상 최소 하나 존재하고(<span class="m">2<sup><i>Ω</i></sup></span>), σ-algebra들의 교집합은 다시 σ-algebra거든. 그래서 "<span class="m">𝒜</span>를 포함하는 모든 σ-algebra의 교집합"이 유일한 최소 원소야.</p>
+
+  <h3>예제 A: 사건 하나에서 출발</h3>
+  <figure>
+  <svg viewBox="0 0 700 220" role="img" aria-label="사건 하나가 σ-algebra 네 개를 생성하는 과정">
+    <defs>
+      <marker id="a3" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#8A9099"/></marker>
+    </defs>
+    <text x="14" y="24" class="svglab" style="font-size:11px;letter-spacing:.1em">A 하나만 주어졌을 때 억지로 딸려 들어오는 것들</text>
+
+    <g class="svgtxt" style="font-size:16px">
+      <rect x="30" y="76" width="110" height="46" rx="8" fill="rgba(18,80,196,.14)" stroke="#1250C4" stroke-width="1.6"/>
+      <text x="85" y="105" text-anchor="middle" font-style="italic" fill="#1250C4">A</text>
+      <text x="85" y="140" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:#1250C4">시작점</text>
+
+      <rect x="230" y="30" width="110" height="42" rx="8" fill="#FFF" stroke="#6B2FA8" stroke-width="1.4"/>
+      <text x="285" y="57" text-anchor="middle" fill="#6B2FA8"><tspan font-style="italic">A</tspan><tspan font-size="10" dy="-5">c</tspan></text>
+
+      <rect x="230" y="82" width="110" height="42" rx="8" fill="#FFF" stroke="#6B2FA8" stroke-width="1.4"/>
+      <text x="285" y="109" text-anchor="middle" fill="#6B2FA8">Ω</text>
+
+      <rect x="230" y="134" width="110" height="42" rx="8" fill="#FFF" stroke="#6B2FA8" stroke-width="1.4"/>
+      <text x="285" y="161" text-anchor="middle" fill="#6B2FA8">∅</text>
+    </g>
+
+    <g stroke="#8A9099" stroke-width="1.3" fill="none">
+      <path d="M 146 92 C 190 76, 200 60, 222 54" marker-end="url(#a3)"/>
+      <path d="M 146 100 C 190 100, 200 102, 222 103" marker-end="url(#a3)"/>
+      <path d="M 146 110 C 190 128, 200 148, 222 155" marker-end="url(#a3)"/>
+    </g>
+    <text x="186" y="66" text-anchor="middle" class="svglab" style="font-size:9px">조건 ②</text>
+    <text x="186" y="93" text-anchor="middle" class="svglab" style="font-size:9px">조건 ①</text>
+    <text x="186" y="150" text-anchor="middle" class="svglab" style="font-size:9px">①+②</text>
+
+    <line x1="358" y1="103" x2="396" y2="103" stroke="#8A9099" stroke-width="1.4" marker-end="url(#a3)"/>
+
+    <rect x="406" y="66" width="270" height="72" rx="10" fill="rgba(0,132,95,.07)" stroke="#00845F" stroke-width="1.6"/>
+    <text x="541" y="98" text-anchor="middle" class="svgtxt" style="font-size:17px;fill:#00845F"><tspan font-style="italic">σ</tspan>(<tspan font-style="italic">A</tspan>) = {∅, <tspan font-style="italic">A</tspan>, <tspan font-style="italic">A</tspan><tspan font-size="10" dy="-5">c</tspan><tspan dy="5">, Ω}</tspan></text>
+    <text x="541" y="122" text-anchor="middle" class="svglab" style="font-size:10px;fill:#00845F">원소 4개 — 더 넣을 것도 뺄 것도 없다</text>
+
+    <text x="350" y="206" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:#565D66">
+      비자명한 사건 하나가 σ-algebra 원소 <tspan font-weight="700" fill="#14161A">4개</tspan>를 만든다. 이 넷은 Module 1의 <tspan font-weight="700" fill="#14161A">{A, Aᶜ} 분할</tspan>과 정확히 대응한다.
+    </text>
+  </svg>
+  <figcaption>슬라이드 14~15쪽 내용. <span class="m"><i>A</i></span>를 물어보기로 결정한 순간, "<span class="m"><i>A</i></span>가 아닌가"와 "무조건 참"과 "무조건 거짓"도 자동으로 물어볼 수 있게 돼.</figcaption>
+  </figure>
+
+  <h3>예제 B: 사건 두 개면 전부가 생성될 수도 있다</h3>
+  <div class="ex">
+    <span class="tag">예제 5.1 — 슬라이드 16~17쪽</span>
+    <p><span class="m"><i>Ω</i> = {1,2,3,4}</span>, <span class="m"><i>A</i> = {1,2}</span>, <span class="m"><i>B</i> = {2,3}</span>. <span class="m"><i>σ</i>(<i>A</i>, <i>B</i>)</span>를 구해라.</p>
+    <details><summary>풀이</summary><div class="body">
+      <p>필요한 것들을 하나씩 끌어내:</p>
+      <ol>
+        <li><span class="m"><i>A</i><sup>c</sup> = {3,4}</span>, <span class="m"><i>B</i><sup>c</sup> = {1,4}</span> — 조건 ②</li>
+        <li><span class="m"><i>A</i> ∩ <i>B</i> = {2}</span> — 교집합도 닫혀 있으므로</li>
+        <li><span class="m"><i>A</i> ∩ <i>B</i><sup>c</sup> = {1,2} ∩ {1,4} = {1}</span></li>
+        <li><span class="m"><i>A</i><sup>c</sup> ∩ <i>B</i> = {3,4} ∩ {2,3} = {3}</span></li>
+        <li><span class="m"><i>A</i><sup>c</sup> ∩ <i>B</i><sup>c</sup> = {3,4} ∩ {1,4} = {4}</span></li>
+      </ol>
+      <p>즉 <strong>모든 낱개 원소 <span class="m">{1}, {2}, {3}, {4}</span>가 분리돼버렸어.</strong> 낱개가 다 있으면 합집합으로 임의의 부분집합을 만들 수 있으니까:</p>
+      <div class="eq"><i>σ</i>(<i>A</i>, <i>B</i>) = 2<sup><i>Ω</i></sup> &nbsp;&nbsp;<span style="font-family:var(--sans);font-size:14px;color:#8A9099">(원소 16개)</span></div>
+      <p><strong>왜 이렇게 됐나:</strong> 이건 사실 Module 1에서 본 구조야. <span class="m"><i>A</i></span>와 <span class="m"><i>B</i></span>가 만드는 네 조각 <span class="m"><i>A</i>∩<i>B</i>, <i>A</i>∩<i>B</i><sup>c</sup>, <i>A</i><sup>c</sup>∩<i>B</i>, <i>A</i><sup>c</sup>∩<i>B</i><sup>c</sup></span>가 <span class="m"><i>Ω</i></span>의 <strong>분할</strong>인데, 이 조각들이 마침 원소 하나씩이었던 거야. <strong>조각이 낱개까지 잘게 쪼개지면 σ-algebra는 <span class="m">2<sup><i>Ω</i></sup></span>가 돼.</strong></p>
+      <p>거꾸로 말하면, 예제 4.1의 <span class="m">ℱ = {∅, <i>Ω</i>, {1,2}, {3,4}}</span>는 조각이 <span class="m">{1,2}</span>와 <span class="m">{3,4}</span> 두 덩어리에서 멈춘 경우야. 1과 2를 나눌 질문이 없으니 더 안 쪼개져.</p>
+      <p><strong>일반 법칙:</strong> 유한 <span class="m"><i>Ω</i></span>에서 σ-algebra는 <span class="m"><i>Ω</i></span>의 어떤 분할 하나와 1:1로 대응해. 그 분할의 조각이 <span class="m"><i>k</i></span>개면 σ-algebra의 원소는 <span class="m">2<sup><i>k</i></sup></span>개야. (조각들을 고르는 모든 방법 = 조각 집합의 멱집합)</p>
+    </div></details>
+  </div>
+
+  <div class="ex">
+    <span class="tag">예제 5.2 — HW1 Problem 4(c) 유형</span>
+    <p><span class="m"><i>Ω</i> = {1,2,3,4}</span>일 때 <span class="m"><i>A</i> = {2,4}</span>를 포함하는 가장 작은 σ-algebra를 구해라.</p>
+    <details><summary>풀이</summary><div class="body">
+      <p>예제 A의 패턴 그대로야. <span class="m"><i>A</i><sup>c</sup> = {1,3}</span>이고,</p>
+      <div class="eq" style="font-size:17px"><i>σ</i>(<i>A</i>) = {∅, {2,4}, {1,3}, <i>Ω</i>}</div>
+      <p>원소 4개. 확인: <span class="m">{2,4} ∪ {1,3} = <i>Ω</i></span> ✓, 여집합 전부 있음 ✓, <span class="m"><i>Ω</i></span> 있음 ✓.</p>
+      <p><strong>주의:</strong> 여기에 <span class="m">{2}</span>나 <span class="m">{4}</span>를 넣으면 <em>더 큰</em> σ-algebra가 되긴 하지만 "가장 작은" 게 아니야. 문제가 <em>smallest</em>를 요구하면 <strong>필요 최소한만</strong> 넣어야 해. HW1 Problem 4(c)는 <span class="m"><i>A</i> = {1,3}</span>으로 나오는데 완전히 같은 구조야.</p>
+    </div></details>
+  </div>
+
+  <div class="trap">
+    <span class="tag">함정</span>
+    <h4>"가장 작은"을 빼먹으면 답이 무한히 많아진다</h4>
+    <p><span class="m">2<sup><i>Ω</i></sup></span>도 <span class="m"><i>A</i></span>를 포함하는 σ-algebra야. 그래서 "<span class="m"><i>A</i></span>를 포함하는 σ-algebra를 구하라"고만 하면 답이 여러 개고, <strong>smallest를 요구해야 답이 하나로 정해져.</strong></p>
+    <h4>σ(𝒜)가 항상 2^Ω 인 건 아니다</h4>
+    <p>예제 5.1에서 <span class="m">2<sup><i>Ω</i></sup></span>가 나왔다고 해서 늘 그런 게 아니야. 예제 5.2에서는 4개에서 멈췄어. <strong><span class="m">𝒜</span>의 사건들이 <span class="m"><i>Ω</i></span>를 얼마나 잘게 쪼개느냐에 달렸어.</strong></p>
+    <h4>합집합만 넣고 교집합을 빼먹는 실수</h4>
+    <p>손으로 <span class="m"><i>σ</i>(𝒜)</span>를 만들 때 여집합과 합집합만 반복하면 놓치는 게 생겨. 안전한 절차는 이래: <strong>(1) 주어진 사건들이 만드는 분할 조각을 먼저 구한다. (2) 그 조각들의 모든 합집합을 모은다.</strong> 예제 5.1의 풀이가 이 순서야.</p>
+  </div>
+</section>
+
+<!-- ══ 06 ══ -->
+<section id="s6">
+  <div class="sec-head"><span class="sec-num">06</span><h2>Kolmogorov의 공리</h2></div>
+  <p class="sec-sub">세 줄. 이게 확률의 정의 전부다.</p>
+
+  <div class="def">
+    <span class="tag">정의 — 확률 측도</span>
+    <p>함수 <span class="m"><i>P</i> : ℱ → [0,1]</span>이 <strong>확률 측도(probability measure)</strong>라는 것은:</p>
+    <div class="eq" style="margin:18px 0 10px;text-align:left;font-size:17px">
+      ① &nbsp; <i>P</i>(<i>A</i>) ≥ 0 &nbsp;&nbsp; 모든 <i>A</i> ∈ ℱ 에 대해
+      <span class="note" style="margin-left:0">비음수성 (non-negativity)</span>
+    </div>
+    <div class="eq" style="margin:10px 0;text-align:left;font-size:17px">
+      ② &nbsp; <i>P</i>(<i>Ω</i>) = 1
+      <span class="note" style="margin-left:0">정규화 (normalization)</span>
+    </div>
+    <div class="eq" style="margin:10px 0 0;text-align:left;font-size:17px">
+      ③ &nbsp; <i>P</i>( ⋃<sub><i>i</i>=1</sub><sup>∞</sup> <i>A<sub>i</sub></i> ) = ∑<sub><i>i</i>=1</sub><sup>∞</sup> <i>P</i>(<i>A<sub>i</sub></i>) &nbsp;&nbsp; 단, <i>A<sub>i</sub></i> ∩ <i>A<sub>j</sub></i> = ∅ (<i>i</i> ≠ <i>j</i>)
+      <span class="note" style="margin-left:0">가산 가법성 (countable additivity)</span>
+    </div>
+  </div>
+
+  <p>①과 ②는 그냥 눈금 맞추기야. "확률은 음수가 될 수 없고, 전체는 1이다." ③이 진짜 내용이야.</p>
+
+  <h3>③번을 그림으로</h3>
+  <p>확률을 <strong>면적</strong>이라고 생각하면 제일 편해. <span class="m"><i>Ω</i></span>는 넓이가 1인 판이고, 각 사건은 그 판 위의 영역이야.</p>
+
+  <figure>
+  <svg viewBox="0 0 700 210" role="img" aria-label="서로소 사건의 확률은 더해진다">
+    <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em">서로소일 때만 그냥 더할 수 있다</text>
+
+    <!-- disjoint case -->
+    <rect x="30" y="46" width="250" height="120" rx="8" fill="#FAFAF8" stroke="#E2E1DB"/>
+    <circle cx="98" cy="106" r="40" fill="rgba(18,80,196,.35)" stroke="#1250C4" stroke-width="1.4"/>
+    <circle cx="206" cy="106" r="34" fill="rgba(217,20,122,.35)" stroke="#D9147A" stroke-width="1.4"/>
+    <text x="98" y="111" text-anchor="middle" class="svgtxt it" style="font-size:14px;fill:#1250C4">A₁</text>
+    <text x="206" y="111" text-anchor="middle" class="svgtxt it" style="font-size:14px;fill:#D9147A">A₂</text>
+    <text x="42" y="64" class="svgtxt it" style="font-size:12px;fill:#8A9099">Ω</text>
+    <text x="155" y="188" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#00845F">P(A₁ ∪ A₂) = P(A₁) + P(A₂) ✓</text>
+
+    <!-- overlapping case -->
+    <rect x="420" y="46" width="250" height="120" rx="8" fill="#FAFAF8" stroke="#E2E1DB"/>
+    <defs><clipPath id="ov"><circle cx="500" cy="106" r="40"/></clipPath></defs>
+    <circle cx="500" cy="106" r="40" fill="rgba(18,80,196,.3)" stroke="#1250C4" stroke-width="1.4"/>
+    <circle cx="570" cy="106" r="40" fill="rgba(217,20,122,.3)" stroke="#D9147A" stroke-width="1.4"/>
+    <g clip-path="url(#ov)"><circle cx="570" cy="106" r="40" fill="rgba(178,106,0,.6)"/></g>
+    <text x="470" y="111" text-anchor="middle" class="svgtxt it" style="font-size:14px;fill:#1250C4">A</text>
+    <text x="600" y="111" text-anchor="middle" class="svgtxt it" style="font-size:14px;fill:#D9147A">B</text>
+    <text x="535" y="164" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:#B26A00">두 번 세짐</text>
+    <text x="545" y="188" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#B26A00">P(A ∪ B) ≠ P(A) + P(B) ✗</text>
+
+    <text x="350" y="110" text-anchor="middle" class="svglab" style="font-size:20px;fill:#E2E1DB">|</text>
+  </svg>
+  <figcaption>겹치는 부분을 양쪽에서 한 번씩 세니까 총합이 실제보다 커져. 그래서 ③은 <strong>서로소일 때만</strong> 성립한다고 못 박아둔 거야. 겹칠 때 어떻게 되는지는 07번에서.</figcaption>
+  </figure>
+
+  <div class="callout">
+    <strong>Module 1의 partition이 여기서 처음 일한다.</strong> 공리 ③이 요구하는 "<span class="m"><i>A<sub>i</sub></i> ∩ <i>A<sub>j</sub></i> = ∅</span>"이 정확히 <em>pairwise disjoint</em> 조건이야. Module 1 09번에서 "pairwise를 확인해야지 전체 교집합만 보면 안 된다"고 했던 함정이 여기서 실전으로 쓰여. 공리를 적용하려는데 사실 pairwise disjoint가 아니면 계산이 통째로 틀려.
+  </div>
+
+  <div class="trap">
+    <span class="tag">함정</span>
+
+    <h4>유한 가법성과 가산 가법성은 다르다</h4>
+    <p>③은 <strong>무한 개</strong>까지 보장해. 유한 개만 보장하는 것보다 훨씬 강한 조건이야. 왜 굳이 무한까지 요구하냐면, 12번의 <em>continuity of probability</em>가 여기서 나오고, 무한 표본공간(예: HW1 Problem 7의 <span class="m"><i>Ω</i> = {1,2,3,…}</span>)을 다루려면 필수거든.</p>
+    <p>참고로 유한 가법성은 ③에서 공짜로 나와. <span class="m"><i>A</i><sub>3</sub> = <i>A</i><sub>4</sub> = ⋯ = ∅</span>으로 두면 되니까.</p>
+
+    <h4>"가산"인 이유도 여기 있다</h4>
+    <p>③이 비가산 합집합까지 요구했다면 모순이 생겨. <span class="m"><i>Ω</i> = [0,1]</span>에서 각 점의 확률이 0인데, 점들을 <em>비가산 개</em> 모으면 <span class="m">0 + 0 + ⋯</span>이 1이 되어야 하잖아. 말이 안 되지. <strong>가산까지만 허용하기 때문에 이 모순이 안 생겨.</strong> σ-algebra의 ③과 확률 공리의 ③이 똑같이 "가산"인 게 우연이 아니야.</p>
+
+    <h4>P는 ℱ 위에서만 정의된다</h4>
+    <p><span class="m"><i>P</i> : ℱ → [0,1]</span>이지 <span class="m"><i>P</i> : 2<sup><i>Ω</i></sup> → [0,1]</span>이 아니야. <span class="m">ℱ</span>에 없는 집합에 대해서는 <span class="m"><i>P</i></span>가 <strong>정의되지 않아.</strong> "확률이 0이다"가 아니라 "확률을 말할 수 없다"야. 이 차이가 09번의 Borel 얘기에서 중요해져.</p>
+    <p>그리고 <span class="m"><i>P</i></span>는 <em>원소</em>가 아니라 <em>사건</em>에 확률을 붙여. <span class="m"><i>P</i>({3})</span>이 맞는 표기고 <span class="m"><i>P</i>(3)</span>은 엄밀히는 약식 표기야.</p>
+  </div>
+</section>
+
+<!-- ══ 07 ══ -->
+<section id="s7">
+  <div class="sec-head"><span class="sec-num">07</span><h2>공리에서 나오는 성질들</h2></div>
+  <p class="sec-sub">외울 게 아니라 세 공리에서 유도해야 하는 것들. HW1 Problem 5가 통째로 이거야.</p>
+
+  <table>
+    <tr><th>성질</th><th>내용</th></tr>
+    <tr><td><span class="m"><i>P</i>(∅) = 0</span></td><td>불가능한 사건의 확률은 0</td></tr>
+    <tr><td><span class="m"><i>P</i>(<i>A</i><sup>c</sup>) = 1 − <i>P</i>(<i>A</i>)</span></td><td>여집합 규칙</td></tr>
+    <tr><td><span class="m"><i>A</i> ⊆ <i>B</i> ⟹ <i>P</i>(<i>A</i>) ≤ <i>P</i>(<i>B</i>)</span></td><td>단조성 (monotonicity)</td></tr>
+    <tr><td><span class="m"><i>P</i>(<i>A</i>∪<i>B</i>) = <i>P</i>(<i>A</i>) + <i>P</i>(<i>B</i>) − <i>P</i>(<i>A</i>∩<i>B</i>)</span></td><td>포함배제 (2개)</td></tr>
+    <tr><td colspan="2"><span class="m"><i>P</i>(<i>A</i>∪<i>B</i>∪<i>C</i>) = <i>P</i>(<i>A</i>)+<i>P</i>(<i>B</i>)+<i>P</i>(<i>C</i>) − <i>P</i>(<i>A</i>∩<i>B</i>) − <i>P</i>(<i>A</i>∩<i>C</i>) − <i>P</i>(<i>B</i>∩<i>C</i>) + <i>P</i>(<i>A</i>∩<i>B</i>∩<i>C</i>)</span><br><span style="font-size:13px;color:var(--ink3)">포함배제 (3개) — 부호가 +, −, + 로 번갈아간다</span></td></tr>
+  </table>
+
+  <h3>포함배제를 그림으로</h3>
+  <figure>
+  <svg viewBox="0 0 700 230" role="img" aria-label="포함배제 원리의 시각적 설명">
+    <defs>
+      <clipPath id="ie1"><circle cx="100" cy="110" r="46"/></clipPath>
+    </defs>
+    <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em">겹친 부분을 두 번 세었으니 한 번 빼준다</text>
+
+    <!-- step 1 -->
+    <g transform="translate(0,0)">
+      <circle cx="100" cy="110" r="46" fill="rgba(18,80,196,.45)" stroke="#1250C4" stroke-width="1.3"/>
+      <circle cx="156" cy="110" r="46" fill="none" stroke="#D9147A" stroke-width="1.3" stroke-dasharray="3 3"/>
+      <text x="128" y="192" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:#1250C4">P(A)</text>
+    </g>
+    <text x="212" y="118" text-anchor="middle" class="svgtxt" style="font-size:20px;fill:#8A9099">+</text>
+
+    <!-- step 2 -->
+    <g transform="translate(140,0)">
+      <circle cx="100" cy="110" r="46" fill="none" stroke="#1250C4" stroke-width="1.3" stroke-dasharray="3 3"/>
+      <circle cx="156" cy="110" r="46" fill="rgba(217,20,122,.45)" stroke="#D9147A" stroke-width="1.3"/>
+      <text x="128" y="192" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:#D9147A">P(B)</text>
+    </g>
+    <text x="392" y="118" text-anchor="middle" class="svgtxt" style="font-size:20px;fill:#8A9099">−</text>
+
+    <!-- step 3 -->
+    <g transform="translate(320,0)">
+      <defs><clipPath id="ie2"><circle cx="100" cy="110" r="46"/></clipPath></defs>
+      <circle cx="100" cy="110" r="46" fill="none" stroke="#1250C4" stroke-width="1.3" stroke-dasharray="3 3"/>
+      <circle cx="156" cy="110" r="46" fill="none" stroke="#D9147A" stroke-width="1.3" stroke-dasharray="3 3"/>
+      <g clip-path="url(#ie2)"><circle cx="156" cy="110" r="46" fill="rgba(178,106,0,.65)"/></g>
+      <text x="128" y="192" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:#B26A00">P(A∩B)</text>
+    </g>
+    <text x="572" y="118" text-anchor="middle" class="svgtxt" style="font-size:20px;fill:#8A9099">=</text>
+
+    <!-- result -->
+    <g transform="translate(490,0)">
+      <circle cx="100" cy="110" r="46" fill="rgba(107,47,168,.45)" stroke="#1250C4" stroke-width="1.3"/>
+      <circle cx="156" cy="110" r="46" fill="rgba(107,47,168,.45)" stroke="#D9147A" stroke-width="1.3"/>
+      <text x="128" y="192" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:#6B2FA8">P(A∪B)</text>
+    </g>
+  </svg>
+  <figcaption>이걸 공리로 증명하려면 <span class="m"><i>A</i>∪<i>B</i></span>를 <strong>서로소 조각으로 분해</strong>해야 해. 공리 ③은 서로소일 때만 쓸 수 있으니까. 아래 풀이를 봐.</figcaption>
+  </figure>
+
+  <div class="ex">
+    <span class="tag">예제 7.1 — HW1 Problem 5 유형 (증명)</span>
+    <p>공리에서 출발해서 <span class="m"><i>P</i>(∅) = 0</span>, <span class="m"><i>P</i>(<i>A</i><sup>c</sup>) = 1 − <i>P</i>(<i>A</i>)</span>, 단조성, 포함배제를 각각 유도해라.</p>
+    <details><summary>풀이 — 네 개 모두</summary><div class="body">
+      <p><strong>(a) <span class="m"><i>P</i>(∅) = 0</span></strong></p>
+      <p><span class="m"><i>A</i><sub>1</sub> = <i>A</i><sub>2</sub> = ⋯ = ∅</span>으로 두자. <span class="m">∅ ∩ ∅ = ∅</span>이므로 pairwise disjoint 조건은 만족돼. 공리 ③에서:</p>
+      <div class="eq" style="text-align:left;font-size:16px"><i>P</i>(∅) = <i>P</i>(⋃<sub><i>i</i></sub> ∅) = ∑<sub><i>i</i>=1</sub><sup>∞</sup> <i>P</i>(∅)</div>
+      <p><span class="m"><i>P</i>(∅) = <i>p</i></span>라 하면 <span class="m"><i>p</i> = <i>p</i> + <i>p</i> + ⋯</span>. <span class="m"><i>p</i> &gt; 0</span>이면 우변이 발산해서 <span class="m">[0,1]</span>을 벗어나. 공리 ①에서 <span class="m"><i>p</i> ≥ 0</span>이므로 <span class="m"><i>p</i> = 0</span>. ∎</p>
+
+      <p><strong>(b) <span class="m"><i>P</i>(<i>A</i><sup>c</sup>) = 1 − <i>P</i>(<i>A</i>)</span></strong></p>
+      <p><span class="m"><i>A</i></span>와 <span class="m"><i>A</i><sup>c</sup></span>는 서로소이고 합치면 <span class="m"><i>Ω</i></span>야. (Module 1의 <span class="m">{<i>A</i>, <i>A</i><sup>c</sup>}</span> 분할!) 공리 ③(유한 버전)과 ②:</p>
+      <div class="eq" style="text-align:left;font-size:16px">1 = <i>P</i>(<i>Ω</i>) = <i>P</i>(<i>A</i> ∪ <i>A</i><sup>c</sup>) = <i>P</i>(<i>A</i>) + <i>P</i>(<i>A</i><sup>c</sup>)</div>
+      <p>이항하면 끝. ∎</p>
+
+      <p><strong>(c) <span class="m"><i>A</i> ⊆ <i>B</i> ⟹ <i>P</i>(<i>A</i>) ≤ <i>P</i>(<i>B</i>)</span></strong></p>
+      <p><strong>핵심은 <span class="m"><i>B</i></span>를 서로소 조각으로 쪼개는 것.</strong> <span class="m"><i>A</i> ⊆ <i>B</i></span>이므로</p>
+      <div class="eq" style="text-align:left;font-size:16px"><i>B</i> = <i>A</i> ∪ (<i>B</i> \ <i>A</i>), &nbsp;&nbsp; <i>A</i> ∩ (<i>B</i> \ <i>A</i>) = ∅</div>
+      <p>공리 ③에서 <span class="m"><i>P</i>(<i>B</i>) = <i>P</i>(<i>A</i>) + <i>P</i>(<i>B</i>\<i>A</i>)</span>. 공리 ①에서 <span class="m"><i>P</i>(<i>B</i>\<i>A</i>) ≥ 0</span>이므로 <span class="m"><i>P</i>(<i>B</i>) ≥ <i>P</i>(<i>A</i>)</span>. ∎</p>
+
+      <p><strong>(d) <span class="m"><i>P</i>(<i>A</i>∪<i>B</i>) = <i>P</i>(<i>A</i>) + <i>P</i>(<i>B</i>) − <i>P</i>(<i>A</i>∩<i>B</i>)</span></strong></p>
+      <p>같은 수법. <span class="m"><i>A</i>∪<i>B</i></span>를 <strong>세 개의 서로소 조각</strong>으로 분해해:</p>
+      <div class="eq" style="text-align:left;font-size:16px"><i>A</i> ∪ <i>B</i> = (<i>A</i> ∩ <i>B</i><sup>c</sup>) ∪ (<i>A</i> ∩ <i>B</i>) ∪ (<i>A</i><sup>c</sup> ∩ <i>B</i>)</div>
+      <p>공리 ③에서 <span class="m"><i>P</i>(<i>A</i>∪<i>B</i>) = <i>P</i>(<i>A</i>∩<i>B</i><sup>c</sup>) + <i>P</i>(<i>A</i>∩<i>B</i>) + <i>P</i>(<i>A</i><sup>c</sup>∩<i>B</i>)</span>.</p>
+      <p>한편 <span class="m"><i>A</i> = (<i>A</i>∩<i>B</i><sup>c</sup>) ∪ (<i>A</i>∩<i>B</i>)</span>도 서로소 분해니까 <span class="m"><i>P</i>(<i>A</i>∩<i>B</i><sup>c</sup>) = <i>P</i>(<i>A</i>) − <i>P</i>(<i>A</i>∩<i>B</i>)</span>. (Module 1 예제 5.1(b)에서 본 그 분해야!) 마찬가지로 <span class="m"><i>P</i>(<i>A</i><sup>c</sup>∩<i>B</i>) = <i>P</i>(<i>B</i>) − <i>P</i>(<i>A</i>∩<i>B</i>)</span>. 대입하면:</p>
+      <div class="eq" style="text-align:left;font-size:16px"><i>P</i>(<i>A</i>∪<i>B</i>) = [<i>P</i>(<i>A</i>) − <i>P</i>(<i>A</i>∩<i>B</i>)] + <i>P</i>(<i>A</i>∩<i>B</i>) + [<i>P</i>(<i>B</i>) − <i>P</i>(<i>A</i>∩<i>B</i>)]</div>
+      <p>정리하면 원하는 식. ∎</p>
+      <p><strong>전체를 관통하는 수법 하나:</strong> 네 증명 모두 <strong>"서로소 조각으로 쪼개고 공리 ③을 쓴다"</strong>야. 공리 ③은 서로소일 때만 쓸 수 있으니까, 증명의 모든 창의성은 <em>어떻게 쪼갤까</em>에 들어가. HW1 Problem 5에 <em>"do not simply quote the formulas. Explain how they follow from the probability axioms and appropriate set decompositions"</em>라고 쓰여 있는 게 바로 이 얘기야. <strong>"적절한 집합 분해"를 명시하는 게 채점 포인트야.</strong></p>
+    </div></details>
+  </div>
+
+  <div class="ex">
+    <span class="tag">예제 7.2 — 이산 확률 공간 계산 (HW1 Problem 6 유형)</span>
+    <p><span class="m"><i>Ω</i> = {1,2,3,4}</span>이고 <span class="m"><i>P</i>({<i>k</i>}) = <i>ck</i><sup>2</sup></span>, <span class="m"><i>k</i> = 1,…,4</span>. (a) <span class="m"><i>c</i></span>를 구하고, (b) <span class="m"><i>A</i> = {1,2}</span>, <span class="m"><i>B</i> = {2,3}</span>에 대해 <span class="m"><i>P</i>(<i>A</i>), <i>P</i>(<i>B</i>), <i>P</i>(<i>A</i>∩<i>B</i>), <i>P</i>(<i>A</i>∪<i>B</i>)</span>를 구하고 (c) 포함배제로 검산해라.</p>
+    <details><summary>풀이</summary><div class="body">
+      <p><strong>(a)</strong> 공리 ②에서 <span class="m"><i>P</i>(<i>Ω</i>) = 1</span>. 낱개들은 서로소이므로 공리 ③으로 그냥 더하면 돼:</p>
+      <div class="eq" style="text-align:left;font-size:16px"><i>c</i>(1 + 4 + 9 + 16) = 30<i>c</i> = 1 &nbsp;⟹&nbsp; <i>c</i> = 1/30</div>
+      <p><strong>(b)</strong> <span class="m"><i>P</i>(<i>A</i>) = (1+4)/30 = 1/6</span>, <span class="m"><i>P</i>(<i>B</i>) = (4+9)/30 = 13/30</span>, <span class="m"><i>A</i>∩<i>B</i> = {2}</span>이므로 <span class="m"><i>P</i>(<i>A</i>∩<i>B</i>) = 4/30 = 2/15</span>, <span class="m"><i>A</i>∪<i>B</i> = {1,2,3}</span>이므로 <span class="m"><i>P</i>(<i>A</i>∪<i>B</i>) = (1+4+9)/30 = 7/15</span>.</p>
+      <p><strong>(c)</strong> <span class="m">1/6 + 13/30 − 2/15 = 5/30 + 13/30 − 4/30 = 14/30 = 7/15</span> ✓</p>
+      <p><strong>여집합 두 가지 방법:</strong> <span class="m"><i>P</i>(<i>A</i><sup>c</sup>)</span>를 직접 세면 <span class="m">(9+16)/30 = 5/6</span>. 여집합 규칙으로는 <span class="m">1 − 1/6 = 5/6</span>. 일치 ✓. HW1 Problem 6(e)가 이 두 방법이 같은지 확인하라는 문제야.</p>
+      <p><strong>주의:</strong> HW1 Problem 6은 <span class="m"><i>Ω</i> = {1,…,5}</span>, <span class="m"><i>P</i>({<i>k</i>}) = <i>ck</i></span>로 조금 달라. 위 풀이의 <em>절차</em>만 가져가고 숫자는 직접 계산해봐.</p>
+    </div></details>
+  </div>
+
+  <div class="trap">
+    <span class="tag">함정</span>
+    <h4>P(A∪B) = P(A) + P(B) 라고 쓰는 것</h4>
+    <p>서로소일 때만 맞아. <strong>문제에 "disjoint" 또는 "mutually exclusive"라는 말이 없으면 반드시 포함배제를 써라.</strong> 시험에서 제일 많이 깎이는 지점이야.</p>
+    <h4>P(A) = 0 이라고 A = ∅ 인 건 아니다</h4>
+    <p>이산 공간에서는 대체로 맞지만, <strong>연속 공간에서는 완전히 틀려.</strong> <span class="m"><i>Ω</i> = [0,1]</span>에서 균등분포면 <span class="m"><i>P</i>({0.5}) = 0</span>이지만 <span class="m">{0.5} ≠ ∅</span>이야. "확률 0"은 "불가능"이 아니라 "거의 확실히 안 일어남(almost surely not)"이야. 10번에서 다시.</p>
+    <p>거꾸로 <span class="m"><i>P</i>(<i>A</i>) = 1</span>이라고 <span class="m"><i>A</i> = <i>Ω</i></span>인 것도 아니야.</p>
+    <h4>단조성의 역은 성립하지 않는다</h4>
+    <p><span class="m"><i>P</i>(<i>A</i>) ≤ <i>P</i>(<i>B</i>)</span>라고 해서 <span class="m"><i>A</i> ⊆ <i>B</i></span>인 건 아니야. 주사위에서 <span class="m"><i>A</i> = {1}</span>, <span class="m"><i>B</i> = {2,3}</span>이면 <span class="m">1/6 ≤ 1/3</span>이지만 포함관계는 없어.</p>
+    <h4>3개짜리 포함배제의 부호</h4>
+    <p>단항은 +, 쌍은 −, 삼항은 +. <span class="m"><i>n</i></span>개로 일반화하면 <span class="m">(−1)<sup><i>k</i>+1</sup></span> 패턴이야. 3개짜리에서 마지막 <span class="m">+<i>P</i>(<i>A</i>∩<i>B</i>∩<i>C</i>)</span>를 빼먹는 실수가 흔해. 세 원 벤 다이어그램을 그려서 가운데 조각이 몇 번 세어졌는지 따라가보면 확실해져 (3번 더하고 3번 빼서 0이 되니까 1번 다시 더해야 함).</p>
+  </div>
+</section>
+
+<!-- ══ 08 ══ -->
+<section id="s8">
+  <div class="sec-head"><span class="sec-num">08</span><h2>이산 vs 연속 표본공간</h2></div>
+  <p class="sec-sub">Module 1의 가산/비가산 구분이 실제로 갈라지는 지점.</p>
+
+  <div class="grid2">
+    <div class="mini" style="padding:18px 20px">
+      <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--blue);margin-bottom:10px">DISCRETE</div>
+      <p style="font-size:14px;color:var(--ink2);margin:0 0 10px">유한 또는 <strong>가산</strong>무한. 원소를 하나씩 나열할 수 있다.</p>
+      <ul style="font-size:14px;margin:0;color:var(--ink2)">
+        <li><span class="m"><i>Ω</i> = {0, 1}</span> — 동전</li>
+        <li><span class="m"><i>Ω</i> = {1,…,6}</span> — 주사위</li>
+        <li><span class="m"><i>Ω</i> = {0,1,2,…}</span> — 1초 동안 도선 단면을 지나는 전자 개수</li>
+      </ul>
+    </div>
+    <div class="mini" style="padding:18px 20px">
+      <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--pink);margin-bottom:10px">CONTINUOUS</div>
+      <p style="font-size:14px;color:var(--ink2);margin:0 0 10px"><strong>비가산.</strong> 원소를 하나씩 나열하는 게 불가능하다.</p>
+      <ul style="font-size:14px;margin:0;color:var(--ink2)">
+        <li><span class="m">[<i>a</i>, <i>b</i>]</span> — 방의 온도</li>
+        <li><span class="m">ℝ</span> — 어느 순간의 회로 전압</li>
+        <li><span class="m">ℝ<sup><i>n</i></sup></span> — 수신 신호 벡터</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout">
+    세 번째 이산 예시(전자 개수)를 눈여겨봐. <strong>무한하지만 이산이야.</strong> Module 1 06번의 "무한 ≠ 비가산"이 여기서 실제로 쓰여. 전자 개수는 0, 1, 2, … 로 번호가 매겨지니까 <em>가산</em>이고, 그래서 이산 취급이 가능해. 반면 전압은 아무리 촘촘히 재도 번호를 못 매겨.
+  </div>
+</section>
+
+<!-- ══ 09 ══ -->
+<section id="s9">
+  <div class="sec-head"><span class="sec-num">09</span><h2>Borel σ-algebra</h2></div>
+  <p class="sec-sub">ℝ에서 쓸 수 있는 실질적인 최대 사건 모음.</p>
+
+  <p>슬라이드 26쪽: <span class="m"><i>Ω</i> = ℝ</span>일 때 <span class="m">2<sup>ℝ</sup></span>는 확률론에 쓰기엔 너무 크다. 대신 <strong>Borel σ-algebra</strong> <span class="m">ℬ(ℝ)</span>를 쓴다.</p>
+
+  <div class="def">
+    <span class="tag">정의</span>
+    <p><span class="m">ℬ(ℝ)</span>는 <strong>모든 열린 구간 <span class="m">(<i>a</i>, <i>b</i>)</span>를 포함하는 가장 작은 σ-algebra</strong>다. 즉 <span class="m">ℬ(ℝ) = <i>σ</i>({(<i>a</i>,<i>b</i>) : <i>a</i> &lt; <i>b</i>})</span>.</p>
+  </div>
+
+  <p>05번의 "생성된 σ-algebra"가 여기서 진짜 쓰임새를 얻어. 열린 구간에서 출발해서 여집합과 가산 합집합을 반복 적용하면 나오는 모든 것이 <span class="m">ℬ(ℝ)</span>야.</p>
+
+  <figure>
+  <svg viewBox="0 0 700 240" role="img" aria-label="열린 구간에서 보렐 집합을 만들어내는 과정">
+    <defs>
+      <marker id="a5" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#8A9099"/></marker>
+    </defs>
+    <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em">열린 구간에서 출발해서 계속 만들어낸다</text>
+
+    <rect x="24" y="44" width="150" height="150" rx="10" fill="rgba(18,80,196,.09)" stroke="#1250C4" stroke-width="1.6"/>
+    <text x="99" y="70" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#1250C4">시작 재료</text>
+    <line x1="46" y1="98" x2="152" y2="98" stroke="#1250C4" stroke-width="4"/>
+    <circle cx="46" cy="98" r="4" fill="#FAFAF8" stroke="#1250C4" stroke-width="1.6"/>
+    <circle cx="152" cy="98" r="4" fill="#FAFAF8" stroke="#1250C4" stroke-width="1.6"/>
+    <text x="99" y="124" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:#1250C4">(<tspan font-style="italic">a</tspan>, <tspan font-style="italic">b</tspan>)</text>
+    <text x="99" y="150" text-anchor="middle" class="svglab" style="font-size:10px">모든 열린 구간</text>
+    <text x="99" y="172" text-anchor="middle" class="svgtxt" style="font-size:11.5px;fill:#8A9099">"X가 a와 b 사이인가?"</text>
+
+    <line x1="182" y1="118" x2="222" y2="118" stroke="#8A9099" stroke-width="1.4" marker-end="url(#a5)"/>
+    <text x="202" y="106" text-anchor="middle" class="svglab" style="font-size:9px">ᶜ, ⋃</text>
+
+    <rect x="232" y="44" width="200" height="150" rx="10" fill="#FAFAF8" stroke="#E2E1DB"/>
+    <text x="332" y="70" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#14161A">반복 적용</text>
+    <g class="svgtxt" style="font-size:13px;fill:#565D66">
+      <text x="332" y="96" text-anchor="middle">[<tspan font-style="italic">a</tspan>, <tspan font-style="italic">b</tspan>] &nbsp; = &nbsp; ⋂ (<tspan font-style="italic">a</tspan>−1/<tspan font-style="italic">n</tspan>, <tspan font-style="italic">b</tspan>+1/<tspan font-style="italic">n</tspan>)</text>
+      <text x="332" y="120" text-anchor="middle">{<tspan font-style="italic">a</tspan>} &nbsp; = &nbsp; ⋂ (<tspan font-style="italic">a</tspan>−1/<tspan font-style="italic">n</tspan>, <tspan font-style="italic">a</tspan>+1/<tspan font-style="italic">n</tspan>)</text>
+      <text x="332" y="144" text-anchor="middle">(<tspan font-style="italic">a</tspan>, ∞), &nbsp; ℚ, &nbsp; 유한합집합 …</text>
+    </g>
+    <text x="332" y="172" text-anchor="middle" class="svglab" style="font-size:10px">가산 번의 연산으로 도달 가능</text>
+
+    <line x1="440" y1="118" x2="480" y2="118" stroke="#8A9099" stroke-width="1.4" marker-end="url(#a5)"/>
+
+    <rect x="490" y="44" width="186" height="150" rx="10" fill="rgba(0,132,95,.08)" stroke="#00845F" stroke-width="1.6"/>
+    <text x="583" y="76" text-anchor="middle" class="svgtxt" style="font-size:19px;fill:#00845F">ℬ(ℝ)</text>
+    <text x="583" y="100" text-anchor="middle" class="svglab" style="font-size:10px;fill:#00845F">BOREL σ-ALGEBRA</text>
+    <text x="583" y="128" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:#565D66">공학에서 다루는</text>
+    <text x="583" y="148" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:#565D66">거의 모든 사건 포함</text>
+    <text x="583" y="174" text-anchor="middle" class="svgtxt" style="font-size:12px;fill:#B26A00">하지만 2^ℝ 는 아님</text>
+
+    <text x="350" y="224" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:#565D66">
+      Module 1 08번의 <tspan font-weight="700" fill="#14161A">⋂(−1/n, 1/n) = {0}</tspan> 이 여기서 실제로 쓰인다. 열린 구간만으로 한 점을 만들어내는 그 트릭.
+    </text>
+  </svg>
+  <figcaption>가운데 칸을 보면 Module 1 08번 예제 8.1(2)와 완전히 같은 계산이야. 그때는 "무한 교집합의 신기한 성질"이었는데, 여기서는 "닫힌 구간과 한 점을 Borel 집합으로 만드는 도구"로 쓰여.</figcaption>
+  </figure>
+
+  <h3>공학적 해석</h3>
+  <div class="callout">
+    슬라이드 27쪽에 명시적으로 적혀 있어. 공학에서 던지는 확률 질문은 거의 항상 <strong>구간 형태</strong>야. "<span class="m"><i>X</i> ∈ (<i>a</i>,<i>b</i>)</span>인가?", "<span class="m"><i>X</i> &gt; <i>a</i></span>인가?", "<span class="m"><i>X</i> ∈ <i>A</i></span>인가 (<span class="m"><i>A</i></span>는 구간들로 만든 집합)". <span class="m">ℬ(ℝ)</span>는 이런 질문을 전부 포함해. <strong>그래서 실무에서는 Borel 밖의 집합을 만날 일이 사실상 없어.</strong>
+  </div>
+
+  <div class="trap">
+    <span class="tag">함정</span>
+    <h4>ℬ(ℝ) ≠ 2^ℝ 이다</h4>
+    <p>슬라이드 28쪽 Remark. Borel σ-algebra는 <span class="m">ℝ</span>의 <em>모든</em> 부분집합을 담지 않아. Borel이 아닌 집합이 존재한다는 건 깊은 결과(Vitali set)이고 <strong>선택공리(Axiom of Choice)</strong>에 의존해. 이런 집합은 공학에서 실질적으로 절대 안 나와.</p>
+    <p style="margin-bottom:0">시험에 증명이 나올 일은 없지만, <em>"왜 2^ℝ를 안 쓰나"</em>라는 개념 질문의 답으로는 알고 있어야 해. 답: <strong>모든 부분집합에 일관된 길이를 부여하는 게 불가능해서.</strong></p>
+    <h4>"열린 구간에서 생성된다"고 열린 집합만 있는 게 아니다</h4>
+    <p><span class="m">ℬ(ℝ)</span>에는 닫힌 구간, 반열린 구간, 한 점, <span class="m">ℚ</span>, 이들의 가산 합집합/교집합이 다 들어있어. <strong>"생성"이 어디까지 뻗어나가는지를 과소평가하지 마.</strong></p>
+    <h4>ℱ에 없는 집합은 확률이 0이 아니라 "정의 안 됨"이다</h4>
+    <p>06번 함정에서도 짚었는데 여기서 구체화돼. 비-Borel 집합 <span class="m"><i>V</i></span>에 대해 <span class="m"><i>P</i>(<i>V</i>) = 0</span>이라고 쓰면 틀려. <span class="m"><i>P</i></span>가 <span class="m"><i>V</i></span>에서 <strong>정의되지 않았어.</strong> "값이 0"과 "값이 없음"은 다른 얘기야.</p>
+  </div>
+</section>
+
+<!-- ══ 10 ══ -->
+<section id="s10">
+  <div class="sec-head"><span class="sec-num">10</span><h2>PMF와 PDF</h2></div>
+  <p class="sec-sub">실무에서 P를 실제로 어떻게 지정하는가.</p>
+
+  <p>공리는 "확률이 되기 위한 자격"만 말해줄 뿐, 구체적인 <span class="m"><i>P</i></span>를 어떻게 만드는지는 안 알려줘. 실무에서는 이렇게 해.</p>
+
+  <div class="grid2">
+    <div class="mini" style="padding:18px 20px">
+      <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--blue);margin-bottom:10px">이산 — PMF</div>
+      <div class="eq" style="font-size:16px;margin:10px 0"><i>p</i>(<i>ω</i>) ≥ 0, &nbsp; ∑<sub><i>ω</i>∈<i>Ω</i></sub> <i>p</i>(<i>ω</i>) = 1</div>
+      <div class="eq" style="font-size:16px;margin:10px 0"><i>P</i>(<i>A</i>) = ∑<sub><i>ω</i>∈<i>A</i></sub> <i>p</i>(<i>ω</i>)</div>
+      <p style="font-size:14px;color:var(--ink2);margin:10px 0 0">각 결과에 <strong>덩어리(mass)</strong>를 하나씩 얹고, 사건의 확률은 그 안의 덩어리를 <strong>더한다.</strong></p>
+    </div>
+    <div class="mini" style="padding:18px 20px">
+      <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--pink);margin-bottom:10px">연속 — PDF</div>
+      <div class="eq" style="font-size:16px;margin:10px 0"><i>f</i>(<i>x</i>) ≥ 0, &nbsp; ∫<sub>ℝ</sub> <i>f</i>(<i>x</i>) d<i>x</i> = 1</div>
+      <div class="eq" style="font-size:16px;margin:10px 0"><i>P</i>(<i>A</i>) = ∫<sub><i>A</i></sub> <i>f</i>(<i>x</i>) d<i>x</i></div>
+      <p style="font-size:14px;color:var(--ink2);margin:10px 0 0">각 점에 <strong>밀도(density)</strong>를 얹고, 사건의 확률은 그 구간의 <strong>넓이</strong>다.</p>
+    </div>
+  </div>
+
+  <figure>
+  <svg viewBox="0 0 700 250" role="img" aria-label="PMF와 PDF의 비교">
+    <!-- PMF -->
+    <text x="30" y="26" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:#1250C4">PMF — 막대의 합</text>
+    <line x1="40" y1="180" x2="310" y2="180" stroke="#8A9099" stroke-width="1.2"/>
+    <line x1="40" y1="180" x2="40" y2="52" stroke="#8A9099" stroke-width="1.2"/>
+    <g fill="rgba(18,80,196,.3)" stroke="#1250C4" stroke-width="1.3">
+      <rect x="58" y="150" width="26" height="30"/>
+      <rect x="98" y="128" width="26" height="52"/>
+      <rect x="138" y="96" width="26" height="84"/>
+      <rect x="178" y="112" width="26" height="68"/>
+      <rect x="218" y="142" width="26" height="38"/>
+      <rect x="258" y="162" width="26" height="18"/>
+    </g>
+    <g fill="rgba(107,47,168,.55)" stroke="#4A1D8C" stroke-width="1.4">
+      <rect x="138" y="96" width="26" height="84"/>
+      <rect x="178" y="112" width="26" height="68"/>
+    </g>
+    <g class="svgnum" style="font-size:11px;fill:#8A9099">
+      <text x="71" y="196" text-anchor="middle">1</text>
+      <text x="111" y="196" text-anchor="middle">2</text>
+      <text x="151" y="196" text-anchor="middle">3</text>
+      <text x="191" y="196" text-anchor="middle">4</text>
+      <text x="231" y="196" text-anchor="middle">5</text>
+      <text x="271" y="196" text-anchor="middle">6</text>
+    </g>
+    <text x="171" y="222" text-anchor="middle" class="svgtxt" style="font-size:13.5px;fill:#4A1D8C">P({3,4}) = p(3) + p(4)</text>
+    <text x="171" y="242" text-anchor="middle" class="svglab" style="font-size:10px">막대 두 개를 더한다</text>
+
+    <!-- PDF -->
+    <text x="390" y="26" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:#D9147A">PDF — 곡선 아래 넓이</text>
+    <line x1="400" y1="180" x2="670" y2="180" stroke="#8A9099" stroke-width="1.2"/>
+    <line x1="400" y1="180" x2="400" y2="52" stroke="#8A9099" stroke-width="1.2"/>
+    <path id="bell" d="M 406 178 C 460 176, 480 92, 520 88 C 560 84, 578 168, 664 178" fill="none" stroke="#D9147A" stroke-width="1.8"/>
+    <path d="M 490 180 L 490 96.5 C 500 91, 510 88.6, 520 88 C 530 87.4, 538 96, 545 112 L 545 180 Z" fill="rgba(107,47,168,.45)"/>
+    <line x1="490" y1="180" x2="490" y2="188" stroke="#4A1D8C" stroke-width="1.4"/>
+    <line x1="545" y1="180" x2="545" y2="188" stroke="#4A1D8C" stroke-width="1.4"/>
+    <text x="490" y="202" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#4A1D8C">a</text>
+    <text x="545" y="202" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#4A1D8C">b</text>
+    <text x="535" y="222" text-anchor="middle" class="svgtxt" style="font-size:13.5px;fill:#4A1D8C">P((a,b)) = ∫ₐᵇ f(x) dx</text>
+    <text x="535" y="242" text-anchor="middle" class="svglab" style="font-size:10px">구간의 넓이를 잰다</text>
+
+    <line x1="350" y1="40" x2="350" y2="230" stroke="#E2E1DB"/>
+  </svg>
+  <figcaption>구조가 완전히 평행해. 합 ↔ 적분, 막대 높이 ↔ 곡선 높이. 다만 <strong>오른쪽에서는 한 점의 폭이 0이라 넓이도 0</strong>이야. 그래서 연속 공간에서 <span class="m"><i>P</i>({<i>x</i>}) = 0</span>이 돼.</figcaption>
+  </figure>
+
+  <div class="trap">
+    <span class="tag">함정 · pdf에서 제일 많이 틀리는 것</span>
+    <h4>f(x)는 확률이 아니다. 1보다 클 수 있다</h4>
+    <p><strong>이게 가장 흔한 오해야.</strong> <span class="m"><i>f</i>(<i>x</i>)</span>는 <em>밀도</em>지 확률이 아니야. 예를 들어 <span class="m">[0, 0.1]</span> 위의 균등분포는 <span class="m"><i>f</i>(<i>x</i>) = 10</span>이야. 10이지만 아무 문제 없어. 왜냐면 확률은 <span class="m"><i>f</i></span>의 <strong>값</strong>이 아니라 <strong>넓이</strong>거든. <span class="m">10 × 0.1 = 1</span> ✓</p>
+    <p>PMF는 다르게, <span class="m"><i>p</i>(<i>ω</i>)</span>가 진짜 확률이라 <span class="m">0 ≤ <i>p</i>(<i>ω</i>) ≤ 1</span>이야. <strong>두 개를 헷갈리지 마.</strong></p>
+    <h4>연속 공간에서 P({x}) = 0 이다</h4>
+    <p><span class="m">∫<sub><i>a</i></sub><sup><i>a</i></sup> <i>f</i>(<i>x</i>)d<i>x</i> = 0</span>이니까. 그 결과로 <span class="m"><i>P</i>((<i>a</i>,<i>b</i>)) = <i>P</i>([<i>a</i>,<i>b</i>])</span>야. <strong>연속 공간에서는 구간이 열렸든 닫혔든 확률이 같아.</strong> 이산 공간에서는 절대 아니고.</p>
+    <p>그리고 07번 함정에서 말한 것처럼, <span class="m"><i>P</i>({0.5}) = 0</span>인데도 0.5가 나올 <em>가능성</em>은 있어. "확률 0 = 불가능"이 아니야.</p>
+    <h4>이산 PMF는 가산일 때만 쓸 수 있다</h4>
+    <p><span class="m">∑<sub><i>ω</i>∈<i>Ω</i></sub></span>라는 표기 자체가 <span class="m"><i>Ω</i></span>가 가산이어야 의미가 있어. 비가산 개를 더하는 건 정의가 안 돼. <strong>Module 1의 가산성이 여기서 또 결정적으로 작동해.</strong></p>
+  </div>
+</section>
+
+<!-- ══ 11 ══ -->
+<section id="s11">
+  <div class="sec-head"><span class="sec-num">11</span><h2>반복 실험과 Cartesian Product</h2></div>
+  <p class="sec-sub">실험을 여러 번 하면 표본공간이 어떻게 커지는가.</p>
+
+  <div class="def">
+    <span class="tag">정의</span>
+    <p>같은 실험을 <span class="m"><i>k</i></span>번 반복하면 표본공간은 <strong>곱집합</strong>이 된다.</p>
+    <div class="eq" style="margin:14px 0 6px"><i>Ω</i><sup><i>k</i></sup> = <i>Ω</i> × <i>Ω</i> × ⋯ × <i>Ω</i> &nbsp;&nbsp;(<i>k</i>번)</div>
+    <p style="margin-bottom:0">결과는 순서쌍 <span class="m">(<i>ω</i><sub>1</sub>, <i>ω</i><sub>2</sub>, …, <i>ω<sub>k</sub></i>)</span>이고, <span class="m"><i>ω<sub>i</sub></i></span>는 <span class="m"><i>i</i></span>번째 실험의 결과다. 반복 횟수가 미리 정해지지 않으면 <span class="m"><i>Ω</i><sup>∞</sup></span>를 쓰고, 결과는 무한 수열이 된다.</p>
+  </div>
+
+  <div class="callout">
+    Module 1 03번 함정에서 짚었던 게 여기 있어. <strong>집합 안의 원소는 순서가 없지만, 원소 <em>자체</em>는 순서 있는 객체일 수 있다.</strong> <span class="m"><i>Ω</i><sup>2</sup></span>의 원소는 순서쌍이라 <span class="m">(S,F) ≠ (F,S)</span>야. HW1 Problem 3에서 SF와 FS를 구별해야 했던 이유가 이거야.
+  </div>
+
+  <h3>슬라이드의 대표 예제: 첫 성공까지</h3>
+  <p><span class="m"><i>Ω</i> = {0, 1}</span>이고 1이 성공, 0이 실패. <strong>첫 성공이 나올 때까지</strong> 반복해. 사건 <span class="m"><i>E</i></span>를 "첫 성공 전에 실패가 <strong>짝수 번</strong> 나온다"로 정의하면:</p>
+
+  <div class="eq"><i>E</i> = {1, 001, 00001, 0000001, …} = {0<sup>2<i>n</i></sup>1 : <i>n</i> = 0, 1, 2, …}</div>
+
+  <figure>
+  <svg viewBox="0 0 700 240" role="img" aria-label="첫 성공까지의 시행을 나타낸 나무 그림">
+    <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em">각 단계에서 성공(1)하면 멈추고, 실패(0)하면 계속</text>
+
+    <g class="svgnum" style="font-size:12px">
+      <!-- level markers -->
+      <g stroke="#E2E1DB" stroke-width="1"><line x1="60" y1="46" x2="60" y2="196"/></g>
+    </g>
+
+    <!-- chain -->
+    <g>
+      <circle cx="90" cy="70" r="15" fill="#FAFAF8" stroke="#8A9099" stroke-width="1.3"/>
+      <text x="90" y="75" text-anchor="middle" class="svgnum" style="font-size:12px;fill:#565D66">시작</text>
+    </g>
+
+    <g stroke-width="1.4" fill="none">
+      <path d="M 106 62 L 160 46" stroke="#00845F" marker-end="url(#a6)"/>
+      <path d="M 106 80 L 160 104" stroke="#B26A00" marker-end="url(#a6)"/>
+    </g>
+    <defs><marker id="a6" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#8A9099"/></marker></defs>
+    <text x="128" y="46" class="svglab" style="font-size:9.5px;fill:#00845F">1</text>
+    <text x="126" y="102" class="svglab" style="font-size:9.5px;fill:#B26A00">0</text>
+
+    <rect x="166" y="32" width="76" height="26" rx="6" fill="rgba(107,47,168,.2)" stroke="#6B2FA8" stroke-width="1.3"/>
+    <text x="204" y="50" text-anchor="middle" class="svgnum" style="font-size:12px;fill:#4A1D8C">1</text>
+    <text x="262" y="50" class="svgtxt" style="font-size:12px;fill:#4A1D8C">실패 0번 (짝수) ∈ E</text>
+
+    <circle cx="180" cy="112" r="13" fill="#FAFAF8" stroke="#8A9099" stroke-width="1.2"/>
+    <g stroke-width="1.4" fill="none">
+      <path d="M 194 106 L 240 92" stroke="#00845F" marker-end="url(#a6)"/>
+      <path d="M 194 120 L 240 140" stroke="#B26A00" marker-end="url(#a6)"/>
+    </g>
+    <rect x="246" y="78" width="76" height="26" rx="6" fill="#FAFAF8" stroke="#E2E1DB"/>
+    <text x="284" y="96" text-anchor="middle" class="svgnum" style="font-size:12px;fill:#8A9099">01</text>
+    <text x="342" y="96" class="svgtxt" style="font-size:12px;fill:#8A9099">실패 1번 (홀수) ∉ E</text>
+
+    <circle cx="258" cy="148" r="13" fill="#FAFAF8" stroke="#8A9099" stroke-width="1.2"/>
+    <g stroke-width="1.4" fill="none">
+      <path d="M 272 142 L 316 130" stroke="#00845F" marker-end="url(#a6)"/>
+      <path d="M 272 156 L 316 176" stroke="#B26A00" marker-end="url(#a6)"/>
+    </g>
+    <rect x="322" y="116" width="86" height="26" rx="6" fill="rgba(107,47,168,.2)" stroke="#6B2FA8" stroke-width="1.3"/>
+    <text x="365" y="134" text-anchor="middle" class="svgnum" style="font-size:12px;fill:#4A1D8C">001</text>
+    <text x="428" y="134" class="svgtxt" style="font-size:12px;fill:#4A1D8C">실패 2번 (짝수) ∈ E</text>
+
+    <circle cx="334" cy="184" r="13" fill="#FAFAF8" stroke="#8A9099" stroke-width="1.2"/>
+    <text x="368" y="190" class="svgtxt" style="font-size:13px;fill:#8A9099">⋯ 끝없이 이어진다</text>
+
+    <text x="14" y="226" class="svgtxt" style="font-size:13px;fill:#565D66">
+      각 수열은 <tspan font-weight="700" fill="#14161A">유한</tspan>하고 1로 끝나지만, 길이에 <tspan font-weight="700" fill="#14161A">상한이 없다.</tspan> 첫 성공이 얼마든지 늦게 올 수 있다.
+    </text>
+  </svg>
+  <figcaption>슬라이드 36쪽 Remark의 내용이 이거야. "모든 원소가 유한한데 집합은 무한하다"는 상황. Module 1 06번 예제 6.1의 2번(가산)과 같은 구조야.</figcaption>
+  </figure>
+
+  <div class="ex">
+    <span class="tag">예제 11.1 — 슬라이드 37~38쪽</span>
+    <p>독립적인 이진 시행에서 <span class="m"><i>p</i>(0) = <i>p</i>(1) = 1/2</span>이고 <span class="m"><i>P</i>(0<sup>2<i>n</i></sup>1) = (1/2)<sup>2<i>n</i>+1</sup></span>이라 하자. <span class="m"><i>P</i>(<i>E</i>)</span>를 구해라.</p>
+    <details><summary>풀이</summary><div class="body">
+      <p><span class="m"><i>E</i></span>의 원소들은 서로 다른 수열이므로 <strong>서로소</strong>야. 그래서 공리 ③(가산 가법성)을 쓸 수 있어:</p>
+      <div class="eq" style="text-align:left;font-size:16px">
+        <i>P</i>(<i>E</i>) = ∑<sub><i>n</i>=0</sub><sup>∞</sup> (1/2)<sup>2<i>n</i>+1</sup> = (1/2) ∑<sub><i>n</i>=0</sub><sup>∞</sup> (1/4)<sup><i>n</i></sup>
+      </div>
+      <p>등비급수 <span class="m">∑(1/4)<sup><i>n</i></sup> = 1/(1 − 1/4) = 4/3</span>이므로:</p>
+      <div class="eq" style="font-size:17px"><i>P</i>(<i>E</i>) = (1/2)(4/3) = <strong>2/3</strong></div>
+      <p><strong>검산 감각:</strong> 실패 횟수가 짝수(0, 2, 4, …)일 확률이 2/3이고 홀수(1, 3, 5, …)일 확률이 1/3이야. 합이 1 ✓. 짝수 쪽이 더 큰 게 직관적으로도 맞아. 실패 0번이 가장 흔한 경우인데 그게 짝수 쪽이거든.</p>
+      <p><strong>여기서 진짜 중요한 것:</strong> 이 계산은 <strong>가산 가법성(공리 ③)이 없으면 못 해.</strong> 무한 개의 서로소 사건의 확률을 더한 거니까. 유한 가법성만 있는 이론이었다면 <span class="m"><i>P</i>(<i>E</i>)</span>를 아예 계산할 수 없어. 06번 함정에서 "왜 굳이 무한까지 요구하냐"고 했던 것의 실제 답이 이거야.</p>
+    </div></details>
+  </div>
+</section>
+
+<!-- ══ 12 ══ -->
+<section id="s12">
+  <div class="sec-head"><span class="sec-num">12</span><h2>확률의 연속성</h2></div>
+  <p class="sec-sub">집합이 극한으로 가면 확률도 따라간다. HW1 Problem 7의 결승선.</p>
+
+  <div class="def">
+    <span class="tag">정리 — Continuity of Probability</span>
+    <p><strong>증가하는 경우:</strong> <span class="m"><i>B</i><sub>1</sub> ⊆ <i>B</i><sub>2</sub> ⊆ ⋯</span> 이면</p>
+    <div class="eq" style="margin:12px 0"><i>P</i>(<i>B<sub>n</sub></i>) → <i>P</i>( ⋃<sub><i>n</i>=1</sub><sup>∞</sup> <i>B<sub>n</sub></i> )</div>
+    <p><strong>감소하는 경우:</strong> <span class="m"><i>B</i><sub>1</sub> ⊇ <i>B</i><sub>2</sub> ⊇ ⋯</span> 이면</p>
+    <div class="eq" style="margin:12px 0 0"><i>P</i>(<i>B<sub>n</sub></i>) → <i>P</i>( ⋂<sub><i>n</i>=1</sub><sup>∞</sup> <i>B<sub>n</sub></i> )</div>
+  </div>
+
+  <p>말로 하면 <strong>"극한과 <span class="m"><i>P</i></span>의 순서를 바꿔도 된다"</strong>야. 이게 당연해 보이지만 전혀 당연하지 않아. 가산 가법성(공리 ③)이 있어야 성립하는 정리거든.</p>
+
+  <figure>
+  <svg viewBox="0 0 700 250" role="img" aria-label="증가하는 집합열과 감소하는 집합열">
+    <!-- increasing -->
+    <text x="30" y="24" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:#00845F">증가 — 점점 커져서 합집합으로</text>
+    <g>
+      <rect x="30" y="40" width="280" height="120" rx="8" fill="#FAFAF8" stroke="#E2E1DB"/>
+      <rect x="46" y="56" width="248" height="88" rx="6" fill="rgba(0,132,95,.06)" stroke="#00845F" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <rect x="46" y="56" width="60" height="88" rx="6" fill="rgba(0,132,95,.4)" stroke="#00845F" stroke-width="1.1"/>
+      <rect x="46" y="56" width="112" height="88" rx="6" fill="none" stroke="#00845F" stroke-width="1.1"/>
+      <rect x="46" y="56" width="170" height="88" rx="6" fill="none" stroke="#00845F" stroke-width="1.1"/>
+      <text x="76" y="105" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#005A42">B₁</text>
+      <text x="132" y="105" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#00845F">B₂</text>
+      <text x="192" y="105" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#00845F">B₃</text>
+      <text x="256" y="105" text-anchor="middle" class="svgtxt" style="font-size:12px;fill:#00845F">⋯ ⋃Bₙ</text>
+    </g>
+    <text x="170" y="186" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#00845F">P(Bₙ) ↗ P(⋃Bₙ)</text>
+
+    <!-- decreasing -->
+    <text x="390" y="24" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:#D9147A">감소 — 점점 작아져서 교집합으로</text>
+    <g>
+      <rect x="390" y="40" width="280" height="120" rx="8" fill="#FAFAF8" stroke="#E2E1DB"/>
+      <rect x="406" y="56" width="248" height="88" rx="6" fill="rgba(217,20,122,.12)" stroke="#D9147A" stroke-width="1.1"/>
+      <rect x="406" y="56" width="180" height="88" rx="6" fill="rgba(217,20,122,.18)" stroke="#D9147A" stroke-width="1.1"/>
+      <rect x="406" y="56" width="118" height="88" rx="6" fill="rgba(217,20,122,.28)" stroke="#D9147A" stroke-width="1.1"/>
+      <rect x="406" y="56" width="56" height="88" rx="6" fill="rgba(217,20,122,.5)" stroke="#D9147A" stroke-width="1.2"/>
+      <text x="434" y="105" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:#8B0D4E">⋂Bₙ</text>
+      <text x="494" y="105" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#D9147A">B₃</text>
+      <text x="556" y="105" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#D9147A">B₂</text>
+      <text x="622" y="105" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#D9147A">B₁</text>
+    </g>
+    <text x="530" y="186" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#D9147A">P(Bₙ) ↘ P(⋂Bₙ)</text>
+
+    <text x="350" y="224" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:#565D66">
+      오른쪽에서 ⋂Bₙ = ∅ 이면 P(Bₙ) → 0 이 된다. Module 1 08번의 (0, 1/n) 이 바로 그 경우.
+    </text>
+    <line x1="350" y1="36" x2="350" y2="200" stroke="#E2E1DB"/>
+  </svg>
+  <figcaption>왼쪽은 <span class="m">⋃</span>로, 오른쪽은 <span class="m">⋂</span>로 수렴해. Module 1 08번에서 "무한 연산은 유한 연산의 단순 연장이 아니다"라고 했는데, 확률은 다행히도 <strong>연속적으로</strong> 따라와준다는 게 이 정리의 내용이야.</figcaption>
+  </figure>
+
+  <div class="ex">
+    <span class="tag">예제 12.1 — HW1 Problem 7 유형</span>
+    <p><span class="m"><i>Ω</i> = {1,2,3,…}</span>이고 <span class="m"><i>P</i>({<i>n</i>}) = 2/3<sup><i>n</i></sup></span>이라 하자.</p>
+    <ol>
+      <li>유효한 확률 측도인지 확인해라.</li>
+      <li><span class="m"><i>P</i>({1,2})</span>를 구해라.</li>
+      <li>결과가 짝수일 확률을 구해라.</li>
+      <li><span class="m"><i>A<sub>n</sub></i> = {<i>n</i>, <i>n</i>+1, …}</span>에 대해 <span class="m"><i>P</i>(<i>A<sub>n</sub></i>)</span>를 구해라.</li>
+      <li><span class="m">⋂<sub><i>n</i></sub> <i>A<sub>n</sub></i></span>를 구하고, <span class="m">lim <i>P</i>(<i>A<sub>n</sub></i>)</span>와 비교해라.</li>
+    </ol>
+    <details><summary>풀이</summary><div class="body">
+      <p><strong>1.</strong> 등비급수: <span class="m">∑<sub><i>n</i>≥1</sub> 2/3<sup><i>n</i></sup> = 2 · (1/3)/(1 − 1/3) = 2 · (1/2) = 1</span> ✓ 그리고 모든 항이 양수 ✓ 따라서 유효해.</p>
+      <p><strong>2.</strong> <span class="m">2/3 + 2/9 = 8/9</span></p>
+      <p><strong>3.</strong> <span class="m">∑<sub><i>m</i>≥1</sub> 2/3<sup>2<i>m</i></sup> = 2 ∑<sub><i>m</i>≥1</sub> (1/9)<sup><i>m</i></sup> = 2 · (1/9)/(1 − 1/9) = 2/8 = 1/4</span></p>
+      <p><strong>4.</strong> 꼬리 합: <span class="m"><i>P</i>(<i>A<sub>n</sub></i>) = ∑<sub><i>k</i>≥<i>n</i></sub> 2/3<sup><i>k</i></sup> = 2 · (3<sup>−<i>n</i></sup>)/(1 − 1/3) = 3 · 3<sup>−<i>n</i></sup> = 1/3<sup><i>n</i>−1</sup></span></p>
+      <p>검산: <span class="m"><i>P</i>(<i>A</i><sub>1</sub>) = 1/3<sup>0</sup> = 1</span> ✓ (<span class="m"><i>A</i><sub>1</sub> = <i>Ω</i></span>니까)</p>
+      <p><strong>5.</strong> <span class="m"><i>A</i><sub>1</sub> ⊇ <i>A</i><sub>2</sub> ⊇ ⋯</span>인 <strong>감소 수열</strong>이야. 어떤 자연수 <span class="m"><i>k</i></span>를 잡아도 <span class="m"><i>k</i> ∉ <i>A</i><sub><i>k</i>+1</sub></span>이므로:</p>
+      <div class="eq" style="text-align:left;font-size:16px">⋂<sub><i>n</i></sub> <i>A<sub>n</sub></i> = ∅ &nbsp;⟹&nbsp; <i>P</i>(⋂<sub><i>n</i></sub> <i>A<sub>n</sub></i>) = <i>P</i>(∅) = 0</div>
+      <p>한편 <span class="m">lim<sub><i>n</i>→∞</sub> <i>P</i>(<i>A<sub>n</sub></i>) = lim 1/3<sup><i>n</i>−1</sup> = 0</span>. <strong>두 값이 일치해.</strong> 이게 연속성 정리를 검증한 거야. ∎</p>
+      <p><strong>이 문제의 구조:</strong> Module 1 08번 예제 8.1(3)에서 <span class="m">⋂{<i>n</i>, <i>n</i>+1, …} = ∅</span>임을 이미 구했어. 여기서는 거기에 확률을 얹어서 "집합이 ∅으로 줄어드니 확률도 0으로 줄어든다"를 확인하는 거야. <strong>Module 1의 집합 계산 + Module 2의 확률 = HW1 Problem 7.</strong></p>
+      <p>HW1 Problem 7은 <span class="m"><i>P</i>({<i>n</i>}) = 1/2<sup><i>n</i></sup></span>으로 나와. 같은 절차에 숫자만 다르니까 직접 해봐.</p>
+    </div></details>
+  </div>
+
+  <div class="trap">
+    <span class="tag">함정</span>
+    <h4>단조(nested)여야 성립한다</h4>
+    <p>아무 집합열에나 <span class="m">lim <i>P</i>(<i>B<sub>n</sub></i>) = <i>P</i>(lim <i>B<sub>n</sub></i>)</span>가 성립하는 게 아니야. <strong>증가하거나 감소하는 열</strong>이어야 해. 오르락내리락하는 열은 애초에 <span class="m">lim <i>B<sub>n</sub></i></span>이 잘 정의되지도 않아.</p>
+    <h4>P(Bₙ) → 0 이라고 ⋂Bₙ = ∅ 인 건 아니다</h4>
+    <p>화살표 방향에 주의해. 정리가 말하는 건 <span class="m"><i>P</i>(<i>B<sub>n</sub></i>) → <i>P</i>(⋂<i>B<sub>n</sub></i>)</span>야. 그러니 <span class="m"><i>P</i>(<i>B<sub>n</sub></i>) → 0</span>이면 <span class="m"><i>P</i>(⋂<i>B<sub>n</sub></i>) = 0</span>이 나오지, <span class="m">⋂<i>B<sub>n</sub></i> = ∅</span>이 나오는 게 아니야. 07번 함정에서 본 "확률 0 ≠ 공집합"이 그대로 적용돼.</p>
+    <h4>이 정리는 가산 가법성의 결과다</h4>
+    <p>증명 아이디어만 말하면, 증가 수열을 서로소 껍질들 <span class="m"><i>C</i><sub>1</sub> = <i>B</i><sub>1</sub>, <i>C<sub>n</sub></i> = <i>B<sub>n</sub></i> \ <i>B</i><sub><i>n</i>−1</sub></span>로 쪼개고 공리 ③을 적용해. <strong>또 "서로소로 쪼개기"야.</strong> 07번 예제의 네 증명과 완전히 같은 수법이지. 이 과목에서 확률 증명은 사실상 전부 이 한 가지 기술이야.</p>
+  </div>
+</section>
+
+<!-- ══ 13 ══ -->
+<section id="s13">
+  <div class="sec-head"><span class="sec-num">13</span><h2>정리 &amp; 다음 모듈</h2></div>
+  <p class="sec-sub">이 모듈에서 반드시 가져가야 할 것.</p>
+
+  <h3>한 장 요약</h3>
+  <table>
+    <tr><th>개념</th><th>한 줄 정의</th><th>왜 필요한가</th></tr>
+    <tr><td><strong>(Ω, ℱ, P)</strong></td><td>표본공간 · 사건공간 · 확률측도</td><td>확률 문제의 완전한 명세</td></tr>
+    <tr><td><strong>σ-algebra ℱ</strong></td><td>Ω 포함 + 여집합·가산합집합에 닫힘</td><td>비가산 Ω에서 2<sup>Ω</sup>를 못 쓰기 때문</td></tr>
+    <tr><td><strong>σ(𝒜)</strong></td><td>𝒜를 포함하는 최소 σ-algebra</td><td>관심 사건에서 필요 최소한만 부풀리기</td></tr>
+    <tr><td><strong>Kolmogorov 공리</strong></td><td>≥0 · P(Ω)=1 · 가산 가법성</td><td>확률의 정의 그 자체</td></tr>
+    <tr><td><strong>가산 가법성</strong></td><td>서로소 무한 개의 확률은 더해진다</td><td>무한 표본공간, 연속성 정리</td></tr>
+    <tr><td><strong>ℬ(ℝ)</strong></td><td>열린 구간이 생성하는 σ-algebra</td><td>연속 공간의 실용적 사건 모음</td></tr>
+    <tr><td><strong>PMF / PDF</strong></td><td>덩어리의 합 / 밀도의 적분</td><td>P를 실제로 지정하는 방법</td></tr>
+    <tr><td><strong>연속성</strong></td><td>lim P(Bₙ) = P(lim Bₙ), 단조일 때</td><td>극한과 확률의 교환</td></tr>
+  </table>
+
+  <h3>이 모듈을 관통하는 하나의 기술</h3>
+  <div class="callout">
+    <strong>"서로소 조각으로 쪼개고 공리 ③을 적용한다."</strong><br>
+    07번의 네 증명, 11번의 등비급수, 12번의 연속성 증명이 전부 이거야. 공리 ③은 서로소일 때만 쓸 수 있으니까, 모든 문제가 "어떻게 서로소로 쪼갤까"로 환원돼. 시험에서 증명 문제가 막히면 <strong>일단 서로소 분해를 시도해봐.</strong> 대부분 그게 답이야.
+  </div>
+
+  <h3>HW1 대응표</h3>
+  <table>
+    <tr><th>문제</th><th>내용</th><th>필요한 섹션</th></tr>
+    <tr><td>Problem 4</td><td>σ-algebra 검증 · 생성 · 멱집합</td><td>03, 04, 05 (04번 도구로 직접 확인 가능)</td></tr>
+    <tr><td>Problem 5</td><td>공리에서 네 가지 성질 유도</td><td>07 (예제 7.1이 같은 문제)</td></tr>
+    <tr><td>Problem 6</td><td>이산 확률 공간 계산</td><td>07 (예제 7.2가 같은 유형, 숫자만 다름)</td></tr>
+    <tr><td>Problem 7</td><td>무한 표본공간 · 연속성</td><td>12 (예제 12.1이 같은 유형, 숫자만 다름)</td></tr>
+    <tr><td>Problem 8</td><td>10분 안에 푸는 종합 문제</td><td>03–07 전부. 노트 안 보고 풀어볼 것</td></tr>
+  </table>
+  <p style="font-size:14px;color:var(--ink2)">Problem 6과 7은 노트의 예제와 <strong>절차는 같고 숫자만 달라.</strong> 일부러 그렇게 만들었어. 절차를 보고 숫자는 직접 계산해야 손에 남거든. Problem 8은 <em>"try solving it without consulting your notes"</em>라고 명시돼 있으니 진짜로 노트를 덮고 10분 재고 풀어봐. 그게 이 문제의 목적이야.</p>
+
+  <h3>다음 모듈 예고</h3>
+  <div class="callout">
+    <strong>Module 3 — Conditional Probability</strong>에서는 "이미 <span class="m"><i>B</i></span>가 일어났다는 걸 안다"는 정보가 확률을 어떻게 바꾸는지 배워. 핵심은 <strong>표본공간을 <span class="m"><i>B</i></span>로 좁히는 것</strong>이야.
+    <ul style="margin-top:10px;margin-bottom:0">
+      <li><span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = <i>P</i>(<i>A</i>∩<i>B</i>)/<i>P</i>(<i>B</i>)</span> — 조건부 확률</li>
+      <li>독립 — <span class="m"><i>P</i>(<i>A</i>∩<i>B</i>) = <i>P</i>(<i>A</i>)<i>P</i>(<i>B</i>)</span></li>
+      <li>전확률 법칙 — <strong>Module 1의 partition</strong>이 드디어 주인공이 돼</li>
+      <li>Bayes 정리</li>
+    </ul>
+  </div>
+  <p>Module 1 09번에서 "partition은 Module 3에서 통째로 쓰인다"고 했던 게 실현되는 곳이야. 그리고 11번 예제에서 슬쩍 쓴 "독립적인 이진 시행"의 <em>독립</em>이 정확히 뭔지도 거기서 정의돼.</p>
+</section>
+
+<footer>
+  EEE 554 Probability and Random Processes · Module 2 개인 학습 노트<br>
+  강의: Nicolò Michelusi, Arizona State University · Fall 2026<br>
+  이 노트는 강의 내용을 바탕으로 재구성한 개인 학습 자료입니다. 원본 강의 슬라이드는 포함되어 있지 않습니다.
+</footer>
+
+</main>
+</div>
+
+<script>
+(function(){
+  var host = document.getElementById("subs");
+  if(!host) return;
+  var verdict = document.getElementById("verdict");
+  var presetBox = document.getElementById("presets");
+
+  function name(m){
+    if(m === 0) return "∅";
+    if(m === 15) return "Ω";
+    var e = [];
+    for(var i=0;i<4;i++){ if(m & (1<<i)) e.push(i+1); }
+    return "{" + e.join(",") + "}";
+  }
+  function pop(m){ var c=0; while(m){ c+=m&1; m>>=1; } return c; }
+
+  // display order: by size, then value
+  var order = [];
+  for(var m=0;m<16;m++) order.push(m);
+  order.sort(function(a,b){ return pop(a)-pop(b) || a-b; });
+
+  var inF = {};
+  var cells = {};
+
+  order.forEach(function(m){
+    var d = document.createElement("div");
+    d.className = "sub";
+    d.textContent = name(m);
+    d.setAttribute("role","button");
+    d.setAttribute("tabindex","0");
+    d.addEventListener("click", function(){ inF[m] = !inF[m]; render(); });
+    d.addEventListener("keydown", function(ev){
+      if(ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); inF[m] = !inF[m]; render(); }
+    });
+    host.appendChild(d);
+    cells[m] = d;
+  });
+
+  function members(){
+    var r = [];
+    for(var m=0;m<16;m++){ if(inF[m]) r.push(m); }
+    return r;
+  }
+
+  function analyze(){
+    var F = members();
+    var missing = {};
+    var reasons = [];
+    if(F.length === 0) return {empty:true};
+
+    if(!inF[15]) reasons.push({txt:"조건 ① 위반: <span class='m'>Ω ∉ ℱ</span>", add:[15]});
+
+    var compBad = [];
+    F.forEach(function(m){
+      var c = 15 & ~m;
+      if(!inF[c]){ compBad.push([m,c]); missing[c] = true; }
+    });
+    if(compBad.length){
+      var s = compBad.slice(0,3).map(function(p){
+        return "<span class='m'>" + name(p[0]) + "<sup>c</sup> = " + name(p[1]) + " ∉ ℱ</span>";
+      }).join(", ");
+      if(compBad.length > 3) s += " 외 " + (compBad.length-3) + "건";
+      reasons.push({txt:"조건 ② 위반 (여집합): " + s});
+    }
+
+    var uniBad = [];
+    for(var i=0;i<F.length;i++){
+      for(var j=i+1;j<F.length;j++){
+        var u = F[i] | F[j];
+        if(!inF[u]){ uniBad.push([F[i],F[j],u]); missing[u] = true; }
+      }
+    }
+    if(uniBad.length){
+      var s2 = uniBad.slice(0,3).map(function(p){
+        return "<span class='m'>" + name(p[0]) + " ∪ " + name(p[1]) + " = " + name(p[2]) + " ∉ ℱ</span>";
+      }).join(", ");
+      if(uniBad.length > 3) s2 += " 외 " + (uniBad.length-3) + "건";
+      reasons.push({txt:"조건 ③ 위반 (합집합): " + s2});
+    }
+
+    if(!inF[15]) missing[15] = true;
+    return {reasons:reasons, missing:missing, count:F.length};
+  }
+
+  function render(){
+    var r = analyze();
+    for(var m=0;m<16;m++){
+      var c = cells[m];
+      c.className = "sub" + (inF[m] ? " on" : (r.missing && r.missing[m] ? " need" : ""));
+    }
+    if(r.empty){
+      verdict.className = "verdict bad";
+      verdict.innerHTML = "<span class='hd'>비어 있음</span>ℱ 는 최소한 <span class='m'>Ω</span> 를 포함해야 한다. 위에서 부분집합을 골라봐.";
+      return;
+    }
+    if(r.reasons.length === 0){
+      verdict.className = "verdict ok";
+      verdict.innerHTML = "<span class='hd'>✓ σ-algebra 다</span>세 조건을 모두 만족한다. 원소 " + r.count + "개." +
+        (r.count === 16 ? " 이건 <span class='m'>2<sup>Ω</sup></span> 전체야 — 가장 큰 σ-algebra." :
+         r.count === 2 ? " 이건 <span class='m'>{∅, Ω}</span> — 가장 작은 σ-algebra." : "");
+      return;
+    }
+    verdict.className = "verdict bad";
+    var html = "<span class='hd'>✗ σ-algebra 가 아니다</span><ul>";
+    r.reasons.forEach(function(x){ html += "<li>" + x.txt + "</li>"; });
+    html += "</ul><div style='margin-top:10px;font-size:13.5px'>점선으로 표시된 칸이 <strong>추가되어야 하는 집합</strong>이야.</div>";
+    verdict.innerHTML = html;
+  }
+
+  function setF(list){
+    inF = {};
+    list.forEach(function(m){ inF[m] = true; });
+    render();
+  }
+  function maskOf(arr){ var m=0; arr.forEach(function(k){ m |= 1<<(k-1); }); return m; }
+
+  function closure(){
+    var changed = true;
+    inF[15] = true;
+    var guard = 0;
+    while(changed && guard < 40){
+      changed = false; guard++;
+      var F = members();
+      F.forEach(function(m){
+        var c = 15 & ~m;
+        if(!inF[c]){ inF[c] = true; changed = true; }
+      });
+      F = members();
+      for(var i=0;i<F.length;i++){
+        for(var j=i;j<F.length;j++){
+          var u = F[i] | F[j];
+          if(!inF[u]){ inF[u] = true; changed = true; }
+        }
+      }
+    }
+    render();
+  }
+
+  var PRESETS = [
+    {label:"{∅, Ω} — 가장 작은", set:[0,15]},
+    {label:"예제 4.1 — {∅,Ω,{1,2},{3,4}}", set:[0,15,maskOf([1,2]),maskOf([3,4])]},
+    {label:"예제 4.2 — 실패하는 𝒢", set:[0,15,maskOf([1]),maskOf([2]),maskOf([3,4])]},
+    {label:"HW1 4(b)의 𝒢", set:[0,15,maskOf([1]),maskOf([2,3,4]),maskOf([2])]},
+    {label:"σ(A,B), A={1,2} B={2,3}", set:[maskOf([1,2]),maskOf([2,3])]},
+    {label:"2^Ω — 전체", set:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]}
+  ];
+
+  PRESETS.forEach(function(p){
+    var b = document.createElement("button");
+    b.textContent = p.label;
+    b.addEventListener("click", function(){ setF(p.set); });
+    presetBox.appendChild(b);
+  });
+  var cb = document.createElement("button");
+  cb.className = "act";
+  cb.textContent = "σ(·) 로 닫기";
+  cb.addEventListener("click", closure);
+  presetBox.appendChild(cb);
+  var clr = document.createElement("button");
+  clr.textContent = "지우기";
+  clr.addEventListener("click", function(){ setF([]); });
+  presetBox.appendChild(clr);
+
+  setF([0,15,maskOf([1,2]),maskOf([3,4])]);
+})();
+</script>
+</body>
+</html>
