@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EEE 554 — 학습 노트</title>
+<style>
+:root{
+  --paper:#FAFAF8;
+  --card:#FFFFFF;
+  --ink:#14161A;
+  --ink2:#565D66;
+  --ink3:#8A9099;
+  --rule:#E2E1DB;
+  --blue:#1250C4;
+  --pink:#D9147A;
+  --violet:#6B2FA8;
+  --green:#00845F;
+  --amber:#B26A00;
+  --amber-bg:#FDF6E9;
+  --mono:ui-monospace,"Cascadia Mono","Cascadia Code",Consolas,"SFMono-Regular",monospace;
+  --sans:"Pretendard","Pretendard Variable",-apple-system,"Segoe UI Variable Text","Segoe UI","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --serif:"Cambria Math","STIX Two Math",Cambria,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.7;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto;padding:0 24px 110px}
+@media(max-width:640px){.wrap{padding:0 18px 70px}}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+a{color:var(--blue)}
+.m{font-family:var(--serif);font-size:1.06em}
+.m i{font-style:italic}
+
+/* hero */
+header{padding:70px 0 34px}
+.mark{display:block;margin-bottom:26px}
+h1{font-size:clamp(32px,6vw,54px);line-height:1.05;letter-spacing:-.03em;font-weight:800;margin:14px 0 10px}
+.lede{font-size:17px;color:var(--ink2);margin:0;max-width:52ch}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.chip{font-family:var(--mono);font-size:11px;letter-spacing:.05em;padding:5px 11px;border:1px solid var(--rule);border-radius:999px;color:var(--ink2);background:var(--card)}
+
+/* hw banner */
+.hw{margin:34px 0 0;background:var(--amber-bg);border:1px solid #F0E2C4;border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.hw .d{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--amber);letter-spacing:-.02em;line-height:1}
+.hw .txt{font-size:14.5px;color:#7A4A00;line-height:1.55;flex:1;min-width:200px}
+.hw .txt b{color:var(--amber)}
+
+/* sections */
+h2{font-size:13px;font-family:var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);font-weight:500;margin:64px 0 18px;padding-bottom:12px;border-bottom:1px solid var(--rule)}
+
+/* module rows */
+.mod{display:grid;grid-template-columns:56px 1fr auto;gap:20px;align-items:start;padding:22px 20px;background:var(--card);border:1px solid var(--rule);border-radius:10px;margin-bottom:10px;text-decoration:none;color:inherit;transition:.15s}
+a.mod:hover{border-color:var(--blue);transform:translateY(-1px);box-shadow:0 3px 14px rgba(20,22,26,.06)}
+.mod.soon{opacity:.62;cursor:default}
+.mod .num{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--ink3);letter-spacing:-.03em;padding-top:1px}
+a.mod:hover .num{color:var(--blue)}
+.mod h3{font-size:18px;font-weight:700;letter-spacing:-.01em;margin:0 0 5px}
+.mod .en{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink3);text-transform:uppercase;margin-bottom:8px}
+.mod p{margin:0;font-size:14.5px;color:var(--ink2);line-height:1.6}
+.mod .tags{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:3px 8px;border-radius:5px;background:#F1F0EB;color:var(--ink2)}
+.tag.a{background:rgba(18,80,196,.1);color:var(--blue)}
+.tag.b{background:rgba(217,20,122,.1);color:var(--pink)}
+.tag.c{background:rgba(0,132,95,.1);color:var(--green)}
+.status{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;padding:4px 10px;border-radius:999px;white-space:nowrap;margin-top:3px}
+.status.done{background:rgba(0,132,95,.12);color:var(--green)}
+.status.wip{background:rgba(107,47,168,.12);color:var(--violet)}
+.status.wait{background:#F1F0EB;color:var(--ink3)}
+@media(max-width:600px){
+  .mod{grid-template-columns:40px 1fr;gap:14px;padding:18px 16px}
+  .mod .num{font-size:17px}
+  .status{grid-column:2;justify-self:start;margin-top:10px}
+}
+
+/* misc */
+.note{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--ink);border-radius:0 8px 8px 0;padding:16px 20px;font-size:14.5px;color:var(--ink2);line-height:1.65}
+.note strong{color:var(--ink)}
+.note p{margin:0 0 10px}
+.note p:last-child{margin-bottom:0}
+ul{padding-left:20px;margin:0}
+li{margin-bottom:6px;font-size:14.5px;color:var(--ink2)}
+li strong{color:var(--ink)}
+footer{margin-top:70px;padding-top:26px;border-top:1px solid var(--rule);font-size:13px;color:var(--ink3);line-height:1.7}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <svg class="mark" width="150" height="66" viewBox="0 0 150 66" aria-label="세 집합이 겹치는 표식">
+    <circle cx="42" cy="26" r="24" fill="rgba(18,80,196,.16)" stroke="#1250C4" stroke-width="1.4"/>
+    <circle cx="68" cy="26" r="24" fill="rgba(217,20,122,.16)" stroke="#D9147A" stroke-width="1.4"/>
+    <circle cx="55" cy="44" r="24" fill="rgba(0,132,95,.16)" stroke="#00845F" stroke-width="1.4"/>
+    <text x="104" y="24" font-family="ui-monospace,Consolas,monospace" font-size="10" letter-spacing="1.4" fill="#8A9099">EEE</text>
+    <text x="104" y="40" font-family="ui-monospace,Consolas,monospace" font-size="15" font-weight="700" letter-spacing=".5" fill="#14161A">554</text>
+  </svg>
+
+  <div class="eyebrow">Arizona State University · Fall 2026 · Nicolò Michelusi</div>
+  <h1>Probability and<br>Random Processes</h1>
+  <p class="lede">강의 슬라이드를 한 장씩 뜯어서 다시 쓴 개인 학습 노트. 수식마다 그림을 붙이고, 예제와 반례를 채워넣었다.</p>
+
+  <div class="facts">
+    <span class="chip">Module 1 / 3 완료</span>
+    <span class="chip">인터랙티브 벤 다이어그램</span>
+    <span class="chip">한국어</span>
+  </div>
+
+  <div class="hw" id="hwbox">
+    <div class="d" id="hwd">HW1</div>
+    <div class="txt">
+      <b>Homework 1 — Sets and Probability Spaces</b> · 마감 8월 30일 (일) 자정<br>
+      Problem 1 · 2 · 3 은 Module 1 노트만으로 풀 수 있다. Problem 4–8 은 Module 2 필요.
+    </div>
+  </div>
+</header>
+
+<h2>모듈</h2>
+
+<a class="mod" href="L01-set-theory.html">
+  <div class="num">01</div>
+  <div>
+    <div class="en">Introduction &amp; Set Theory</div>
+    <h3>집합론</h3>
+    <p>확률을 배우기 전에 확률이 쓸 언어부터 깐다. "질문"을 "집합"으로 바꾸는 법. 클릭해서 영역을 고르는 벤 다이어그램으로 De Morgan과 분배법칙을 눈으로 확인할 수 있다.</p>
+    <div class="tags">
+      <span class="tag a">sample space</span>
+      <span class="tag a">event</span>
+      <span class="tag">∩ ∪ ᶜ</span>
+      <span class="tag">De Morgan</span>
+      <span class="tag b">countable</span>
+      <span class="tag">power set</span>
+      <span class="tag c">partition</span>
+    </div>
+  </div>
+  <span class="status done">읽기</span>
+</a>
+
+<div class="mod soon">
+  <div class="num">02</div>
+  <div>
+    <div class="en">Probability Space</div>
+    <h3>확률 공간</h3>
+    <p>집합 위에 드디어 숫자를 얹는다. 삼중항 <span class="m">(<i>Ω</i>, ℱ, <i>P</i>)</span>, σ-algebra, 확률의 세 공리, 그리고 공리에서 유도되는 성질들. Module 1에서 배운 partition이 여기서 처음 일한다.</p>
+    <div class="tags">
+      <span class="tag">σ-algebra</span>
+      <span class="tag">axioms</span>
+      <span class="tag">countable additivity</span>
+      <span class="tag">continuity</span>
+    </div>
+  </div>
+  <span class="status wait">준비 중</span>
+</div>
+
+<div class="mod soon">
+  <div class="num">03</div>
+  <div>
+    <div class="en">Conditional Probability</div>
+    <h3>조건부 확률</h3>
+    <p>"이미 B가 일어났다는 걸 알 때 A의 확률"로 표본공간을 좁히는 법. 독립, 전확률 법칙, 베이즈 정리로 이어진다.</p>
+    <div class="tags">
+      <span class="tag">conditioning</span>
+      <span class="tag">independence</span>
+      <span class="tag c">total probability</span>
+      <span class="tag">Bayes</span>
+    </div>
+  </div>
+  <span class="status wait">준비 중</span>
+</div>
+
+<h2>노트 구조</h2>
+<div class="note">
+  <p>모든 모듈이 같은 다섯 단계를 반복한다. 슬라이드를 그대로 옮긴 게 아니라, 슬라이드에서 <strong>빠져 있던 것</strong>을 채우는 게 목적이다.</p>
+  <ul style="margin-top:12px">
+    <li><strong>목차와 요약</strong> — 이 모듈이 무슨 일을 하는지, 어떤 용어가 새로 나오는지, 그게 나중에 어디서 쓰이는지</li>
+    <li><strong>개념 정리</strong> — 슬라이드의 정의를 그대로. 여기까지는 원본과 크게 다르지 않다</li>
+    <li><strong>그림</strong> — 수식만 있는 정의에 붙이는 시각 자료. 벤 다이어그램, 대응 관계, 수직선</li>
+    <li><strong>예제</strong> — 시험 감각용. 풀이는 접어놨으니 먼저 풀어보고 펼칠 것</li>
+    <li><strong>반례와 함정</strong> — 그 개념이 <em>성립하지 않는</em> 경우들. 오해하기 쉬운 지점을 미리 잡아둔다</li>
+  </ul>
+</div>
+
+<h2>이 노트 쓰는 법</h2>
+<div class="note">
+  <p><strong>예제는 접힌 채로 시작한다.</strong> "풀이 보기"를 누르기 전에 종이에 먼저 써봐야 의미가 있다. 이 과목은 시험 위주고, 읽어서 이해한 것과 손으로 풀 수 있는 것 사이의 간격이 꽤 크다.</p>
+  <p><strong>함정 섹션이 실제 점수를 지킨다.</strong> 개념 정리는 슬라이드로도 되지만, "pairwise disjoint와 전체 교집합이 공집합인 건 다르다" 같은 건 틀려보기 전에는 안 보인다. 시험 직전에는 함정 섹션만 훑어도 된다.</p>
+  <p><strong>그림은 확인 도구지 증명이 아니다.</strong> 벤 다이어그램으로 항등식이 맞는지 볼 수는 있지만, 과제와 시험에서 "prove"라고 하면 원소를 하나 잡고 시작해야 한다.</p>
+</div>
+
+<footer>
+  강의: Nicolò Michelusi · School of Electrical, Computer and Energy Engineering, Arizona State University<br>
+  교재: Steven M. Kay, <em>Intuitive Probability and Random Processes Using MATLAB</em><br>
+  이 사이트는 강의 내용을 바탕으로 재구성한 개인 학습 자료입니다. 원본 강의 슬라이드는 포함되어 있지 않습니다.
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var due = new Date(2026, 7, 31, 0, 0, 0); // Aug 30 midnight = Aug 31 00:00 local
+  var now = new Date();
+  var ms = due - now;
+  var el = document.getElementById("hwd");
+  if(!el) return;
+  if(ms <= 0){ el.textContent = "제출"; el.style.fontSize = "17px"; return; }
+  var days = Math.ceil(ms / 86400000);
+  el.textContent = "D-" + days;
+})();
+</script>
+</body>
+</html>
