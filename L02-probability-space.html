@@ -149,7 +149,7 @@ footer a{color:var(--blue)}
   <h1 class="title">Module 2<br>Probability Spaces</h1>
   <p class="subtitle">집합 위에 드디어 숫자를 얹는다. 삼중항 <span class="m">(<i>Ω</i>, ℱ, <i>P</i>)</span>의 정체.</p>
   <div class="meta">
-    <span class="chip">슬라이드 39쪽</span>
+    <span class="chip">슬라이드 41쪽</span>
     <span class="chip hot">HW1 Problem 4–8 이 범위</span>
     <span class="chip">Module 1의 06번과 직결</span>
   </div>
@@ -177,7 +177,7 @@ footer a{color:var(--blue)}
 <main>
 
 <!-- ══ 00 ══ -->
-<section id="s0">
+<section id="s0" data-slide="2-4">
   <div class="sec-head"><span class="sec-num">00</span><h2>이 모듈이 하는 일</h2></div>
   <p class="sec-sub">한 줄 요약: <strong>확률이 뭔지 "정의"한다. 빈도가 아니라 공리로.</strong></p>
 
@@ -244,9 +244,9 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 01 ══ -->
-<section id="s1">
+<section id="s1" data-slide="5-6">
   <div class="sec-head"><span class="sec-num">01</span><h2>확률 모델의 세 가지 재료</h2></div>
-  <p class="sec-sub">슬라이드 4쪽. 이 세 줄이 이번 모듈 전체의 목차야.</p>
+  <p class="sec-sub">슬라이드 5쪽. 이 세 줄이 이번 모듈 전체의 목차야.</p>
 
   <div class="def">
     <span class="tag">확률 모델을 만들려면 정해야 할 것</span>
@@ -268,7 +268,7 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 02 ══ -->
-<section id="s2">
+<section id="s2" data-slide="7-8">
   <div class="sec-head"><span class="sec-num">02</span><h2>ℱ는 왜 필요한가</h2></div>
   <p class="sec-sub">두 가지 답이 있다. 하나는 실용적, 하나는 수학적.</p>
 
@@ -319,13 +319,13 @@ footer a{color:var(--blue)}
 
   <p><span class="m"><i>Ω</i></span>가 유한하거나 가산이면 사실 <span class="m">ℱ = 2<sup><i>Ω</i></sup></span>로 두어도 아무 문제가 없어. 주사위면 <span class="m">2<sup>6</sup> = 64</span>개 사건 전부에 확률을 줄 수 있어.</p>
 
-  <p>그런데 <span class="m"><i>Ω</i> = ℝ</span>이면 얘기가 달라져. 슬라이드 26쪽 표현 그대로: <em>"the power set <span class="m">2<sup>ℝ</sup></span> is too large for probability theory."</em> <strong><span class="m">ℝ</span>의 모든 부분집합에 길이(측도)를 일관되게 부여하는 게 수학적으로 불가능해.</strong> 시도하면 모순이 나와 (Vitali set. 09번에서 다시 얘기할게).</p>
+  <p>그런데 <span class="m"><i>Ω</i> = ℝ</span>이면 얘기가 달라져. 슬라이드 27쪽 표현 그대로: <em>"the power set <span class="m">2<sup>ℝ</sup></span> is too large for probability theory."</em> <strong><span class="m">ℝ</span>의 모든 부분집합에 길이(측도)를 일관되게 부여하는 게 수학적으로 불가능해.</strong> 시도하면 모순이 나와 (Vitali set. 09번에서 다시 얘기할게).</p>
 
   <p>그래서 타협을 해. <strong>확률을 줄 수 있는 사건들만 골라 모으되, 그 모음이 연산에 대해 닫혀 있게 만든다.</strong> 그 모음의 이름이 σ-algebra야.</p>
 </section>
 
 <!-- ══ 03 ══ -->
-<section id="s3">
+<section id="s3" data-slide="9-11">
   <div class="sec-head"><span class="sec-num">03</span><h2>σ-algebra</h2></div>
   <p class="sec-sub">세 줄짜리 정의. 그런데 세 번째 줄에 함정이 있다.</p>
 
@@ -348,7 +348,7 @@ footer a{color:var(--blue)}
 
   <p>이름의 <strong>σ</strong>가 바로 ③의 "가산 무한까지"를 뜻해. 유한 합집합만 닫혀 있으면 그냥 <em>algebra</em>(또는 field)라고 부르고, 무한 개까지 되면 <em>σ-algebra</em>야.</p>
 
-  <h3>공짜로 따라오는 것들</h3>
+  <h3 data-slide="10">공짜로 따라오는 것들</h3>
   <p>세 조건만 있으면 나머지는 자동으로 따라와. 이게 정의가 짧은 이유야.</p>
 
   <table>
@@ -363,7 +363,7 @@ footer a{color:var(--blue)}
     <strong>Module 1이 여기서 일한다.</strong> "왜 교집합은 정의에 안 넣었지?" 싶으면 De Morgan 때문이야. <span class="m">(<i>A</i><sup>c</sup> ∪ <i>B</i><sup>c</sup>)<sup>c</sup> = <i>A</i> ∩ <i>B</i></span>니까, 여집합과 합집합만 있으면 교집합은 공짜로 나와. 수학에서 정의는 <strong>최소한으로</strong> 쓰는 게 관례라서 중복되는 건 뺀 거야.
   </div>
 
-  <h3>해석: 물어봐도 되는 질문 목록</h3>
+  <h3 data-slide="11">해석: 물어봐도 되는 질문 목록</h3>
   <div class="def">
     <span class="tag">직관</span>
     <p>σ-algebra는 <strong>우리가 던져도 되는 확률적 질문들의 목록</strong>이다. <span class="m"><i>A</i>, <i>B</i> ∈ ℱ</span>이면:</p>
@@ -499,7 +499,7 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 05 ══ -->
-<section id="s5">
+<section id="s5" data-slide="12-17">
   <div class="sec-head"><span class="sec-num">05</span><h2>생성된 σ-algebra</h2></div>
   <p class="sec-sub">"관심 있는 사건 몇 개"에서 출발해서 최소한으로 부풀리기.</p>
 
@@ -514,7 +514,7 @@ footer a{color:var(--blue)}
 
   <p>"가장 작은"이 왜 잘 정의되는지 잠깐 짚자면, <span class="m">𝒜</span>를 포함하는 σ-algebra는 항상 최소 하나 존재하고(<span class="m">2<sup><i>Ω</i></sup></span>), σ-algebra들의 교집합은 다시 σ-algebra거든. 그래서 "<span class="m">𝒜</span>를 포함하는 모든 σ-algebra의 교집합"이 유일한 최소 원소야.</p>
 
-  <h3>예제 A: 사건 하나에서 출발</h3>
+  <h3 data-slide="14-15">예제 A: 사건 하나에서 출발</h3>
   <figure>
   <svg viewBox="0 0 700 220" role="img" aria-label="사건 하나가 σ-algebra 네 개를 생성하는 과정">
     <defs>
@@ -559,7 +559,7 @@ footer a{color:var(--blue)}
   <figcaption>슬라이드 14~15쪽 내용. <span class="m"><i>A</i></span>를 물어보기로 결정한 순간, "<span class="m"><i>A</i></span>가 아닌가"와 "무조건 참"과 "무조건 거짓"도 자동으로 물어볼 수 있게 돼.</figcaption>
   </figure>
 
-  <h3>예제 B: 사건 두 개면 전부가 생성될 수도 있다</h3>
+  <h3 data-slide="16-17">예제 B: 사건 두 개면 전부가 생성될 수도 있다</h3>
   <div class="ex">
     <span class="tag">예제 5.1 — 슬라이드 16~17쪽</span>
     <p><span class="m"><i>Ω</i> = {1,2,3,4}</span>, <span class="m"><i>A</i> = {1,2}</span>, <span class="m"><i>B</i> = {2,3}</span>. <span class="m"><i>σ</i>(<i>A</i>, <i>B</i>)</span>를 구해라.</p>
@@ -603,7 +603,7 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 06 ══ -->
-<section id="s6">
+<section id="s6" data-slide="19-20">
   <div class="sec-head"><span class="sec-num">06</span><h2>Kolmogorov의 공리</h2></div>
   <p class="sec-sub">세 줄. 이게 확률의 정의 전부다.</p>
 
@@ -626,7 +626,7 @@ footer a{color:var(--blue)}
 
   <p>①과 ②는 그냥 눈금 맞추기야. "확률은 음수가 될 수 없고, 전체는 1이다." ③이 진짜 내용이야.</p>
 
-  <h3>③번을 그림으로</h3>
+  <h3 data-slide="20">③번을 그림으로</h3>
   <p>확률을 <strong>면적</strong>이라고 생각하면 제일 편해. <span class="m"><i>Ω</i></span>는 넓이가 1인 판이고, 각 사건은 그 판 위의 영역이야.</p>
 
   <figure>
@@ -679,7 +679,7 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 07 ══ -->
-<section id="s7">
+<section id="s7" data-slide="21-24">
   <div class="sec-head"><span class="sec-num">07</span><h2>공리에서 나오는 성질들</h2></div>
   <p class="sec-sub">외울 게 아니라 세 공리에서 유도해야 하는 것들. HW1 Problem 5가 통째로 이거야.</p>
 
@@ -794,7 +794,7 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 08 ══ -->
-<section id="s8">
+<section id="s8" data-slide="25-26">
   <div class="sec-head"><span class="sec-num">08</span><h2>이산 vs 연속 표본공간</h2></div>
   <p class="sec-sub">Module 1의 가산/비가산 구분이 실제로 갈라지는 지점.</p>
 
@@ -825,11 +825,11 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 09 ══ -->
-<section id="s9">
+<section id="s9" data-slide="27-29">
   <div class="sec-head"><span class="sec-num">09</span><h2>Borel σ-algebra</h2></div>
   <p class="sec-sub">ℝ에서 쓸 수 있는 실질적인 최대 사건 모음.</p>
 
-  <p>슬라이드 26쪽: <span class="m"><i>Ω</i> = ℝ</span>일 때 <span class="m">2<sup>ℝ</sup></span>는 확률론에 쓰기엔 너무 크다. 대신 <strong>Borel σ-algebra</strong> <span class="m">ℬ(ℝ)</span>를 쓴다.</p>
+  <p>슬라이드 27쪽: <span class="m"><i>Ω</i> = ℝ</span>일 때 <span class="m">2<sup>ℝ</sup></span>는 확률론에 쓰기엔 너무 크다. 대신 <strong>Borel σ-algebra</strong> <span class="m">ℬ(ℝ)</span>를 쓴다.</p>
 
   <div class="def">
     <span class="tag">정의</span>
@@ -882,15 +882,15 @@ footer a{color:var(--blue)}
   <figcaption>가운데 칸을 보면 Module 1 08번 예제 8.1(2)와 완전히 같은 계산이야. 그때는 "무한 교집합의 신기한 성질"이었는데, 여기서는 "닫힌 구간과 한 점을 Borel 집합으로 만드는 도구"로 쓰여.</figcaption>
   </figure>
 
-  <h3>공학적 해석</h3>
+  <h3 data-slide="28">공학적 해석</h3>
   <div class="callout">
-    슬라이드 27쪽에 명시적으로 적혀 있어. 공학에서 던지는 확률 질문은 거의 항상 <strong>구간 형태</strong>야. "<span class="m"><i>X</i> ∈ (<i>a</i>,<i>b</i>)</span>인가?", "<span class="m"><i>X</i> &gt; <i>a</i></span>인가?", "<span class="m"><i>X</i> ∈ <i>A</i></span>인가 (<span class="m"><i>A</i></span>는 구간들로 만든 집합)". <span class="m">ℬ(ℝ)</span>는 이런 질문을 전부 포함해. <strong>그래서 실무에서는 Borel 밖의 집합을 만날 일이 사실상 없어.</strong>
+    슬라이드 28쪽에 명시적으로 적혀 있어. 공학에서 던지는 확률 질문은 거의 항상 <strong>구간 형태</strong>야. "<span class="m"><i>X</i> ∈ (<i>a</i>,<i>b</i>)</span>인가?", "<span class="m"><i>X</i> &gt; <i>a</i></span>인가?", "<span class="m"><i>X</i> ∈ <i>A</i></span>인가 (<span class="m"><i>A</i></span>는 구간들로 만든 집합)". <span class="m">ℬ(ℝ)</span>는 이런 질문을 전부 포함해. <strong>그래서 실무에서는 Borel 밖의 집합을 만날 일이 사실상 없어.</strong>
   </div>
 
   <div class="trap">
     <span class="tag">함정</span>
     <h4>ℬ(ℝ) ≠ 2^ℝ 이다</h4>
-    <p>슬라이드 28쪽 Remark. Borel σ-algebra는 <span class="m">ℝ</span>의 <em>모든</em> 부분집합을 담지 않아. Borel이 아닌 집합이 존재한다는 건 깊은 결과(Vitali set)이고 <strong>선택공리(Axiom of Choice)</strong>에 의존해. 이런 집합은 공학에서 실질적으로 절대 안 나와.</p>
+    <p>슬라이드 29쪽 Remark. Borel σ-algebra는 <span class="m">ℝ</span>의 <em>모든</em> 부분집합을 담지 않아. Borel이 아닌 집합이 존재한다는 건 깊은 결과(Vitali set)이고 <strong>선택공리(Axiom of Choice)</strong>에 의존해. 이런 집합은 공학에서 실질적으로 절대 안 나와.</p>
     <p style="margin-bottom:0">시험에 증명이 나올 일은 없지만, <em>"왜 2^ℝ를 안 쓰나"</em>라는 개념 질문의 답으로는 알고 있어야 해. 답: <strong>모든 부분집합에 일관된 길이를 부여하는 게 불가능해서.</strong></p>
     <h4>"열린 구간에서 생성된다"고 열린 집합만 있는 게 아니다</h4>
     <p><span class="m">ℬ(ℝ)</span>에는 닫힌 구간, 반열린 구간, 한 점, <span class="m">ℚ</span>, 이들의 가산 합집합/교집합이 다 들어있어. <strong>"생성"이 어디까지 뻗어나가는지를 과소평가하지 마.</strong></p>
@@ -900,7 +900,7 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 10 ══ -->
-<section id="s10">
+<section id="s10" data-slide="30-31">
   <div class="sec-head"><span class="sec-num">10</span><h2>PMF와 PDF</h2></div>
   <p class="sec-sub">실무에서 P를 실제로 어떻게 지정하는가.</p>
 
@@ -982,7 +982,7 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 11 ══ -->
-<section id="s11">
+<section id="s11" data-slide="32-37">
   <div class="sec-head"><span class="sec-num">11</span><h2>반복 실험과 Cartesian Product</h2></div>
   <p class="sec-sub">실험을 여러 번 하면 표본공간이 어떻게 커지는가.</p>
 
@@ -997,7 +997,7 @@ footer a{color:var(--blue)}
     Module 1 03번 함정에서 짚었던 게 여기 있어. <strong>집합 안의 원소는 순서가 없지만, 원소 <em>자체</em>는 순서 있는 객체일 수 있다.</strong> <span class="m"><i>Ω</i><sup>2</sup></span>의 원소는 순서쌍이라 <span class="m">(S,F) ≠ (F,S)</span>야. HW1 Problem 3에서 SF와 FS를 구별해야 했던 이유가 이거야.
   </div>
 
-  <h3>슬라이드의 대표 예제: 첫 성공까지</h3>
+  <h3 data-slide="35-37">슬라이드의 대표 예제: 첫 성공까지</h3>
   <p><span class="m"><i>Ω</i> = {0, 1}</span>이고 1이 성공, 0이 실패. <strong>첫 성공이 나올 때까지</strong> 반복해. 사건 <span class="m"><i>E</i></span>를 "첫 성공 전에 실패가 <strong>짝수 번</strong> 나온다"로 정의하면:</p>
 
   <div class="eq"><i>E</i> = {1, 001, 00001, 0000001, …} = {0<sup>2<i>n</i></sup>1 : <i>n</i> = 0, 1, 2, …}</div>
@@ -1054,11 +1054,11 @@ footer a{color:var(--blue)}
       각 수열은 <tspan font-weight="700" fill="#14161A">유한</tspan>하고 1로 끝나지만, 길이에 <tspan font-weight="700" fill="#14161A">상한이 없다.</tspan> 첫 성공이 얼마든지 늦게 올 수 있다.
     </text>
   </svg>
-  <figcaption>슬라이드 36쪽 Remark의 내용이 이거야. "모든 원소가 유한한데 집합은 무한하다"는 상황. Module 1 06번 예제 6.1의 2번(가산)과 같은 구조야.</figcaption>
+  <figcaption>슬라이드 37쪽 Remark의 내용이 이거야. "모든 원소가 유한한데 집합은 무한하다"는 상황. Module 1 06번 예제 6.1의 2번(가산)과 같은 구조야.</figcaption>
   </figure>
 
   <div class="ex">
-    <span class="tag">예제 11.1 — 슬라이드 37~38쪽</span>
+    <span class="tag">예제 11.1 — 슬라이드 38~39쪽</span>
     <p>독립적인 이진 시행에서 <span class="m"><i>p</i>(0) = <i>p</i>(1) = 1/2</span>이고 <span class="m"><i>P</i>(0<sup>2<i>n</i></sup>1) = (1/2)<sup>2<i>n</i>+1</sup></span>이라 하자. <span class="m"><i>P</i>(<i>E</i>)</span>를 구해라.</p>
     <details><summary>풀이</summary><div class="body">
       <p><span class="m"><i>E</i></span>의 원소들은 서로 다른 수열이므로 <strong>서로소</strong>야. 그래서 공리 ③(가산 가법성)을 쓸 수 있어:</p>
@@ -1074,7 +1074,7 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 12 ══ -->
-<section id="s12">
+<section id="s12" data-slide="40-41">
   <div class="sec-head"><span class="sec-num">12</span><h2>확률의 연속성</h2></div>
   <p class="sec-sub">집합이 극한으로 가면 확률도 따라간다. HW1 Problem 7의 결승선.</p>
 
@@ -1214,7 +1214,8 @@ footer a{color:var(--blue)}
 <footer>
   EEE 554 Probability and Random Processes · Module 2 개인 학습 노트<br>
   강의: Nicolò Michelusi, Arizona State University · Fall 2026<br>
-  이 노트는 강의 내용을 바탕으로 재구성한 개인 학습 자료입니다. 원본 강의 슬라이드는 포함되어 있지 않습니다.
+  이 노트 본문은 수강생이 강의 슬라이드를 재구성하고 보충해 만든 개인 학습 자료이며, 공식 강의 자료가 아닙니다.<br>
+  함께 실린 강의 슬라이드의 저작권은 Nicolò Michelusi 교수와 Arizona State University에 있습니다.
 </footer>
 
 </main>
@@ -1386,5 +1387,6 @@ footer a{color:var(--blue)}
   setF([0,15,maskOf([1,2]),maskOf([3,4])]);
 })();
 </script>
+<script src="reader.js" type="module"></script>
 </body>
 </html>
