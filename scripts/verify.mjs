@@ -8,9 +8,9 @@
 //            그건 도해별 스크린샷을 사람이 봐야 한다.
 
 import { chromium } from 'playwright';
-import { pathToFileURL } from 'node:url';
-import { mkdirSync, existsSync } from 'node:fs';
-import { resolve, basename } from 'node:path';
+import { createServer } from 'node:http';
+import { createReadStream, mkdirSync, existsSync, statSync } from 'node:fs';
+import { resolve, basename, extname, join, relative, sep } from 'node:path';
 
 const target = process.argv[2];
 if (!target) {
@@ -24,8 +24,46 @@ if (!existsSync(abs)) {
 }
 
 const stem = basename(target).replace(/\.html$/, '');
-const url = pathToFileURL(abs).href;
 mkdirSync('shots', { recursive: true });
+
+// ── 정적 서버 ────────────────────────────────
+// file://로 열면 브라우저가 PDF와 모듈 fetch를 막아서 슬라이드 리더를 검증할 수 없다.
+// GitHub Pages와 같은 조건(http)으로 맞춘다.
+const MIME = {
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.pdf': 'application/pdf',
+  '.png': 'image/png',
+  '.svg': 'image/svg+xml',
+  '.json': 'application/json',
+};
+const ROOT = process.cwd();
+
+function serve() {
+  return new Promise(ok => {
+    const server = createServer((req, res) => {
+      const rel = decodeURIComponent(req.url.split('?')[0]).replace(/^\/+/, '');
+      const file = resolve(ROOT, rel);
+      // 루트 밖으로 나가는 요청은 막는다
+      const inside = file === ROOT || file.startsWith(ROOT + sep);
+      if (!inside || !existsSync(file) || !statSync(file).isFile()) {
+        res.writeHead(404).end('not found');
+        return;
+      }
+      res.writeHead(200, { 'content-type': MIME[extname(file).toLowerCase()] || 'application/octet-stream' });
+      createReadStream(file).pipe(res);
+    });
+    server.listen(0, '127.0.0.1', () => ok({
+      origin: `http://127.0.0.1:${server.address().port}`,
+      close: () => new Promise(done => server.close(done)),
+    }));
+  });
+}
+
+const site = await serve();
+const url = `${site.origin}/${relative(ROOT, abs).split(sep).join('/')}`;
 
 const MOBILE = 390;
 const browser = await chromium.launch();
@@ -132,8 +170,66 @@ const hoverflow = await page.evaluate(() => {
   return { doc, view, bad: bad.slice(0, 8) };
 });
 
+// ── 슬라이드 리더 ────────────────────────────
+// 앵커가 있는 파일만 검사한다. 리더는 1100px 이상에서만 뜨므로 넓은 뷰포트로 연다.
+const reader = { anchors: 0, mounted: false, pages: 0, outOfRange: [], overlaps: [], backward: [], skipped: false };
+{
+  const anchorCount = await page.evaluate(() => document.querySelectorAll('[data-slide]').length);
+  reader.anchors = anchorCount;
+  if (anchorCount === 0) {
+    reader.skipped = true;
+  } else {
+    await page.setViewportSize({ width: 1600, height: 1000 });
+    await page.goto(url, { waitUntil: 'networkidle' });
+    try {
+      // 첫 쪽이 렌더될 때까지 기다린다
+      await page.waitForSelector('#rdr canvas', { timeout: 20000 });
+      reader.mounted = true;
+    } catch { /* mounted=false로 아래에서 보고된다 */ }
+
+    Object.assign(reader, await page.evaluate(() => {
+      const txt = document.querySelector('#rdr-pg')?.textContent || '';
+      const total = +(/\/\s*(\d+)/.exec(txt)?.[1] || 0);
+      const list = [...document.querySelectorAll('[data-slide]')].map(el => {
+        const m = /^(\d+)(?:\s*[-–~]\s*(\d+))?$/.exec(String(el.dataset.slide).trim());
+        const where = el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') +
+          ' "' + (el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 26) + '"';
+        if (!m) return { where, bad: true, raw: el.dataset.slide };
+        return { where, from: +m[1], to: m[2] ? +m[2] : +m[1] };
+      });
+      const outOfRange = list
+        .filter(a => a.bad || (total && (a.from < 1 || a.to > total || a.from > a.to)))
+        .map(a => `${a.where} → data-slide="${a.bad ? a.raw : a.from + '-' + a.to}"`);
+      const overlaps = [];
+      for (let i = 0; i < list.length; i++) {
+        for (let j = i + 1; j < list.length; j++) {
+          const a = list[i], b = list[j];
+          if (a.bad || b.bad) continue;
+          if (a.from <= b.to && b.from <= a.to) {
+            // 섹션과 그 안의 h3는 포함 관계라 정상. 완전 포함은 봐준다.
+            const contains = (a.from <= b.from && b.to <= a.to) || (b.from <= a.from && a.to <= b.to);
+            if (!contains) overlaps.push(`${a.where} [${a.from}-${a.to}] ↔ ${b.where} [${b.from}-${b.to}]`);
+          }
+        }
+      }
+      // 문서 순서대로 읽었을 때 슬라이드 번호가 뒤로 가는 곳.
+      // 노트 구성이 슬라이드 진행과 어긋난다는 신호다. 의도한 재배열일 수도 있어 경고만 한다.
+      const backward = [];
+      for (let i = 1; i < list.length; i++) {
+        const a = list[i - 1], b = list[i];
+        if (a.bad || b.bad) continue;
+        if (b.from < a.from) backward.push(`${a.where} [${a.from}] → ${b.where} [${b.from}]`);
+      }
+      return { pages: total, outOfRange, overlaps, backward };
+    }));
+  }
+}
+
 // ── 스크린샷: 도해별 개별 (풀이 펼친 상태, 데스크톱 폭) ──
 await page.setViewportSize({ width: 1280, height: 900 });
+await page.goto(url, { waitUntil: 'networkidle' });
+await page.evaluate(() => document.querySelectorAll('details').forEach(d => d.open = true));
+await page.waitForTimeout(300);
 await page.waitForTimeout(250);
 const figs = await page.$$('figure, .play');
 let shotCount = 0;
@@ -150,6 +246,7 @@ for (const el of figs) {
 }
 
 await browser.close();
+await site.close();
 
 // ── 결과 출력 ────────────────────────────────
 const line = (s) => console.log(s);
@@ -185,6 +282,35 @@ if (hoverflow.doc > hoverflow.view + 1) {
   hoverflow.bad.forEach(e => line('  · ' + e));
   line('  힌트: 긴 .m 수식(nowrap), 표의 min-content, 그리드 트랙 1fr을 의심할 것.');
 } else line(`[OK] 모바일(${MOBILE}px) 가로 오버플로우 없음 (풀이 펼친 상태 기준)`);
+
+if (reader.skipped) {
+  line('[--] 슬라이드 리더: data-slide 앵커가 없어 건너뜀');
+} else if (!reader.mounted) {
+  fail++;
+  line(`\n[FAIL] 슬라이드 리더가 뜨지 않음 (앵커는 ${reader.anchors}개 있음)`);
+  line(`  slides/${stem}.pdf 가 있는지, reader.js 태그가 들어갔는지 확인할 것.`);
+} else {
+  line(`[OK] 슬라이드 리더 동작 (앵커 ${reader.anchors}개 / PDF ${reader.pages}쪽)`);
+}
+
+if (reader.outOfRange?.length) {
+  fail++;
+  line(`\n[FAIL] data-slide가 PDF 쪽 범위를 벗어남 ${reader.outOfRange.length}건 (PDF는 ${reader.pages}쪽)`);
+  reader.outOfRange.slice(0, 10).forEach(e => line('  · ' + e));
+}
+if (reader.overlaps?.length) {
+  fail++;
+  line(`\n[FAIL] data-slide 범위가 서로 겹침 ${reader.overlaps.length}건`);
+  reader.overlaps.slice(0, 10).forEach(e => line('  · ' + e));
+  line('  겹치면 역방향 동기화(PDF→노트)가 어느 쪽으로 갈지 정해지지 않는다.');
+  line('  한 슬라이드는 그것을 실제로 다루는 곳 한 군데에만 앵커를 단다.');
+}
+if (reader.backward?.length) {
+  // 실패로 치지 않는다. 노트를 일부러 슬라이드와 다르게 배열할 수도 있다.
+  line(`\n[WARN] 노트를 따라 내려가는데 슬라이드가 뒤로 가는 곳 ${reader.backward.length}건`);
+  reader.backward.slice(0, 10).forEach(e => line('  · ' + e));
+  line('  읽으면서 슬라이드가 앞뒤로 튄다. 의도한 재배열이 아니면 노트 순서를 슬라이드에 맞추는 게 낫다.');
+}
 
 line(`\n전체 스크린샷: shots/${stem}-desktop.png, shots/${stem}-mobile.png`);
 if (shotCount > 0) {
