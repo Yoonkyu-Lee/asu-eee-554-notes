@@ -13,14 +13,12 @@
   --ink3:#8A9099;
   --rule:#E2E1DB;
   --blue:#1250C4;
-  --blue-t:rgba(18,80,196,.16);
   --pink:#D9147A;
-  --pink-t:rgba(217,20,122,.16);
   --violet:#6B2FA8;
   --green:#00845F;
-  --green-t:rgba(0,132,95,.16);
   --amber:#B26A00;
   --amber-bg:#FDF6E9;
+  --red:#C02626;
   --sel:#4A1D8C;
   --mono:ui-monospace,"Cascadia Mono","Cascadia Code",Consolas,"SFMono-Regular",monospace;
   --sans:"Pretendard","Pretendard Variable",-apple-system,"Segoe UI Variable Text","Segoe UI","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
@@ -34,7 +32,7 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 .wrap{max-width:1180px;margin:0 auto;padding:0 24px 120px;display:grid;grid-template-columns:210px minmax(0,1fr);gap:56px}
-@media(max-width:900px){.wrap{grid-template-columns:1fr;gap:0;padding:0 18px 80px}}
+@media(max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);gap:0;padding:0 18px 80px}}
 
 /* ── header ─────────────────────────────── */
 header.top{grid-column:1/-1;padding:64px 0 40px;border-bottom:1px solid var(--rule);margin-bottom:48px}
@@ -69,6 +67,7 @@ code{font-family:var(--mono);font-size:.87em;background:#F0EFEA;padding:1px 5px;
 
 /* ── math ───────────────────────────────── */
 .m{font-family:var(--serif);font-style:normal;font-size:1.07em;white-space:nowrap}
+@media(max-width:900px){.m{white-space:normal}}
 .m i{font-style:italic}
 .eq{font-family:var(--serif);font-size:19px;text-align:center;margin:22px 0;line-height:1.9}
 .eq i{font-style:italic}
@@ -111,7 +110,7 @@ figcaption{font-size:13px;color:var(--ink2);margin-top:14px;padding-top:12px;bor
 .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 @media(max-width:720px){.grid2,.grid3,.grid4{grid-template-columns:1fr 1fr}}
 .mini{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:12px}
-.mini .cap{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--ink2);text-align:center;margin-top:8px;min-height:2.4em;display:flex;align-items:center;justify-content:center;line-height:1.35}
+.mini .cap{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--ink2);text-align:center;margin-top:8px;min-height:2.4em;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.35}
 .mini svg{display:block;width:100%;height:auto}
 .svgtxt{font-family:var(--serif);font-size:15px;fill:var(--ink)}
 .svgtxt.it{font-style:italic}
@@ -140,6 +139,7 @@ figcaption{font-size:13px;color:var(--ink2);margin-top:14px;padding-top:12px;bor
 
 /* ── table ──────────────────────────────── */
 table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14.5px}
+@media(max-width:900px){table{display:block;max-width:100%;overflow-x:auto}}
 th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
 th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);font-weight:500}
 td .m{font-size:1.02em}
@@ -1105,7 +1105,7 @@ footer a{color:var(--blue)}
   </div>
 
   <figure>
-  <svg viewBox="0 0 700 260" role="img" aria-label="중첩된 구간들의 무한 교집합">
+  <svg viewBox="0 0 700 280" role="img" aria-label="중첩된 구간들의 무한 교집합">
     <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em">Aₙ = (0, 1/n) 을 겹쳐 그리면</text>
 
     <!-- axis -->
