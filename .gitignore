@@ -1,7 +1,10 @@
 node_modules/
 shots/
-slides/
-*.pdf
 package-lock.json
 .DS_Store
 Thumbs.db
+
+# PDF는 기본적으로 전부 제외하고, 강의 슬라이드만 되살린다.
+# 교재(57MB)가 실수로 딸려 들어가는 걸 막기 위한 것이다.
+*.pdf
+!slides/*.pdf

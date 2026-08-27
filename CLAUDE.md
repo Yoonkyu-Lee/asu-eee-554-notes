@@ -4,6 +4,8 @@
 
 ASU EEE 554 (Probability and Random Processes, Michelusi, Fall 2026) 강의 슬라이드를
 한 장씩 분해해서, 시각 자료와 예제와 반례가 풍부한 개인 학습 노트 HTML로 재구성한다.
+노트 옆에 원본 슬라이드 PDF를 띄우고 스크롤을 동기화해서, 지금 읽는 문단이
+슬라이드 몇 쪽에서 나온 것인지 바로 보이게 한다.
 GitHub Pages로 배포된다: https://yoonkyu-lee.github.io/asu-eee-554-notes/
 
 사용자(YK)는 UIUC Computer Engineering 학부를 졸업하고 ASU에서 MS 중인 한국인 학생이다.
@@ -17,8 +19,14 @@ GitHub Pages로 배포된다: https://yoonkyu-lee.github.io/asu-eee-554-notes/
 | 저장소 | `D:\Engineering\asu-eee-554-notes` |
 | 슬라이드 원본 (읽기 전용) | `D:\Library\01 Immigration Documents\02 ASU\FA26\EEE 554` |
 
-슬라이드 폴더는 Google Drive 미러라 절대 수정하지 않는다. 읽기만 한다.
-저작권 때문에 슬라이드 PDF와 교재는 **절대 커밋하지 않는다.**
+Drive 미러 폴더는 절대 수정하지 않는다. 읽기만 한다.
+
+**커밋하는 것**: 모듈에 대응되는 강의 슬라이드 PDF만. `slides/`에 사본을 두고 커밋한다.
+사이트에 PDF 리더를 붙여 노트와 슬라이드를 나란히 보기 위한 것이다.
+
+**커밋하지 않는 것**: 교재(Kay, 57MB), `randomprocJuly14.pdf`, 강의계획서, `HW*.pdf`.
+용량 때문이기도 하고, 리더가 필요로 하지 않기 때문이기도 하다.
+HW는 노트를 쓸 때 읽기만 하고 커밋하지 않는다.
 
 ## 파일 명명
 
@@ -28,10 +36,21 @@ L01-set-theory.html                 Module 1
 L02-probability-space.html          Module 2
 L03-conditional-probability.html    Module 3
 L{NN}-{kebab-case-영문주제}.html
+
+slides/L01-set-theory.pdf           Module 1 슬라이드 (노트와 같은 stem)
+slides/L02-probability-space.pdf
+slides/L03-conditional-probability.pdf
+
+vendor/pdf.js/                      PDF 리더 런타임 (아래 참조)
 ```
 
 슬라이드 `03 ConditionalProbability.pdf` → `L03-conditional-probability.html`.
 번호는 슬라이드 파일 번호를 따른다.
+
+**슬라이드 사본은 노트와 stem을 맞춰서 이름을 바꾼다.** Drive 원본은 공백이 들어간
+`03 ConditionalProbability.pdf`지만 URL에 쓰기 나쁘다. `slides/`에 복사하면서
+`L03-conditional-probability.pdf`로 바꾼다. 그러면 노트 파일명에서 슬라이드 경로가
+바로 유도되므로 리더가 하드코딩된 매핑 표를 들 필요가 없다.
 
 ## 언어와 문체
 
@@ -91,8 +110,14 @@ L{NN}-{kebab-case-영문주제}.html
 
 ### 자체완결형
 
-외부 의존성 **없음**. CDN 금지. CSS, SVG, JS를 파일 하나에 인라인한다.
-오프라인에서 열어도 완전히 동작해야 한다.
+**CDN 금지.** 네트워크에서 뭔가를 받아오는 코드를 쓰지 않는다.
+노트 본문의 CSS, SVG, JS는 전부 그 HTML 파일 하나에 인라인한다.
+오프라인에서 열어도 노트는 완전히 동작해야 한다.
+
+예외는 PDF 리더 하나뿐이다. `vendor/pdf.js/`와 `slides/*.pdf`는 repo 안에 있는
+로컬 파일이므로 "외부 의존성 없음"은 유지된다. 다만 **리더는 없어도 되는 부가 기능이다.**
+`vendor/`나 `slides/`가 없거나 로드에 실패해도 노트 본문은 그대로 읽혀야 한다.
+리더를 노트 읽기의 전제 조건으로 만들지 않는다.
 
 ### 수학 표기
 
@@ -174,27 +199,92 @@ SVG 안의 색은 CSS 변수가 안 먹으므로 `#1250C4`, `rgba(18,80,196,.16)
 
 브라우저 저장소(localStorage 등) 사용 금지. 모든 상태는 JS 변수로만.
 
+## 슬라이드 리더 (데스크톱 전용)
+
+노트 오른쪽에 강의 슬라이드 PDF를 띄우고, **노트를 스크롤하면 슬라이드가 따라온다.**
+목적은 두 가지다. 진도를 따라가는 감각을 주는 것, 그리고 이 문단의 근거가 슬라이드
+몇 쪽인지 바로 확인할 수 있게 하는 것.
+
+### 렌더러
+
+`vendor/pdf.js/`에 pdf.js를 넣어서 쓴다. CDN에서 불러오지 않는다.
+브라우저 내장 PDF 뷰어(`<iframe src="x.pdf#page=N">`)는 **쓰지 않는다.**
+현재 스크롤 위치를 읽을 수 없어서 역방향 동기화가 불가능하고 페이지 이동이 깜빡인다.
+
+### 앵커 규칙
+
+동기화의 기반은 노트 안에 박아둔 슬라이드 쪽수다. 이건 **노트를 쓸 때 같이 넣는다.**
+나중에 몰아서 붙이려 하면 슬라이드를 다시 다 읽어야 한다.
+
+```html
+<section id="s3" data-slide="14">          <!-- 단일 쪽 -->
+<section id="s6" data-slide="26-28">       <!-- 여러 쪽에 걸침: 시작 쪽으로 간다 -->
+<h3 data-slide="17">생성된 σ-algebra</h3>   <!-- 섹션보다 잘게 끊고 싶을 때 -->
+```
+
+- `data-slide`는 **1부터 시작하는 PDF 쪽 번호**다. 슬라이드에 인쇄된 번호가 아니라
+  PDF 파일에서 몇 번째 장인지다. 둘이 다르면 PDF 기준을 따른다.
+- 모든 `<section>`에 붙인다. 한 섹션이 슬라이드 여러 장을 다루면 `h3`에 더 붙인다.
+- 슬라이드에 없는 내용(보충 설명, 반례, 함정)에는 **붙이지 않는다.**
+  앵커가 없는 구간은 리더가 직전 앵커를 유지한다. 이게 "이건 슬라이드 밖 내용"이라는
+  신호도 된다.
+- 본문에 이미 쓰던 "슬라이드 14~15쪽" 같은 표현은 그대로 둔다. 사람이 읽는 문장이고
+  `data-slide`는 기계가 읽는 값이라 역할이 다르다. 다만 **값이 어긋나면 안 된다.**
+
+### 동기화 동작
+
+- **노트 → 슬라이드가 주(主).** IntersectionObserver로 화면 상단에 걸린 앵커를 찾아
+  해당 쪽으로 슬라이드를 옮긴다.
+- **슬라이드 → 노트는 종(從).** 사용자가 PDF를 직접 스크롤하면 대응되는 섹션으로
+  노트를 옮긴다. 양방향이므로 **루프 가드가 필수다.** 프로그램이 일으킨 스크롤에는
+  플래그를 세우고 짧은 타임아웃 뒤에 내린다. 이걸 빠뜨리면 두 창이 서로를 밀며 진동한다.
+- 사용자가 슬라이드를 수동으로 넘겼으면 자동 추적을 잠시 멈춘다. 읽던 자리를 뺏지 않는다.
+- 리더는 **접을 수 있어야 한다.** 접힌 상태가 기본값은 아니지만, 노트만 보고 싶을 때
+  방해가 되면 안 된다.
+
+### 레이아웃
+
+데스크톱 전용이다. **모바일은 지원하지 않는다.**
+
+- 좁은 화면에서는 리더를 DOM에서 숨기고 PDF를 아예 받지 않는다.
+  모바일에서 1MB를 받게 하지 않는다.
+- 기준 폭은 `1100px`. 그 아래에서는 기존 2단 레이아웃(TOC + 본문)만 남는다.
+- 리더가 켜져 있을 때 본문이 눌려서 표나 도해가 깨지면 안 된다.
+  `verify.mjs`의 오버플로우 검사가 데스크톱 폭에서도 걸리는지 확인할 것.
+
+### 저작권 표기
+
+슬라이드를 사이트에 싣게 되면 footer 문구를 반드시 같이 고친다.
+자세한 내용은 아래 [footer 문구](#footer-문구) 참조.
+
 ## 워크플로우
 
 새 모듈 노트를 만들 때:
 
 1. 슬라이드 PDF를 읽는다. 필요하면 `HW*.pdf`도 읽어서 범위를 확인한다.
-2. 기존 `L01`/`L02`를 참고해 스타일을 맞춘다.
-3. `L{NN}-{topic}.html`을 작성한다.
-4. `node scripts/verify.mjs L{NN}-{topic}.html` 실행. exit code 0이어야 통과다.
+   **읽으면서 어느 개념이 PDF 몇 쪽인지 기록해둔다.** 3번에서 `data-slide`로 쓴다.
+2. Drive 원본을 `slides/L{NN}-{topic}.pdf`로 복사한다. 노트와 stem을 맞춘다.
+3. 기존 `L01`/`L02`를 참고해 스타일을 맞춘다.
+4. `L{NN}-{topic}.html`을 작성한다. 각 `<section>`에 `data-slide`를 붙인다.
+   슬라이드에 없는 보충 내용에는 붙이지 않는다.
+5. `node scripts/verify.mjs L{NN}-{topic}.html` 실행. exit code 0이어야 통과다.
    - 콘솔 에러, SVG 텍스트 이탈, 중복 id, 모바일 가로 오버플로우를 검사한다.
    - `shots/` 폴더에 전체 스크린샷 2장과 **도해별 개별 스크린샷** `-fig01.png…`이 생긴다.
    - **도해 스크린샷을 한 장씩 다 열어본다.** 자동 검사가 통과해도 이건 건너뛰지 않는다.
      테두리가 글자를 관통하는 것, 색 대비, 화살표가 엉킨 것은 눈으로만 잡힌다.
-5. 문제가 있으면 고치고 4번 반복.
-6. `index.html`을 갱신한다:
+6. 슬라이드 리더가 실제로 따라오는지 확인한다. 노트를 위에서 아래로 훑으면서
+   슬라이드가 같이 넘어가는지, `data-slide` 값이 실제 PDF 쪽과 맞는지 본다.
+   **어긋난 앵커는 있으나 마나가 아니라 적극적으로 해롭다.** 근거를 잘못 가리키기 때문이다.
+7. 문제가 있으면 고치고 5번 반복.
+8. `index.html`을 갱신한다:
    - 해당 모듈 카드의 `<div class="mod soon">` → `<a class="mod" href="...">`
    - `<span class="status wait">준비 중</span>` → `<span class="status done">읽기</span>`
    - 닫는 `</div>` → `</a>`
    - 태그 목록을 실제 내용에 맞게 갱신
    - 헤더의 "Module N / M 완료" chip 갱신
    - 다음 모듈 카드를 `soon` 상태로 추가
-7. 커밋하고 푸시한다. 커밋 메시지는 한 줄, 영어: `Add Module 3: conditional probability`
+9. 커밋하고 푸시한다. 커밋 메시지는 한 줄, 영어: `Add Module 3: conditional probability`
+   슬라이드 PDF는 노트와 같은 커밋에 넣는다. 둘이 따로 놀면 리더가 깨진다.
 
 ## 검증
 
@@ -228,15 +318,39 @@ SVG 안의 색은 CSS 변수가 안 먹으므로 `#1250C4`, `rgba(18,80,196,.16)
 | 표의 min-content가 화면보다 넓음 | `@media(max-width:900px){table{display:block;overflow-x:auto}}` |
 | 긴 `.m` 수식이 `white-space:nowrap`이라 안 접힘 | `@media(max-width:900px){.m{white-space:normal}}` |
 
-## 커밋하지 않는 것
+## 커밋하는 것과 안 하는 것
+
+repo는 **Public**이고 GitHub Pages로 서빙된다. 여기 올리는 건 인터넷에 게시하는 것이다.
 
 `.gitignore`:
 ```
 node_modules/
 shots/
-slides/
+package-lock.json
 *.pdf
+!slides/*.pdf
 ```
 
-슬라이드 PDF와 교재는 저작권이 있고 repo는 Public이다. 절대 커밋하지 않는다.
-각 노트 footer에 "원본 강의 슬라이드는 포함되어 있지 않습니다" 문구를 유지한다.
+`*.pdf`로 전부 막고 `!slides/*.pdf`로 슬라이드만 되살린다.
+**Drive 미러에서 아무 PDF나 repo 루트로 복사하지 않는다.** 교재 57MB가 딸려 들어간다.
+`slides/`에 넣을 것은 모듈에 대응되는 강의 슬라이드뿐이다.
+
+| 파일 | 커밋 |
+|---|---|
+| `slides/L{NN}-*.pdf` (강의 슬라이드) | O |
+| `vendor/pdf.js/` | O |
+| 교재 (Kay), `randomprocJuly14.pdf` | X (용량 + 저작권) |
+| `HW*.pdf`, 강의계획서 | X |
+| `shots/`, `node_modules/` | X |
+
+커밋 전에 `git status`로 의도하지 않은 PDF가 스테이징됐는지 확인한다.
+
+### footer 문구
+
+슬라이드를 포함하게 되었으므로 **"원본 강의 슬라이드는 포함되어 있지 않습니다"는
+더 이상 쓰지 않는다.** 사실이 아닌 문구를 남겨두는 게 안 쓰는 것보다 나쁘다.
+대신 각 노트와 `index.html` footer에 이렇게 밝힌다:
+
+- 강의 슬라이드의 저작권은 담당 교수(Nicolò Michelusi)와 ASU에 있다는 것
+- 이 사이트는 수강생이 만든 개인 학습 자료이고 공식 강의 자료가 아니라는 것
+- 노트 본문은 슬라이드를 재구성하고 보충한 것이라는 것
