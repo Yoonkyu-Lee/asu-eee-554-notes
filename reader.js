@@ -2,17 +2,16 @@
 //
 // 규칙 (CLAUDE.md "슬라이드 리더" 참조):
 //  - 데스크톱 전용. 1100px 아래에서는 아무것도 하지 않고 PDF도 받지 않는다.
-//  - 노트 → 슬라이드가 주(主), 슬라이드 → 노트가 종(從).
+//  - 동기화는 구간 경계를 넘을 때만 일어난다. 한 구간 안에서는 양쪽 다 자유롭게 움직인다.
 //  - 리더는 부가 기능이다. 실패하면 조용히 사라지고 노트 본문은 그대로 읽힌다.
 //
 // 앵커는 노트 안의 [data-slide]다. 값은 PDF 물리 쪽 번호(1부터).
-//   <section id="s3" data-slide="9">      단일 쪽
-//   <section id="s5" data-slide="12-17">  여러 쪽 (시작 쪽으로 간다)
+//   <section id="s3" data-slide="9">      한 쪽짜리 구간
+//   <section id="s5" data-slide="12-17">  12~17쪽을 한 구간으로 묶는다
 
 const MIN_WIDTH = 1100;      // 이 아래로는 리더를 띄우지 않는다
 const FOLLOW_LINE = 0.28;    // 화면 위에서 28% 지점에 걸린 앵커를 "현재"로 본다
 const PROG_MS = 2500;      // 프로그램 스크롤의 보조 타임아웃 (도착 판정이 주, 이건 안전장치)
-const RESUME_MS = 1200;      // 수동 조작 후 노트를 다시 스크롤하면 재개되기까지의 유예
 
 const anchors = [...document.querySelectorAll('[data-slide]')]
   .map(el => {
@@ -199,8 +198,18 @@ function render(p) {
 
 // ── 동기화 ──────────────────────────────────────────
 
+// 동기화는 "구간 경계를 넘을 때만" 일어난다.
+//
+// 한 주제가 슬라이드 여러 장에 걸치면(data-slide="12-17") 그 구간 안에서는
+// 노트도 슬라이드도 자유롭게 움직여야 한다. 매 스크롤마다 구간의 첫 쪽으로
+// 되돌리면 슬라이드를 읽을 수가 없다.
+//
+// 그래서 "지금 어느 구간에 있나"(actAnchor)를 하나의 상태로 두고,
+// 그 값이 바뀔 때만 반대쪽을 움직인다. 구간이 바뀌어도 상대가 이미 새 구간
+// 안에 있으면 건드리지 않는다.
 let autoFollow = true;
-let userPdfAt = 0;       // 마지막으로 사용자가 PDF를 직접 스크롤한 시각
+let actAnchor = null;    // 현재 구간. 이게 바뀔 때만 동기화가 일어난다.
+let sticky = null;       // 사용자가 직접 슬라이드를 잡아둔 구역 (아래 설명)
 let curPage = 0;
 
 // 루프 가드.
@@ -262,8 +271,8 @@ function setCurrent(n) {
   ui.next.disabled = n >= pages.length;
 }
 
-// 화면 위쪽 기준선에 걸린 마지막 앵커를 찾는다.
-function activeAnchor() {
+// 화면 위쪽 기준선에 걸린 마지막 앵커 = 지금 읽고 있는 구간.
+function anchorFromNote() {
   const line = window.innerHeight * FOLLOW_LINE;
   let found = anchors[0];
   for (const a of anchors) {
@@ -273,57 +282,106 @@ function activeAnchor() {
   return found;
 }
 
-function syncNoteToPdf(force = false) {
-  if (!pages.length) return;
-  if (!force && !autoFollow) return;
-  const a = activeAnchor();
-  if (!a) return;
-  if (!force && a.from === curPage) return;
-  goToPage(a.from);
-}
-
-// PDF 쪽 번호로 대응되는 노트 위치를 찾는다.
-// 그 쪽을 범위에 포함하는 앵커가 있으면 그것, 없으면 그 앞의 마지막 앵커.
-function anchorForPage(n) {
-  let fallback = null;
-  for (const a of anchors) {
-    if (n >= a.from && n <= a.to) return a;
-    if (a.from <= n) fallback = a;
-  }
-  return fallback;
-}
-
-function syncPdfToNote() {
+// 지금 리더가 보고 있는 쪽.
+function pageFromPdf() {
   const top = ui.scroll.scrollTop + 40;
   let n = 1;
   for (let i = 1; i <= pages.length; i++) {
     if (pageTop(i) <= top) n = i; else break;
   }
-  setCurrent(n);
+  return n;
+}
+
+const inRange = (a, n) => !!a && n >= a.from && n <= a.to;
+
+// PDF 쪽 번호로 대응되는 구간을 찾는다.
+// 포함하는 앵커가 여럿이면(섹션과 그 안의 h3) 더 좁은 쪽을 고른다. 더 구체적이기 때문이다.
+// 어느 구간에도 안 들어가는 쪽(중간에 끼워진 페이지 등)은 그 앞의 마지막 앵커로 둔다.
+function anchorForPage(n) {
+  let best = null, fallback = null;
+  for (const a of anchors) {
+    if (inRange(a, n)) {
+      if (!best || (a.to - a.from) <= (best.to - best.from)) best = a;
+    }
+    if (a.from <= n) fallback = a;
+  }
+  return best || fallback;
+}
+
+// 그 쪽을 포함하는 가장 넓은 구간. 사용자가 직접 슬라이드를 옮겼을 때
+// "어디까지가 같은 주제인가"의 기준이 된다.
+function widestForPage(n) {
+  let best = null;
+  for (const a of anchors) {
+    if (inRange(a, n) && (!best || (a.to - a.from) > (best.to - best.from))) best = a;
+  }
+  return best;
+}
+
+const within = (x, s) => !!x && !!s && x.from >= s.from && x.to <= s.to;
+
+// 노트 → 슬라이드. 구간이 바뀌었을 때만, 그리고 슬라이드가 그 구간 밖일 때만 움직인다.
+function syncNoteToPdf(force = false) {
+  if (!pages.length) return;
+  if (!force && !autoFollow) return;
+  const a = anchorFromNote();
+  if (!a) return;
+  const changed = a !== actAnchor;
+  actAnchor = a;
+  if (!force && !changed) return;          // 같은 구간 안에서는 가만히 둔다
+
+  // 사용자가 직접 슬라이드를 옮겨둔 상태라면, 그 구역을 벗어나기 전까지 존중한다.
+  // 섹션(12-17) 안을 읽는 중에 h3 하위 구간(14-15)으로 들어갔다고 해서
+  // 사용자가 보고 있던 16쪽을 14쪽으로 되돌리면 안 된다.
+  if (!force && within(a, sticky)) return;
+  sticky = null;
+
+  if (!force && inRange(a, curPage)) return;   // 이미 이 구간을 보고 있으면 그대로 둔다
+  goToPage(a.from);
+}
+
+// 슬라이드 → 노트. 슬라이드가 현재 구간을 벗어났을 때만 움직인다.
+// 스크롤이든 ◀▶ 버튼이든 같은 규칙을 따른다.
+function alignNoteToPage(n) {
+  if (!autoFollow) return;
+
+  // 같은 구간 안에서는 노트를 건드리지 않는다. 대신 "사용자가 이 구역을 직접
+  // 잡고 있다"고 기억해서, 노트가 그 구역 안에서 움직여도 되돌리지 않게 한다.
+  if (inRange(actAnchor, n)) {
+    sticky = widestForPage(n) || actAnchor;
+    return;
+  }
 
   const a = anchorForPage(n);
-  if (!a) return;
+  if (!a || a === actAnchor) { sticky = widestForPage(n); return; }
+  actAnchor = a;
+  sticky = null;                           // 양쪽이 다시 맞춰졌다
   const y = a.el.getBoundingClientRect().top + window.scrollY - 18;
   if (Math.abs(y - window.scrollY) < 8) return;
   scrollNoteTo(y, true);
+}
+
+function syncPdfToNote() {
+  const n = pageFromPdf();
+  setCurrent(n);
+  alignNoteToPage(n);
 }
 
 function wireSync() {
   let noteTick = false;
   window.addEventListener('scroll', () => {
     if (consumeProg('note', window.scrollY)) return;
-    // 사용자가 PDF를 직접 넘긴 뒤 노트를 다시 스크롤하면 따라가기를 재개한다.
-    if (!autoFollow && now() - userPdfAt > RESUME_MS) setFollow(true);
     if (noteTick) return;
     noteTick = true;
     requestAnimationFrame(() => { noteTick = false; syncNoteToPdf(); });
   }, { passive: true });
 
   let pdfTick = false;
+  // 사용자가 슬라이드를 직접 넘겨도 따라가기를 끄지 않는다.
+  // 구간을 벗어나지 않는 한 아무 일도 일어나지 않고, 벗어나면 그건 "다음 주제로
+  // 넘어갔다"는 뜻이므로 노트가 따라가는 게 맞다.
   ui.scroll.addEventListener('scroll', () => {
     if (consumeProg('pdf', ui.scroll.scrollTop)) return;
-    userPdfAt = now();
-    if (autoFollow) setFollow(false);   // 수동 조작 = 자동 추적 일시 정지
     if (pdfTick) return;
     pdfTick = true;
     requestAnimationFrame(() => { pdfTick = false; syncPdfToNote(); });
@@ -344,11 +402,11 @@ function setFollow(on) {
 // ── 크롬 (버튼, 폭 조절) ────────────────────────────
 
 function wireChrome() {
-  ui.prev.addEventListener('click', () => { setFollow(false); goToPage(curPage - 1); });
-  ui.next.addEventListener('click', () => { setFollow(false); goToPage(curPage + 1); });
+  ui.prev.addEventListener('click', () => { goToPage(curPage - 1); alignNoteToPage(curPage); });
+  ui.next.addEventListener('click', () => { goToPage(curPage + 1); alignNoteToPage(curPage); });
   ui.follow.addEventListener('click', () => {
     setFollow(!autoFollow);
-    if (autoFollow) syncNoteToPdf(true);
+    if (autoFollow) { sticky = null; syncNoteToPdf(true); }   // 켜면 지금 읽는 곳으로 맞춘다
   });
   ui.close.addEventListener('click', () => {
     ui.root.hidden = true;
