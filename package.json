@@ -1,0 +1,13 @@
+{
+  "name": "asu-eee-554-notes",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "EEE 554 Probability and Random Processes - personal study notes",
+  "scripts": {
+    "verify": "node scripts/verify.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.1"
+  }
+}
