@@ -8,6 +8,7 @@
     "verify": "node scripts/verify.mjs"
   },
   "devDependencies": {
+    "pdfjs-dist": "^6.2.108",
     "playwright": "^1.62.1"
   }
 }
