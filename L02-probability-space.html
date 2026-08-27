@@ -93,6 +93,23 @@ details .body p:last-child,details .body ol:last-child{margin-bottom:0}
 .callout{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:16px 0;margin:26px 0;font-size:15px;color:var(--ink2)}
 .callout strong{color:var(--ink)}
 
+/* ── 슬라이드 출처 표시 ─────────────────── */
+/* data-slide 값에서 라벨을 직접 만든다. 라벨과 앵커가 어긋날 수 없다.
+   리더가 꺼져 있어도, 모바일이어도 "이 대목이 슬라이드 몇 쪽인지"는 보여야 한다. */
+.sec-head[data-slide],h3[data-slide]{display:flex;align-items:baseline;gap:14px}
+.sec-head[data-slide]>h2,h3[data-slide]{min-width:0}
+.sec-head[data-slide]::before,h3[data-slide]::before{
+  content:"";order:1;flex:1 1 auto;min-width:16px;height:1px;
+  background:var(--rule);align-self:center;opacity:.75}
+.sec-head[data-slide]::after,h3[data-slide]::after{
+  content:"슬라이드 " attr(data-slide) "쪽";order:2;flex:none;
+  font-family:var(--mono);font-size:10px;letter-spacing:.05em;
+  color:var(--ink3);white-space:nowrap;align-self:center}
+@media(max-width:900px){
+  .sec-head[data-slide]::before,h3[data-slide]::before{min-width:10px}
+  .sec-head[data-slide]::after,h3[data-slide]::after{font-size:9.5px}
+}
+
 figure{margin:28px 0;background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:22px}
 figure svg{display:block;width:100%;height:auto;max-width:100%}
 figcaption{font-size:13px;color:var(--ink2);margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);line-height:1.6}
@@ -177,8 +194,8 @@ footer a{color:var(--blue)}
 <main>
 
 <!-- ══ 00 ══ -->
-<section id="s0" data-slide="2-4">
-  <div class="sec-head"><span class="sec-num">00</span><h2>이 모듈이 하는 일</h2></div>
+<section id="s0">
+  <div class="sec-head" data-slide="2-4"><span class="sec-num">00</span><h2>이 모듈이 하는 일</h2></div>
   <p class="sec-sub">한 줄 요약: <strong>확률이 뭔지 "정의"한다. 빈도가 아니라 공리로.</strong></p>
 
   <p>Module 1에서 질문을 집합으로 바꾸는 법을 배웠어. 이제 그 집합에 숫자를 붙일 차례야. 그런데 이 모듈에서 하는 일이 좀 의외인데, <strong>"확률을 계산하는 법"이 아니라 "확률이 되기 위한 자격 요건"을 정하는 거야.</strong></p>
@@ -244,8 +261,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 01 ══ -->
-<section id="s1" data-slide="5-6">
-  <div class="sec-head"><span class="sec-num">01</span><h2>확률 모델의 세 가지 재료</h2></div>
+<section id="s1">
+  <div class="sec-head" data-slide="5-6"><span class="sec-num">01</span><h2>확률 모델의 세 가지 재료</h2></div>
   <p class="sec-sub">슬라이드 5쪽. 이 세 줄이 이번 모듈 전체의 목차야.</p>
 
   <div class="def">
@@ -268,8 +285,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 02 ══ -->
-<section id="s2" data-slide="7-8">
-  <div class="sec-head"><span class="sec-num">02</span><h2>ℱ는 왜 필요한가</h2></div>
+<section id="s2">
+  <div class="sec-head" data-slide="7-8"><span class="sec-num">02</span><h2>ℱ는 왜 필요한가</h2></div>
   <p class="sec-sub">두 가지 답이 있다. 하나는 실용적, 하나는 수학적.</p>
 
   <h3>답 1: 질문에는 짝이 있다</h3>
@@ -325,8 +342,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 03 ══ -->
-<section id="s3" data-slide="9-11">
-  <div class="sec-head"><span class="sec-num">03</span><h2>σ-algebra</h2></div>
+<section id="s3">
+  <div class="sec-head" data-slide="9-11"><span class="sec-num">03</span><h2>σ-algebra</h2></div>
   <p class="sec-sub">세 줄짜리 정의. 그런데 세 번째 줄에 함정이 있다.</p>
 
   <div class="def">
@@ -499,8 +516,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 05 ══ -->
-<section id="s5" data-slide="12-17">
-  <div class="sec-head"><span class="sec-num">05</span><h2>생성된 σ-algebra</h2></div>
+<section id="s5">
+  <div class="sec-head" data-slide="12-17"><span class="sec-num">05</span><h2>생성된 σ-algebra</h2></div>
   <p class="sec-sub">"관심 있는 사건 몇 개"에서 출발해서 최소한으로 부풀리기.</p>
 
   <p>실무에서는 보통 이래. 내가 관심 있는 사건 몇 개가 있어. 그런데 σ-algebra 조건을 만족시키려면 <em>어쩔 수 없이</em> 몇 개를 더 넣어야 해. <strong>필요한 만큼만 넣어서 만든 게 생성된 σ-algebra야.</strong></p>
@@ -603,8 +620,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 06 ══ -->
-<section id="s6" data-slide="19-20">
-  <div class="sec-head"><span class="sec-num">06</span><h2>Kolmogorov의 공리</h2></div>
+<section id="s6">
+  <div class="sec-head" data-slide="19-20"><span class="sec-num">06</span><h2>Kolmogorov의 공리</h2></div>
   <p class="sec-sub">세 줄. 이게 확률의 정의 전부다.</p>
 
   <div class="def">
@@ -679,8 +696,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 07 ══ -->
-<section id="s7" data-slide="21-24">
-  <div class="sec-head"><span class="sec-num">07</span><h2>공리에서 나오는 성질들</h2></div>
+<section id="s7">
+  <div class="sec-head" data-slide="21-24"><span class="sec-num">07</span><h2>공리에서 나오는 성질들</h2></div>
   <p class="sec-sub">외울 게 아니라 세 공리에서 유도해야 하는 것들. HW1 Problem 5가 통째로 이거야.</p>
 
   <table>
@@ -794,8 +811,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 08 ══ -->
-<section id="s8" data-slide="25-26">
-  <div class="sec-head"><span class="sec-num">08</span><h2>이산 vs 연속 표본공간</h2></div>
+<section id="s8">
+  <div class="sec-head" data-slide="25-26"><span class="sec-num">08</span><h2>이산 vs 연속 표본공간</h2></div>
   <p class="sec-sub">Module 1의 가산/비가산 구분이 실제로 갈라지는 지점.</p>
 
   <div class="grid2">
@@ -825,8 +842,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 09 ══ -->
-<section id="s9" data-slide="27-29">
-  <div class="sec-head"><span class="sec-num">09</span><h2>Borel σ-algebra</h2></div>
+<section id="s9">
+  <div class="sec-head" data-slide="27-29"><span class="sec-num">09</span><h2>Borel σ-algebra</h2></div>
   <p class="sec-sub">ℝ에서 쓸 수 있는 실질적인 최대 사건 모음.</p>
 
   <p>슬라이드 27쪽: <span class="m"><i>Ω</i> = ℝ</span>일 때 <span class="m">2<sup>ℝ</sup></span>는 확률론에 쓰기엔 너무 크다. 대신 <strong>Borel σ-algebra</strong> <span class="m">ℬ(ℝ)</span>를 쓴다.</p>
@@ -900,8 +917,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 10 ══ -->
-<section id="s10" data-slide="30-31">
-  <div class="sec-head"><span class="sec-num">10</span><h2>PMF와 PDF</h2></div>
+<section id="s10">
+  <div class="sec-head" data-slide="30-31"><span class="sec-num">10</span><h2>PMF와 PDF</h2></div>
   <p class="sec-sub">실무에서 P를 실제로 어떻게 지정하는가.</p>
 
   <p>공리는 "확률이 되기 위한 자격"만 말해줄 뿐, 구체적인 <span class="m"><i>P</i></span>를 어떻게 만드는지는 안 알려줘. 실무에서는 이렇게 해.</p>
@@ -982,8 +999,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 11 ══ -->
-<section id="s11" data-slide="32-37">
-  <div class="sec-head"><span class="sec-num">11</span><h2>반복 실험과 Cartesian Product</h2></div>
+<section id="s11">
+  <div class="sec-head" data-slide="32-37"><span class="sec-num">11</span><h2>반복 실험과 Cartesian Product</h2></div>
   <p class="sec-sub">실험을 여러 번 하면 표본공간이 어떻게 커지는가.</p>
 
   <div class="def">
@@ -1074,8 +1091,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 12 ══ -->
-<section id="s12" data-slide="40-41">
-  <div class="sec-head"><span class="sec-num">12</span><h2>확률의 연속성</h2></div>
+<section id="s12">
+  <div class="sec-head" data-slide="40-41"><span class="sec-num">12</span><h2>확률의 연속성</h2></div>
   <p class="sec-sub">집합이 극한으로 가면 확률도 따라간다. HW1 Problem 7의 결승선.</p>
 
   <div class="def">

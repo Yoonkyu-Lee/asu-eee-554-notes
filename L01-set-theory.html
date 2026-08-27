@@ -101,6 +101,23 @@ details .body p:last-child,details .body ol:last-child{margin-bottom:0}
 .callout{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:16px 0;margin:26px 0;font-size:15px;color:var(--ink2)}
 .callout strong{color:var(--ink)}
 
+/* ── 슬라이드 출처 표시 ─────────────────── */
+/* data-slide 값에서 라벨을 직접 만든다. 라벨과 앵커가 어긋날 수 없다.
+   리더가 꺼져 있어도, 모바일이어도 "이 대목이 슬라이드 몇 쪽인지"는 보여야 한다. */
+.sec-head[data-slide],h3[data-slide]{display:flex;align-items:baseline;gap:14px}
+.sec-head[data-slide]>h2,h3[data-slide]{min-width:0}
+.sec-head[data-slide]::before,h3[data-slide]::before{
+  content:"";order:1;flex:1 1 auto;min-width:16px;height:1px;
+  background:var(--rule);align-self:center;opacity:.75}
+.sec-head[data-slide]::after,h3[data-slide]::after{
+  content:"슬라이드 " attr(data-slide) "쪽";order:2;flex:none;
+  font-family:var(--mono);font-size:10px;letter-spacing:.05em;
+  color:var(--ink3);white-space:nowrap;align-self:center}
+@media(max-width:900px){
+  .sec-head[data-slide]::before,h3[data-slide]::before{min-width:10px}
+  .sec-head[data-slide]::after,h3[data-slide]::after{font-size:9.5px}
+}
+
 /* ── figure ─────────────────────────────── */
 figure{margin:28px 0;background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:22px}
 figure svg{display:block;width:100%;height:auto;max-width:100%}
@@ -182,8 +199,8 @@ footer a{color:var(--blue)}
 <main>
 
 <!-- ══ 00 ══ -->
-<section id="s0" data-slide="1">
-  <div class="sec-head"><span class="sec-num">00</span><h2>이 모듈이 하는 일</h2></div>
+<section id="s0">
+  <div class="sec-head" data-slide="1"><span class="sec-num">00</span><h2>이 모듈이 하는 일</h2></div>
   <p class="sec-sub">한 줄 요약: <strong>"질문"을 "집합"으로 바꾸는 법을 배운다.</strong></p>
 
   <p>이 모듈에는 확률이 거의 안 나와. 슬라이드 40장 중 확률 기호 <span class="m">P</span>(·)가 등장하는 건 딱 한 번이야. 그래서 노잼으로 느껴지는 게 정상이야. 목적이 다르거든.</p>
@@ -232,8 +249,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 01 ══ -->
-<section id="s1" data-slide="2-5">
-  <div class="sec-head"><span class="sec-num">01</span><h2>Probability vs Statistics</h2></div>
+<section id="s1">
+  <div class="sec-head" data-slide="2-5"><span class="sec-num">01</span><h2>Probability vs Statistics</h2></div>
   <p class="sec-sub">화살표 방향이 반대인 두 학문.</p>
 
   <div class="def">
@@ -291,8 +308,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 02 ══ -->
-<section id="s2" data-slide="6-11">
-  <div class="sec-head"><span class="sec-num">02</span><h2>왜 집합인가</h2></div>
+<section id="s2">
+  <div class="sec-head" data-slide="6-11"><span class="sec-num">02</span><h2>왜 집합인가</h2></div>
   <p class="sec-sub">질문 → 사건 → 확률. 그리고 AND/OR/NOT ↔ ∩/∪/ᶜ.</p>
 
   <p>공정한 주사위를 굴리는 실험을 생각해. 가능한 결과 전체를 모은 게 <strong>표본공간(sample space)</strong> <span class="m"><i>Ω</i></span>야.</p>
@@ -399,8 +416,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 03 ══ -->
-<section id="s3" data-slide="12-18">
-  <div class="sec-head"><span class="sec-num">03</span><h2>집합의 기초</h2></div>
+<section id="s3">
+  <div class="sec-head" data-slide="12-18"><span class="sec-num">03</span><h2>집합의 기초</h2></div>
   <p class="sec-sub">Definition 1–5. 표기법 두 가지, 그리고 같음 · 포함 · 공집합 · 서로소.</p>
 
   <div class="def">
@@ -528,8 +545,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 04 ══ -->
-<section id="s4" data-slide="19-22">
-  <div class="sec-head"><span class="sec-num">04</span><h2>집합 연산</h2></div>
+<section id="s4">
+  <div class="sec-head" data-slide="19-22"><span class="sec-num">04</span><h2>집합 연산</h2></div>
   <p class="sec-sub">Definition 6–9. 여집합 · 교집합 · 합집합 · 차집합.</p>
 
   <div class="grid4">
@@ -714,8 +731,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 05 ══ -->
-<section id="s5" data-slide="23-28">
-  <div class="sec-head"><span class="sec-num">05</span><h2>집합 대수</h2></div>
+<section id="s5">
+  <div class="sec-head" data-slide="23-28"><span class="sec-num">05</span><h2>집합 대수</h2></div>
   <p class="sec-sub">교환 · 결합 · 분배 · De Morgan · 여집합 · 항등. 외우지 말고 그림으로 확인해.</p>
 
   <table>
@@ -859,8 +876,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 06 ══ -->
-<section id="s6" data-slide="29-31">
-  <div class="sec-head"><span class="sec-num">06</span><h2>유한 · 가산 · 비가산</h2></div>
+<section id="s6">
+  <div class="sec-head" data-slide="29-31"><span class="sec-num">06</span><h2>유한 · 가산 · 비가산</h2></div>
   <p class="sec-sub">Definition 10–12. 이 모듈에서 제일 미묘하고, 제일 중요한 구분.</p>
 
   <div class="def">
@@ -985,8 +1002,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 07 ══ -->
-<section id="s7" data-slide="32">
-  <div class="sec-head"><span class="sec-num">07</span><h2>Power Set</h2></div>
+<section id="s7">
+  <div class="sec-head" data-slide="32"><span class="sec-num">07</span><h2>Power Set</h2></div>
   <p class="sec-sub">Definition 13. 가능한 모든 질문을 한 자루에 담기.</p>
 
   <div class="def">
@@ -1071,8 +1088,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 08 ══ -->
-<section id="s8" data-slide="33-39">
-  <div class="sec-head"><span class="sec-num">08</span><h2>Index Set과 무한 연산</h2></div>
+<section id="s8">
+  <div class="sec-head" data-slide="33-39"><span class="sec-num">08</span><h2>Index Set과 무한 연산</h2></div>
   <p class="sec-sub">Definition 14. 집합이 두세 개가 아니라 무한히 많을 때의 표기법.</p>
 
   <div class="def">
@@ -1171,8 +1188,8 @@ footer a{color:var(--blue)}
 </section>
 
 <!-- ══ 09 ══ -->
-<section id="s9" data-slide="40">
-  <div class="sec-head"><span class="sec-num">09</span><h2>Partition</h2></div>
+<section id="s9">
+  <div class="sec-head" data-slide="40"><span class="sec-num">09</span><h2>Partition</h2></div>
   <p class="sec-sub">이 모듈의 결승선. 앞으로 계속 쓰게 될 개념.</p>
 
   <div class="def">

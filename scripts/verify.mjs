@@ -192,7 +192,9 @@ const reader = { anchors: 0, mounted: false, pages: 0, outOfRange: [], overlaps:
       const total = +(/\/\s*(\d+)/.exec(txt)?.[1] || 0);
       const list = [...document.querySelectorAll('[data-slide]')].map(el => {
         const m = /^(\d+)(?:\s*[-–~]\s*(\d+))?$/.exec(String(el.dataset.slide).trim());
-        const where = el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') +
+        // 앵커는 id가 없는 div.sec-head인 경우가 많아 감싸는 섹션 id를 같이 보여준다.
+        const sec = el.closest('section');
+        const where = (sec ? sec.id + ' ' : '') + el.tagName.toLowerCase() +
           ' "' + (el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 26) + '"';
         if (!m) return { where, bad: true, raw: el.dataset.slide };
         return { where, from: +m[1], to: m[2] ? +m[2] : +m[1] };
