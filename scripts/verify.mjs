@@ -172,7 +172,7 @@ const hoverflow = await page.evaluate(() => {
 
 // ── 슬라이드 리더 ────────────────────────────
 // 앵커가 있는 파일만 검사한다. 리더는 1100px 이상에서만 뜨므로 넓은 뷰포트로 연다.
-const reader = { anchors: 0, mounted: false, pages: 0, outOfRange: [], overlaps: [], backward: [], skipped: false };
+const reader = { anchors: 0, mounted: false, pages: 0, outOfRange: [], overlaps: [], backward: [], gaps: [], skipped: false };
 {
   const anchorCount = await page.evaluate(() => document.querySelectorAll('[data-slide]').length);
   reader.anchors = anchorCount;
@@ -222,7 +222,17 @@ const reader = { anchors: 0, mounted: false, pages: 0, outOfRange: [], overlaps:
         if (a.bad || b.bad) continue;
         if (b.from < a.from) backward.push(`${a.where} [${a.from}] → ${b.where} [${b.from}]`);
       }
-      return { pages: total, outOfRange, overlaps, backward };
+      // 어떤 앵커에도 안 걸린 쪽. 노트가 그 슬라이드를 아예 안 다룬다는 뜻이다.
+      // 표지나 손글씨 삽입 페이지는 정상이지만, 범위를 짧게 잡아 빠뜨린 경우도 여기 걸린다.
+      const covered = new Set();
+      for (const a of list) {
+        if (a.bad) continue;
+        for (let i = a.from; i <= a.to; i++) covered.add(i);
+      }
+      const gaps = [];
+      for (let i = 1; i <= total; i++) if (!covered.has(i)) gaps.push(i);
+
+      return { pages: total, outOfRange, overlaps, backward, gaps };
     }));
   }
 }
@@ -306,6 +316,12 @@ if (reader.overlaps?.length) {
   reader.overlaps.slice(0, 10).forEach(e => line('  · ' + e));
   line('  겹치면 역방향 동기화(PDF→노트)가 어느 쪽으로 갈지 정해지지 않는다.');
   line('  한 슬라이드는 그것을 실제로 다루는 곳 한 군데에만 앵커를 단다.');
+}
+if (reader.gaps?.length) {
+  // 실패로 치지 않는다. 표지나 손글씨 삽입 페이지는 노트가 안 다루는 게 정상이다.
+  line(`\n[WARN] 어떤 앵커에도 안 걸린 슬라이드 ${reader.gaps.length}쪽: ${reader.gaps.join(', ')}`);
+  line('  노트가 그 슬라이드를 안 다룬다는 뜻이다. 표지·삽입 페이지면 정상이지만,');
+  line('  범위를 짧게 잡아 빠뜨린 것일 수도 있다. 해당 쪽을 열어서 확인할 것.');
 }
 if (reader.backward?.length) {
   // 실패로 치지 않는다. 노트를 일부러 슬라이드와 다르게 배열할 수도 있다.
