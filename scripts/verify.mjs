@@ -172,7 +172,7 @@ const hoverflow = await page.evaluate(() => {
 
 // ── 슬라이드 리더 ────────────────────────────
 // 앵커가 있는 파일만 검사한다. 리더는 1100px 이상에서만 뜨므로 넓은 뷰포트로 연다.
-const reader = { anchors: 0, mounted: false, pages: 0, outOfRange: [], overlaps: [], backward: [], gaps: [], skipped: false };
+const reader = { anchors: 0, mounted: false, pages: 0, outOfRange: [], overlaps: [], backward: [], gaps: [], folded: [], lostLabel: [], starts: 0, marks: 0, ticks: 0, skipped: false };
 {
   const anchorCount = await page.evaluate(() => document.querySelectorAll('[data-slide]').length);
   reader.anchors = anchorCount;
@@ -196,8 +196,9 @@ const reader = { anchors: 0, mounted: false, pages: 0, outOfRange: [], overlaps:
         const sec = el.closest('section');
         const where = (sec ? sec.id + ' ' : '') + el.tagName.toLowerCase() +
           ' "' + (el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 26) + '"';
-        if (!m) return { where, bad: true, raw: el.dataset.slide };
-        return { where, from: +m[1], to: m[2] ? +m[2] : +m[1] };
+        const isSec = el.classList.contains('sec-head');
+        if (!m) return { where, isSec, bad: true, raw: el.dataset.slide };
+        return { where, isSec, from: +m[1], to: m[2] ? +m[2] : +m[1] };
       });
       const outOfRange = list
         .filter(a => a.bad || (total && (a.from < 1 || a.to > total || a.from > a.to)))
@@ -232,7 +233,32 @@ const reader = { anchors: 0, mounted: false, pages: 0, outOfRange: [], overlaps:
       const gaps = [];
       for (let i = 1; i <= total; i++) if (!covered.has(i)) gaps.push(i);
 
-      return { pages: total, outOfRange, overlaps, backward, gaps };
+      // 노트의 판정선과 슬라이드의 판정선은 개수가 맞아야 한다.
+      // 단, 기준은 앵커 개수가 아니라 "서로 다른 시작 쪽" 개수다.
+      // 노트 앵커 둘이 같은 슬라이드 쪽에서 시작하면 PDF에는 그릴 자리가 하나뿐이라
+      // 하나로 접힌다. 그건 정상이고, 그 외에 어긋나면 표시를 잃어버린 것이다.
+      const starts = new Map();      // 시작 쪽 → 그 쪽에서 시작하는 앵커 이름들
+      for (const a of list) {
+        if (a.bad) continue;
+        if (!starts.has(a.from)) starts.set(a.from, []);
+        starts.get(a.from).push(a);
+      }
+      const marks = document.querySelectorAll('.rdr-mark').length;
+      const ticks = document.querySelectorAll('.rdr-tick').length;
+      // 접힌 자리 중, 섹션끼리 부딪힌 것은 라벨 이름을 실제로 잃는다.
+      // 섹션 + h3 조합은 라벨이 이기므로 정보 손실이 없다.
+      const folded = [], lostLabel = [];
+      for (const [pg, v] of starts.entries()) {
+        if (v.length < 2) continue;
+        const line = `${pg}쪽: ${v.map(x => x.where).join('  |  ')}`;
+        if (v.filter(x => x.isSec).length > 1) lostLabel.push(line);
+        else folded.push(line);
+      }
+
+      return {
+        pages: total, outOfRange, overlaps, backward, gaps,
+        starts: starts.size, marks, ticks, folded, lostLabel,
+      };
     }));
   }
 }
@@ -303,6 +329,23 @@ if (reader.skipped) {
   line(`  slides/${stem}.pdf 가 있는지, reader.js 태그가 들어갔는지 확인할 것.`);
 } else {
   line(`[OK] 슬라이드 리더 동작 (앵커 ${reader.anchors}개 / PDF ${reader.pages}쪽)`);
+
+  // 노트의 판정선과 슬라이드의 판정선 개수가 맞는지.
+  // 앵커 개수가 아니라 "서로 다른 시작 쪽" 개수와 맞아야 한다.
+  const shown = reader.marks + reader.ticks;
+  if (shown === reader.starts) {
+    line(`[OK] 판정선 개수 일치 (노트 시작 쪽 ${reader.starts}개 = PDF 표시 ${shown}개` +
+         `: 라벨 ${reader.marks} + 눈금 ${reader.ticks})`);
+    if (reader.folded.length) {
+      line(`     같은 슬라이드 쪽에서 시작해 하나로 접힌 앵커 ${reader.folded.length}곳 (정상):`);
+      reader.folded.slice(0, 6).forEach(e => line('       · ' + e));
+    }
+  } else {
+    fail++;
+    line(`\n[FAIL] 판정선 개수 불일치: 노트 시작 쪽 ${reader.starts}개 ≠ PDF 표시 ${shown}개`);
+    line(`  라벨 ${reader.marks} + 눈금 ${reader.ticks}. 슬라이드쪽 표시가 조용히 사라졌다.`);
+    line('  섹션 두 개가 같은 쪽에서 시작하면 라벨 하나를 잃는다. reader.js의 layout()을 볼 것.');
+  }
 }
 
 if (reader.outOfRange?.length) {
@@ -316,6 +359,13 @@ if (reader.overlaps?.length) {
   reader.overlaps.slice(0, 10).forEach(e => line('  · ' + e));
   line('  겹치면 역방향 동기화(PDF→노트)가 어느 쪽으로 갈지 정해지지 않는다.');
   line('  한 슬라이드는 그것을 실제로 다루는 곳 한 군데에만 앵커를 단다.');
+}
+if (reader.lostLabel?.length) {
+  fail++;
+  line(`\n[FAIL] 섹션 두 개가 같은 슬라이드 쪽에서 시작 ${reader.lostLabel.length}곳`);
+  reader.lostLabel.forEach(e => line('  · ' + e));
+  line('  슬라이드쪽에 라벨을 하나만 그릴 수 있어 섹션 이름 하나가 사라진다.');
+  line('  두 섹션이 정말 같은 쪽에서 시작한다면 하나로 합치거나 범위를 다시 나눌 것.');
 }
 if (reader.gaps?.length) {
   // 실패로 치지 않는다. 표지나 손글씨 삽입 페이지는 노트가 안 다루는 게 정상이다.
