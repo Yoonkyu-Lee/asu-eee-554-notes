@@ -15,6 +15,10 @@ const MIN_WIDTH = 1100;      // 이 아래로는 리더를 띄우지 않는다
 // 화면에 바늘로 표시되고 드래그로 옮길 수 있다. 저장하지 않는다(세션 한정).
 let followLine = 0.28;
 const FOLLOW_MIN = 0.06, FOLLOW_MAX = 0.6;
+
+// 슬라이드쪽 기준선. 페이지 열의 위에서 이만큼 내려온 지점에 걸친 쪽을 "현재"로 본다.
+// 노트쪽 바늘과 마주 보는 위치에 표시되고 역시 드래그로 옮길 수 있다.
+let pdfLine = 40;
 const PROG_MS = 2500;      // 프로그램 스크롤의 보조 타임아웃 (도착 판정이 주, 이건 안전장치)
 
 const anchors = [...document.querySelectorAll('[data-slide]')]
@@ -90,7 +94,8 @@ function buildUI() {
       <button id="rdr-follow" class="on" title="노트를 스크롤하면 슬라이드가 따라온다">따라가기</button>
       <button id="rdr-close" title="리더 닫기">✕</button>
     </div>
-    <div id="rdr-scroll"><div id="rdr-msg">슬라이드를 불러오는 중…</div></div>`;
+    <div id="rdr-scroll"><div id="rdr-msg">슬라이드를 불러오는 중…</div></div>
+    <div id="rdr-pin" title="슬라이드쪽 기준선. 여기 걸린 쪽이 '현재'다. 다른 구간으로 넘어가면 노트가 따라온다. 드래그해서 옮길 수 있다."></div>`;
   document.body.appendChild(root);
   document.body.classList.add('rdr-on');
 
@@ -115,6 +120,7 @@ function buildUI() {
     follow: root.querySelector('#rdr-follow'),
     close: root.querySelector('#rdr-close'),
     grab: root.querySelector('#rdr-grab'),
+    pin: root.querySelector('#rdr-pin'),
   };
 }
 
@@ -149,6 +155,17 @@ async function start() {
 let pages = [];          // { div, num, viewport, rendered, task }
 let renderObserver = null;
 
+// 앵커가 가리키는 노트 위치의 이름. 슬라이드쪽 구간 라벨에 쓴다.
+function anchorTitle(a) {
+  const el = a.el;
+  if (el.classList?.contains('sec-head')) {
+    const num = el.querySelector('.sec-num')?.textContent.trim() || '';
+    const h2 = el.querySelector('h2')?.textContent.trim() || '';
+    return (num ? num + ' ' : '') + h2;
+  }
+  return el.textContent.trim();
+}
+
 async function layout(doc) {
   const n = doc.numPages;
   const width = ui.scroll.clientWidth - 24;   // padding 12px 양쪽
@@ -158,7 +175,22 @@ async function layout(doc) {
   renderObserver?.disconnect();
   pages.forEach(p => { try { p.task?.cancel(); } catch {} });
   pages = [];
-  ui.scroll.querySelectorAll('.rdr-page').forEach(el => el.remove());
+  ui.scroll.querySelectorAll('.rdr-page,.rdr-mark,.rdr-tick').forEach(el => el.remove());
+
+  // 구간 경계를 미리 계산한다.
+  // 섹션 경계는 이름표를 달고, h3 하위 경계는 이름 없이 가는 눈금만 둔다.
+  // 라벨을 다 달면 페이지 열이 글자로 빽빽해진다.
+  const secMark = new Map();   // 쪽 번호 → 노트 섹션 이름
+  const subTick = new Set();   // 쪽 번호 (h3 경계)
+  const covered = new Set();   // 어떤 앵커든 걸린 쪽
+  for (const a of anchors) {
+    for (let i = a.from; i <= a.to; i++) covered.add(i);
+    if (a.el.classList?.contains('sec-head')) {
+      if (!secMark.has(a.from)) secMark.set(a.from, anchorTitle(a));
+    } else {
+      subTick.add(a.from);
+    }
+  }
 
   for (let i = 1; i <= n; i++) {
     const page = await doc.getPage(i);
@@ -166,12 +198,23 @@ async function layout(doc) {
     const scale = width / base.width;
     const vp = page.getViewport({ scale });
 
+    if (secMark.has(i)) {
+      const mk = document.createElement('div');
+      mk.className = 'rdr-mark';
+      mk.textContent = secMark.get(i);
+      mk.title = `노트 ${secMark.get(i)} 가 여기서 시작한다`;
+      ui.scroll.appendChild(mk);
+    } else if (subTick.has(i)) {
+      ui.scroll.appendChild(Object.assign(document.createElement('div'), { className: 'rdr-tick' }));
+    }
+
     const div = document.createElement('div');
-    div.className = 'rdr-page';
+    div.className = 'rdr-page' + (covered.has(i) ? '' : ' is-bare');
     div.style.width = `${Math.round(vp.width)}px`;
     div.style.height = `${Math.round(vp.height)}px`;
     div.dataset.page = String(i);
-    div.innerHTML = `<span class="rdr-num">${i}</span>`;
+    div.innerHTML = `<span class="rdr-num">${i}</span>` +
+      (covered.has(i) ? '' : '<span class="rdr-bare">노트에 없음</span>');
     ui.scroll.appendChild(div);
 
     pages.push({ div, num: i, page, vp, rendered: false, task: null });
@@ -294,7 +337,7 @@ function anchorFromNote() {
 
 // 지금 리더가 보고 있는 쪽.
 function pageFromPdf() {
-  const top = ui.scroll.scrollTop + 40;
+  const top = ui.scroll.scrollTop + pdfLine;
   let n = 1;
   for (let i = 1; i <= pages.length; i++) {
     if (pageTop(i) <= top) n = i; else break;
@@ -353,16 +396,21 @@ function syncNoteToPdf(force = false) {
 
 // 동기화가 실제로 일어난 순간 바늘을 잠깐 강조한다.
 // 왜 지금 슬라이드가 넘어갔는지 눈으로 이어지게 하려는 것.
-let pulseTimer = null;
-function pulseNeedle() {
-  if (!ui?.needle) return;
-  ui.needle.classList.add('is-hit');
-  clearTimeout(pulseTimer);
-  pulseTimer = setTimeout(() => ui?.needle?.classList.remove('is-hit'), 420);
+const pulseTimer = { needle: null, pin: null };
+function pulse(which) {
+  const el = which === 'pin' ? ui?.pin : ui?.needle;
+  if (!el) return;
+  el.classList.add('is-hit');
+  clearTimeout(pulseTimer[which]);
+  pulseTimer[which] = setTimeout(() => el.classList.remove('is-hit'), 420);
 }
+const pulseNeedle = () => pulse('needle');
 
 function placeNeedle() {
   if (ui?.needle) ui.needle.style.top = `${(followLine * 100).toFixed(2)}%`;
+}
+function placePin() {
+  if (ui?.pin) ui.pin.style.top = `calc(var(--rdr-head) + ${Math.round(pdfLine)}px)`;
 }
 
 // 슬라이드 → 노트. 슬라이드가 현재 구간을 벗어났을 때만 움직인다.
@@ -384,6 +432,7 @@ function alignNoteToPage(n) {
   const y = a.el.getBoundingClientRect().top + window.scrollY - 18;
   if (Math.abs(y - window.scrollY) < 8) return;
   scrollNoteTo(y, true);
+  pulse('pin');                            // 슬라이드가 기준선을 넘어 구간을 바꿨다는 신호
 }
 
 function syncPdfToNote() {
@@ -472,6 +521,32 @@ function wireChrome() {
   };
   ui.needle.addEventListener('pointerup', endNeedle);
   ui.needle.addEventListener('pointercancel', endNeedle);
+
+  // 슬라이드쪽 기준선 드래그. 노트쪽과 같은 방식이되 단위가 %가 아니라 px다.
+  // 페이지 열의 위에서부터의 거리라서 패널 높이가 바뀌어도 의미가 유지된다.
+  placePin();
+  let pinDrag = false;
+  ui.pin.addEventListener('pointerdown', e => {
+    pinDrag = true;
+    ui.pin.setPointerCapture(e.pointerId);
+    document.body.classList.add('rdr-pin-drag');
+    e.preventDefault();
+  });
+  ui.pin.addEventListener('pointermove', e => {
+    if (!pinDrag) return;
+    const r = ui.scroll.getBoundingClientRect();
+    pdfLine = Math.max(8, Math.min(r.height * 0.7, e.clientY - r.top));
+    placePin();
+    syncPdfToNote();
+  });
+  const endPin = e => {
+    if (!pinDrag) return;
+    pinDrag = false;
+    try { ui.pin.releasePointerCapture(e.pointerId); } catch {}
+    document.body.classList.remove('rdr-pin-drag');
+  };
+  ui.pin.addEventListener('pointerup', endPin);
+  ui.pin.addEventListener('pointercancel', endPin);
 
   // 폭 조절
   let dragging = false;
