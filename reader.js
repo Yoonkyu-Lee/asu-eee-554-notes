@@ -10,7 +10,11 @@
 //   <section id="s5" data-slide="12-17">  12~17쪽을 한 구간으로 묶는다
 
 const MIN_WIDTH = 1100;      // 이 아래로는 리더를 띄우지 않는다
-const FOLLOW_LINE = 0.28;    // 화면 위에서 28% 지점에 걸린 앵커를 "현재"로 본다
+
+// 동기화 기준선. 화면 위에서 이 비율 지점을 책갈피 선이 넘어가면 슬라이드가 넘어간다.
+// 화면에 바늘로 표시되고 드래그로 옮길 수 있다. 저장하지 않는다(세션 한정).
+let followLine = 0.28;
+const FOLLOW_MIN = 0.06, FOLLOW_MAX = 0.6;
 const PROG_MS = 2500;      // 프로그램 스크롤의 보조 타임아웃 (도착 판정이 주, 이건 안전장치)
 
 const anchors = [...document.querySelectorAll('[data-slide]')]
@@ -49,6 +53,7 @@ function teardown() {
   if (ui) {
     ui.root.remove();
     ui.openBtn?.remove();
+    ui.needle?.remove();
     document.body.classList.remove('rdr-on');
     ui = null;
   }
@@ -95,8 +100,13 @@ function buildUI() {
   openBtn.hidden = true;
   document.body.appendChild(openBtn);
 
+  const needle = document.createElement('div');
+  needle.id = 'rdr-needle';
+  needle.title = '동기화 기준선. 제목 옆 선이 여기를 넘어가면 슬라이드가 넘어간다. 드래그해서 옮길 수 있다.';
+  document.body.appendChild(needle);
+
   return {
-    root, openBtn,
+    root, openBtn, needle,
     scroll: root.querySelector('#rdr-scroll'),
     msg: root.querySelector('#rdr-msg'),
     pg: root.querySelector('#rdr-pg'),
@@ -273,7 +283,7 @@ function setCurrent(n) {
 
 // 화면 위쪽 기준선에 걸린 마지막 앵커 = 지금 읽고 있는 구간.
 function anchorFromNote() {
-  const line = window.innerHeight * FOLLOW_LINE;
+  const line = window.innerHeight * followLine;
   let found = anchors[0];
   for (const a of anchors) {
     if (a.el.getBoundingClientRect().top <= line) found = a;
@@ -338,6 +348,21 @@ function syncNoteToPdf(force = false) {
 
   if (!force && inRange(a, curPage)) return;   // 이미 이 구간을 보고 있으면 그대로 둔다
   goToPage(a.from);
+  pulseNeedle();                                // 방금 기준선을 넘어서 넘어갔다는 신호
+}
+
+// 동기화가 실제로 일어난 순간 바늘을 잠깐 강조한다.
+// 왜 지금 슬라이드가 넘어갔는지 눈으로 이어지게 하려는 것.
+let pulseTimer = null;
+function pulseNeedle() {
+  if (!ui?.needle) return;
+  ui.needle.classList.add('is-hit');
+  clearTimeout(pulseTimer);
+  pulseTimer = setTimeout(() => ui?.needle?.classList.remove('is-hit'), 420);
+}
+
+function placeNeedle() {
+  if (ui?.needle) ui.needle.style.top = `${(followLine * 100).toFixed(2)}%`;
 }
 
 // 슬라이드 → 노트. 슬라이드가 현재 구간을 벗어났을 때만 움직인다.
@@ -420,6 +445,33 @@ function wireChrome() {
     relayoutWidth();
     syncNoteToPdf(true);
   });
+
+  // 기준선 바늘 드래그.
+  // 끌면서 바로 동기화를 다시 판정한다. 바늘이 제목을 지나는 순간 슬라이드가
+  // 넘어가는 게 보여야 이 장치가 뭘 하는지 알 수 있다.
+  placeNeedle();
+  let needleDrag = false;
+  ui.needle.addEventListener('pointerdown', e => {
+    needleDrag = true;
+    ui.needle.setPointerCapture(e.pointerId);
+    document.body.classList.add('rdr-needle-drag');
+    e.preventDefault();
+  });
+  ui.needle.addEventListener('pointermove', e => {
+    if (!needleDrag) return;
+    const r = e.clientY / window.innerHeight;
+    followLine = Math.max(FOLLOW_MIN, Math.min(FOLLOW_MAX, r));
+    placeNeedle();
+    syncNoteToPdf();
+  });
+  const endNeedle = e => {
+    if (!needleDrag) return;
+    needleDrag = false;
+    try { ui.needle.releasePointerCapture(e.pointerId); } catch {}
+    document.body.classList.remove('rdr-needle-drag');
+  };
+  ui.needle.addEventListener('pointerup', endNeedle);
+  ui.needle.addEventListener('pointercancel', endNeedle);
 
   // 폭 조절
   let dragging = false;
