@@ -6,23 +6,109 @@
 <title>EEE 554 · Module 2 — Probability Spaces</title>
 <style>
 :root{
+  color-scheme:light dark;
+
+  /* 색 성분. rgba(var(--blue-rgb),.16) 형태로 농도 변형을 만든다. */
+  --ink-rgb:20,22,26;
+  --blue-rgb:18,80,196;
+  --pink-rgb:217,20,122;
+  --violet-rgb:107,47,168;
+  --green-rgb:0,132,95;
+  --amber-rgb:178,106,0;
+  --sel-rgb:75,29,140;
+
   --paper:#FAFAF8;
   --card:#FFFFFF;
-  --ink:#14161A;
+  --ink:rgb(var(--ink-rgb));
   --ink2:#565D66;
   --ink3:#8A9099;
   --rule:#E2E1DB;
-  --blue:#1250C4;
-  --pink:#D9147A;
-  --violet:#6B2FA8;
-  --green:#00845F;
-  --amber:#B26A00;
+  --blue:rgb(var(--blue-rgb));
+  --pink:rgb(var(--pink-rgb));
+  --violet:rgb(var(--violet-rgb));
+  --green:rgb(var(--green-rgb));
+  --amber:rgb(var(--amber-rgb));
   --amber-bg:#FDF6E9;
   --red:#C02626;
-  --sel:#4A1D8C;
+  --sel:rgb(var(--sel-rgb));
+
+  /* 보조 표면과 진한 변형 */
+  --amber-line:#F0E2C4;
+  --code-bg:#F0EFEA;
+  --chip:#F1F0EB;
+  --sel-soft:#F6F2FB;
+  --pink-deep:#8B0D4E;
+  --green-deep:#005A42;
+  --amber-deep:#7A4A00;
+  --violet-deep:#3B1E70;
+  --brown:#A3532B;
+  --teal:#0E7490;
+  --shadow:rgba(var(--ink-rgb),.06);
+
   --mono:ui-monospace,"Cascadia Mono","Cascadia Code",Consolas,"SFMono-Regular",monospace;
   --sans:"Pretendard","Pretendard Variable",-apple-system,"Segoe UI Variable Text","Segoe UI","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
   --serif:"Cambria Math","STIX Two Math","Latin Modern Math",Cambria,"Times New Roman",serif;
+}
+
+/* 다크 팔레트. 의미 고정 색상(A=blue, B=pink, 교집합=violet, 함정=amber)은
+   그대로 두고 밝기만 어두운 배경에 맞게 올린다. */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:24px}
@@ -71,7 +157,7 @@ h4{font-size:15px;font-weight:700;margin:26px 0 8px;color:var(--ink)}
 p{margin:0 0 14px}
 ul,ol{margin:0 0 16px;padding-left:22px}
 li{margin-bottom:7px}
-code{font-family:var(--mono);font-size:.87em;background:#F0EFEA;padding:1px 5px;border-radius:4px}
+code{font-family:var(--mono);font-size:.87em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
 
 .m{font-family:var(--serif);font-style:normal;font-size:1.07em;white-space:nowrap}
 @media(max-width:900px){.m{white-space:normal}}
@@ -87,7 +173,7 @@ code{font-family:var(--mono);font-size:.87em;background:#F0EFEA;padding:1px 5px;
 .def .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:7px}
 .def p:last-child,.def ol:last-child,.def ul:last-child{margin-bottom:0}
 
-.trap{background:var(--amber-bg);border:1px solid #F0E2C4;border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.trap{background:var(--amber-bg);border:1px solid var(--amber-line);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
 .trap .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:7px;font-weight:600}
 .trap p:last-child,.trap ul:last-child{margin-bottom:0}
 .trap h4{margin-top:18px;font-size:14.5px}
@@ -146,19 +232,19 @@ figcaption{font-size:13px;color:var(--ink2);margin-top:14px;padding-top:12px;bor
 @media(max-width:560px){.subsets{grid-template-columns:repeat(2,1fr)}}
 .sub{font-family:var(--serif);font-size:15px;padding:9px 6px;text-align:center;background:var(--paper);border:1px solid var(--rule);border-radius:6px;cursor:pointer;user-select:none;transition:.12s;position:relative}
 .sub:hover{border-color:var(--sel)}
-.sub.on{background:#4A1D8C;border-color:#4A1D8C;color:#fff;font-weight:600}
-.sub.need{background:#FDF6E9;border-color:var(--amber);border-style:dashed;color:var(--amber)}
+.sub.on{background:var(--sel);border-color:var(--sel);color:var(--card);font-weight:600}
+.sub.need{background:var(--amber-bg);border-color:var(--amber);border-style:dashed;color:var(--amber)}
 .verdict{margin-top:18px;border-radius:8px;padding:15px 18px;font-size:14.5px;line-height:1.65}
-.verdict.ok{background:rgba(0,132,95,.08);border:1px solid rgba(0,132,95,.3);color:#00553E}
-.verdict.bad{background:var(--amber-bg);border:1px solid #F0E2C4;color:#7A4A00}
+.verdict.ok{background:rgba(var(--green-rgb),.08);border:1px solid rgba(var(--green-rgb),.3);color:var(--green-deep)}
+.verdict.bad{background:var(--amber-bg);border:1px solid var(--amber-line);color:var(--amber-deep)}
 .verdict .hd{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:8px}
 .verdict ul{margin:8px 0 0;padding-left:20px}
 .verdict li{margin-bottom:5px;font-size:14px}
 .verdict .m{font-size:1em}
 .presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
 .presets button{font-family:var(--sans);font-size:12.5px;padding:7px 12px;background:var(--paper);border:1px solid var(--rule);border-radius:6px;color:var(--ink2);cursor:pointer;transition:.13s}
-.presets button:hover{border-color:var(--sel);color:var(--sel);background:#F6F2FB}
-.presets button.act{border-color:var(--green);color:var(--green);background:rgba(0,132,95,.06);font-weight:600}
+.presets button:hover{border-color:var(--sel);color:var(--sel);background:var(--sel-soft)}
+.presets button.act{border-color:var(--green);color:var(--green);background:rgba(var(--green-rgb),.06);font-weight:600}
 .hintline{font-size:13px;color:var(--ink2);margin-top:16px;line-height:1.6;border-top:1px solid var(--rule);padding-top:13px}
 
 table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14.5px}
@@ -170,6 +256,17 @@ footer{grid-column:1/-1;border-top:1px solid var(--rule);padding-top:28px;margin
 footer a{color:var(--blue)}
 :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ── 테마 토글 ──────────────────────────── */
+/* 기본은 OS 설정(prefers-color-scheme)을 따른다. 이 버튼은 그걸 덮어쓴다. */
+.theme-btn{position:fixed;left:16px;bottom:16px;z-index:70;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 6px var(--shadow);transition:.13s}
+.theme-btn:hover{border-color:var(--sel);color:var(--sel)}
+@media(max-width:900px){.theme-btn{left:10px;bottom:10px;font-size:10.5px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.theme-btn{transition:none}}
 </style>
 </head>
 <body>
@@ -231,50 +328,50 @@ footer a{color:var(--blue)}
   <figure>
   <svg viewBox="0 0 700 260" role="img" aria-label="확률 공간 삼중항 구조도">
     <defs>
-      <marker id="a1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#8A9099"/></marker>
+      <marker id="a1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="var(--ink3)"/></marker>
     </defs>
 
     <!-- Omega -->
-    <rect x="20" y="60" width="170" height="130" rx="10" fill="rgba(18,80,196,.07)" stroke="#1250C4" stroke-width="1.5"/>
-    <text x="105" y="86" text-anchor="middle" class="svgtxt it" style="font-size:20px;fill:#1250C4">Ω</text>
-    <text x="105" y="106" text-anchor="middle" class="svglab" style="font-size:10px;fill:#1250C4;letter-spacing:.08em">SAMPLE SPACE</text>
-    <g class="svgnum" style="font-size:12px;fill:#565D66">
-      <circle cx="55" cy="132" r="3" fill="#1250C4"/><text x="66" y="136">ω₁</text>
-      <circle cx="115" cy="132" r="3" fill="#1250C4"/><text x="126" y="136">ω₂</text>
-      <circle cx="55" cy="160" r="3" fill="#1250C4"/><text x="66" y="164">ω₃</text>
-      <circle cx="115" cy="160" r="3" fill="#1250C4"/><text x="126" y="164">…</text>
+    <rect x="20" y="60" width="170" height="130" rx="10" fill="rgba(var(--blue-rgb),.07)" stroke="var(--blue)" stroke-width="1.5"/>
+    <text x="105" y="86" text-anchor="middle" class="svgtxt it" style="font-size:20px;fill:var(--blue)">Ω</text>
+    <text x="105" y="106" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--blue);letter-spacing:.08em">SAMPLE SPACE</text>
+    <g class="svgnum" style="font-size:12px;fill:var(--ink2)">
+      <circle cx="55" cy="132" r="3" fill="var(--blue)"/><text x="66" y="136">ω₁</text>
+      <circle cx="115" cy="132" r="3" fill="var(--blue)"/><text x="126" y="136">ω₂</text>
+      <circle cx="55" cy="160" r="3" fill="var(--blue)"/><text x="66" y="164">ω₃</text>
+      <circle cx="115" cy="160" r="3" fill="var(--blue)"/><text x="126" y="164">…</text>
     </g>
-    <text x="105" y="212" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:#565D66">일어날 수 있는 결과들</text>
+    <text x="105" y="212" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)">일어날 수 있는 결과들</text>
 
-    <line x1="198" y1="125" x2="240" y2="125" stroke="#8A9099" stroke-width="1.4" marker-end="url(#a1)"/>
+    <line x1="198" y1="125" x2="240" y2="125" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#a1)"/>
     <text x="219" y="112" text-anchor="middle" class="svglab" style="font-size:9px">부분집합</text>
 
     <!-- F -->
-    <rect x="248" y="60" width="180" height="130" rx="10" fill="rgba(217,20,122,.07)" stroke="#D9147A" stroke-width="1.5"/>
-    <text x="338" y="86" text-anchor="middle" class="svgtxt it" style="font-size:20px;fill:#D9147A">ℱ</text>
-    <text x="338" y="106" text-anchor="middle" class="svglab" style="font-size:10px;fill:#D9147A;letter-spacing:.08em">EVENT SPACE</text>
-    <g class="svgtxt" style="font-size:12.5px;fill:#565D66">
+    <rect x="248" y="60" width="180" height="130" rx="10" fill="rgba(var(--pink-rgb),.07)" stroke="var(--pink)" stroke-width="1.5"/>
+    <text x="338" y="86" text-anchor="middle" class="svgtxt it" style="font-size:20px;fill:var(--pink)">ℱ</text>
+    <text x="338" y="106" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--pink);letter-spacing:.08em">EVENT SPACE</text>
+    <g class="svgtxt" style="font-size:12.5px;fill:var(--ink2)">
       <text x="338" y="130" text-anchor="middle">∅, Ω, <tspan font-style="italic">A</tspan>, <tspan font-style="italic">A</tspan><tspan font-size="9" dy="-4">c</tspan><tspan dy="4">, …</tspan></text>
-      <text x="338" y="152" text-anchor="middle" style="font-size:11.5px;fill:#8A9099">ℱ ⊆ 2^Ω</text>
+      <text x="338" y="152" text-anchor="middle" style="font-size:11.5px;fill:var(--ink3)">ℱ ⊆ 2^Ω</text>
     </g>
-    <text x="338" y="212" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:#565D66">물어봐도 되는 질문들</text>
+    <text x="338" y="212" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)">물어봐도 되는 질문들</text>
 
-    <line x1="436" y1="125" x2="478" y2="125" stroke="#8A9099" stroke-width="1.4" marker-end="url(#a1)"/>
+    <line x1="436" y1="125" x2="478" y2="125" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#a1)"/>
     <text x="457" y="112" text-anchor="middle" class="svglab" style="font-size:9px">측도</text>
 
     <!-- P -->
-    <rect x="486" y="60" width="190" height="130" rx="10" fill="rgba(0,132,95,.07)" stroke="#00845F" stroke-width="1.5"/>
-    <text x="581" y="86" text-anchor="middle" class="svgtxt it" style="font-size:20px;fill:#00845F">P</text>
-    <text x="581" y="106" text-anchor="middle" class="svglab" style="font-size:10px;fill:#00845F;letter-spacing:.08em">PROBABILITY MEASURE</text>
-    <line x1="510" y1="145" x2="652" y2="145" stroke="#00845F" stroke-width="2"/>
-    <line x1="510" y1="139" x2="510" y2="151" stroke="#00845F" stroke-width="2"/>
-    <line x1="652" y1="139" x2="652" y2="151" stroke="#00845F" stroke-width="2"/>
-    <text x="510" y="167" text-anchor="middle" class="svgnum" style="font-size:12px;fill:#00845F">0</text>
-    <text x="652" y="167" text-anchor="middle" class="svgnum" style="font-size:12px;fill:#00845F">1</text>
-    <text x="581" y="212" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:#565D66">각 질문에 붙는 숫자</text>
+    <rect x="486" y="60" width="190" height="130" rx="10" fill="rgba(var(--green-rgb),.07)" stroke="var(--green)" stroke-width="1.5"/>
+    <text x="581" y="86" text-anchor="middle" class="svgtxt it" style="font-size:20px;fill:var(--green)">P</text>
+    <text x="581" y="106" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--green);letter-spacing:.08em">PROBABILITY MEASURE</text>
+    <line x1="510" y1="145" x2="652" y2="145" stroke="var(--green)" stroke-width="2"/>
+    <line x1="510" y1="139" x2="510" y2="151" stroke="var(--green)" stroke-width="2"/>
+    <line x1="652" y1="139" x2="652" y2="151" stroke="var(--green)" stroke-width="2"/>
+    <text x="510" y="167" text-anchor="middle" class="svgnum" style="font-size:12px;fill:var(--green)">0</text>
+    <text x="652" y="167" text-anchor="middle" class="svgnum" style="font-size:12px;fill:var(--green)">1</text>
+    <text x="581" y="212" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)">각 질문에 붙는 숫자</text>
 
-    <text x="350" y="34" text-anchor="middle" class="svgtxt" style="font-size:16px;fill:#14161A">확률 공간 &nbsp; (<tspan font-style="italic">Ω</tspan>, ℱ, <tspan font-style="italic">P</tspan>)</text>
-    <text x="350" y="248" text-anchor="middle" class="svglab" style="font-size:11px;fill:#8A9099">이 셋이 다 갖춰져야 "확률 문제"가 성립한다</text>
+    <text x="350" y="34" text-anchor="middle" class="svgtxt" style="font-size:16px;fill:var(--ink)">확률 공간 &nbsp; (<tspan font-style="italic">Ω</tspan>, ℱ, <tspan font-style="italic">P</tspan>)</text>
+    <text x="350" y="248" text-anchor="middle" class="svglab" style="font-size:11px;fill:var(--ink3)">이 셋이 다 갖춰져야 "확률 문제"가 성립한다</text>
   </svg>
   <figcaption>세 칸 중 가운데 <span class="m">ℱ</span>가 이번 모듈의 주인공이야. <span class="m"><i>Ω</i></span>는 Module 1에서 이미 했고, <span class="m"><i>P</i></span>는 공리 세 줄이면 끝나거든.</figcaption>
   </figure>
@@ -317,36 +414,36 @@ footer a{color:var(--blue)}
   <figure>
   <svg viewBox="0 0 700 272" role="img" aria-label="이벤트 스페이스가 연산에 대해 닫혀 있어야 한다는 그림">
     <defs>
-      <marker id="a2" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#D9147A"/></marker>
+      <marker id="a2" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--pink)"/></marker>
     </defs>
-    <ellipse cx="350" cy="130" rx="290" ry="105" fill="rgba(217,20,122,.05)" stroke="#D9147A" stroke-width="1.6"/>
-    <text x="350" y="42" text-anchor="middle" class="svgtxt it" style="font-size:19px;fill:#D9147A">ℱ</text>
-    <text x="350" y="60" text-anchor="middle" class="svglab" style="font-size:10px;fill:#D9147A;letter-spacing:.1em">물어봐도 되는 질문들</text>
+    <ellipse cx="350" cy="130" rx="290" ry="105" fill="rgba(var(--pink-rgb),.05)" stroke="var(--pink)" stroke-width="1.6"/>
+    <text x="350" y="42" text-anchor="middle" class="svgtxt it" style="font-size:19px;fill:var(--pink)">ℱ</text>
+    <text x="350" y="60" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--pink);letter-spacing:.1em">물어봐도 되는 질문들</text>
 
     <g class="svgtxt" style="font-size:15px">
-      <rect x="120" y="98" width="66" height="34" rx="7" fill="#FFF" stroke="#1250C4" stroke-width="1.4"/>
-      <text x="153" y="120" text-anchor="middle" font-style="italic" fill="#1250C4">A</text>
-      <rect x="120" y="148" width="66" height="34" rx="7" fill="#FFF" stroke="#1250C4" stroke-width="1.4"/>
-      <text x="153" y="170" text-anchor="middle" font-style="italic" fill="#1250C4">B</text>
+      <rect x="120" y="98" width="66" height="34" rx="7" fill="var(--card)" stroke="var(--blue)" stroke-width="1.4"/>
+      <text x="153" y="120" text-anchor="middle" font-style="italic" fill="var(--blue)">A</text>
+      <rect x="120" y="148" width="66" height="34" rx="7" fill="var(--card)" stroke="var(--blue)" stroke-width="1.4"/>
+      <text x="153" y="170" text-anchor="middle" font-style="italic" fill="var(--blue)">B</text>
 
-      <rect x="490" y="76" width="90" height="34" rx="7" fill="#FFF" stroke="#6B2FA8" stroke-width="1.4"/>
-      <text x="535" y="98" text-anchor="middle" fill="#6B2FA8"><tspan font-style="italic">A</tspan><tspan font-size="10" dy="-5">c</tspan></text>
-      <rect x="490" y="121" width="90" height="34" rx="7" fill="#FFF" stroke="#6B2FA8" stroke-width="1.4"/>
-      <text x="535" y="143" text-anchor="middle" fill="#6B2FA8"><tspan font-style="italic">A</tspan> ∪ <tspan font-style="italic">B</tspan></text>
-      <rect x="490" y="166" width="90" height="34" rx="7" fill="#FFF" stroke="#6B2FA8" stroke-width="1.4"/>
-      <text x="535" y="188" text-anchor="middle" fill="#6B2FA8"><tspan font-style="italic">A</tspan> ∩ <tspan font-style="italic">B</tspan></text>
+      <rect x="490" y="76" width="90" height="34" rx="7" fill="var(--card)" stroke="var(--violet)" stroke-width="1.4"/>
+      <text x="535" y="98" text-anchor="middle" fill="var(--violet)"><tspan font-style="italic">A</tspan><tspan font-size="10" dy="-5">c</tspan></text>
+      <rect x="490" y="121" width="90" height="34" rx="7" fill="var(--card)" stroke="var(--violet)" stroke-width="1.4"/>
+      <text x="535" y="143" text-anchor="middle" fill="var(--violet)"><tspan font-style="italic">A</tspan> ∪ <tspan font-style="italic">B</tspan></text>
+      <rect x="490" y="166" width="90" height="34" rx="7" fill="var(--card)" stroke="var(--violet)" stroke-width="1.4"/>
+      <text x="535" y="188" text-anchor="middle" fill="var(--violet)"><tspan font-style="italic">A</tspan> ∩ <tspan font-style="italic">B</tspan></text>
     </g>
 
-    <g stroke="#D9147A" stroke-width="1.4" fill="none">
+    <g stroke="var(--pink)" stroke-width="1.4" fill="none">
       <path d="M 194 112 C 300 100, 380 92, 482 92" marker-end="url(#a2)"/>
       <path d="M 194 122 C 300 132, 380 137, 482 137" marker-end="url(#a2)"/>
       <path d="M 194 165 C 300 180, 380 183, 482 182" marker-end="url(#a2)"/>
     </g>
-    <text x="338" y="108" text-anchor="middle" class="svglab" style="font-size:10px;fill:#D9147A">NOT</text>
-    <text x="338" y="127" text-anchor="middle" class="svglab" style="font-size:10px;fill:#D9147A">OR</text>
-    <text x="338" y="196" text-anchor="middle" class="svglab" style="font-size:10px;fill:#D9147A">AND</text>
+    <text x="338" y="108" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--pink)">NOT</text>
+    <text x="338" y="127" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--pink)">OR</text>
+    <text x="338" y="196" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--pink)">AND</text>
 
-    <text x="350" y="262" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:#565D66">연산 결과가 반드시 ℱ 안으로 다시 들어와야 한다 = <tspan font-weight="700" fill="#14161A">닫혀 있다 (closed)</tspan></text>
+    <text x="350" y="262" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)">연산 결과가 반드시 ℱ 안으로 다시 들어와야 한다 = <tspan font-weight="700" fill="var(--ink)">닫혀 있다 (closed)</tspan></text>
   </svg>
   <figcaption>"닫혀 있다"는 표현이 이 그림이야. 안에 있는 것들끼리 연산해서 밖으로 나가버리면 안 돼. 프로그래밍으로 치면 <code>int + int = int</code>인 것처럼, 타입이 보존되어야 한다는 뜻이지.</figcaption>
   </figure>
@@ -415,45 +512,45 @@ footer a{color:var(--blue)}
 
   <figure>
   <svg viewBox="0 0 700 200" role="img" aria-label="σ-algebra의 크기 스펙트럼">
-    <line x1="60" y1="150" x2="640" y2="150" stroke="#8A9099" stroke-width="1.4"/>
+    <line x1="60" y1="150" x2="640" y2="150" stroke="var(--ink3)" stroke-width="1.4"/>
     <text x="60" y="176" text-anchor="middle" class="svglab" style="font-size:10.5px">정보 없음</text>
     <text x="640" y="176" text-anchor="middle" class="svglab" style="font-size:10.5px">완전한 정보</text>
 
     <g>
-      <circle cx="60" cy="150" r="6" fill="#8A9099"/>
-      <rect x="6" y="52" width="130" height="72" rx="8" fill="#FAFAF8" stroke="#E2E1DB"/>
+      <circle cx="60" cy="150" r="6" fill="var(--ink3)"/>
+      <rect x="6" y="52" width="130" height="72" rx="8" fill="var(--paper)" stroke="var(--rule)"/>
       <text x="71" y="76" text-anchor="middle" class="svgtxt" style="font-size:14px">{∅, Ω}</text>
       <text x="71" y="96" text-anchor="middle" class="svglab" style="font-size:9.5px">trivial σ-algebra</text>
-      <text x="71" y="113" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:#8A9099">질문 2개</text>
-      <line x1="60" y1="124" x2="60" y2="144" stroke="#E2E1DB"/>
+      <text x="71" y="113" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:var(--ink3)">질문 2개</text>
+      <line x1="60" y1="124" x2="60" y2="144" stroke="var(--rule)"/>
     </g>
 
     <g>
-      <circle cx="290" cy="150" r="6" fill="#6B2FA8"/>
-      <rect x="215" y="52" width="150" height="72" rx="8" fill="#FAFAF8" stroke="#6B2FA8"/>
-      <text x="290" y="76" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#6B2FA8">{∅, <tspan font-style="italic">A</tspan>, <tspan font-style="italic">A</tspan><tspan font-size="9" dy="-4">c</tspan><tspan dy="4">, Ω}</tspan></text>
-      <text x="290" y="96" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:#6B2FA8">σ(A)</text>
-      <text x="290" y="113" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:#8A9099">질문 4개</text>
-      <line x1="290" y1="124" x2="290" y2="144" stroke="#E2E1DB"/>
+      <circle cx="290" cy="150" r="6" fill="var(--violet)"/>
+      <rect x="215" y="52" width="150" height="72" rx="8" fill="var(--paper)" stroke="var(--violet)"/>
+      <text x="290" y="76" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--violet)">{∅, <tspan font-style="italic">A</tspan>, <tspan font-style="italic">A</tspan><tspan font-size="9" dy="-4">c</tspan><tspan dy="4">, Ω}</tspan></text>
+      <text x="290" y="96" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:var(--violet)">σ(A)</text>
+      <text x="290" y="113" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:var(--ink3)">질문 4개</text>
+      <line x1="290" y1="124" x2="290" y2="144" stroke="var(--rule)"/>
     </g>
 
     <g>
-      <circle cx="520" cy="150" r="6" fill="#1250C4"/>
-      <rect x="450" y="52" width="140" height="72" rx="8" fill="#FAFAF8" stroke="#E2E1DB"/>
+      <circle cx="520" cy="150" r="6" fill="var(--blue)"/>
+      <rect x="450" y="52" width="140" height="72" rx="8" fill="var(--paper)" stroke="var(--rule)"/>
       <text x="520" y="76" text-anchor="middle" class="svgtxt" style="font-size:13px">{∅,{1},{2,3},…}</text>
       <text x="520" y="96" text-anchor="middle" class="svglab" style="font-size:9.5px">중간 크기</text>
-      <text x="520" y="113" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:#8A9099">질문 여러 개</text>
-      <line x1="520" y1="124" x2="520" y2="144" stroke="#E2E1DB"/>
+      <text x="520" y="113" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:var(--ink3)">질문 여러 개</text>
+      <line x1="520" y1="124" x2="520" y2="144" stroke="var(--rule)"/>
     </g>
 
     <g>
-      <circle cx="640" cy="150" r="6" fill="#00845F"/>
-      <text x="640" y="120" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#00845F">2^Ω</text>
-      <text x="640" y="136" text-anchor="middle" class="svglab" style="font-size:9px;fill:#00845F">2ⁿ개</text>
+      <circle cx="640" cy="150" r="6" fill="var(--green)"/>
+      <text x="640" y="120" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--green)">2^Ω</text>
+      <text x="640" y="136" text-anchor="middle" class="svglab" style="font-size:9px;fill:var(--green)">2ⁿ개</text>
     </g>
 
-    <text x="350" y="28" text-anchor="middle" class="svgtxt" style="font-size:13.5px;fill:#565D66">
-      Ω 하나에 σ-algebra는 <tspan font-weight="700" fill="#14161A">여러 개</tspan> 존재한다. 양 끝 두 개는 언제나 σ-algebra다.
+    <text x="350" y="28" text-anchor="middle" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)">
+      Ω 하나에 σ-algebra는 <tspan font-weight="700" fill="var(--ink)">여러 개</tspan> 존재한다. 양 끝 두 개는 언제나 σ-algebra다.
     </text>
   </svg>
   <figcaption>왼쪽 끝 <span class="m">{∅, <i>Ω</i>}</span>는 "아무것도 구별 못 하는" 상태고, 오른쪽 끝 <span class="m">2<sup><i>Ω</i></sup></span>는 "다 구별하는" 상태야. <span class="m">ℱ</span>를 고른다는 건 이 스펙트럼 위에서 위치를 정하는 일이야.</figcaption>
@@ -555,26 +652,26 @@ footer a{color:var(--blue)}
   <figure>
   <svg viewBox="0 0 700 220" role="img" aria-label="사건 하나가 σ-algebra 네 개를 생성하는 과정">
     <defs>
-      <marker id="a3" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#8A9099"/></marker>
+      <marker id="a3" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--ink3)"/></marker>
     </defs>
     <text x="14" y="24" class="svglab" style="font-size:11px;letter-spacing:.1em">A 하나만 주어졌을 때 억지로 딸려 들어오는 것들</text>
 
     <g class="svgtxt" style="font-size:16px">
-      <rect x="30" y="76" width="110" height="46" rx="8" fill="rgba(18,80,196,.14)" stroke="#1250C4" stroke-width="1.6"/>
-      <text x="85" y="105" text-anchor="middle" font-style="italic" fill="#1250C4">A</text>
-      <text x="85" y="140" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:#1250C4">시작점</text>
+      <rect x="30" y="76" width="110" height="46" rx="8" fill="rgba(var(--blue-rgb),.14)" stroke="var(--blue)" stroke-width="1.6"/>
+      <text x="85" y="105" text-anchor="middle" font-style="italic" fill="var(--blue)">A</text>
+      <text x="85" y="140" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:var(--blue)">시작점</text>
 
-      <rect x="230" y="30" width="110" height="42" rx="8" fill="#FFF" stroke="#6B2FA8" stroke-width="1.4"/>
-      <text x="285" y="57" text-anchor="middle" fill="#6B2FA8"><tspan font-style="italic">A</tspan><tspan font-size="10" dy="-5">c</tspan></text>
+      <rect x="230" y="30" width="110" height="42" rx="8" fill="var(--card)" stroke="var(--violet)" stroke-width="1.4"/>
+      <text x="285" y="57" text-anchor="middle" fill="var(--violet)"><tspan font-style="italic">A</tspan><tspan font-size="10" dy="-5">c</tspan></text>
 
-      <rect x="230" y="82" width="110" height="42" rx="8" fill="#FFF" stroke="#6B2FA8" stroke-width="1.4"/>
-      <text x="285" y="109" text-anchor="middle" fill="#6B2FA8">Ω</text>
+      <rect x="230" y="82" width="110" height="42" rx="8" fill="var(--card)" stroke="var(--violet)" stroke-width="1.4"/>
+      <text x="285" y="109" text-anchor="middle" fill="var(--violet)">Ω</text>
 
-      <rect x="230" y="134" width="110" height="42" rx="8" fill="#FFF" stroke="#6B2FA8" stroke-width="1.4"/>
-      <text x="285" y="161" text-anchor="middle" fill="#6B2FA8">∅</text>
+      <rect x="230" y="134" width="110" height="42" rx="8" fill="var(--card)" stroke="var(--violet)" stroke-width="1.4"/>
+      <text x="285" y="161" text-anchor="middle" fill="var(--violet)">∅</text>
     </g>
 
-    <g stroke="#8A9099" stroke-width="1.3" fill="none">
+    <g stroke="var(--ink3)" stroke-width="1.3" fill="none">
       <path d="M 146 92 C 190 76, 200 60, 222 54" marker-end="url(#a3)"/>
       <path d="M 146 100 C 190 100, 200 102, 222 103" marker-end="url(#a3)"/>
       <path d="M 146 110 C 190 128, 200 148, 222 155" marker-end="url(#a3)"/>
@@ -583,14 +680,14 @@ footer a{color:var(--blue)}
     <text x="186" y="93" text-anchor="middle" class="svglab" style="font-size:9px">조건 ①</text>
     <text x="186" y="150" text-anchor="middle" class="svglab" style="font-size:9px">①+②</text>
 
-    <line x1="358" y1="103" x2="396" y2="103" stroke="#8A9099" stroke-width="1.4" marker-end="url(#a3)"/>
+    <line x1="358" y1="103" x2="396" y2="103" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#a3)"/>
 
-    <rect x="406" y="66" width="270" height="72" rx="10" fill="rgba(0,132,95,.07)" stroke="#00845F" stroke-width="1.6"/>
-    <text x="541" y="98" text-anchor="middle" class="svgtxt" style="font-size:17px;fill:#00845F"><tspan font-style="italic">σ</tspan>(<tspan font-style="italic">A</tspan>) = {∅, <tspan font-style="italic">A</tspan>, <tspan font-style="italic">A</tspan><tspan font-size="10" dy="-5">c</tspan><tspan dy="5">, Ω}</tspan></text>
-    <text x="541" y="122" text-anchor="middle" class="svglab" style="font-size:10px;fill:#00845F">원소 4개 — 더 넣을 것도 뺄 것도 없다</text>
+    <rect x="406" y="66" width="270" height="72" rx="10" fill="rgba(var(--green-rgb),.07)" stroke="var(--green)" stroke-width="1.6"/>
+    <text x="541" y="98" text-anchor="middle" class="svgtxt" style="font-size:17px;fill:var(--green)"><tspan font-style="italic">σ</tspan>(<tspan font-style="italic">A</tspan>) = {∅, <tspan font-style="italic">A</tspan>, <tspan font-style="italic">A</tspan><tspan font-size="10" dy="-5">c</tspan><tspan dy="5">, Ω}</tspan></text>
+    <text x="541" y="122" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--green)">원소 4개 — 더 넣을 것도 뺄 것도 없다</text>
 
-    <text x="350" y="206" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:#565D66">
-      비자명한 사건 하나가 σ-algebra 원소 <tspan font-weight="700" fill="#14161A">4개</tspan>를 만든다. 이 넷은 Module 1의 <tspan font-weight="700" fill="#14161A">{A, Aᶜ} 분할</tspan>과 정확히 대응한다.
+    <text x="350" y="206" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)">
+      비자명한 사건 하나가 σ-algebra 원소 <tspan font-weight="700" fill="var(--ink)">4개</tspan>를 만든다. 이 넷은 Module 1의 <tspan font-weight="700" fill="var(--ink)">{A, Aᶜ} 분할</tspan>과 정확히 대응한다.
     </text>
   </svg>
   <figcaption>슬라이드 14~15쪽 내용. <span class="m"><i>A</i></span>를 물어보기로 결정한 순간, "<span class="m"><i>A</i></span>가 아닌가"와 "무조건 참"과 "무조건 거짓"도 자동으로 물어볼 수 있게 돼.</figcaption>
@@ -610,7 +707,7 @@ footer a{color:var(--blue)}
         <li><span class="m"><i>A</i><sup>c</sup> ∩ <i>B</i><sup>c</sup> = {3,4} ∩ {1,4} = {4}</span></li>
       </ol>
       <p>즉 <strong>모든 낱개 원소 <span class="m">{1}, {2}, {3}, {4}</span>가 분리돼버렸어.</strong> 낱개가 다 있으면 합집합으로 임의의 부분집합을 만들 수 있으니까:</p>
-      <div class="eq"><i>σ</i>(<i>A</i>, <i>B</i>) = 2<sup><i>Ω</i></sup> &nbsp;&nbsp;<span style="font-family:var(--sans);font-size:14px;color:#8A9099">(원소 16개)</span></div>
+      <div class="eq"><i>σ</i>(<i>A</i>, <i>B</i>) = 2<sup><i>Ω</i></sup> &nbsp;&nbsp;<span style="font-family:var(--sans);font-size:14px;color:var(--ink3)">(원소 16개)</span></div>
       <p><strong>왜 이렇게 됐나:</strong> 이건 사실 Module 1에서 본 구조야. <span class="m"><i>A</i></span>와 <span class="m"><i>B</i></span>가 만드는 네 조각 <span class="m"><i>A</i>∩<i>B</i>, <i>A</i>∩<i>B</i><sup>c</sup>, <i>A</i><sup>c</sup>∩<i>B</i>, <i>A</i><sup>c</sup>∩<i>B</i><sup>c</sup></span>가 <span class="m"><i>Ω</i></span>의 <strong>분할</strong>인데, 이 조각들이 마침 원소 하나씩이었던 거야. <strong>조각이 낱개까지 잘게 쪼개지면 σ-algebra는 <span class="m">2<sup><i>Ω</i></sup></span>가 돼.</strong></p>
       <p>거꾸로 말하면, 예제 4.1의 <span class="m">ℱ = {∅, <i>Ω</i>, {1,2}, {3,4}}</span>는 조각이 <span class="m">{1,2}</span>와 <span class="m">{3,4}</span> 두 덩어리에서 멈춘 경우야. 1과 2를 나눌 질문이 없으니 더 안 쪼개져.</p>
       <p><strong>일반 법칙:</strong> 유한 <span class="m"><i>Ω</i></span>에서 σ-algebra는 <span class="m"><i>Ω</i></span>의 어떤 분할 하나와 1:1로 대응해. 그 분할의 조각이 <span class="m"><i>k</i></span>개면 σ-algebra의 원소는 <span class="m">2<sup><i>k</i></sup></span>개야. (조각들을 고르는 모든 방법 = 조각 집합의 멱집합)</p>
@@ -671,26 +768,26 @@ footer a{color:var(--blue)}
     <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em">서로소일 때만 그냥 더할 수 있다</text>
 
     <!-- disjoint case -->
-    <rect x="30" y="46" width="250" height="120" rx="8" fill="#FAFAF8" stroke="#E2E1DB"/>
-    <circle cx="98" cy="106" r="40" fill="rgba(18,80,196,.35)" stroke="#1250C4" stroke-width="1.4"/>
-    <circle cx="206" cy="106" r="34" fill="rgba(217,20,122,.35)" stroke="#D9147A" stroke-width="1.4"/>
-    <text x="98" y="111" text-anchor="middle" class="svgtxt it" style="font-size:14px;fill:#1250C4">A₁</text>
-    <text x="206" y="111" text-anchor="middle" class="svgtxt it" style="font-size:14px;fill:#D9147A">A₂</text>
-    <text x="42" y="64" class="svgtxt it" style="font-size:12px;fill:#8A9099">Ω</text>
-    <text x="155" y="188" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#00845F">P(A₁ ∪ A₂) = P(A₁) + P(A₂) ✓</text>
+    <rect x="30" y="46" width="250" height="120" rx="8" fill="var(--paper)" stroke="var(--rule)"/>
+    <circle cx="98" cy="106" r="40" fill="rgba(var(--blue-rgb),.35)" stroke="var(--blue)" stroke-width="1.4"/>
+    <circle cx="206" cy="106" r="34" fill="rgba(var(--pink-rgb),.35)" stroke="var(--pink)" stroke-width="1.4"/>
+    <text x="98" y="111" text-anchor="middle" class="svgtxt it" style="font-size:14px;fill:var(--blue)">A₁</text>
+    <text x="206" y="111" text-anchor="middle" class="svgtxt it" style="font-size:14px;fill:var(--pink)">A₂</text>
+    <text x="42" y="64" class="svgtxt it" style="font-size:12px;fill:var(--ink3)">Ω</text>
+    <text x="155" y="188" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--green)">P(A₁ ∪ A₂) = P(A₁) + P(A₂) ✓</text>
 
     <!-- overlapping case -->
-    <rect x="420" y="46" width="250" height="120" rx="8" fill="#FAFAF8" stroke="#E2E1DB"/>
+    <rect x="420" y="46" width="250" height="120" rx="8" fill="var(--paper)" stroke="var(--rule)"/>
     <defs><clipPath id="ov"><circle cx="500" cy="106" r="40"/></clipPath></defs>
-    <circle cx="500" cy="106" r="40" fill="rgba(18,80,196,.3)" stroke="#1250C4" stroke-width="1.4"/>
-    <circle cx="570" cy="106" r="40" fill="rgba(217,20,122,.3)" stroke="#D9147A" stroke-width="1.4"/>
-    <g clip-path="url(#ov)"><circle cx="570" cy="106" r="40" fill="rgba(178,106,0,.6)"/></g>
-    <text x="470" y="111" text-anchor="middle" class="svgtxt it" style="font-size:14px;fill:#1250C4">A</text>
-    <text x="600" y="111" text-anchor="middle" class="svgtxt it" style="font-size:14px;fill:#D9147A">B</text>
-    <text x="535" y="164" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:#B26A00">두 번 세짐</text>
-    <text x="545" y="188" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#B26A00">P(A ∪ B) ≠ P(A) + P(B) ✗</text>
+    <circle cx="500" cy="106" r="40" fill="rgba(var(--blue-rgb),.3)" stroke="var(--blue)" stroke-width="1.4"/>
+    <circle cx="570" cy="106" r="40" fill="rgba(var(--pink-rgb),.3)" stroke="var(--pink)" stroke-width="1.4"/>
+    <g clip-path="url(#ov)"><circle cx="570" cy="106" r="40" fill="rgba(var(--amber-rgb),.6)"/></g>
+    <text x="470" y="111" text-anchor="middle" class="svgtxt it" style="font-size:14px;fill:var(--blue)">A</text>
+    <text x="600" y="111" text-anchor="middle" class="svgtxt it" style="font-size:14px;fill:var(--pink)">B</text>
+    <text x="535" y="164" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:var(--amber)">두 번 세짐</text>
+    <text x="545" y="188" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--amber)">P(A ∪ B) ≠ P(A) + P(B) ✗</text>
 
-    <text x="350" y="110" text-anchor="middle" class="svglab" style="font-size:20px;fill:#E2E1DB">|</text>
+    <text x="350" y="110" text-anchor="middle" class="svglab" style="font-size:20px;fill:var(--rule)">|</text>
   </svg>
   <figcaption>겹치는 부분을 양쪽에서 한 번씩 세니까 총합이 실제보다 커져. 그래서 ③은 <strong>서로소일 때만</strong> 성립한다고 못 박아둔 거야. 겹칠 때 어떻게 되는지는 07번에서.</figcaption>
   </figure>
@@ -739,35 +836,35 @@ footer a{color:var(--blue)}
 
     <!-- step 1 -->
     <g transform="translate(0,0)">
-      <circle cx="100" cy="110" r="46" fill="rgba(18,80,196,.45)" stroke="#1250C4" stroke-width="1.3"/>
-      <circle cx="156" cy="110" r="46" fill="none" stroke="#D9147A" stroke-width="1.3" stroke-dasharray="3 3"/>
-      <text x="128" y="192" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:#1250C4">P(A)</text>
+      <circle cx="100" cy="110" r="46" fill="rgba(var(--blue-rgb),.45)" stroke="var(--blue)" stroke-width="1.3"/>
+      <circle cx="156" cy="110" r="46" fill="none" stroke="var(--pink)" stroke-width="1.3" stroke-dasharray="3 3"/>
+      <text x="128" y="192" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:var(--blue)">P(A)</text>
     </g>
-    <text x="212" y="118" text-anchor="middle" class="svgtxt" style="font-size:20px;fill:#8A9099">+</text>
+    <text x="212" y="118" text-anchor="middle" class="svgtxt" style="font-size:20px;fill:var(--ink3)">+</text>
 
     <!-- step 2 -->
     <g transform="translate(140,0)">
-      <circle cx="100" cy="110" r="46" fill="none" stroke="#1250C4" stroke-width="1.3" stroke-dasharray="3 3"/>
-      <circle cx="156" cy="110" r="46" fill="rgba(217,20,122,.45)" stroke="#D9147A" stroke-width="1.3"/>
-      <text x="128" y="192" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:#D9147A">P(B)</text>
+      <circle cx="100" cy="110" r="46" fill="none" stroke="var(--blue)" stroke-width="1.3" stroke-dasharray="3 3"/>
+      <circle cx="156" cy="110" r="46" fill="rgba(var(--pink-rgb),.45)" stroke="var(--pink)" stroke-width="1.3"/>
+      <text x="128" y="192" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:var(--pink)">P(B)</text>
     </g>
-    <text x="392" y="118" text-anchor="middle" class="svgtxt" style="font-size:20px;fill:#8A9099">−</text>
+    <text x="392" y="118" text-anchor="middle" class="svgtxt" style="font-size:20px;fill:var(--ink3)">−</text>
 
     <!-- step 3 -->
     <g transform="translate(320,0)">
       <defs><clipPath id="ie2"><circle cx="100" cy="110" r="46"/></clipPath></defs>
-      <circle cx="100" cy="110" r="46" fill="none" stroke="#1250C4" stroke-width="1.3" stroke-dasharray="3 3"/>
-      <circle cx="156" cy="110" r="46" fill="none" stroke="#D9147A" stroke-width="1.3" stroke-dasharray="3 3"/>
-      <g clip-path="url(#ie2)"><circle cx="156" cy="110" r="46" fill="rgba(178,106,0,.65)"/></g>
-      <text x="128" y="192" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:#B26A00">P(A∩B)</text>
+      <circle cx="100" cy="110" r="46" fill="none" stroke="var(--blue)" stroke-width="1.3" stroke-dasharray="3 3"/>
+      <circle cx="156" cy="110" r="46" fill="none" stroke="var(--pink)" stroke-width="1.3" stroke-dasharray="3 3"/>
+      <g clip-path="url(#ie2)"><circle cx="156" cy="110" r="46" fill="rgba(var(--amber-rgb),.65)"/></g>
+      <text x="128" y="192" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:var(--amber)">P(A∩B)</text>
     </g>
-    <text x="572" y="118" text-anchor="middle" class="svgtxt" style="font-size:20px;fill:#8A9099">=</text>
+    <text x="572" y="118" text-anchor="middle" class="svgtxt" style="font-size:20px;fill:var(--ink3)">=</text>
 
     <!-- result -->
     <g transform="translate(490,0)">
-      <circle cx="100" cy="110" r="46" fill="rgba(107,47,168,.45)" stroke="#1250C4" stroke-width="1.3"/>
-      <circle cx="156" cy="110" r="46" fill="rgba(107,47,168,.45)" stroke="#D9147A" stroke-width="1.3"/>
-      <text x="128" y="192" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:#6B2FA8">P(A∪B)</text>
+      <circle cx="100" cy="110" r="46" fill="rgba(var(--violet-rgb),.45)" stroke="var(--blue)" stroke-width="1.3"/>
+      <circle cx="156" cy="110" r="46" fill="rgba(var(--violet-rgb),.45)" stroke="var(--pink)" stroke-width="1.3"/>
+      <text x="128" y="192" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:var(--violet)">P(A∪B)</text>
     </g>
   </svg>
   <figcaption>이걸 공리로 증명하려면 <span class="m"><i>A</i>∪<i>B</i></span>를 <strong>서로소 조각으로 분해</strong>해야 해. 공리 ③은 서로소일 때만 쓸 수 있으니까. 아래 풀이를 봐.</figcaption>
@@ -878,42 +975,42 @@ footer a{color:var(--blue)}
   <figure>
   <svg viewBox="0 0 700 240" role="img" aria-label="열린 구간에서 보렐 집합을 만들어내는 과정">
     <defs>
-      <marker id="a5" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#8A9099"/></marker>
+      <marker id="a5" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--ink3)"/></marker>
     </defs>
     <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em">열린 구간에서 출발해서 계속 만들어낸다</text>
 
-    <rect x="24" y="44" width="150" height="150" rx="10" fill="rgba(18,80,196,.09)" stroke="#1250C4" stroke-width="1.6"/>
-    <text x="99" y="70" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#1250C4">시작 재료</text>
-    <line x1="46" y1="98" x2="152" y2="98" stroke="#1250C4" stroke-width="4"/>
-    <circle cx="46" cy="98" r="4" fill="#FAFAF8" stroke="#1250C4" stroke-width="1.6"/>
-    <circle cx="152" cy="98" r="4" fill="#FAFAF8" stroke="#1250C4" stroke-width="1.6"/>
-    <text x="99" y="124" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:#1250C4">(<tspan font-style="italic">a</tspan>, <tspan font-style="italic">b</tspan>)</text>
+    <rect x="24" y="44" width="150" height="150" rx="10" fill="rgba(var(--blue-rgb),.09)" stroke="var(--blue)" stroke-width="1.6"/>
+    <text x="99" y="70" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--blue)">시작 재료</text>
+    <line x1="46" y1="98" x2="152" y2="98" stroke="var(--blue)" stroke-width="4"/>
+    <circle cx="46" cy="98" r="4" fill="var(--paper)" stroke="var(--blue)" stroke-width="1.6"/>
+    <circle cx="152" cy="98" r="4" fill="var(--paper)" stroke="var(--blue)" stroke-width="1.6"/>
+    <text x="99" y="124" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:var(--blue)">(<tspan font-style="italic">a</tspan>, <tspan font-style="italic">b</tspan>)</text>
     <text x="99" y="150" text-anchor="middle" class="svglab" style="font-size:10px">모든 열린 구간</text>
-    <text x="99" y="172" text-anchor="middle" class="svgtxt" style="font-size:11.5px;fill:#8A9099">"X가 a와 b 사이인가?"</text>
+    <text x="99" y="172" text-anchor="middle" class="svgtxt" style="font-size:11.5px;fill:var(--ink3)">"X가 a와 b 사이인가?"</text>
 
-    <line x1="182" y1="118" x2="222" y2="118" stroke="#8A9099" stroke-width="1.4" marker-end="url(#a5)"/>
+    <line x1="182" y1="118" x2="222" y2="118" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#a5)"/>
     <text x="202" y="106" text-anchor="middle" class="svglab" style="font-size:9px">ᶜ, ⋃</text>
 
-    <rect x="232" y="44" width="200" height="150" rx="10" fill="#FAFAF8" stroke="#E2E1DB"/>
-    <text x="332" y="70" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#14161A">반복 적용</text>
-    <g class="svgtxt" style="font-size:13px;fill:#565D66">
+    <rect x="232" y="44" width="200" height="150" rx="10" fill="var(--paper)" stroke="var(--rule)"/>
+    <text x="332" y="70" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--ink)">반복 적용</text>
+    <g class="svgtxt" style="font-size:13px;fill:var(--ink2)">
       <text x="332" y="96" text-anchor="middle">[<tspan font-style="italic">a</tspan>, <tspan font-style="italic">b</tspan>] &nbsp; = &nbsp; ⋂ (<tspan font-style="italic">a</tspan>−1/<tspan font-style="italic">n</tspan>, <tspan font-style="italic">b</tspan>+1/<tspan font-style="italic">n</tspan>)</text>
       <text x="332" y="120" text-anchor="middle">{<tspan font-style="italic">a</tspan>} &nbsp; = &nbsp; ⋂ (<tspan font-style="italic">a</tspan>−1/<tspan font-style="italic">n</tspan>, <tspan font-style="italic">a</tspan>+1/<tspan font-style="italic">n</tspan>)</text>
       <text x="332" y="144" text-anchor="middle">(<tspan font-style="italic">a</tspan>, ∞), &nbsp; ℚ, &nbsp; 유한합집합 …</text>
     </g>
     <text x="332" y="172" text-anchor="middle" class="svglab" style="font-size:10px">가산 번의 연산으로 도달 가능</text>
 
-    <line x1="440" y1="118" x2="480" y2="118" stroke="#8A9099" stroke-width="1.4" marker-end="url(#a5)"/>
+    <line x1="440" y1="118" x2="480" y2="118" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#a5)"/>
 
-    <rect x="490" y="44" width="186" height="150" rx="10" fill="rgba(0,132,95,.08)" stroke="#00845F" stroke-width="1.6"/>
-    <text x="583" y="76" text-anchor="middle" class="svgtxt" style="font-size:19px;fill:#00845F">ℬ(ℝ)</text>
-    <text x="583" y="100" text-anchor="middle" class="svglab" style="font-size:10px;fill:#00845F">BOREL σ-ALGEBRA</text>
-    <text x="583" y="128" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:#565D66">공학에서 다루는</text>
-    <text x="583" y="148" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:#565D66">거의 모든 사건 포함</text>
-    <text x="583" y="174" text-anchor="middle" class="svgtxt" style="font-size:12px;fill:#B26A00">하지만 2^ℝ 는 아님</text>
+    <rect x="490" y="44" width="186" height="150" rx="10" fill="rgba(var(--green-rgb),.08)" stroke="var(--green)" stroke-width="1.6"/>
+    <text x="583" y="76" text-anchor="middle" class="svgtxt" style="font-size:19px;fill:var(--green)">ℬ(ℝ)</text>
+    <text x="583" y="100" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--green)">BOREL σ-ALGEBRA</text>
+    <text x="583" y="128" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)">공학에서 다루는</text>
+    <text x="583" y="148" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)">거의 모든 사건 포함</text>
+    <text x="583" y="174" text-anchor="middle" class="svgtxt" style="font-size:12px;fill:var(--amber)">하지만 2^ℝ 는 아님</text>
 
-    <text x="350" y="224" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:#565D66">
-      Module 1 08번의 <tspan font-weight="700" fill="#14161A">⋂(−1/n, 1/n) = {0}</tspan> 이 여기서 실제로 쓰인다. 열린 구간만으로 한 점을 만들어내는 그 트릭.
+    <text x="350" y="224" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)">
+      Module 1 08번의 <tspan font-weight="700" fill="var(--ink)">⋂(−1/n, 1/n) = {0}</tspan> 이 여기서 실제로 쓰인다. 열린 구간만으로 한 점을 만들어내는 그 트릭.
     </text>
   </svg>
   <figcaption>가운데 칸을 보면 Module 1 08번 예제 8.1(2)와 완전히 같은 계산이야. 그때는 "무한 교집합의 신기한 성질"이었는데, 여기서는 "닫힌 구간과 한 점을 Borel 집합으로 만드는 도구"로 쓰여.</figcaption>
@@ -961,10 +1058,10 @@ footer a{color:var(--blue)}
   <figure>
   <svg viewBox="0 0 700 250" role="img" aria-label="PMF와 PDF의 비교">
     <!-- PMF -->
-    <text x="30" y="26" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:#1250C4">PMF — 막대의 합</text>
-    <line x1="40" y1="180" x2="310" y2="180" stroke="#8A9099" stroke-width="1.2"/>
-    <line x1="40" y1="180" x2="40" y2="52" stroke="#8A9099" stroke-width="1.2"/>
-    <g fill="rgba(18,80,196,.3)" stroke="#1250C4" stroke-width="1.3">
+    <text x="30" y="26" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:var(--blue)">PMF — 막대의 합</text>
+    <line x1="40" y1="180" x2="310" y2="180" stroke="var(--ink3)" stroke-width="1.2"/>
+    <line x1="40" y1="180" x2="40" y2="52" stroke="var(--ink3)" stroke-width="1.2"/>
+    <g fill="rgba(var(--blue-rgb),.3)" stroke="var(--blue)" stroke-width="1.3">
       <rect x="58" y="150" width="26" height="30"/>
       <rect x="98" y="128" width="26" height="52"/>
       <rect x="138" y="96" width="26" height="84"/>
@@ -972,11 +1069,11 @@ footer a{color:var(--blue)}
       <rect x="218" y="142" width="26" height="38"/>
       <rect x="258" y="162" width="26" height="18"/>
     </g>
-    <g fill="rgba(107,47,168,.55)" stroke="#4A1D8C" stroke-width="1.4">
+    <g fill="rgba(var(--violet-rgb),.55)" stroke="var(--sel)" stroke-width="1.4">
       <rect x="138" y="96" width="26" height="84"/>
       <rect x="178" y="112" width="26" height="68"/>
     </g>
-    <g class="svgnum" style="font-size:11px;fill:#8A9099">
+    <g class="svgnum" style="font-size:11px;fill:var(--ink3)">
       <text x="71" y="196" text-anchor="middle">1</text>
       <text x="111" y="196" text-anchor="middle">2</text>
       <text x="151" y="196" text-anchor="middle">3</text>
@@ -984,23 +1081,23 @@ footer a{color:var(--blue)}
       <text x="231" y="196" text-anchor="middle">5</text>
       <text x="271" y="196" text-anchor="middle">6</text>
     </g>
-    <text x="171" y="222" text-anchor="middle" class="svgtxt" style="font-size:13.5px;fill:#4A1D8C">P({3,4}) = p(3) + p(4)</text>
+    <text x="171" y="222" text-anchor="middle" class="svgtxt" style="font-size:13.5px;fill:var(--sel)">P({3,4}) = p(3) + p(4)</text>
     <text x="171" y="242" text-anchor="middle" class="svglab" style="font-size:10px">막대 두 개를 더한다</text>
 
     <!-- PDF -->
-    <text x="390" y="26" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:#D9147A">PDF — 곡선 아래 넓이</text>
-    <line x1="400" y1="180" x2="670" y2="180" stroke="#8A9099" stroke-width="1.2"/>
-    <line x1="400" y1="180" x2="400" y2="52" stroke="#8A9099" stroke-width="1.2"/>
-    <path id="bell" d="M 406 178 C 460 176, 480 92, 520 88 C 560 84, 578 168, 664 178" fill="none" stroke="#D9147A" stroke-width="1.8"/>
-    <path d="M 490 180 L 490 96.5 C 500 91, 510 88.6, 520 88 C 530 87.4, 538 96, 545 112 L 545 180 Z" fill="rgba(107,47,168,.45)"/>
-    <line x1="490" y1="180" x2="490" y2="188" stroke="#4A1D8C" stroke-width="1.4"/>
-    <line x1="545" y1="180" x2="545" y2="188" stroke="#4A1D8C" stroke-width="1.4"/>
-    <text x="490" y="202" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#4A1D8C">a</text>
-    <text x="545" y="202" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#4A1D8C">b</text>
-    <text x="535" y="222" text-anchor="middle" class="svgtxt" style="font-size:13.5px;fill:#4A1D8C">P((a,b)) = ∫ₐᵇ f(x) dx</text>
+    <text x="390" y="26" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:var(--pink)">PDF — 곡선 아래 넓이</text>
+    <line x1="400" y1="180" x2="670" y2="180" stroke="var(--ink3)" stroke-width="1.2"/>
+    <line x1="400" y1="180" x2="400" y2="52" stroke="var(--ink3)" stroke-width="1.2"/>
+    <path id="bell" d="M 406 178 C 460 176, 480 92, 520 88 C 560 84, 578 168, 664 178" fill="none" stroke="var(--pink)" stroke-width="1.8"/>
+    <path d="M 490 180 L 490 96.5 C 500 91, 510 88.6, 520 88 C 530 87.4, 538 96, 545 112 L 545 180 Z" fill="rgba(var(--violet-rgb),.45)"/>
+    <line x1="490" y1="180" x2="490" y2="188" stroke="var(--sel)" stroke-width="1.4"/>
+    <line x1="545" y1="180" x2="545" y2="188" stroke="var(--sel)" stroke-width="1.4"/>
+    <text x="490" y="202" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--sel)">a</text>
+    <text x="545" y="202" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--sel)">b</text>
+    <text x="535" y="222" text-anchor="middle" class="svgtxt" style="font-size:13.5px;fill:var(--sel)">P((a,b)) = ∫ₐᵇ f(x) dx</text>
     <text x="535" y="242" text-anchor="middle" class="svglab" style="font-size:10px">구간의 넓이를 잰다</text>
 
-    <line x1="350" y1="40" x2="350" y2="230" stroke="#E2E1DB"/>
+    <line x1="350" y1="40" x2="350" y2="230" stroke="var(--rule)"/>
   </svg>
   <figcaption>구조가 완전히 평행해. 합 ↔ 적분, 막대 높이 ↔ 곡선 높이. 다만 <strong>오른쪽에서는 한 점의 폭이 0이라 넓이도 0</strong>이야. 그래서 연속 공간에서 <span class="m"><i>P</i>({<i>x</i>}) = 0</span>이 돼.</figcaption>
   </figure>
@@ -1045,50 +1142,50 @@ footer a{color:var(--blue)}
 
     <g class="svgnum" style="font-size:12px">
       <!-- level markers -->
-      <g stroke="#E2E1DB" stroke-width="1"><line x1="60" y1="46" x2="60" y2="196"/></g>
+      <g stroke="var(--rule)" stroke-width="1"><line x1="60" y1="46" x2="60" y2="196"/></g>
     </g>
 
     <!-- chain -->
     <g>
-      <circle cx="90" cy="70" r="15" fill="#FAFAF8" stroke="#8A9099" stroke-width="1.3"/>
-      <text x="90" y="75" text-anchor="middle" class="svgnum" style="font-size:12px;fill:#565D66">시작</text>
+      <circle cx="90" cy="70" r="15" fill="var(--paper)" stroke="var(--ink3)" stroke-width="1.3"/>
+      <text x="90" y="75" text-anchor="middle" class="svgnum" style="font-size:12px;fill:var(--ink2)">시작</text>
     </g>
 
     <g stroke-width="1.4" fill="none">
-      <path d="M 106 62 L 160 46" stroke="#00845F" marker-end="url(#a6)"/>
-      <path d="M 106 80 L 160 104" stroke="#B26A00" marker-end="url(#a6)"/>
+      <path d="M 106 62 L 160 46" stroke="var(--green)" marker-end="url(#a6)"/>
+      <path d="M 106 80 L 160 104" stroke="var(--amber)" marker-end="url(#a6)"/>
     </g>
-    <defs><marker id="a6" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#8A9099"/></marker></defs>
-    <text x="128" y="46" class="svglab" style="font-size:9.5px;fill:#00845F">1</text>
-    <text x="126" y="102" class="svglab" style="font-size:9.5px;fill:#B26A00">0</text>
+    <defs><marker id="a6" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="var(--ink3)"/></marker></defs>
+    <text x="128" y="46" class="svglab" style="font-size:9.5px;fill:var(--green)">1</text>
+    <text x="126" y="102" class="svglab" style="font-size:9.5px;fill:var(--amber)">0</text>
 
-    <rect x="166" y="32" width="76" height="26" rx="6" fill="rgba(107,47,168,.2)" stroke="#6B2FA8" stroke-width="1.3"/>
-    <text x="204" y="50" text-anchor="middle" class="svgnum" style="font-size:12px;fill:#4A1D8C">1</text>
-    <text x="262" y="50" class="svgtxt" style="font-size:12px;fill:#4A1D8C">실패 0번 (짝수) ∈ E</text>
+    <rect x="166" y="32" width="76" height="26" rx="6" fill="rgba(var(--violet-rgb),.2)" stroke="var(--violet)" stroke-width="1.3"/>
+    <text x="204" y="50" text-anchor="middle" class="svgnum" style="font-size:12px;fill:var(--sel)">1</text>
+    <text x="262" y="50" class="svgtxt" style="font-size:12px;fill:var(--sel)">실패 0번 (짝수) ∈ E</text>
 
-    <circle cx="180" cy="112" r="13" fill="#FAFAF8" stroke="#8A9099" stroke-width="1.2"/>
+    <circle cx="180" cy="112" r="13" fill="var(--paper)" stroke="var(--ink3)" stroke-width="1.2"/>
     <g stroke-width="1.4" fill="none">
-      <path d="M 194 106 L 240 92" stroke="#00845F" marker-end="url(#a6)"/>
-      <path d="M 194 120 L 240 140" stroke="#B26A00" marker-end="url(#a6)"/>
+      <path d="M 194 106 L 240 92" stroke="var(--green)" marker-end="url(#a6)"/>
+      <path d="M 194 120 L 240 140" stroke="var(--amber)" marker-end="url(#a6)"/>
     </g>
-    <rect x="246" y="78" width="76" height="26" rx="6" fill="#FAFAF8" stroke="#E2E1DB"/>
-    <text x="284" y="96" text-anchor="middle" class="svgnum" style="font-size:12px;fill:#8A9099">01</text>
-    <text x="342" y="96" class="svgtxt" style="font-size:12px;fill:#8A9099">실패 1번 (홀수) ∉ E</text>
+    <rect x="246" y="78" width="76" height="26" rx="6" fill="var(--paper)" stroke="var(--rule)"/>
+    <text x="284" y="96" text-anchor="middle" class="svgnum" style="font-size:12px;fill:var(--ink3)">01</text>
+    <text x="342" y="96" class="svgtxt" style="font-size:12px;fill:var(--ink3)">실패 1번 (홀수) ∉ E</text>
 
-    <circle cx="258" cy="148" r="13" fill="#FAFAF8" stroke="#8A9099" stroke-width="1.2"/>
+    <circle cx="258" cy="148" r="13" fill="var(--paper)" stroke="var(--ink3)" stroke-width="1.2"/>
     <g stroke-width="1.4" fill="none">
-      <path d="M 272 142 L 316 130" stroke="#00845F" marker-end="url(#a6)"/>
-      <path d="M 272 156 L 316 176" stroke="#B26A00" marker-end="url(#a6)"/>
+      <path d="M 272 142 L 316 130" stroke="var(--green)" marker-end="url(#a6)"/>
+      <path d="M 272 156 L 316 176" stroke="var(--amber)" marker-end="url(#a6)"/>
     </g>
-    <rect x="322" y="116" width="86" height="26" rx="6" fill="rgba(107,47,168,.2)" stroke="#6B2FA8" stroke-width="1.3"/>
-    <text x="365" y="134" text-anchor="middle" class="svgnum" style="font-size:12px;fill:#4A1D8C">001</text>
-    <text x="428" y="134" class="svgtxt" style="font-size:12px;fill:#4A1D8C">실패 2번 (짝수) ∈ E</text>
+    <rect x="322" y="116" width="86" height="26" rx="6" fill="rgba(var(--violet-rgb),.2)" stroke="var(--violet)" stroke-width="1.3"/>
+    <text x="365" y="134" text-anchor="middle" class="svgnum" style="font-size:12px;fill:var(--sel)">001</text>
+    <text x="428" y="134" class="svgtxt" style="font-size:12px;fill:var(--sel)">실패 2번 (짝수) ∈ E</text>
 
-    <circle cx="334" cy="184" r="13" fill="#FAFAF8" stroke="#8A9099" stroke-width="1.2"/>
-    <text x="368" y="190" class="svgtxt" style="font-size:13px;fill:#8A9099">⋯ 끝없이 이어진다</text>
+    <circle cx="334" cy="184" r="13" fill="var(--paper)" stroke="var(--ink3)" stroke-width="1.2"/>
+    <text x="368" y="190" class="svgtxt" style="font-size:13px;fill:var(--ink3)">⋯ 끝없이 이어진다</text>
 
-    <text x="14" y="226" class="svgtxt" style="font-size:13px;fill:#565D66">
-      각 수열은 <tspan font-weight="700" fill="#14161A">유한</tspan>하고 1로 끝나지만, 길이에 <tspan font-weight="700" fill="#14161A">상한이 없다.</tspan> 첫 성공이 얼마든지 늦게 올 수 있다.
+    <text x="14" y="226" class="svgtxt" style="font-size:13px;fill:var(--ink2)">
+      각 수열은 <tspan font-weight="700" fill="var(--ink)">유한</tspan>하고 1로 끝나지만, 길이에 <tspan font-weight="700" fill="var(--ink)">상한이 없다.</tspan> 첫 성공이 얼마든지 늦게 올 수 있다.
     </text>
   </svg>
   <figcaption>슬라이드 37쪽 Remark의 내용이 이거야. "모든 원소가 유한한데 집합은 무한하다"는 상황. Module 1 06번 예제 6.1의 2번(가산)과 같은 구조야.</figcaption>
@@ -1128,39 +1225,39 @@ footer a{color:var(--blue)}
   <figure>
   <svg viewBox="0 0 700 250" role="img" aria-label="증가하는 집합열과 감소하는 집합열">
     <!-- increasing -->
-    <text x="30" y="24" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:#00845F">증가 — 점점 커져서 합집합으로</text>
+    <text x="30" y="24" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:var(--green)">증가 — 점점 커져서 합집합으로</text>
     <g>
-      <rect x="30" y="40" width="280" height="120" rx="8" fill="#FAFAF8" stroke="#E2E1DB"/>
-      <rect x="46" y="56" width="248" height="88" rx="6" fill="rgba(0,132,95,.06)" stroke="#00845F" stroke-width="1.2" stroke-dasharray="4 3"/>
-      <rect x="46" y="56" width="60" height="88" rx="6" fill="rgba(0,132,95,.4)" stroke="#00845F" stroke-width="1.1"/>
-      <rect x="46" y="56" width="112" height="88" rx="6" fill="none" stroke="#00845F" stroke-width="1.1"/>
-      <rect x="46" y="56" width="170" height="88" rx="6" fill="none" stroke="#00845F" stroke-width="1.1"/>
-      <text x="76" y="105" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#005A42">B₁</text>
-      <text x="132" y="105" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#00845F">B₂</text>
-      <text x="192" y="105" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#00845F">B₃</text>
-      <text x="256" y="105" text-anchor="middle" class="svgtxt" style="font-size:12px;fill:#00845F">⋯ ⋃Bₙ</text>
+      <rect x="30" y="40" width="280" height="120" rx="8" fill="var(--paper)" stroke="var(--rule)"/>
+      <rect x="46" y="56" width="248" height="88" rx="6" fill="rgba(var(--green-rgb),.06)" stroke="var(--green)" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <rect x="46" y="56" width="60" height="88" rx="6" fill="rgba(var(--green-rgb),.4)" stroke="var(--green)" stroke-width="1.1"/>
+      <rect x="46" y="56" width="112" height="88" rx="6" fill="none" stroke="var(--green)" stroke-width="1.1"/>
+      <rect x="46" y="56" width="170" height="88" rx="6" fill="none" stroke="var(--green)" stroke-width="1.1"/>
+      <text x="76" y="105" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--green-deep)">B₁</text>
+      <text x="132" y="105" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--green)">B₂</text>
+      <text x="192" y="105" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--green)">B₃</text>
+      <text x="256" y="105" text-anchor="middle" class="svgtxt" style="font-size:12px;fill:var(--green)">⋯ ⋃Bₙ</text>
     </g>
-    <text x="170" y="186" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#00845F">P(Bₙ) ↗ P(⋃Bₙ)</text>
+    <text x="170" y="186" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--green)">P(Bₙ) ↗ P(⋃Bₙ)</text>
 
     <!-- decreasing -->
-    <text x="390" y="24" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:#D9147A">감소 — 점점 작아져서 교집합으로</text>
+    <text x="390" y="24" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:var(--pink)">감소 — 점점 작아져서 교집합으로</text>
     <g>
-      <rect x="390" y="40" width="280" height="120" rx="8" fill="#FAFAF8" stroke="#E2E1DB"/>
-      <rect x="406" y="56" width="248" height="88" rx="6" fill="rgba(217,20,122,.12)" stroke="#D9147A" stroke-width="1.1"/>
-      <rect x="406" y="56" width="180" height="88" rx="6" fill="rgba(217,20,122,.18)" stroke="#D9147A" stroke-width="1.1"/>
-      <rect x="406" y="56" width="118" height="88" rx="6" fill="rgba(217,20,122,.28)" stroke="#D9147A" stroke-width="1.1"/>
-      <rect x="406" y="56" width="56" height="88" rx="6" fill="rgba(217,20,122,.5)" stroke="#D9147A" stroke-width="1.2"/>
-      <text x="434" y="105" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:#8B0D4E">⋂Bₙ</text>
-      <text x="494" y="105" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#D9147A">B₃</text>
-      <text x="556" y="105" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#D9147A">B₂</text>
-      <text x="622" y="105" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#D9147A">B₁</text>
+      <rect x="390" y="40" width="280" height="120" rx="8" fill="var(--paper)" stroke="var(--rule)"/>
+      <rect x="406" y="56" width="248" height="88" rx="6" fill="rgba(var(--pink-rgb),.12)" stroke="var(--pink)" stroke-width="1.1"/>
+      <rect x="406" y="56" width="180" height="88" rx="6" fill="rgba(var(--pink-rgb),.18)" stroke="var(--pink)" stroke-width="1.1"/>
+      <rect x="406" y="56" width="118" height="88" rx="6" fill="rgba(var(--pink-rgb),.28)" stroke="var(--pink)" stroke-width="1.1"/>
+      <rect x="406" y="56" width="56" height="88" rx="6" fill="rgba(var(--pink-rgb),.5)" stroke="var(--pink)" stroke-width="1.2"/>
+      <text x="434" y="105" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:var(--pink-deep)">⋂Bₙ</text>
+      <text x="494" y="105" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--pink)">B₃</text>
+      <text x="556" y="105" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--pink)">B₂</text>
+      <text x="622" y="105" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--pink)">B₁</text>
     </g>
-    <text x="530" y="186" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#D9147A">P(Bₙ) ↘ P(⋂Bₙ)</text>
+    <text x="530" y="186" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--pink)">P(Bₙ) ↘ P(⋂Bₙ)</text>
 
-    <text x="350" y="224" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:#565D66">
+    <text x="350" y="224" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)">
       오른쪽에서 ⋂Bₙ = ∅ 이면 P(Bₙ) → 0 이 된다. Module 1 08번의 (0, 1/n) 이 바로 그 경우.
     </text>
-    <line x1="350" y1="36" x2="350" y2="200" stroke="#E2E1DB"/>
+    <line x1="350" y1="36" x2="350" y2="200" stroke="var(--rule)"/>
   </svg>
   <figcaption>왼쪽은 <span class="m">⋃</span>로, 오른쪽은 <span class="m">⋂</span>로 수렴해. Module 1 08번에서 "무한 연산은 유한 연산의 단순 연장이 아니다"라고 했는데, 확률은 다행히도 <strong>연속적으로</strong> 따라와준다는 게 이 정리의 내용이야.</figcaption>
   </figure>
@@ -1436,5 +1533,30 @@ footer a{color:var(--blue)}
 })();
 </script>
 <script src="reader.js" type="module"></script>
+<button class="theme-btn" type="button">☾ 다크</button>
+<script>
+// 테마 토글. 기본은 OS 설정을 따르고, 누르면 그 반대로 고정한다.
+// 저장하지 않으므로 페이지를 옮기면 다시 OS 설정을 따른다.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.theme-btn');
+  if (!btn) return;
+  var osDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  function current() {
+    return root.dataset.theme || (osDark && osDark.matches ? 'dark' : 'light');
+  }
+  function paint() {
+    var dark = current() === 'dark';
+    btn.textContent = dark ? '☀ 라이트' : '☾ 다크';
+    btn.setAttribute('aria-label', dark ? '라이트 모드로' : '다크 모드로');
+  }
+  btn.addEventListener('click', function () {
+    root.dataset.theme = current() === 'dark' ? 'light' : 'dark';
+    paint();
+  });
+  if (osDark && osDark.addEventListener) osDark.addEventListener('change', paint);
+  paint();
+})();
+</script>
 </body>
 </html>

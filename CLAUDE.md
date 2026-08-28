@@ -133,25 +133,29 @@ KaTeX나 MathJax를 쓰지 않는다. **유니코드 + 세리프 폰트**로 처
 - 기호는 유니코드 직접: `∩ ∪ ⊆ ∈ ∉ ∅ Ω ω ℱ ℝ ℕ ℤ ℚ ℬ σ ⋃ ⋂ ∑ ∫ ≤ ≥ ≠ ⟹ ⟺ ∀ ∞ −`
 - 마이너스는 하이픈이 아니라 `−` (U+2212).
 
-### 디자인 토큰 (변경 금지, 모든 파일 공통)
+### 디자인 토큰 (모든 파일 공통)
+
+색마다 **RGB 성분을 따로 둔다.** 도해에서 같은 색을 여러 농도로 쓰기 때문이다.
+이렇게 해두면 다크모드에서 RGB 하나만 바꿔도 모든 농도 변형이 같이 따라온다.
 
 ```css
---paper:#FAFAF8;  --card:#FFFFFF;  --rule:#E2E1DB;
---ink:#14161A;    --ink2:#565D66;  --ink3:#8A9099;
---blue:#1250C4;   --pink:#D9147A;  --violet:#6B2FA8;
---green:#00845F;  --amber:#B26A00; --amber-bg:#FDF6E9;
---sel:#4A1D8C;    --red:#C02626;
-
---mono: ui-monospace,"Cascadia Mono","Cascadia Code",Consolas,"SFMono-Regular",monospace;
---sans: "Pretendard","Pretendard Variable",-apple-system,"Segoe UI Variable Text",
-        "Segoe UI","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
---serif:"Cambria Math","STIX Two Math","Latin Modern Math",Cambria,"Times New Roman",serif;
+--blue-rgb:18,80,196;
+--blue:rgb(var(--blue-rgb));
+/* 농도 변형은 rgba(var(--blue-rgb),.16) 형태로 쓴다 */
 ```
 
 `index.html`, `L01`, `L02`의 `:root` 블록은 **한 글자도 다르지 않게 동일**하다.
-새 파일도 이걸 그대로 복사한다. 여기 없는 변수를 새로 만들지 않는다.
-SVG 안의 색은 CSS 변수가 안 먹으므로 `#1250C4`, `rgba(18,80,196,.16)`처럼 리터럴로 쓴다.
-값은 위 토큰과 반드시 일치시킨다.
+새 파일도 그대로 복사한다. 여기 없는 변수를 새로 만들지 않는다.
+
+**SVG 안에서도 CSS 변수를 쓴다.** `fill="var(--blue)"`는 프레젠테이션 속성에서도
+정상 동작한다. (예전에 "SVG는 변수가 안 먹으니 리터럴을 쓰라"고 적어뒀던 건 틀린 내용이었다.
+그 때문에 색이 635곳에 하드코딩돼 있었고 다크모드를 넣으려면 전부 고쳐야 했다.)
+
+**색을 하드코딩하지 않는다.** 하드코딩하면 다크모드에서 그 부분만 안 바뀐다.
+`verify.mjs`가 소스에서 리터럴 색을 잡아 실패시킨다.
+
+**예외는 `<mask>` 안뿐이다.** 마스크의 `#000`/`#fff`는 색이 아니라 알파 채널이라
+테마를 입히면 도형이 깨진다. 검사도 마스크 안은 건너뛴다.
 
 **의미 고정 색상.** 모든 다이어그램에서 일관되게 지킨다.
 
@@ -164,6 +168,18 @@ SVG 안의 색은 CSS 변수가 안 먹으므로 `#1250C4`, `rgba(18,80,196,.16)
 | 함정, 경고, 틀린 것 | `--amber` |
 
 세 번 이상 반복되면 독자가 색만 보고 의미를 알게 된다. 이게 이 노트의 시그니처다.
+
+## 다크모드
+
+기본은 OS 설정(`prefers-color-scheme`)을 따르고, 좌하단 버튼으로 덮어쓸 수 있다.
+
+- 다크 팔레트는 `@media (prefers-color-scheme:dark){:root:not([data-theme="light"])}`와
+  `:root[data-theme="dark"]` 두 곳에 같은 값을 적는다. 앞은 자동, 뒤는 수동 전환용.
+- **의미 고정 색상의 의미는 유지하고 밝기만 올린다.** A는 여전히 파랑, B는 분홍이다.
+- 토글 상태는 **저장하지 않는다.** 브라우저 저장소 금지 규칙 때문에 페이지를 옮기면
+  다시 OS 설정을 따른다.
+- 슬라이드 PDF는 원본 문서라 다크모드에서도 흰 종이 그대로 둔다.
+  반전 필터를 씌우면 손글씨와 컬러 도형이 이상해진다.
 
 ### 블록 클래스
 

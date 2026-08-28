@@ -6,23 +6,109 @@
 <title>EEE 554 — 학습 노트</title>
 <style>
 :root{
+  color-scheme:light dark;
+
+  /* 색 성분. rgba(var(--blue-rgb),.16) 형태로 농도 변형을 만든다. */
+  --ink-rgb:20,22,26;
+  --blue-rgb:18,80,196;
+  --pink-rgb:217,20,122;
+  --violet-rgb:107,47,168;
+  --green-rgb:0,132,95;
+  --amber-rgb:178,106,0;
+  --sel-rgb:75,29,140;
+
   --paper:#FAFAF8;
   --card:#FFFFFF;
-  --ink:#14161A;
+  --ink:rgb(var(--ink-rgb));
   --ink2:#565D66;
   --ink3:#8A9099;
   --rule:#E2E1DB;
-  --blue:#1250C4;
-  --pink:#D9147A;
-  --violet:#6B2FA8;
-  --green:#00845F;
-  --amber:#B26A00;
+  --blue:rgb(var(--blue-rgb));
+  --pink:rgb(var(--pink-rgb));
+  --violet:rgb(var(--violet-rgb));
+  --green:rgb(var(--green-rgb));
+  --amber:rgb(var(--amber-rgb));
   --amber-bg:#FDF6E9;
   --red:#C02626;
-  --sel:#4A1D8C;
+  --sel:rgb(var(--sel-rgb));
+
+  /* 보조 표면과 진한 변형 */
+  --amber-line:#F0E2C4;
+  --code-bg:#F0EFEA;
+  --chip:#F1F0EB;
+  --sel-soft:#F6F2FB;
+  --pink-deep:#8B0D4E;
+  --green-deep:#005A42;
+  --amber-deep:#7A4A00;
+  --violet-deep:#3B1E70;
+  --brown:#A3532B;
+  --teal:#0E7490;
+  --shadow:rgba(var(--ink-rgb),.06);
+
   --mono:ui-monospace,"Cascadia Mono","Cascadia Code",Consolas,"SFMono-Regular",monospace;
   --sans:"Pretendard","Pretendard Variable",-apple-system,"Segoe UI Variable Text","Segoe UI","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
   --serif:"Cambria Math","STIX Two Math","Latin Modern Math",Cambria,"Times New Roman",serif;
+}
+
+/* 다크 팔레트. 의미 고정 색상(A=blue, B=pink, 교집합=violet, 함정=amber)은
+   그대로 두고 밝기만 어두운 배경에 맞게 올린다. */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.7;-webkit-font-smoothing:antialiased}
@@ -42,9 +128,9 @@ h1{font-size:clamp(32px,6vw,54px);line-height:1.05;letter-spacing:-.03em;font-we
 .chip{font-family:var(--mono);font-size:11px;letter-spacing:.05em;padding:5px 11px;border:1px solid var(--rule);border-radius:999px;color:var(--ink2);background:var(--card)}
 
 /* hw banner */
-.hw{margin:34px 0 0;background:var(--amber-bg);border:1px solid #F0E2C4;border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.hw{margin:34px 0 0;background:var(--amber-bg);border:1px solid var(--amber-line);border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .hw .d{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--amber);letter-spacing:-.02em;line-height:1}
-.hw .txt{font-size:14.5px;color:#7A4A00;line-height:1.55;flex:1;min-width:200px}
+.hw .txt{font-size:14.5px;color:var(--amber-deep);line-height:1.55;flex:1;min-width:200px}
 .hw .txt b{color:var(--amber)}
 
 /* sections */
@@ -52,7 +138,7 @@ h2{font-size:13px;font-family:var(--mono);letter-spacing:.16em;text-transform:up
 
 /* module rows */
 .mod{display:grid;grid-template-columns:56px 1fr auto;gap:20px;align-items:start;padding:22px 20px;background:var(--card);border:1px solid var(--rule);border-radius:10px;margin-bottom:10px;text-decoration:none;color:inherit;transition:.15s}
-a.mod:hover{border-color:var(--blue);transform:translateY(-1px);box-shadow:0 3px 14px rgba(20,22,26,.06)}
+a.mod:hover{border-color:var(--blue);transform:translateY(-1px);box-shadow:0 3px 14px rgba(var(--ink-rgb),.06)}
 .mod.soon{opacity:.62;cursor:default}
 .mod .num{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--ink3);letter-spacing:-.03em;padding-top:1px}
 a.mod:hover .num{color:var(--blue)}
@@ -60,14 +146,14 @@ a.mod:hover .num{color:var(--blue)}
 .mod .en{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink3);text-transform:uppercase;margin-bottom:8px}
 .mod p{margin:0;font-size:14.5px;color:var(--ink2);line-height:1.6}
 .mod .tags{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
-.tag{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:3px 8px;border-radius:5px;background:#F1F0EB;color:var(--ink2)}
-.tag.a{background:rgba(18,80,196,.1);color:var(--blue)}
-.tag.b{background:rgba(217,20,122,.1);color:var(--pink)}
-.tag.c{background:rgba(0,132,95,.1);color:var(--green)}
+.tag{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:3px 8px;border-radius:5px;background:var(--chip);color:var(--ink2)}
+.tag.a{background:rgba(var(--blue-rgb),.1);color:var(--blue)}
+.tag.b{background:rgba(var(--pink-rgb),.1);color:var(--pink)}
+.tag.c{background:rgba(var(--green-rgb),.1);color:var(--green)}
 .status{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;padding:4px 10px;border-radius:999px;white-space:nowrap;margin-top:3px}
-.status.done{background:rgba(0,132,95,.12);color:var(--green)}
-.status.wip{background:rgba(107,47,168,.12);color:var(--violet)}
-.status.wait{background:#F1F0EB;color:var(--ink3)}
+.status.done{background:rgba(var(--green-rgb),.12);color:var(--green)}
+.status.wip{background:rgba(var(--violet-rgb),.12);color:var(--violet)}
+.status.wait{background:var(--chip);color:var(--ink3)}
 @media(max-width:600px){
   .mod{grid-template-columns:40px 1fr;gap:14px;padding:18px 16px}
   .mod .num{font-size:17px}
@@ -85,6 +171,17 @@ li strong{color:var(--ink)}
 footer{margin-top:70px;padding-top:26px;border-top:1px solid var(--rule);font-size:13px;color:var(--ink3);line-height:1.7}
 :focus-visible{outline:2px solid var(--blue);outline-offset:3px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ── 테마 토글 ──────────────────────────── */
+/* 기본은 OS 설정(prefers-color-scheme)을 따른다. 이 버튼은 그걸 덮어쓴다. */
+.theme-btn{position:fixed;left:16px;bottom:16px;z-index:70;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 6px var(--shadow);transition:.13s}
+.theme-btn:hover{border-color:var(--sel);color:var(--sel)}
+@media(max-width:900px){.theme-btn{left:10px;bottom:10px;font-size:10.5px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.theme-btn{transition:none}}
 </style>
 </head>
 <body>
@@ -92,11 +189,11 @@ footer{margin-top:70px;padding-top:26px;border-top:1px solid var(--rule);font-si
 
 <header>
   <svg class="mark" width="150" height="66" viewBox="0 0 150 66" aria-label="세 집합이 겹치는 표식">
-    <circle cx="42" cy="26" r="24" fill="rgba(18,80,196,.16)" stroke="#1250C4" stroke-width="1.4"/>
-    <circle cx="68" cy="26" r="24" fill="rgba(217,20,122,.16)" stroke="#D9147A" stroke-width="1.4"/>
-    <circle cx="55" cy="44" r="24" fill="rgba(0,132,95,.16)" stroke="#00845F" stroke-width="1.4"/>
-    <text x="104" y="24" font-family="ui-monospace,Consolas,monospace" font-size="10" letter-spacing="1.4" fill="#8A9099">EEE</text>
-    <text x="104" y="40" font-family="ui-monospace,Consolas,monospace" font-size="15" font-weight="700" letter-spacing=".5" fill="#14161A">554</text>
+    <circle cx="42" cy="26" r="24" fill="rgba(var(--blue-rgb),.16)" stroke="var(--blue)" stroke-width="1.4"/>
+    <circle cx="68" cy="26" r="24" fill="rgba(var(--pink-rgb),.16)" stroke="var(--pink)" stroke-width="1.4"/>
+    <circle cx="55" cy="44" r="24" fill="rgba(var(--green-rgb),.16)" stroke="var(--green)" stroke-width="1.4"/>
+    <text x="104" y="24" font-family="ui-monospace,Consolas,monospace" font-size="10" letter-spacing="1.4" fill="var(--ink3)">EEE</text>
+    <text x="104" y="40" font-family="ui-monospace,Consolas,monospace" font-size="15" font-weight="700" letter-spacing=".5" fill="var(--ink)">554</text>
   </svg>
 
   <div class="eyebrow">Arizona State University · Fall 2026 · Nicolò Michelusi</div>
@@ -214,6 +311,31 @@ footer{margin-top:70px;padding-top:26px;border-top:1px solid var(--rule);font-si
   if(ms <= 0){ el.textContent = "제출"; el.style.fontSize = "17px"; return; }
   var days = Math.ceil(ms / 86400000);
   el.textContent = "D-" + days;
+})();
+</script>
+<button class="theme-btn" type="button">☾ 다크</button>
+<script>
+// 테마 토글. 기본은 OS 설정을 따르고, 누르면 그 반대로 고정한다.
+// 저장하지 않으므로 페이지를 옮기면 다시 OS 설정을 따른다.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.theme-btn');
+  if (!btn) return;
+  var osDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  function current() {
+    return root.dataset.theme || (osDark && osDark.matches ? 'dark' : 'light');
+  }
+  function paint() {
+    var dark = current() === 'dark';
+    btn.textContent = dark ? '☀ 라이트' : '☾ 다크';
+    btn.setAttribute('aria-label', dark ? '라이트 모드로' : '다크 모드로');
+  }
+  btn.addEventListener('click', function () {
+    root.dataset.theme = current() === 'dark' ? 'light' : 'dark';
+    paint();
+  });
+  if (osDark && osDark.addEventListener) osDark.addEventListener('change', paint);
+  paint();
 })();
 </script>
 </body>

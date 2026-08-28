@@ -6,23 +6,109 @@
 <title>EEE 554 · Module 1 — Introduction &amp; Set Theory</title>
 <style>
 :root{
+  color-scheme:light dark;
+
+  /* 색 성분. rgba(var(--blue-rgb),.16) 형태로 농도 변형을 만든다. */
+  --ink-rgb:20,22,26;
+  --blue-rgb:18,80,196;
+  --pink-rgb:217,20,122;
+  --violet-rgb:107,47,168;
+  --green-rgb:0,132,95;
+  --amber-rgb:178,106,0;
+  --sel-rgb:75,29,140;
+
   --paper:#FAFAF8;
   --card:#FFFFFF;
-  --ink:#14161A;
+  --ink:rgb(var(--ink-rgb));
   --ink2:#565D66;
   --ink3:#8A9099;
   --rule:#E2E1DB;
-  --blue:#1250C4;
-  --pink:#D9147A;
-  --violet:#6B2FA8;
-  --green:#00845F;
-  --amber:#B26A00;
+  --blue:rgb(var(--blue-rgb));
+  --pink:rgb(var(--pink-rgb));
+  --violet:rgb(var(--violet-rgb));
+  --green:rgb(var(--green-rgb));
+  --amber:rgb(var(--amber-rgb));
   --amber-bg:#FDF6E9;
   --red:#C02626;
-  --sel:#4A1D8C;
+  --sel:rgb(var(--sel-rgb));
+
+  /* 보조 표면과 진한 변형 */
+  --amber-line:#F0E2C4;
+  --code-bg:#F0EFEA;
+  --chip:#F1F0EB;
+  --sel-soft:#F6F2FB;
+  --pink-deep:#8B0D4E;
+  --green-deep:#005A42;
+  --amber-deep:#7A4A00;
+  --violet-deep:#3B1E70;
+  --brown:#A3532B;
+  --teal:#0E7490;
+  --shadow:rgba(var(--ink-rgb),.06);
+
   --mono:ui-monospace,"Cascadia Mono","Cascadia Code",Consolas,"SFMono-Regular",monospace;
   --sans:"Pretendard","Pretendard Variable",-apple-system,"Segoe UI Variable Text","Segoe UI","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
   --serif:"Cambria Math","STIX Two Math","Latin Modern Math",Cambria,"Times New Roman",serif;
+}
+
+/* 다크 팔레트. 의미 고정 색상(A=blue, B=pink, 교집합=violet, 함정=amber)은
+   그대로 두고 밝기만 어두운 배경에 맞게 올린다. */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:24px}
@@ -79,7 +165,7 @@ p{margin:0 0 14px}
 ul,ol{margin:0 0 16px;padding-left:22px}
 li{margin-bottom:7px}
 strong{font-weight:700}
-code{font-family:var(--mono);font-size:.87em;background:#F0EFEA;padding:1px 5px;border-radius:4px}
+code{font-family:var(--mono);font-size:.87em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
 
 /* ── math ───────────────────────────────── */
 .m{font-family:var(--serif);font-style:normal;font-size:1.07em;white-space:nowrap}
@@ -97,7 +183,7 @@ code{font-family:var(--mono);font-size:.87em;background:#F0EFEA;padding:1px 5px;
 .def .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:7px}
 .def p:last-child{margin-bottom:0}
 
-.trap{background:var(--amber-bg);border:1px solid #F0E2C4;border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.trap{background:var(--amber-bg);border:1px solid var(--amber-line);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
 .trap .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:7px;font-weight:600}
 .trap p:last-child,.trap ul:last-child{margin-bottom:0}
 .trap h4{margin-top:18px;font-size:14.5px}
@@ -164,7 +250,7 @@ figcaption{font-size:13px;color:var(--ink2);margin-top:14px;padding-top:12px;bor
 .presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px}
 .presets button{font-family:var(--serif);font-size:14.5px;padding:6px 12px;background:var(--paper);border:1px solid var(--rule);border-radius:6px;color:var(--ink);cursor:pointer;transition:.13s}
 .presets button i{font-style:italic}
-.presets button:hover{border-color:var(--sel);color:var(--sel);background:#F6F2FB}
+.presets button:hover{border-color:var(--sel);color:var(--sel);background:var(--sel-soft)}
 .presets button.clear{font-family:var(--mono);font-size:11px;color:var(--ink3)}
 .plab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin:18px 0 8px}
 .plab:first-child{margin-top:0}
@@ -181,6 +267,17 @@ footer{grid-column:1/-1;border-top:1px solid var(--rule);padding-top:28px;margin
 footer a{color:var(--blue)}
 :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ── 테마 토글 ──────────────────────────── */
+/* 기본은 OS 설정(prefers-color-scheme)을 따른다. 이 버튼은 그걸 덮어쓴다. */
+.theme-btn{position:fixed;left:16px;bottom:16px;z-index:70;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 6px var(--shadow);transition:.13s}
+.theme-btn:hover{border-color:var(--sel);color:var(--sel)}
+@media(max-width:900px){.theme-btn{left:10px;bottom:10px;font-size:10.5px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.theme-btn{transition:none}}
 </style>
 </head>
 <body>
@@ -240,32 +337,32 @@ footer a{color:var(--blue)}
   <svg viewBox="0 0 720 130" role="img" aria-label="질문에서 확률로 가는 흐름도">
     <defs>
       <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
-        <path d="M0,0 L9,4.5 L0,9 z" fill="#8A9099"/>
+        <path d="M0,0 L9,4.5 L0,9 z" fill="var(--ink3)"/>
       </marker>
     </defs>
-    <rect x="10" y="34" width="150" height="58" rx="8" fill="#FFF" stroke="#E2E1DB"/>
-    <text x="85" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:#14161A">현실의 질문</text>
-    <text x="85" y="79" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:#565D66">"짝수 나왔나?"</text>
+    <rect x="10" y="34" width="150" height="58" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+    <text x="85" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)">현실의 질문</text>
+    <text x="85" y="79" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)">"짝수 나왔나?"</text>
 
-    <line x1="168" y1="63" x2="205" y2="63" stroke="#8A9099" stroke-width="1.4" marker-end="url(#ar)"/>
+    <line x1="168" y1="63" x2="205" y2="63" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#ar)"/>
     <text x="186" y="48" text-anchor="middle" class="svglab" style="font-size:9.5px">Module 1</text>
 
-    <rect x="213" y="34" width="150" height="58" rx="8" fill="#FFF" stroke="#1250C4" stroke-width="1.5"/>
-    <text x="288" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:#1250C4">사건 (집합)</text>
-    <text x="288" y="79" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#1250C4">A = {2, 4, 6}</text>
+    <rect x="213" y="34" width="150" height="58" rx="8" fill="var(--card)" stroke="var(--blue)" stroke-width="1.5"/>
+    <text x="288" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--blue)">사건 (집합)</text>
+    <text x="288" y="79" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--blue)">A = {2, 4, 6}</text>
 
-    <line x1="371" y1="63" x2="408" y2="63" stroke="#8A9099" stroke-width="1.4" marker-end="url(#ar)"/>
+    <line x1="371" y1="63" x2="408" y2="63" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#ar)"/>
     <text x="389" y="48" text-anchor="middle" class="svglab" style="font-size:9.5px">Module 2</text>
 
-    <rect x="416" y="34" width="150" height="58" rx="8" fill="#FFF" stroke="#E2E1DB"/>
-    <text x="491" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:#14161A">확률 공간</text>
-    <text x="491" y="79" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#565D66">(Ω, ℱ, P)</text>
+    <rect x="416" y="34" width="150" height="58" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+    <text x="491" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)">확률 공간</text>
+    <text x="491" y="79" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--ink2)">(Ω, ℱ, P)</text>
 
-    <line x1="574" y1="63" x2="611" y2="63" stroke="#8A9099" stroke-width="1.4" marker-end="url(#ar)"/>
+    <line x1="574" y1="63" x2="611" y2="63" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#ar)"/>
 
-    <rect x="619" y="34" width="92" height="58" rx="8" fill="#FFF" stroke="#E2E1DB"/>
-    <text x="665" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:#14161A">숫자</text>
-    <text x="665" y="79" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#565D66">P(A) = ½</text>
+    <rect x="619" y="34" width="92" height="58" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+    <text x="665" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)">숫자</text>
+    <text x="665" y="79" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--ink2)">P(A) = ½</text>
   </svg>
   <figcaption>Module 1은 이 사슬의 첫 번째 화살표만 담당해. 지금 하는 게 답답하게 느껴지면, 아직 두 번째 칸에 머물러 있어서 그런 거야.</figcaption>
   </figure>
@@ -284,24 +381,24 @@ footer a{color:var(--blue)}
 
   <figure>
   <svg viewBox="0 0 640 190" role="img" aria-label="확률과 통계의 방향 비교">
-    <rect x="40" y="62" width="180" height="66" rx="9" fill="rgba(18,80,196,.08)" stroke="#1250C4" stroke-width="1.4"/>
-    <text x="130" y="90" text-anchor="middle" class="svglab" style="font-size:11px;fill:#1250C4">MODEL</text>
-    <text x="130" y="112" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:#565D66">주사위는 공정하다</text>
+    <rect x="40" y="62" width="180" height="66" rx="9" fill="rgba(var(--blue-rgb),.08)" stroke="var(--blue)" stroke-width="1.4"/>
+    <text x="130" y="90" text-anchor="middle" class="svglab" style="font-size:11px;fill:var(--blue)">MODEL</text>
+    <text x="130" y="112" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)">주사위는 공정하다</text>
 
-    <rect x="420" y="62" width="180" height="66" rx="9" fill="rgba(217,20,122,.08)" stroke="#D9147A" stroke-width="1.4"/>
-    <text x="510" y="90" text-anchor="middle" class="svglab" style="font-size:11px;fill:#D9147A">DATA</text>
-    <text x="510" y="112" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:#565D66">6,6,2,4,6,1,6,3…</text>
+    <rect x="420" y="62" width="180" height="66" rx="9" fill="rgba(var(--pink-rgb),.08)" stroke="var(--pink)" stroke-width="1.4"/>
+    <text x="510" y="90" text-anchor="middle" class="svglab" style="font-size:11px;fill:var(--pink)">DATA</text>
+    <text x="510" y="112" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)">6,6,2,4,6,1,6,3…</text>
 
-    <path d="M 228 82 L 412 82" stroke="#1250C4" stroke-width="2" marker-end="url(#ar2)"/>
-    <path d="M 412 112 L 228 112" stroke="#D9147A" stroke-width="2" marker-end="url(#ar3)"/>
+    <path d="M 228 82 L 412 82" stroke="var(--blue)" stroke-width="2" marker-end="url(#ar2)"/>
+    <path d="M 412 112 L 228 112" stroke="var(--pink)" stroke-width="2" marker-end="url(#ar3)"/>
     <defs>
-      <marker id="ar2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#1250C4"/></marker>
-      <marker id="ar3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#D9147A"/></marker>
+      <marker id="ar2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="var(--blue)"/></marker>
+      <marker id="ar3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="var(--pink)"/></marker>
     </defs>
-    <text x="320" y="72" text-anchor="middle" class="svglab" style="font-size:11px;fill:#1250C4;letter-spacing:.1em">PROBABILITY</text>
-    <text x="320" y="134" text-anchor="middle" class="svglab" style="font-size:11px;fill:#D9147A;letter-spacing:.1em">STATISTICS</text>
+    <text x="320" y="72" text-anchor="middle" class="svglab" style="font-size:11px;fill:var(--blue);letter-spacing:.1em">PROBABILITY</text>
+    <text x="320" y="134" text-anchor="middle" class="svglab" style="font-size:11px;fill:var(--pink);letter-spacing:.1em">STATISTICS</text>
 
-    <text x="320" y="30" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:#8A9099">같은 세계, 반대 방향</text>
+    <text x="320" y="30" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink3)">같은 세계, 반대 방향</text>
   </svg>
   <figcaption>같은 주사위를 두고, 위쪽 화살표는 "공정하다면 6이 세 번 연속 나올 확률은?"을 묻고, 아래쪽 화살표는 "이런 데이터가 나왔는데 이 주사위 공정한 거 맞아?"를 묻는다.</figcaption>
   </figure>
@@ -348,63 +445,63 @@ footer a{color:var(--blue)}
     </g>
     <!-- row template -->
     <g transform="translate(0,0)">
-      <text x="16" y="60" class="svglab" style="font-size:11.5px;fill:#14161A">질문</text>
-      <text x="330" y="60" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:#14161A">Ω 안에서 고른 원소</text>
-      <text x="640" y="60" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:#14161A">사건</text>
+      <text x="16" y="60" class="svglab" style="font-size:11.5px;fill:var(--ink)">질문</text>
+      <text x="330" y="60" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)">Ω 안에서 고른 원소</text>
+      <text x="640" y="60" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)">사건</text>
     </g>
-    <line x1="16" y1="70" x2="684" y2="70" stroke="#E2E1DB"/>
+    <line x1="16" y1="70" x2="684" y2="70" stroke="var(--rule)"/>
 
     <!-- rows -->
     <g>
-      <text x="16" y="98" class="svgtxt" style="font-size:13.5px;fill:#565D66">짝수인가?</text>
+      <text x="16" y="98" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)">짝수인가?</text>
       <g transform="translate(190,84)">
-        <rect x="0" y="0" width="30" height="22" rx="4" fill="#FAFAF8" stroke="#E2E1DB"/><text x="15" y="16" text-anchor="middle" class="svgnum" fill="#8A9099">1</text>
-        <rect x="38" y="0" width="30" height="22" rx="4" fill="rgba(18,80,196,.16)" stroke="#1250C4"/><text x="53" y="16" text-anchor="middle" class="svgnum" fill="#1250C4">2</text>
-        <rect x="76" y="0" width="30" height="22" rx="4" fill="#FAFAF8" stroke="#E2E1DB"/><text x="91" y="16" text-anchor="middle" class="svgnum" fill="#8A9099">3</text>
-        <rect x="114" y="0" width="30" height="22" rx="4" fill="rgba(18,80,196,.16)" stroke="#1250C4"/><text x="129" y="16" text-anchor="middle" class="svgnum" fill="#1250C4">4</text>
-        <rect x="152" y="0" width="30" height="22" rx="4" fill="#FAFAF8" stroke="#E2E1DB"/><text x="167" y="16" text-anchor="middle" class="svgnum" fill="#8A9099">5</text>
-        <rect x="190" y="0" width="30" height="22" rx="4" fill="rgba(18,80,196,.16)" stroke="#1250C4"/><text x="205" y="16" text-anchor="middle" class="svgnum" fill="#1250C4">6</text>
+        <rect x="0" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="15" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">1</text>
+        <rect x="38" y="0" width="30" height="22" rx="4" fill="rgba(var(--blue-rgb),.16)" stroke="var(--blue)"/><text x="53" y="16" text-anchor="middle" class="svgnum" fill="var(--blue)">2</text>
+        <rect x="76" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="91" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">3</text>
+        <rect x="114" y="0" width="30" height="22" rx="4" fill="rgba(var(--blue-rgb),.16)" stroke="var(--blue)"/><text x="129" y="16" text-anchor="middle" class="svgnum" fill="var(--blue)">4</text>
+        <rect x="152" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="167" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">5</text>
+        <rect x="190" y="0" width="30" height="22" rx="4" fill="rgba(var(--blue-rgb),.16)" stroke="var(--blue)"/><text x="205" y="16" text-anchor="middle" class="svgnum" fill="var(--blue)">6</text>
       </g>
-      <text x="640" y="100" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#1250C4"><tspan font-style="italic">A</tspan> = {2,4,6}</text>
+      <text x="640" y="100" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--blue)"><tspan font-style="italic">A</tspan> = {2,4,6}</text>
     </g>
 
     <g>
-      <text x="16" y="140" class="svgtxt" style="font-size:13.5px;fill:#565D66">홀수인가?</text>
+      <text x="16" y="140" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)">홀수인가?</text>
       <g transform="translate(190,126)">
-        <rect x="0" y="0" width="30" height="22" rx="4" fill="rgba(217,20,122,.16)" stroke="#D9147A"/><text x="15" y="16" text-anchor="middle" class="svgnum" fill="#D9147A">1</text>
-        <rect x="38" y="0" width="30" height="22" rx="4" fill="#FAFAF8" stroke="#E2E1DB"/><text x="53" y="16" text-anchor="middle" class="svgnum" fill="#8A9099">2</text>
-        <rect x="76" y="0" width="30" height="22" rx="4" fill="rgba(217,20,122,.16)" stroke="#D9147A"/><text x="91" y="16" text-anchor="middle" class="svgnum" fill="#D9147A">3</text>
-        <rect x="114" y="0" width="30" height="22" rx="4" fill="#FAFAF8" stroke="#E2E1DB"/><text x="129" y="16" text-anchor="middle" class="svgnum" fill="#8A9099">4</text>
-        <rect x="152" y="0" width="30" height="22" rx="4" fill="rgba(217,20,122,.16)" stroke="#D9147A"/><text x="167" y="16" text-anchor="middle" class="svgnum" fill="#D9147A">5</text>
-        <rect x="190" y="0" width="30" height="22" rx="4" fill="#FAFAF8" stroke="#E2E1DB"/><text x="205" y="16" text-anchor="middle" class="svgnum" fill="#8A9099">6</text>
+        <rect x="0" y="0" width="30" height="22" rx="4" fill="rgba(var(--pink-rgb),.16)" stroke="var(--pink)"/><text x="15" y="16" text-anchor="middle" class="svgnum" fill="var(--pink)">1</text>
+        <rect x="38" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="53" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">2</text>
+        <rect x="76" y="0" width="30" height="22" rx="4" fill="rgba(var(--pink-rgb),.16)" stroke="var(--pink)"/><text x="91" y="16" text-anchor="middle" class="svgnum" fill="var(--pink)">3</text>
+        <rect x="114" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="129" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">4</text>
+        <rect x="152" y="0" width="30" height="22" rx="4" fill="rgba(var(--pink-rgb),.16)" stroke="var(--pink)"/><text x="167" y="16" text-anchor="middle" class="svgnum" fill="var(--pink)">5</text>
+        <rect x="190" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="205" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">6</text>
       </g>
-      <text x="640" y="142" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#D9147A"><tspan font-style="italic">B</tspan> = {1,3,5}</text>
+      <text x="640" y="142" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--pink)"><tspan font-style="italic">B</tspan> = {1,3,5}</text>
     </g>
 
     <g>
-      <text x="16" y="182" class="svgtxt" style="font-size:13.5px;fill:#565D66">4보다 큰가?</text>
+      <text x="16" y="182" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)">4보다 큰가?</text>
       <g transform="translate(190,168)">
-        <rect x="0" y="0" width="30" height="22" rx="4" fill="#FAFAF8" stroke="#E2E1DB"/><text x="15" y="16" text-anchor="middle" class="svgnum" fill="#8A9099">1</text>
-        <rect x="38" y="0" width="30" height="22" rx="4" fill="#FAFAF8" stroke="#E2E1DB"/><text x="53" y="16" text-anchor="middle" class="svgnum" fill="#8A9099">2</text>
-        <rect x="76" y="0" width="30" height="22" rx="4" fill="#FAFAF8" stroke="#E2E1DB"/><text x="91" y="16" text-anchor="middle" class="svgnum" fill="#8A9099">3</text>
-        <rect x="114" y="0" width="30" height="22" rx="4" fill="#FAFAF8" stroke="#E2E1DB"/><text x="129" y="16" text-anchor="middle" class="svgnum" fill="#8A9099">4</text>
-        <rect x="152" y="0" width="30" height="22" rx="4" fill="rgba(0,132,95,.16)" stroke="#00845F"/><text x="167" y="16" text-anchor="middle" class="svgnum" fill="#00845F">5</text>
-        <rect x="190" y="0" width="30" height="22" rx="4" fill="rgba(0,132,95,.16)" stroke="#00845F"/><text x="205" y="16" text-anchor="middle" class="svgnum" fill="#00845F">6</text>
+        <rect x="0" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="15" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">1</text>
+        <rect x="38" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="53" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">2</text>
+        <rect x="76" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="91" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">3</text>
+        <rect x="114" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="129" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">4</text>
+        <rect x="152" y="0" width="30" height="22" rx="4" fill="rgba(var(--green-rgb),.16)" stroke="var(--green)"/><text x="167" y="16" text-anchor="middle" class="svgnum" fill="var(--green)">5</text>
+        <rect x="190" y="0" width="30" height="22" rx="4" fill="rgba(var(--green-rgb),.16)" stroke="var(--green)"/><text x="205" y="16" text-anchor="middle" class="svgnum" fill="var(--green)">6</text>
       </g>
-      <text x="640" y="184" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#00845F"><tspan font-style="italic">C</tspan> = {5,6}</text>
+      <text x="640" y="184" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--green)"><tspan font-style="italic">C</tspan> = {5,6}</text>
     </g>
 
     <g>
-      <text x="16" y="224" class="svgtxt" style="font-size:13.5px;fill:#565D66">3인가?</text>
+      <text x="16" y="224" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)">3인가?</text>
       <g transform="translate(190,210)">
-        <rect x="0" y="0" width="30" height="22" rx="4" fill="#FAFAF8" stroke="#E2E1DB"/><text x="15" y="16" text-anchor="middle" class="svgnum" fill="#8A9099">1</text>
-        <rect x="38" y="0" width="30" height="22" rx="4" fill="#FAFAF8" stroke="#E2E1DB"/><text x="53" y="16" text-anchor="middle" class="svgnum" fill="#8A9099">2</text>
-        <rect x="76" y="0" width="30" height="22" rx="4" fill="rgba(107,47,168,.18)" stroke="#6B2FA8"/><text x="91" y="16" text-anchor="middle" class="svgnum" fill="#6B2FA8">3</text>
-        <rect x="114" y="0" width="30" height="22" rx="4" fill="#FAFAF8" stroke="#E2E1DB"/><text x="129" y="16" text-anchor="middle" class="svgnum" fill="#8A9099">4</text>
-        <rect x="152" y="0" width="30" height="22" rx="4" fill="#FAFAF8" stroke="#E2E1DB"/><text x="167" y="16" text-anchor="middle" class="svgnum" fill="#8A9099">5</text>
-        <rect x="190" y="0" width="30" height="22" rx="4" fill="#FAFAF8" stroke="#E2E1DB"/><text x="205" y="16" text-anchor="middle" class="svgnum" fill="#8A9099">6</text>
+        <rect x="0" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="15" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">1</text>
+        <rect x="38" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="53" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">2</text>
+        <rect x="76" y="0" width="30" height="22" rx="4" fill="rgba(var(--violet-rgb),.18)" stroke="var(--violet)"/><text x="91" y="16" text-anchor="middle" class="svgnum" fill="var(--violet)">3</text>
+        <rect x="114" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="129" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">4</text>
+        <rect x="152" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="167" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">5</text>
+        <rect x="190" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="205" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">6</text>
       </g>
-      <text x="640" y="226" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:#6B2FA8"><tspan font-style="italic">D</tspan> = {3}</text>
+      <text x="640" y="226" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--violet)"><tspan font-style="italic">D</tspan> = {3}</text>
     </g>
   </svg>
   <figcaption>질문 하나 = 색칠 패턴 하나 = 부분집합 하나. 이 대응이 이 과목 전체의 출발점이야.</figcaption>
@@ -486,44 +583,44 @@ footer a{color:var(--blue)}
   <div class="grid4">
     <div class="mini">
       <svg viewBox="0 0 120 100" aria-label="A는 B의 부분집합">
-        <rect x="2" y="2" width="116" height="96" rx="6" fill="#FAFAF8" stroke="#E2E1DB"/>
+        <rect x="2" y="2" width="116" height="96" rx="6" fill="var(--paper)" stroke="var(--rule)"/>
         <text x="10" y="16" class="svglab" style="font-size:9px">Ω</text>
-        <circle cx="60" cy="54" r="36" fill="rgba(217,20,122,.14)" stroke="#D9147A" stroke-width="1.4"/>
-        <circle cx="52" cy="58" r="19" fill="rgba(18,80,196,.22)" stroke="#1250C4" stroke-width="1.4"/>
-        <text x="52" y="62" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#1250C4">A</text>
-        <text x="88" y="36" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#D9147A">B</text>
+        <circle cx="60" cy="54" r="36" fill="rgba(var(--pink-rgb),.14)" stroke="var(--pink)" stroke-width="1.4"/>
+        <circle cx="52" cy="58" r="19" fill="rgba(var(--blue-rgb),.22)" stroke="var(--blue)" stroke-width="1.4"/>
+        <text x="52" y="62" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--blue)">A</text>
+        <text x="88" y="36" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--pink)">B</text>
       </svg>
       <div class="cap">A ⊆ B<br>부분집합</div>
     </div>
     <div class="mini">
       <svg viewBox="0 0 120 100" aria-label="A와 B가 같음">
-        <rect x="2" y="2" width="116" height="96" rx="6" fill="#FAFAF8" stroke="#E2E1DB"/>
+        <rect x="2" y="2" width="116" height="96" rx="6" fill="var(--paper)" stroke="var(--rule)"/>
         <text x="10" y="16" class="svglab" style="font-size:9px">Ω</text>
-        <circle cx="60" cy="54" r="32" fill="rgba(107,47,168,.2)" stroke="#6B2FA8" stroke-width="1.4"/>
-        <circle cx="60" cy="54" r="32" fill="none" stroke="#D9147A" stroke-width="1.4" stroke-dasharray="4 3"/>
-        <text x="60" y="59" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#6B2FA8">A = B</text>
+        <circle cx="60" cy="54" r="32" fill="rgba(var(--violet-rgb),.2)" stroke="var(--violet)" stroke-width="1.4"/>
+        <circle cx="60" cy="54" r="32" fill="none" stroke="var(--pink)" stroke-width="1.4" stroke-dasharray="4 3"/>
+        <text x="60" y="59" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--violet)">A = B</text>
       </svg>
       <div class="cap">A = B<br>완전히 겹침</div>
     </div>
     <div class="mini">
       <svg viewBox="0 0 120 100" aria-label="A와 B가 일부 겹침">
-        <rect x="2" y="2" width="116" height="96" rx="6" fill="#FAFAF8" stroke="#E2E1DB"/>
+        <rect x="2" y="2" width="116" height="96" rx="6" fill="var(--paper)" stroke="var(--rule)"/>
         <text x="10" y="16" class="svglab" style="font-size:9px">Ω</text>
-        <circle cx="46" cy="54" r="28" fill="rgba(18,80,196,.16)" stroke="#1250C4" stroke-width="1.4"/>
-        <circle cx="76" cy="54" r="28" fill="rgba(217,20,122,.16)" stroke="#D9147A" stroke-width="1.4"/>
-        <text x="30" y="58" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#1250C4">A</text>
-        <text x="94" y="58" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#D9147A">B</text>
+        <circle cx="46" cy="54" r="28" fill="rgba(var(--blue-rgb),.16)" stroke="var(--blue)" stroke-width="1.4"/>
+        <circle cx="76" cy="54" r="28" fill="rgba(var(--pink-rgb),.16)" stroke="var(--pink)" stroke-width="1.4"/>
+        <text x="30" y="58" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--blue)">A</text>
+        <text x="94" y="58" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--pink)">B</text>
       </svg>
       <div class="cap">일반적인 경우<br>일부만 겹침</div>
     </div>
     <div class="mini">
       <svg viewBox="0 0 120 100" aria-label="A와 B가 서로소">
-        <rect x="2" y="2" width="116" height="96" rx="6" fill="#FAFAF8" stroke="#E2E1DB"/>
+        <rect x="2" y="2" width="116" height="96" rx="6" fill="var(--paper)" stroke="var(--rule)"/>
         <text x="10" y="16" class="svglab" style="font-size:9px">Ω</text>
-        <circle cx="38" cy="54" r="25" fill="rgba(18,80,196,.16)" stroke="#1250C4" stroke-width="1.4"/>
-        <circle cx="84" cy="54" r="25" fill="rgba(217,20,122,.16)" stroke="#D9147A" stroke-width="1.4"/>
-        <text x="38" y="58" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#1250C4">A</text>
-        <text x="84" y="58" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#D9147A">B</text>
+        <circle cx="38" cy="54" r="25" fill="rgba(var(--blue-rgb),.16)" stroke="var(--blue)" stroke-width="1.4"/>
+        <circle cx="84" cy="54" r="25" fill="rgba(var(--pink-rgb),.16)" stroke="var(--pink)" stroke-width="1.4"/>
+        <text x="38" y="58" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--blue)">A</text>
+        <text x="84" y="58" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--pink)">B</text>
       </svg>
       <div class="cap">A ∩ B = ∅<br>서로소 (disjoint)</div>
     </div>
@@ -576,10 +673,10 @@ footer a{color:var(--blue)}
     <div class="mini">
       <svg viewBox="0 0 130 106" aria-label="여집합">
         <defs><mask id="mkA"><rect width="130" height="106" fill="#fff"/><circle cx="65" cy="56" r="30" fill="#000"/></mask></defs>
-        <rect x="2" y="2" width="126" height="102" rx="6" fill="rgba(18,80,196,.16)" stroke="#1250C4" mask="url(#mkA)"/>
-        <rect x="2" y="2" width="126" height="102" rx="6" fill="none" stroke="#E2E1DB"/>
-        <circle cx="65" cy="56" r="30" fill="#FFF" stroke="#1250C4" stroke-width="1.4"/>
-        <text x="65" y="61" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:#1250C4">A</text>
+        <rect x="2" y="2" width="126" height="102" rx="6" fill="rgba(var(--blue-rgb),.16)" stroke="var(--blue)" mask="url(#mkA)"/>
+        <rect x="2" y="2" width="126" height="102" rx="6" fill="none" stroke="var(--rule)"/>
+        <circle cx="65" cy="56" r="30" fill="var(--card)" stroke="var(--blue)" stroke-width="1.4"/>
+        <text x="65" y="61" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:var(--blue)">A</text>
         <text x="11" y="17" class="svglab" style="font-size:9px">Ω</text>
       </svg>
       <div class="cap">Aᶜ = {ω ∈ Ω : ω ∉ A}</div>
@@ -587,23 +684,23 @@ footer a{color:var(--blue)}
     <div class="mini">
       <svg viewBox="0 0 130 106" aria-label="교집합">
         <defs><clipPath id="cpA1"><circle cx="52" cy="56" r="30"/></clipPath></defs>
-        <rect x="2" y="2" width="126" height="102" rx="6" fill="#FAFAF8" stroke="#E2E1DB"/>
-        <circle cx="52" cy="56" r="30" fill="rgba(18,80,196,.1)" stroke="#1250C4" stroke-width="1.3"/>
-        <circle cx="80" cy="56" r="30" fill="rgba(217,20,122,.1)" stroke="#D9147A" stroke-width="1.3"/>
-        <g clip-path="url(#cpA1)"><circle cx="80" cy="56" r="30" fill="rgba(107,47,168,.55)"/></g>
-        <text x="30" y="60" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#1250C4">A</text>
-        <text x="102" y="60" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#D9147A">B</text>
+        <rect x="2" y="2" width="126" height="102" rx="6" fill="var(--paper)" stroke="var(--rule)"/>
+        <circle cx="52" cy="56" r="30" fill="rgba(var(--blue-rgb),.1)" stroke="var(--blue)" stroke-width="1.3"/>
+        <circle cx="80" cy="56" r="30" fill="rgba(var(--pink-rgb),.1)" stroke="var(--pink)" stroke-width="1.3"/>
+        <g clip-path="url(#cpA1)"><circle cx="80" cy="56" r="30" fill="rgba(var(--violet-rgb),.55)"/></g>
+        <text x="30" y="60" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--blue)">A</text>
+        <text x="102" y="60" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--pink)">B</text>
         <text x="11" y="17" class="svglab" style="font-size:9px">Ω</text>
       </svg>
       <div class="cap">A ∩ B<br>둘 다 (AND)</div>
     </div>
     <div class="mini">
       <svg viewBox="0 0 130 106" aria-label="합집합">
-        <rect x="2" y="2" width="126" height="102" rx="6" fill="#FAFAF8" stroke="#E2E1DB"/>
-        <circle cx="52" cy="56" r="30" fill="rgba(107,47,168,.4)" stroke="#1250C4" stroke-width="1.3"/>
-        <circle cx="80" cy="56" r="30" fill="rgba(107,47,168,.4)" stroke="#D9147A" stroke-width="1.3"/>
-        <text x="30" y="60" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#1250C4">A</text>
-        <text x="102" y="60" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#D9147A">B</text>
+        <rect x="2" y="2" width="126" height="102" rx="6" fill="var(--paper)" stroke="var(--rule)"/>
+        <circle cx="52" cy="56" r="30" fill="rgba(var(--violet-rgb),.4)" stroke="var(--blue)" stroke-width="1.3"/>
+        <circle cx="80" cy="56" r="30" fill="rgba(var(--violet-rgb),.4)" stroke="var(--pink)" stroke-width="1.3"/>
+        <text x="30" y="60" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--blue)">A</text>
+        <text x="102" y="60" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--pink)">B</text>
         <text x="11" y="17" class="svglab" style="font-size:9px">Ω</text>
       </svg>
       <div class="cap">A ∪ B<br>적어도 하나 (OR)</div>
@@ -611,12 +708,12 @@ footer a{color:var(--blue)}
     <div class="mini">
       <svg viewBox="0 0 130 106" aria-label="차집합">
         <defs><mask id="mkB1"><rect width="130" height="106" fill="#fff"/><circle cx="80" cy="56" r="30" fill="#000"/></mask></defs>
-        <rect x="2" y="2" width="126" height="102" rx="6" fill="#FAFAF8" stroke="#E2E1DB"/>
-        <circle cx="52" cy="56" r="30" fill="rgba(18,80,196,.55)" stroke="#1250C4" stroke-width="1.3" mask="url(#mkB1)"/>
-        <circle cx="52" cy="56" r="30" fill="none" stroke="#1250C4" stroke-width="1.3"/>
-        <circle cx="80" cy="56" r="30" fill="none" stroke="#D9147A" stroke-width="1.3"/>
-        <text x="30" y="60" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#1250C4">A</text>
-        <text x="102" y="60" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#D9147A">B</text>
+        <rect x="2" y="2" width="126" height="102" rx="6" fill="var(--paper)" stroke="var(--rule)"/>
+        <circle cx="52" cy="56" r="30" fill="rgba(var(--blue-rgb),.55)" stroke="var(--blue)" stroke-width="1.3" mask="url(#mkB1)"/>
+        <circle cx="52" cy="56" r="30" fill="none" stroke="var(--blue)" stroke-width="1.3"/>
+        <circle cx="80" cy="56" r="30" fill="none" stroke="var(--pink)" stroke-width="1.3"/>
+        <text x="30" y="60" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--blue)">A</text>
+        <text x="102" y="60" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--pink)">B</text>
         <text x="11" y="17" class="svglab" style="font-size:9px">Ω</text>
       </svg>
       <div class="cap">A \ B = A ∩ Bᶜ<br>A인데 B는 아닌</div>
@@ -647,27 +744,27 @@ footer a{color:var(--blue)}
             <mask id="nABC"><rect width="460" height="400" fill="#fff"/><circle cx="175" cy="155" r="100" fill="#000"/><circle cx="285" cy="155" r="100" fill="#000"/><circle cx="230" cy="250" r="100" fill="#000"/></mask>
           </defs>
 
-          <rect x="4" y="4" width="452" height="392" rx="10" fill="#FAFAF8" stroke="#E2E1DB"/>
+          <rect x="4" y="4" width="452" height="392" rx="10" fill="var(--paper)" stroke="var(--rule)"/>
 
           <!-- regions -->
-          <rect class="region" data-id="r000" x="0" y="0" width="460" height="400" mask="url(#nABC)" fill="#8A9099" fill-opacity="0"/>
-          <g clip-path="url(#cA)"><rect class="region" data-id="r100" x="0" y="0" width="460" height="400" mask="url(#nBC)" fill="#1250C4" fill-opacity=".14"/></g>
-          <g clip-path="url(#cB)"><rect class="region" data-id="r010" x="0" y="0" width="460" height="400" mask="url(#nAC)" fill="#D9147A" fill-opacity=".14"/></g>
-          <g clip-path="url(#cC)"><rect class="region" data-id="r001" x="0" y="0" width="460" height="400" mask="url(#nAB)" fill="#00845F" fill-opacity=".14"/></g>
-          <g clip-path="url(#cA)"><g clip-path="url(#cB)"><rect class="region" data-id="r110" x="0" y="0" width="460" height="400" mask="url(#nC)" fill="#6B2FA8" fill-opacity=".2"/></g></g>
-          <g clip-path="url(#cA)"><g clip-path="url(#cC)"><rect class="region" data-id="r101" x="0" y="0" width="460" height="400" mask="url(#nB)" fill="#0E7490" fill-opacity=".2"/></g></g>
-          <g clip-path="url(#cB)"><g clip-path="url(#cC)"><rect class="region" data-id="r011" x="0" y="0" width="460" height="400" mask="url(#nA)" fill="#A3532B" fill-opacity=".2"/></g></g>
-          <g clip-path="url(#cA)"><g clip-path="url(#cB)"><g clip-path="url(#cC)"><rect class="region" data-id="r111" x="0" y="0" width="460" height="400" fill="#3B1E70" fill-opacity=".26"/></g></g></g>
+          <rect class="region" data-id="r000" x="0" y="0" width="460" height="400" mask="url(#nABC)" fill="var(--ink3)" fill-opacity="0"/>
+          <g clip-path="url(#cA)"><rect class="region" data-id="r100" x="0" y="0" width="460" height="400" mask="url(#nBC)" fill="var(--blue)" fill-opacity=".14"/></g>
+          <g clip-path="url(#cB)"><rect class="region" data-id="r010" x="0" y="0" width="460" height="400" mask="url(#nAC)" fill="var(--pink)" fill-opacity=".14"/></g>
+          <g clip-path="url(#cC)"><rect class="region" data-id="r001" x="0" y="0" width="460" height="400" mask="url(#nAB)" fill="var(--green)" fill-opacity=".14"/></g>
+          <g clip-path="url(#cA)"><g clip-path="url(#cB)"><rect class="region" data-id="r110" x="0" y="0" width="460" height="400" mask="url(#nC)" fill="var(--violet)" fill-opacity=".2"/></g></g>
+          <g clip-path="url(#cA)"><g clip-path="url(#cC)"><rect class="region" data-id="r101" x="0" y="0" width="460" height="400" mask="url(#nB)" fill="var(--teal)" fill-opacity=".2"/></g></g>
+          <g clip-path="url(#cB)"><g clip-path="url(#cC)"><rect class="region" data-id="r011" x="0" y="0" width="460" height="400" mask="url(#nA)" fill="var(--brown)" fill-opacity=".2"/></g></g>
+          <g clip-path="url(#cA)"><g clip-path="url(#cB)"><g clip-path="url(#cC)"><rect class="region" data-id="r111" x="0" y="0" width="460" height="400" fill="var(--violet-deep)" fill-opacity=".26"/></g></g></g>
 
           <!-- outlines -->
           <g fill="none" stroke-width="1.7" pointer-events="none">
-            <circle cx="175" cy="155" r="100" stroke="#1250C4"/>
-            <circle cx="285" cy="155" r="100" stroke="#D9147A"/>
-            <circle cx="230" cy="250" r="100" stroke="#00845F"/>
+            <circle cx="175" cy="155" r="100" stroke="var(--blue)"/>
+            <circle cx="285" cy="155" r="100" stroke="var(--pink)"/>
+            <circle cx="230" cy="250" r="100" stroke="var(--green)"/>
           </g>
 
           <!-- element numbers -->
-          <g pointer-events="none" class="svgnum" style="font-size:15px;fill:#14161A">
+          <g pointer-events="none" class="svgnum" style="font-size:15px;fill:var(--ink)">
             <text x="130" y="126" text-anchor="middle">1</text>
             <text x="168" y="227" text-anchor="middle">2</text>
             <text x="230" y="125" text-anchor="middle">3</text>
@@ -680,10 +777,10 @@ footer a{color:var(--blue)}
 
           <!-- labels -->
           <g pointer-events="none">
-            <text x="98" y="72" class="svgtxt it" style="font-size:19px;fill:#1250C4">A</text>
-            <text x="362" y="72" class="svgtxt it" style="font-size:19px;fill:#D9147A">B</text>
-            <text x="230" y="366" class="svgtxt it" style="font-size:19px;fill:#00845F">C</text>
-            <text x="20" y="30" class="svgtxt it" style="font-size:17px;fill:#8A9099">Ω</text>
+            <text x="98" y="72" class="svgtxt it" style="font-size:19px;fill:var(--blue)">A</text>
+            <text x="362" y="72" class="svgtxt it" style="font-size:19px;fill:var(--pink)">B</text>
+            <text x="230" y="366" class="svgtxt it" style="font-size:19px;fill:var(--green)">C</text>
+            <text x="20" y="30" class="svgtxt it" style="font-size:17px;fill:var(--ink3)">Ω</text>
           </g>
         </svg>
         <div class="hintline" style="border:0;padding-top:8px">
@@ -773,13 +870,13 @@ footer a{color:var(--blue)}
   <div class="grid3">
     <div class="mini">
       <svg viewBox="0 0 160 150" aria-label="B 합집합 C">
-        <rect x="2" y="2" width="156" height="146" rx="6" fill="#FAFAF8" stroke="#E2E1DB"/>
-        <circle cx="62" cy="58" r="40" fill="none" stroke="#1250C4" stroke-width="1.3"/>
-        <circle cx="102" cy="58" r="40" fill="rgba(217,20,122,.3)" stroke="#D9147A" stroke-width="1.3"/>
-        <circle cx="82" cy="96" r="40" fill="rgba(0,132,95,.3)" stroke="#00845F" stroke-width="1.3"/>
-        <text x="30" y="34" class="svgtxt it" style="font-size:12px;fill:#1250C4">A</text>
-        <text x="128" y="34" class="svgtxt it" style="font-size:12px;fill:#D9147A">B</text>
-        <text x="82" y="142" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#00845F">C</text>
+        <rect x="2" y="2" width="156" height="146" rx="6" fill="var(--paper)" stroke="var(--rule)"/>
+        <circle cx="62" cy="58" r="40" fill="none" stroke="var(--blue)" stroke-width="1.3"/>
+        <circle cx="102" cy="58" r="40" fill="rgba(var(--pink-rgb),.3)" stroke="var(--pink)" stroke-width="1.3"/>
+        <circle cx="82" cy="96" r="40" fill="rgba(var(--green-rgb),.3)" stroke="var(--green)" stroke-width="1.3"/>
+        <text x="30" y="34" class="svgtxt it" style="font-size:12px;fill:var(--blue)">A</text>
+        <text x="128" y="34" class="svgtxt it" style="font-size:12px;fill:var(--pink)">B</text>
+        <text x="82" y="142" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--green)">C</text>
       </svg>
       <div class="cap" style="font-family:var(--serif);font-size:14px">먼저 B ∪ C</div>
     </div>
@@ -788,17 +885,17 @@ footer a{color:var(--blue)}
         <defs>
           <clipPath id="dcA"><circle cx="62" cy="58" r="40"/></clipPath>
         </defs>
-        <rect x="2" y="2" width="156" height="146" rx="6" fill="#FAFAF8" stroke="#E2E1DB"/>
+        <rect x="2" y="2" width="156" height="146" rx="6" fill="var(--paper)" stroke="var(--rule)"/>
         <g clip-path="url(#dcA)">
-          <circle cx="102" cy="58" r="40" fill="rgba(75,29,140,.6)"/>
-          <circle cx="82" cy="96" r="40" fill="rgba(75,29,140,.6)"/>
+          <circle cx="102" cy="58" r="40" fill="rgba(var(--sel-rgb),.6)"/>
+          <circle cx="82" cy="96" r="40" fill="rgba(var(--sel-rgb),.6)"/>
         </g>
-        <circle cx="62" cy="58" r="40" fill="none" stroke="#1250C4" stroke-width="1.6"/>
-        <circle cx="102" cy="58" r="40" fill="none" stroke="#D9147A" stroke-width="1.3"/>
-        <circle cx="82" cy="96" r="40" fill="none" stroke="#00845F" stroke-width="1.3"/>
-        <text x="30" y="34" class="svgtxt it" style="font-size:12px;fill:#1250C4">A</text>
-        <text x="128" y="34" class="svgtxt it" style="font-size:12px;fill:#D9147A">B</text>
-        <text x="82" y="142" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#00845F">C</text>
+        <circle cx="62" cy="58" r="40" fill="none" stroke="var(--blue)" stroke-width="1.6"/>
+        <circle cx="102" cy="58" r="40" fill="none" stroke="var(--pink)" stroke-width="1.3"/>
+        <circle cx="82" cy="96" r="40" fill="none" stroke="var(--green)" stroke-width="1.3"/>
+        <text x="30" y="34" class="svgtxt it" style="font-size:12px;fill:var(--blue)">A</text>
+        <text x="128" y="34" class="svgtxt it" style="font-size:12px;fill:var(--pink)">B</text>
+        <text x="82" y="142" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--green)">C</text>
       </svg>
       <div class="cap" style="font-family:var(--serif);font-size:14px">A ∩ (B ∪ C)</div>
     </div>
@@ -807,19 +904,19 @@ footer a{color:var(--blue)}
         <defs>
           <clipPath id="dcA2"><circle cx="62" cy="58" r="40"/></clipPath>
         </defs>
-        <rect x="2" y="2" width="156" height="146" rx="6" fill="#FAFAF8" stroke="#E2E1DB"/>
+        <rect x="2" y="2" width="156" height="146" rx="6" fill="var(--paper)" stroke="var(--rule)"/>
         <g clip-path="url(#dcA2)">
-          <circle cx="102" cy="58" r="40" fill="rgba(75,29,140,.6)"/>
+          <circle cx="102" cy="58" r="40" fill="rgba(var(--sel-rgb),.6)"/>
         </g>
         <g clip-path="url(#dcA2)">
-          <circle cx="82" cy="96" r="40" fill="rgba(75,29,140,.6)"/>
+          <circle cx="82" cy="96" r="40" fill="rgba(var(--sel-rgb),.6)"/>
         </g>
-        <circle cx="62" cy="58" r="40" fill="none" stroke="#1250C4" stroke-width="1.6"/>
-        <circle cx="102" cy="58" r="40" fill="none" stroke="#D9147A" stroke-width="1.3"/>
-        <circle cx="82" cy="96" r="40" fill="none" stroke="#00845F" stroke-width="1.3"/>
-        <text x="30" y="34" class="svgtxt it" style="font-size:12px;fill:#1250C4">A</text>
-        <text x="128" y="34" class="svgtxt it" style="font-size:12px;fill:#D9147A">B</text>
-        <text x="82" y="142" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#00845F">C</text>
+        <circle cx="62" cy="58" r="40" fill="none" stroke="var(--blue)" stroke-width="1.6"/>
+        <circle cx="102" cy="58" r="40" fill="none" stroke="var(--pink)" stroke-width="1.3"/>
+        <circle cx="82" cy="96" r="40" fill="none" stroke="var(--green)" stroke-width="1.3"/>
+        <text x="30" y="34" class="svgtxt it" style="font-size:12px;fill:var(--blue)">A</text>
+        <text x="128" y="34" class="svgtxt it" style="font-size:12px;fill:var(--pink)">B</text>
+        <text x="82" y="142" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--green)">C</text>
       </svg>
       <div class="cap" style="font-family:var(--serif);font-size:14px">(A∩B) ∪ (A∩C)</div>
     </div>
@@ -833,26 +930,26 @@ footer a{color:var(--blue)}
     <div class="mini" style="padding:16px">
       <svg viewBox="0 0 200 130" aria-label="합집합의 여집합">
         <defs><mask id="dm1"><rect width="200" height="130" fill="#fff"/><circle cx="80" cy="66" r="38" fill="#000"/><circle cx="120" cy="66" r="38" fill="#000"/></mask></defs>
-        <rect x="2" y="2" width="196" height="126" rx="6" fill="rgba(107,47,168,.45)" mask="url(#dm1)"/>
-        <rect x="2" y="2" width="196" height="126" rx="6" fill="none" stroke="#E2E1DB"/>
-        <circle cx="80" cy="66" r="38" fill="none" stroke="#1250C4" stroke-width="1.4"/>
-        <circle cx="120" cy="66" r="38" fill="none" stroke="#D9147A" stroke-width="1.4"/>
-        <text x="52" y="70" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:#1250C4">A</text>
-        <text x="148" y="70" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:#D9147A">B</text>
+        <rect x="2" y="2" width="196" height="126" rx="6" fill="rgba(var(--violet-rgb),.45)" mask="url(#dm1)"/>
+        <rect x="2" y="2" width="196" height="126" rx="6" fill="none" stroke="var(--rule)"/>
+        <circle cx="80" cy="66" r="38" fill="none" stroke="var(--blue)" stroke-width="1.4"/>
+        <circle cx="120" cy="66" r="38" fill="none" stroke="var(--pink)" stroke-width="1.4"/>
+        <text x="52" y="70" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:var(--blue)">A</text>
+        <text x="148" y="70" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:var(--pink)">B</text>
       </svg>
-      <div class="cap" style="font-family:var(--serif);font-size:15px">(A ∪ B)ᶜ<br><span style="font-family:var(--sans);font-size:11px;color:#8A9099">둘 중 어디에도 없는 곳</span></div>
+      <div class="cap" style="font-family:var(--serif);font-size:15px">(A ∪ B)ᶜ<br><span style="font-family:var(--sans);font-size:11px;color:var(--ink3)">둘 중 어디에도 없는 곳</span></div>
     </div>
     <div class="mini" style="padding:16px">
       <svg viewBox="0 0 200 130" aria-label="여집합의 교집합">
         <defs><mask id="dm2"><rect width="200" height="130" fill="#fff"/><circle cx="80" cy="66" r="38" fill="#000"/><circle cx="120" cy="66" r="38" fill="#000"/></mask></defs>
-        <rect x="2" y="2" width="196" height="126" rx="6" fill="rgba(107,47,168,.45)" mask="url(#dm2)"/>
-        <rect x="2" y="2" width="196" height="126" rx="6" fill="none" stroke="#E2E1DB"/>
-        <circle cx="80" cy="66" r="38" fill="none" stroke="#1250C4" stroke-width="1.4" stroke-dasharray="3 3"/>
-        <circle cx="120" cy="66" r="38" fill="none" stroke="#D9147A" stroke-width="1.4" stroke-dasharray="3 3"/>
-        <text x="52" y="70" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:#1250C4">A</text>
-        <text x="148" y="70" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:#D9147A">B</text>
+        <rect x="2" y="2" width="196" height="126" rx="6" fill="rgba(var(--violet-rgb),.45)" mask="url(#dm2)"/>
+        <rect x="2" y="2" width="196" height="126" rx="6" fill="none" stroke="var(--rule)"/>
+        <circle cx="80" cy="66" r="38" fill="none" stroke="var(--blue)" stroke-width="1.4" stroke-dasharray="3 3"/>
+        <circle cx="120" cy="66" r="38" fill="none" stroke="var(--pink)" stroke-width="1.4" stroke-dasharray="3 3"/>
+        <text x="52" y="70" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:var(--blue)">A</text>
+        <text x="148" y="70" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:var(--pink)">B</text>
       </svg>
-      <div class="cap" style="font-family:var(--serif);font-size:15px">Aᶜ ∩ Bᶜ<br><span style="font-family:var(--sans);font-size:11px;color:#8A9099">A 밖이면서 동시에 B 밖</span></div>
+      <div class="cap" style="font-family:var(--serif);font-size:15px">Aᶜ ∩ Bᶜ<br><span style="font-family:var(--sans);font-size:11px;color:var(--ink3)">A 밖이면서 동시에 B 밖</span></div>
     </div>
   </div>
   <figcaption>같은 그림이 나온다. 말로 하면 이래: <strong>"둘 중 아무것도 안 일어났다"는 "A도 안 일어나고 B도 안 일어났다"와 같은 말이다.</strong> 한국어로 읽으면 너무 당연하지? De Morgan은 그 당연한 말을 기호로 옮긴 것뿐이야.</figcaption>
@@ -923,8 +1020,8 @@ footer a{color:var(--blue)}
   <svg viewBox="0 0 700 200" role="img" aria-label="정수를 자연수와 일대일 대응시키는 지그재그">
     <text x="14" y="24" class="svglab" style="font-size:11px;letter-spacing:.1em">ℤ 는 무한한데 셀 수 있다 — 지그재그로 줄 세우면 된다</text>
 
-    <text x="14" y="72" class="svgtxt" style="font-size:13px;fill:#8A9099">ℤ</text>
-    <g class="svgnum" style="font-size:14px;fill:#14161A">
+    <text x="14" y="72" class="svgtxt" style="font-size:13px;fill:var(--ink3)">ℤ</text>
+    <g class="svgnum" style="font-size:14px;fill:var(--ink)">
       <text x="90"  y="72" text-anchor="middle">…</text>
       <text x="150" y="72" text-anchor="middle">−2</text>
       <text x="220" y="72" text-anchor="middle">−1</text>
@@ -934,17 +1031,17 @@ footer a{color:var(--blue)}
       <text x="500" y="72" text-anchor="middle">…</text>
     </g>
 
-    <g stroke="#6B2FA8" stroke-width="1.4" fill="none">
+    <g stroke="var(--violet)" stroke-width="1.4" fill="none">
       <path d="M 290 82 L 290 128" marker-end="url(#ar4)"/>
       <path d="M 360 82 L 305 128" marker-end="url(#ar4)"/>
       <path d="M 220 82 L 355 128" marker-end="url(#ar4)"/>
       <path d="M 430 82 L 400 128" marker-end="url(#ar4)"/>
       <path d="M 150 82 L 450 128" marker-end="url(#ar4)"/>
     </g>
-    <defs><marker id="ar4" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#6B2FA8"/></marker></defs>
+    <defs><marker id="ar4" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--violet)"/></marker></defs>
 
-    <text x="14" y="152" class="svgtxt" style="font-size:13px;fill:#8A9099">ℕ</text>
-    <g class="svgnum" style="font-size:14px;fill:#6B2FA8">
+    <text x="14" y="152" class="svgtxt" style="font-size:13px;fill:var(--ink3)">ℕ</text>
+    <g class="svgnum" style="font-size:14px;fill:var(--violet)">
       <text x="290" y="152" text-anchor="middle">1</text>
       <text x="335" y="152" text-anchor="middle">2</text>
       <text x="380" y="152" text-anchor="middle">3</text>
@@ -953,8 +1050,8 @@ footer a{color:var(--blue)}
       <text x="515" y="152" text-anchor="middle">…</text>
     </g>
 
-    <text x="560" y="118" class="svgtxt" style="font-size:13px;fill:#565D66">순서: 0, 1, −1, 2, −2, …</text>
-    <text x="560" y="140" class="svgtxt" style="font-size:13px;fill:#565D66">빠지는 정수가 없다 ✓</text>
+    <text x="560" y="118" class="svgtxt" style="font-size:13px;fill:var(--ink2)">순서: 0, 1, −1, 2, −2, …</text>
+    <text x="560" y="140" class="svgtxt" style="font-size:13px;fill:var(--ink2)">빠지는 정수가 없다 ✓</text>
   </svg>
   <figcaption>ℤ가 ℕ보다 "두 배 커 보이는" 건 착각이야. 무한집합에서는 "부분이 전체와 같은 크기"일 수 있어. 유한집합의 직관이 안 통하는 첫 지점이지.</figcaption>
   </figure>
@@ -962,28 +1059,28 @@ footer a{color:var(--blue)}
   <figure>
   <svg viewBox="0 0 700 230" role="img" aria-label="실수는 셀 수 없다는 대각선 논법">
     <text x="14" y="24" class="svglab" style="font-size:11px;letter-spacing:.1em">ℝ 은 셀 수 없다 — 아무리 줄 세워도 빠지는 놈이 생긴다</text>
-    <text x="14" y="48" class="svgtxt" style="font-size:13px;fill:#565D66">(0,1) 사이의 실수를 다 나열했다고 치자:</text>
+    <text x="14" y="48" class="svgtxt" style="font-size:13px;fill:var(--ink2)">(0,1) 사이의 실수를 다 나열했다고 치자:</text>
 
     <g class="svgnum" style="font-size:15px">
-      <text x="40" y="86" fill="#8A9099">1.</text>
-      <text x="80" y="86" fill="#14161A">0.</text><text x="108" y="86" fill="#D9147A" font-weight="700">3</text><text x="126" y="86">1</text><text x="144" y="86">4</text><text x="162" y="86">1</text><text x="180" y="86">5</text><text x="198" y="86" fill="#8A9099">…</text>
-      <text x="40" y="112" fill="#8A9099">2.</text>
-      <text x="80" y="112" fill="#14161A">0.</text><text x="108" y="112">2</text><text x="126" y="112" fill="#D9147A" font-weight="700">7</text><text x="144" y="112">1</text><text x="162" y="112">8</text><text x="180" y="112">2</text><text x="198" y="112" fill="#8A9099">…</text>
-      <text x="40" y="138" fill="#8A9099">3.</text>
-      <text x="80" y="138" fill="#14161A">0.</text><text x="108" y="138">1</text><text x="126" y="138">4</text><text x="144" y="138" fill="#D9147A" font-weight="700">1</text><text x="162" y="138">4</text><text x="180" y="138">2</text><text x="198" y="138" fill="#8A9099">…</text>
-      <text x="40" y="164" fill="#8A9099">4.</text>
-      <text x="80" y="164" fill="#14161A">0.</text><text x="108" y="164">5</text><text x="126" y="164">7</text><text x="144" y="164">7</text><text x="162" y="164" fill="#D9147A" font-weight="700">2</text><text x="180" y="164">1</text><text x="198" y="164" fill="#8A9099">…</text>
-      <text x="40" y="190" fill="#8A9099">⋮</text>
+      <text x="40" y="86" fill="var(--ink3)">1.</text>
+      <text x="80" y="86" fill="var(--ink)">0.</text><text x="108" y="86" fill="var(--pink)" font-weight="700">3</text><text x="126" y="86">1</text><text x="144" y="86">4</text><text x="162" y="86">1</text><text x="180" y="86">5</text><text x="198" y="86" fill="var(--ink3)">…</text>
+      <text x="40" y="112" fill="var(--ink3)">2.</text>
+      <text x="80" y="112" fill="var(--ink)">0.</text><text x="108" y="112">2</text><text x="126" y="112" fill="var(--pink)" font-weight="700">7</text><text x="144" y="112">1</text><text x="162" y="112">8</text><text x="180" y="112">2</text><text x="198" y="112" fill="var(--ink3)">…</text>
+      <text x="40" y="138" fill="var(--ink3)">3.</text>
+      <text x="80" y="138" fill="var(--ink)">0.</text><text x="108" y="138">1</text><text x="126" y="138">4</text><text x="144" y="138" fill="var(--pink)" font-weight="700">1</text><text x="162" y="138">4</text><text x="180" y="138">2</text><text x="198" y="138" fill="var(--ink3)">…</text>
+      <text x="40" y="164" fill="var(--ink3)">4.</text>
+      <text x="80" y="164" fill="var(--ink)">0.</text><text x="108" y="164">5</text><text x="126" y="164">7</text><text x="144" y="164">7</text><text x="162" y="164" fill="var(--pink)" font-weight="700">2</text><text x="180" y="164">1</text><text x="198" y="164" fill="var(--ink3)">…</text>
+      <text x="40" y="190" fill="var(--ink3)">⋮</text>
     </g>
 
-    <line x1="100" y1="72" x2="192" y2="180" stroke="#D9147A" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <line x1="100" y1="72" x2="192" y2="180" stroke="var(--pink)" stroke-width="1.5" stroke-dasharray="4 3"/>
 
-    <text x="270" y="86" class="svgtxt" style="font-size:13px;fill:#565D66">대각선 숫자를 뽑으면</text>
-    <text x="270" y="110" class="svgnum" style="font-size:15px;fill:#D9147A">0.3712…</text>
-    <text x="270" y="142" class="svgtxt" style="font-size:13px;fill:#565D66">각 자리를 하나씩 바꾸면</text>
-    <text x="270" y="166" class="svgnum" style="font-size:15px;fill:#6B2FA8;font-weight:700">0.4823…</text>
-    <text x="270" y="196" class="svgtxt" style="font-size:13px;fill:#14161A">이 수는 목록의 <tspan font-weight="700">어느 줄과도 다르다.</tspan></text>
-    <text x="270" y="218" class="svgtxt" style="font-size:13px;fill:#14161A">n번째 줄과는 n번째 자리가 다르니까.</text>
+    <text x="270" y="86" class="svgtxt" style="font-size:13px;fill:var(--ink2)">대각선 숫자를 뽑으면</text>
+    <text x="270" y="110" class="svgnum" style="font-size:15px;fill:var(--pink)">0.3712…</text>
+    <text x="270" y="142" class="svgtxt" style="font-size:13px;fill:var(--ink2)">각 자리를 하나씩 바꾸면</text>
+    <text x="270" y="166" class="svgnum" style="font-size:15px;fill:var(--violet);font-weight:700">0.4823…</text>
+    <text x="270" y="196" class="svgtxt" style="font-size:13px;fill:var(--ink)">이 수는 목록의 <tspan font-weight="700">어느 줄과도 다르다.</tspan></text>
+    <text x="270" y="218" class="svgtxt" style="font-size:13px;fill:var(--ink)">n번째 줄과는 n번째 자리가 다르니까.</text>
   </svg>
   <figcaption>Cantor의 대각선 논법. "다 나열했다"는 가정에서 출발했는데 목록에 없는 수를 만들어냈으니, 애초에 나열이 불가능했던 거야. 이 과목에서 증명을 직접 요구하진 않지만, <strong>왜</strong> ℝ이 다른지는 알고 있어야 해.</figcaption>
   </figure>
@@ -1046,14 +1143,14 @@ footer a{color:var(--blue)}
 
     <g class="svgnum" style="font-size:13px">
       <!-- header -->
-      <text x="60"  y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:#8A9099">비트</text>
-      <text x="210" y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:#8A9099">부분집합</text>
-      <text x="400" y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:#8A9099">비트</text>
-      <text x="550" y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:#8A9099">부분집합</text>
+      <text x="60"  y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--ink3)">비트</text>
+      <text x="210" y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--ink3)">부분집합</text>
+      <text x="400" y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--ink3)">비트</text>
+      <text x="550" y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--ink3)">부분집합</text>
     </g>
-    <line x1="14" y1="60" x2="686" y2="60" stroke="#E2E1DB"/>
+    <line x1="14" y1="60" x2="686" y2="60" stroke="var(--rule)"/>
 
-    <g style="font-family:var(--mono);font-size:14px;fill:#6B2FA8">
+    <g style="font-family:var(--mono);font-size:14px;fill:var(--violet)">
       <text x="60"  y="86" text-anchor="middle">000</text>
       <text x="60"  y="116" text-anchor="middle">001</text>
       <text x="60"  y="146" text-anchor="middle">010</text>
@@ -1063,7 +1160,7 @@ footer a{color:var(--blue)}
       <text x="400" y="146" text-anchor="middle">110</text>
       <text x="400" y="176" text-anchor="middle">111</text>
     </g>
-    <g class="svgtxt" style="font-size:15px;fill:#14161A">
+    <g class="svgtxt" style="font-size:15px;fill:var(--ink)">
       <text x="210" y="86"  text-anchor="middle">∅</text>
       <text x="210" y="116" text-anchor="middle">{3}</text>
       <text x="210" y="146" text-anchor="middle">{2}</text>
@@ -1073,10 +1170,10 @@ footer a{color:var(--blue)}
       <text x="550" y="146" text-anchor="middle">{1, 2}</text>
       <text x="550" y="176" text-anchor="middle">{1, 2, 3} = Ω</text>
     </g>
-    <g stroke="#E2E1DB"><line x1="120" y1="72" x2="120" y2="188"/><line x1="460" y1="72" x2="460" y2="188"/><line x1="340" y1="60" x2="340" y2="188"/></g>
+    <g stroke="var(--rule)"><line x1="120" y1="72" x2="120" y2="188"/><line x1="460" y1="72" x2="460" y2="188"/><line x1="340" y1="60" x2="340" y2="188"/></g>
 
-    <text x="14" y="222" class="svgtxt" style="font-size:13.5px;fill:#565D66">원소마다 "넣을까 말까" 2가지 선택 × 3개 원소 = <tspan font-weight="700" fill="#14161A">2³ = 8가지</tspan>. 일반적으로 |Ω| = n 이면 |2^Ω| = 2ⁿ.</text>
-    <text x="14" y="242" class="svgtxt" style="font-size:13.5px;fill:#565D66">그래서 기호가 2^Ω 야. 지수 표기가 개수를 그대로 말해주는 거지.</text>
+    <text x="14" y="222" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)">원소마다 "넣을까 말까" 2가지 선택 × 3개 원소 = <tspan font-weight="700" fill="var(--ink)">2³ = 8가지</tspan>. 일반적으로 |Ω| = n 이면 |2^Ω| = 2ⁿ.</text>
+    <text x="14" y="242" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)">그래서 기호가 2^Ω 야. 지수 표기가 개수를 그대로 말해주는 거지.</text>
   </svg>
   <figcaption>ECE 385/391에서 쓰던 비트마스크 그대로야. 집합 연산이 비트 연산이 되고(∪ = OR, ∩ = AND, ᶜ = NOT), 부분집합의 총 개수가 <span class="m">2<sup><i>n</i></sup></span>인 이유도 한눈에 보여.</figcaption>
   </figure>
@@ -1149,22 +1246,22 @@ footer a{color:var(--blue)}
     <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em">Aₙ = (0, 1/n) 을 겹쳐 그리면</text>
 
     <!-- axis -->
-    <line x1="60" y1="200" x2="660" y2="200" stroke="#8A9099" stroke-width="1.2"/>
-    <line x1="60" y1="195" x2="60" y2="205" stroke="#8A9099" stroke-width="1.2"/>
-    <line x1="620" y1="195" x2="620" y2="205" stroke="#8A9099" stroke-width="1.2"/>
-    <text x="60" y="222" text-anchor="middle" class="svgnum" style="font-size:13px;fill:#565D66">0</text>
-    <text x="620" y="222" text-anchor="middle" class="svgnum" style="font-size:13px;fill:#565D66">1</text>
+    <line x1="60" y1="200" x2="660" y2="200" stroke="var(--ink3)" stroke-width="1.2"/>
+    <line x1="60" y1="195" x2="60" y2="205" stroke="var(--ink3)" stroke-width="1.2"/>
+    <line x1="620" y1="195" x2="620" y2="205" stroke="var(--ink3)" stroke-width="1.2"/>
+    <text x="60" y="222" text-anchor="middle" class="svgnum" style="font-size:13px;fill:var(--ink2)">0</text>
+    <text x="620" y="222" text-anchor="middle" class="svgnum" style="font-size:13px;fill:var(--ink2)">1</text>
 
     <!-- intervals -->
     <g stroke-width="7" stroke-linecap="butt">
-      <line x1="62" y1="60"  x2="618" y2="60"  stroke="#1250C4" opacity=".75"/>
-      <line x1="62" y1="82"  x2="340" y2="82"  stroke="#1250C4" opacity=".62"/>
-      <line x1="62" y1="104" x2="247" y2="104" stroke="#1250C4" opacity=".5"/>
-      <line x1="62" y1="126" x2="200" y2="126" stroke="#1250C4" opacity=".4"/>
-      <line x1="62" y1="148" x2="172" y2="148" stroke="#1250C4" opacity=".3"/>
-      <line x1="62" y1="170" x2="118" y2="170" stroke="#1250C4" opacity=".2"/>
+      <line x1="62" y1="60"  x2="618" y2="60"  stroke="var(--blue)" opacity=".75"/>
+      <line x1="62" y1="82"  x2="340" y2="82"  stroke="var(--blue)" opacity=".62"/>
+      <line x1="62" y1="104" x2="247" y2="104" stroke="var(--blue)" opacity=".5"/>
+      <line x1="62" y1="126" x2="200" y2="126" stroke="var(--blue)" opacity=".4"/>
+      <line x1="62" y1="148" x2="172" y2="148" stroke="var(--blue)" opacity=".3"/>
+      <line x1="62" y1="170" x2="118" y2="170" stroke="var(--blue)" opacity=".2"/>
     </g>
-    <g class="svgnum" style="font-size:12px;fill:#565D66">
+    <g class="svgnum" style="font-size:12px;fill:var(--ink2)">
       <text x="640" y="64">n=1</text>
       <text x="360" y="86">n=2</text>
       <text x="267" y="108">n=3</text>
@@ -1173,11 +1270,11 @@ footer a{color:var(--blue)}
       <text x="138" y="174">⋮</text>
     </g>
 
-    <circle cx="60" cy="200" r="4.5" fill="#FAFAF8" stroke="#D9147A" stroke-width="1.8"/>
-    <text x="86" y="248" class="svgtxt" style="font-size:13.5px;fill:#14161A">
+    <circle cx="60" cy="200" r="4.5" fill="var(--paper)" stroke="var(--pink)" stroke-width="1.8"/>
+    <text x="86" y="248" class="svgtxt" style="font-size:13.5px;fill:var(--ink)">
       모든 구간이 0에 붙어있지만 <tspan font-weight="700">0은 어느 구간에도 안 들어간다</tspan> (열린 구간이라서).
     </text>
-    <text x="86" y="268" class="svgtxt" style="font-size:13.5px;fill:#14161A">그래서 ⋂ₙ Aₙ = ∅.</text>
+    <text x="86" y="268" class="svgtxt" style="font-size:13.5px;fill:var(--ink)">그래서 ⋂ₙ Aₙ = ∅.</text>
   </svg>
   <figcaption>유한 개만 교집합하면 항상 비어있지 않은데(<span class="m"><i>A</i><sub>1</sub>∩…∩<i>A</i><sub><i>N</i></sub> = (0, 1/<i>N</i>) ≠ ∅</span>), <strong>무한 개를 다 교집합하면 비어버려.</strong> 무한 연산은 유한 연산의 단순 연장이 아니야.</figcaption>
   </figure>
@@ -1219,10 +1316,10 @@ footer a{color:var(--blue)}
     <span class="tag">정의 — 두 조건</span>
     <p>집합족 <span class="m">{<i>A<sub>i</sub></i> : <i>i</i> ∈ <i>I</i>}</span>가 <span class="m"><i>Ω</i></span>의 <strong>분할(partition)</strong>이라는 건 다음 두 가지를 <em>동시에</em> 만족한다는 뜻:</p>
     <div class="eq" style="margin:14px 0 6px">
-      ① <i>A<sub>i</sub></i> ∩ <i>A<sub>j</sub></i> = ∅ &nbsp; (<i>i</i> ≠ <i>j</i>) <span style="font-family:var(--sans);font-size:13px;color:#8A9099">겹치지 않는다</span>
+      ① <i>A<sub>i</sub></i> ∩ <i>A<sub>j</sub></i> = ∅ &nbsp; (<i>i</i> ≠ <i>j</i>) <span style="font-family:var(--sans);font-size:13px;color:var(--ink3)">겹치지 않는다</span>
     </div>
     <div class="eq" style="margin:6px 0 0">
-      ② ⋃<sub><i>i</i>∈<i>I</i></sub> <i>A<sub>i</sub></i> = <i>Ω</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family:var(--sans);font-size:13px;color:#8A9099">빈틈이 없다</span>
+      ② ⋃<sub><i>i</i>∈<i>I</i></sub> <i>A<sub>i</sub></i> = <i>Ω</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family:var(--sans);font-size:13px;color:var(--ink3)">빈틈이 없다</span>
     </div>
   </div>
 
@@ -1232,44 +1329,44 @@ footer a{color:var(--blue)}
   <div class="grid4">
     <div class="mini">
       <svg viewBox="0 0 130 110" aria-label="올바른 분할">
-        <rect x="4" y="4" width="122" height="102" rx="6" fill="rgba(18,80,196,.16)" stroke="#1250C4" stroke-width="1.3"/>
-        <path d="M 52 4 L 52 106" stroke="#FFF" stroke-width="2.5"/>
-        <path d="M 52 58 L 126 58" stroke="#FFF" stroke-width="2.5"/>
-        <path d="M 88 58 L 88 106" stroke="#FFF" stroke-width="2.5"/>
-        <text x="28" y="60" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#1250C4">A₁</text>
-        <text x="89" y="34" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#1250C4">A₂</text>
-        <text x="70" y="86" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#1250C4">A₃</text>
-        <text x="107" y="86" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#1250C4">A₄</text>
+        <rect x="4" y="4" width="122" height="102" rx="6" fill="rgba(var(--blue-rgb),.16)" stroke="var(--blue)" stroke-width="1.3"/>
+        <path d="M 52 4 L 52 106" stroke="var(--card)" stroke-width="2.5"/>
+        <path d="M 52 58 L 126 58" stroke="var(--card)" stroke-width="2.5"/>
+        <path d="M 88 58 L 88 106" stroke="var(--card)" stroke-width="2.5"/>
+        <text x="28" y="60" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--blue)">A₁</text>
+        <text x="89" y="34" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--blue)">A₂</text>
+        <text x="70" y="86" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--blue)">A₃</text>
+        <text x="107" y="86" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--blue)">A₄</text>
       </svg>
-      <div class="cap" style="color:#00845F">✓ 분할<br>겹침 X · 빈틈 X</div>
+      <div class="cap" style="color:var(--green)">✓ 분할<br>겹침 X · 빈틈 X</div>
     </div>
     <div class="mini">
       <svg viewBox="0 0 130 110" aria-label="겹치는 경우">
-        <rect x="4" y="4" width="122" height="102" rx="6" fill="#FAFAF8" stroke="#E2E1DB"/>
-        <circle cx="50" cy="55" r="34" fill="rgba(18,80,196,.2)" stroke="#1250C4" stroke-width="1.3"/>
-        <circle cx="82" cy="55" r="34" fill="rgba(217,20,122,.2)" stroke="#D9147A" stroke-width="1.3"/>
-        <path d="M 66 27 A 34 34 0 0 1 66 83 A 34 34 0 0 1 66 27 Z" fill="rgba(178,106,0,.5)"/>
-        <text x="66" y="102" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:#B26A00">겹침</text>
+        <rect x="4" y="4" width="122" height="102" rx="6" fill="var(--paper)" stroke="var(--rule)"/>
+        <circle cx="50" cy="55" r="34" fill="rgba(var(--blue-rgb),.2)" stroke="var(--blue)" stroke-width="1.3"/>
+        <circle cx="82" cy="55" r="34" fill="rgba(var(--pink-rgb),.2)" stroke="var(--pink)" stroke-width="1.3"/>
+        <path d="M 66 27 A 34 34 0 0 1 66 83 A 34 34 0 0 1 66 27 Z" fill="rgba(var(--amber-rgb),.5)"/>
+        <text x="66" y="102" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:var(--amber)">겹침</text>
       </svg>
-      <div class="cap" style="color:#B26A00">✗ 조건 ① 위반<br>겹치는 부분이 있음</div>
+      <div class="cap" style="color:var(--amber)">✗ 조건 ① 위반<br>겹치는 부분이 있음</div>
     </div>
     <div class="mini">
       <svg viewBox="0 0 130 110" aria-label="빈틈이 있는 경우">
-        <rect x="4" y="4" width="122" height="102" rx="6" fill="#FAFAF8" stroke="#E2E1DB"/>
-        <circle cx="42" cy="55" r="28" fill="rgba(18,80,196,.2)" stroke="#1250C4" stroke-width="1.3"/>
-        <circle cx="92" cy="55" r="26" fill="rgba(217,20,122,.2)" stroke="#D9147A" stroke-width="1.3"/>
-        <text x="66" y="102" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:#B26A00">Ω 를 못 덮음</text>
+        <rect x="4" y="4" width="122" height="102" rx="6" fill="var(--paper)" stroke="var(--rule)"/>
+        <circle cx="42" cy="55" r="28" fill="rgba(var(--blue-rgb),.2)" stroke="var(--blue)" stroke-width="1.3"/>
+        <circle cx="92" cy="55" r="26" fill="rgba(var(--pink-rgb),.2)" stroke="var(--pink)" stroke-width="1.3"/>
+        <text x="66" y="102" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:var(--amber)">Ω 를 못 덮음</text>
       </svg>
-      <div class="cap" style="color:#B26A00">✗ 조건 ② 위반<br>안 덮인 영역이 남음</div>
+      <div class="cap" style="color:var(--amber)">✗ 조건 ② 위반<br>안 덮인 영역이 남음</div>
     </div>
     <div class="mini">
       <svg viewBox="0 0 130 110" aria-label="가장 단순한 분할">
-        <rect x="4" y="4" width="122" height="102" rx="6" fill="rgba(217,20,122,.16)" stroke="#D9147A" stroke-width="1.3"/>
-        <circle cx="60" cy="55" r="32" fill="rgba(18,80,196,.3)" stroke="#1250C4" stroke-width="1.3"/>
-        <text x="60" y="60" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:#1250C4">A</text>
-        <text x="112" y="24" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:#D9147A">Aᶜ</text>
+        <rect x="4" y="4" width="122" height="102" rx="6" fill="rgba(var(--pink-rgb),.16)" stroke="var(--pink)" stroke-width="1.3"/>
+        <circle cx="60" cy="55" r="32" fill="rgba(var(--blue-rgb),.3)" stroke="var(--blue)" stroke-width="1.3"/>
+        <text x="60" y="60" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:var(--blue)">A</text>
+        <text x="112" y="24" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--pink)">Aᶜ</text>
       </svg>
-      <div class="cap" style="color:#00845F">✓ 가장 작은 분할<br>{A, Aᶜ}</div>
+      <div class="cap" style="color:var(--green)">✓ 가장 작은 분할<br>{A, Aᶜ}</div>
     </div>
   </div>
   <figcaption>맨 오른쪽이 중요해. 어떤 사건 <span class="m"><i>A</i></span>든, <span class="m">{<i>A</i>, <i>A</i><sup>c</sup></span>}는 항상 <span class="m"><i>Ω</i></span>의 분할이야. 이게 Module 3에서 <span class="m"><i>P</i>(<i>B</i>) = <i>P</i>(<i>B</i>∩<i>A</i>) + <i>P</i>(<i>B</i>∩<i>A</i><sup>c</sup>)</span> 형태로 계속 등장해.</figcaption>
@@ -1431,7 +1528,7 @@ footer a{color:var(--blue)}
     var chosen = ORDER.filter(function(id){ return sel[id]; });
     nodes.forEach(function(n){
       var id = n.getAttribute("data-id");
-      if(sel[id]){ n.setAttribute("fill","#4A1D8C"); n.setAttribute("fill-opacity",".72"); }
+      if(sel[id]){ n.setAttribute("fill","var(--sel)"); n.setAttribute("fill-opacity",".72"); }
       else {
         n.setAttribute("fill", n.getAttribute("data-fill"));
         n.setAttribute("fill-opacity", baseOpacity(n));
@@ -1443,7 +1540,7 @@ footer a{color:var(--blue)}
       return;
     }
     if(chosen.length === 8){
-      out.innerHTML = "<i>Ω</i> &nbsp;<span style='font-family:inherit;font-size:13px;color:#8A9099'>(전체)</span>";
+      out.innerHTML = "<i>Ω</i> &nbsp;<span style='font-family:inherit;font-size:13px;color:var(--ink3)'>(전체)</span>";
     } else {
       out.innerHTML = chosen.map(function(id){ return "(" + REG[id].ex + ")"; }).join(" ∪ ");
     }
@@ -1486,5 +1583,30 @@ footer a{color:var(--blue)}
 })();
 </script>
 <script src="reader.js" type="module"></script>
+<button class="theme-btn" type="button">☾ 다크</button>
+<script>
+// 테마 토글. 기본은 OS 설정을 따르고, 누르면 그 반대로 고정한다.
+// 저장하지 않으므로 페이지를 옮기면 다시 OS 설정을 따른다.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.theme-btn');
+  if (!btn) return;
+  var osDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  function current() {
+    return root.dataset.theme || (osDark && osDark.matches ? 'dark' : 'light');
+  }
+  function paint() {
+    var dark = current() === 'dark';
+    btn.textContent = dark ? '☀ 라이트' : '☾ 다크';
+    btn.setAttribute('aria-label', dark ? '라이트 모드로' : '다크 모드로');
+  }
+  btn.addEventListener('click', function () {
+    root.dataset.theme = current() === 'dark' ? 'light' : 'dark';
+    paint();
+  });
+  if (osDark && osDark.addEventListener) osDark.addEventListener('change', paint);
+  paint();
+})();
+</script>
 </body>
 </html>

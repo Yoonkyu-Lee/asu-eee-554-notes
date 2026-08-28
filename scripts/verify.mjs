@@ -9,7 +9,7 @@
 
 import { chromium } from 'playwright';
 import { createServer } from 'node:http';
-import { createReadStream, mkdirSync, existsSync, statSync } from 'node:fs';
+import { createReadStream, readFileSync, mkdirSync, existsSync, statSync } from 'node:fs';
 import { resolve, basename, extname, join, relative, sep } from 'node:path';
 
 const target = process.argv[2];
@@ -64,6 +64,21 @@ function serve() {
 
 const site = await serve();
 const url = `${site.origin}/${relative(ROOT, abs).split(sep).join('/')}`;
+
+// ── 색 리터럴 검사 (소스 기준) ────────────────
+// 색을 하드코딩하면 다크모드에서 그 부분만 안 바뀐다. 화면으로는 잘 안 보여서
+// 소스에서 잡는다. :root 정의부와 <mask> 안(알파 채널)은 예외다.
+const litColors = (() => {
+  let src = readFileSync(abs, 'utf8');
+  src = src.replace(/<mask[\s\S]*?<\/mask>/g, '');                 // 마스크 = 알파 채널
+  src = src.replace(/^:root[^{]*\{[\s\S]*?^\}/gm, '');             // 토큰 정의
+  src = src.replace(/@media \(prefers-color-scheme[\s\S]*?\}\}/g, '');
+  const hits = [];
+  for (const m of src.matchAll(/(?:fill|stroke|color|background|border[a-z-]*)\s*[:=]\s*"?(#[0-9A-Fa-f]{3,8}\b|rgba?\(\s*\d+\s*,[^)]*\))/g)) {
+    hits.push(m[1]);
+  }
+  return [...new Set(hits)];
+})();
 
 const MOBILE = 390;
 const browser = await chromium.launch();
@@ -320,6 +335,14 @@ if (hoverflow.doc > hoverflow.view + 1) {
   hoverflow.bad.forEach(e => line('  · ' + e));
   line('  힌트: 긴 .m 수식(nowrap), 표의 min-content, 그리드 트랙 1fr을 의심할 것.');
 } else line(`[OK] 모바일(${MOBILE}px) 가로 오버플로우 없음 (풀이 펼친 상태 기준)`);
+
+if (litColors.length) {
+  fail++;
+  line(`
+[FAIL] 하드코딩된 색 종 (다크모드에서 이 부분만 안 바뀐다)`);
+  litColors.slice(0, 12).forEach(e => line("  · " + e));
+  line("  디자인 토큰을 쓸 것: var(--blue), rgba(var(--blue-rgb),.16) 형태.");
+} else line("[OK] 하드코딩된 색 없음 (전부 디자인 토큰)");
 
 if (reader.skipped) {
   line('[--] 슬라이드 리더: data-slide 앵커가 없어 건너뜀');
