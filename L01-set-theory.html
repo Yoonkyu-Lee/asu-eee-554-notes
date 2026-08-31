@@ -638,46 +638,72 @@ html[data-lang="en"] [lang="ko"]{display:none}
 
 <!-- ══ 03 ══ -->
 <section id="s3">
-  <div class="sec-head" data-slide="12-18"><span class="sec-num">03</span><h2>집합의 기초</h2></div>
-  <p class="sec-sub">Definition 1–5. 표기법 두 가지, 그리고 같음 · 포함 · 공집합 · 서로소.</p>
+  <div class="sec-head" data-slide="12-18"><span class="sec-num">03</span><h2 lang="ko">집합의 기초</h2><h2 lang="en">Set basics</h2></div>
+  <p class="sec-sub" lang="ko">Definition 1–5. 표기법 두 가지, 그리고 같음 · 포함 · 공집합 · 서로소.</p>
+  <p class="sec-sub" lang="en">Definitions 1–5. Two notations, then equality, inclusion, the empty set, disjointness.</p>
 
-  <div class="def">
+  <div class="def" lang="ko">
     <span class="tag">Definition 1</span>
     <p>집합(set)은 <strong>서로 구별되는</strong> 대상들의 모임이고, 그 대상들을 원소(element)라고 한다.</p>
   </div>
+  <div class="def" lang="en">
+    <span class="tag">Definition 1</span>
+    <p>A set is a collection of <strong>distinct</strong> objects, and those objects are its elements.</p>
+  </div>
 
-  <h3 data-slide="12-13">표기법 두 가지</h3>
+  <h3 data-slide="12-13" lang="ko">표기법 두 가지</h3>
+  <h3 data-slide="12-13" lang="en">Two ways to write a set</h3>
   <div class="grid2">
     <div class="mini" style="padding:16px 18px">
       <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--ink3);margin-bottom:8px">METHOD 1 — LISTING</div>
       <div class="eq" style="margin:8px 0"><i>Ω</i> = {1, 2, 3, 4, 5, 6}</div>
-      <p style="font-size:13.5px;color:var(--ink2);margin:0">그냥 다 적는다. 원소가 적고 유한할 때만 가능.</p>
+      <p style="font-size:13.5px;color:var(--ink2);margin:0" lang="ko">그냥 다 적는다. 원소가 적고 유한할 때만 가능.</p>
+      <p style="font-size:13.5px;color:var(--ink2);margin:0" lang="en">Just write them all out. Only works when the set is finite and small.</p>
     </div>
     <div class="mini" style="padding:16px 18px">
       <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--ink3);margin-bottom:8px">METHOD 2 — SET BUILDER</div>
       <div class="eq" style="margin:8px 0"><i>Ω</i> = {<i>ω</i> ∈ ℤ : 1 ≤ <i>ω</i> ≤ 6}</div>
-      <p style="font-size:13.5px;color:var(--ink2);margin:0">"<i>ω</i>가 ℤ에 <strong>속하는데</strong>(∈), <strong>단</strong>(:) 1 이상 6 이하인 것들". 무한집합도 쓸 수 있다.</p>
+      <p style="font-size:13.5px;color:var(--ink2);margin:0" lang="ko">"<i>ω</i>가 ℤ에 <strong>속하는데</strong>(∈), <strong>단</strong>(:) 1 이상 6 이하인 것들". 무한집합도 쓸 수 있다.</p>
+      <p style="font-size:13.5px;color:var(--ink2);margin:0" lang="en">Read it as "the <i>ω</i> <strong>in</strong> ℤ (∈) <strong>such that</strong> (:) 1 ≤ <i>ω</i> ≤ 6". This one also works for infinite sets.</p>
     </div>
   </div>
-  <p style="font-size:14px;color:var(--ink2)">콜론 <code>:</code>은 "such that"으로 읽어. 어떤 교재는 <code>|</code>를 쓰기도 하는데 같은 뜻이야.</p>
+  <p style="font-size:14px;color:var(--ink2)" lang="ko">콜론 <code>:</code>은 "such that"으로 읽어. 어떤 교재는 <code>|</code>를 쓰기도 하는데 같은 뜻이야.</p>
+  <p style="font-size:14px;color:var(--ink2)" lang="en">The colon <code>:</code> reads as "such that". Some books write <code>|</code> instead. Same thing.</p>
 
-  <h3 data-slide="15-18">같음 · 포함 · 공집합 · 서로소</h3>
+  <h3 data-slide="15-18" lang="ko">같음 · 포함 · 공집합 · 서로소</h3>
+  <h3 data-slide="15-18" lang="en">Equality, inclusion, empty, disjoint</h3>
 
-  <div class="def">
+  <div class="def" lang="ko">
     <span class="tag">Definition 2 — Equality</span>
     <p><span class="m"><i>A</i> = <i>B</i></span> ⟺ 두 집합이 <em>정확히 같은 원소</em>를 가진다. 즉 <span class="m">∀<i>ω</i> : <i>ω</i> ∈ <i>A</i> ⟺ <i>ω</i> ∈ <i>B</i></span></p>
   </div>
-  <div class="def">
+  <div class="def" lang="en">
+    <span class="tag">Definition 2 — Equality</span>
+    <p><span class="m"><i>A</i> = <i>B</i></span> ⟺ the two sets hold <em>exactly the same elements</em>. That is, <span class="m">∀<i>ω</i> : <i>ω</i> ∈ <i>A</i> ⟺ <i>ω</i> ∈ <i>B</i></span></p>
+  </div>
+  <div class="def" lang="ko">
     <span class="tag">Definition 3 — Subset</span>
     <p><span class="m"><i>A</i> ⊆ <i>B</i></span> ⟺ <span class="m"><i>A</i></span>의 모든 원소가 <span class="m"><i>B</i></span>에도 있다. 즉 <span class="m">∀<i>ω</i> : <i>ω</i> ∈ <i>A</i> ⟹ <i>ω</i> ∈ <i>B</i></span></p>
   </div>
-  <div class="def">
+  <div class="def" lang="en">
+    <span class="tag">Definition 3 — Subset</span>
+    <p><span class="m"><i>A</i> ⊆ <i>B</i></span> ⟺ every element of <span class="m"><i>A</i></span> is also in <span class="m"><i>B</i></span>. That is, <span class="m">∀<i>ω</i> : <i>ω</i> ∈ <i>A</i> ⟹ <i>ω</i> ∈ <i>B</i></span></p>
+  </div>
+  <div class="def" lang="ko">
     <span class="tag">Definition 4 — Empty set</span>
     <p><span class="m">∅ = { }</span>. 원소가 하나도 없는 집합.</p>
   </div>
-  <div class="def">
+  <div class="def" lang="en">
+    <span class="tag">Definition 4 — Empty set</span>
+    <p><span class="m">∅ = { }</span>. The set with no elements at all.</p>
+  </div>
+  <div class="def" lang="ko">
     <span class="tag">Definition 5 — Disjoint</span>
     <p><span class="m"><i>A</i></span>와 <span class="m"><i>B</i></span>가 서로소(disjoint)라는 건 겹치는 원소가 없다는 뜻. 즉 <span class="m"><i>A</i> ∩ <i>B</i> = ∅</span></p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Definition 5 — Disjoint</span>
+    <p><span class="m"><i>A</i></span> and <span class="m"><i>B</i></span> are disjoint when they share no element. That is, <span class="m"><i>A</i> ∩ <i>B</i> = ∅</span></p>
   </div>
 
   <figure>
@@ -691,7 +717,8 @@ html[data-lang="en"] [lang="ko"]{display:none}
         <text x="52" y="62" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--blue)">A</text>
         <text x="88" y="36" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--pink)">B</text>
       </svg>
-      <div class="cap">A ⊆ B<br>부분집합</div>
+      <div class="cap" lang="ko">A ⊆ B<br>부분집합</div>
+      <div class="cap" lang="en">A ⊆ B<br>subset</div>
     </div>
     <div class="mini">
       <svg viewBox="0 0 120 100" aria-label="A와 B가 같음">
@@ -701,7 +728,8 @@ html[data-lang="en"] [lang="ko"]{display:none}
         <circle cx="60" cy="54" r="32" fill="none" stroke="var(--pink)" stroke-width="1.4" stroke-dasharray="4 3"/>
         <text x="60" y="59" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--violet)">A = B</text>
       </svg>
-      <div class="cap">A = B<br>완전히 겹침</div>
+      <div class="cap" lang="ko">A = B<br>완전히 겹침</div>
+      <div class="cap" lang="en">A = B<br>fully overlapping</div>
     </div>
     <div class="mini">
       <svg viewBox="0 0 120 100" aria-label="A와 B가 일부 겹침">
@@ -712,7 +740,8 @@ html[data-lang="en"] [lang="ko"]{display:none}
         <text x="30" y="58" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--blue)">A</text>
         <text x="94" y="58" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--pink)">B</text>
       </svg>
-      <div class="cap">일반적인 경우<br>일부만 겹침</div>
+      <div class="cap" lang="ko">일반적인 경우<br>일부만 겹침</div>
+      <div class="cap" lang="en">the general case<br>partial overlap</div>
     </div>
     <div class="mini">
       <svg viewBox="0 0 120 100" aria-label="A와 B가 서로소">
@@ -723,13 +752,15 @@ html[data-lang="en"] [lang="ko"]{display:none}
         <text x="38" y="58" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--blue)">A</text>
         <text x="84" y="58" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--pink)">B</text>
       </svg>
-      <div class="cap">A ∩ B = ∅<br>서로소 (disjoint)</div>
+      <div class="cap" lang="ko">A ∩ B = ∅<br>서로소 (disjoint)</div>
+      <div class="cap" lang="en">A ∩ B = ∅<br>disjoint</div>
     </div>
   </div>
-  <figcaption>네 가지 관계. 세 번째가 "기본값"이고 나머지 셋은 특수한 경우야. 문제에서 특별한 언급이 없으면 세 번째를 가정하고 그려.</figcaption>
+  <figcaption lang="ko">네 가지 관계. 세 번째가 "기본값"이고 나머지 셋은 특수한 경우야. 문제에서 특별한 언급이 없으면 세 번째를 가정하고 그려.</figcaption>
+  <figcaption lang="en">Four possible relationships. The third one is the default and the other three are special cases. Unless a problem says otherwise, draw the third.</figcaption>
   </figure>
 
-  <div class="ex">
+  <div class="ex" lang="ko">
     <span class="tag">예제 3.1</span>
     <p><span class="m"><i>Ω</i> = {1, 2, 3, 4, 5, 6, 7, 8}</span>이고 <span class="m"><i>A</i> = {<i>ω</i> ∈ <i>Ω</i> : <i>ω</i>는 3의 배수}</span>, <span class="m"><i>B</i> = {<i>ω</i> ∈ <i>Ω</i> : <i>ω</i> &gt; 5}</span>일 때, 두 집합을 나열법으로 쓰고 서로소인지 판정해.</p>
     <details><summary>풀이</summary><div class="body">
@@ -737,8 +768,16 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <p>참고로 <span class="m"><i>Ω</i></span>가 {1,…,8}로 한정된 게 중요해. 만약 <span class="m"><i>Ω</i> = ℤ</span>였다면 <span class="m"><i>A</i> = {…, −3, 0, 3, 6, 9, …}</span>로 완전히 다른 집합이 돼.</p>
     </div></details>
   </div>
+  <div class="ex" lang="en">
+    <span class="tag">Example 3.1</span>
+    <p>Let <span class="m"><i>Ω</i> = {1, 2, 3, 4, 5, 6, 7, 8}</span>, <span class="m"><i>A</i> = {<i>ω</i> ∈ <i>Ω</i> : <i>ω</i> is a multiple of 3}</span> and <span class="m"><i>B</i> = {<i>ω</i> ∈ <i>Ω</i> : <i>ω</i> &gt; 5}</span>. Write both sets by listing, and decide whether they are disjoint.</p>
+    <details><summary>Solution</summary><div class="body">
+      <p><span class="m"><i>A</i> = {3, 6}</span>, <span class="m"><i>B</i> = {6, 7, 8}</span>. Since <span class="m"><i>A</i> ∩ <i>B</i> = {6} ≠ ∅</span>, they are <strong>not disjoint.</strong></p>
+      <p>Notice how much work <span class="m"><i>Ω</i></span> = {1,…,8} is doing here. Had <span class="m"><i>Ω</i> = ℤ</span>, the same description would give <span class="m"><i>A</i> = {…, −3, 0, 3, 6, 9, …}</span>, an entirely different set.</p>
+    </div></details>
+  </div>
 
-  <div class="trap">
+  <div class="trap" lang="ko">
     <span class="tag">함정 · 이 섹션에서 제일 많이 틀리는 곳</span>
 
     <h4>∈ 와 ⊆ 를 섞어 쓰면 안 된다</h4>
@@ -763,12 +802,38 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <h4>서로소 ≠ 여집합</h4>
     <p><span class="m"><i>A</i> ∩ <i>B</i> = ∅</span>이라고 해서 <span class="m"><i>B</i> = <i>A</i><sup>c</sup></span>인 건 아니야. 위 네 번째 그림에서 <span class="m"><i>A</i></span>와 <span class="m"><i>B</i></span>는 서로소지만, 둘을 합쳐도 <span class="m"><i>Ω</i></span>를 못 채우잖아. 여집합이려면 <strong>서로소이면서 동시에 둘이 합쳐서 Ω 전체</strong>여야 해. 이게 09번 partition의 예고편이야.</p>
   </div>
+  <div class="trap" lang="en">
+    <span class="tag">Trap · the highest-error spot in this section</span>
+
+    <h4>Never mix up ∈ and ⊆</h4>
+    <p><span class="m">∈</span> relates an <em>element</em> to a set. <span class="m">⊆</span> relates a <em>set</em> to a set. What sits on the left is what differs.</p>
+    <ul>
+      <li><span class="m">1 ∈ <i>Ω</i></span> &nbsp;✓ &nbsp;(1 is an element)</li>
+      <li><span class="m">{1} ⊆ <i>Ω</i></span> &nbsp;✓ &nbsp;({1} is a set)</li>
+      <li><span class="m">1 ⊆ <i>Ω</i></span> &nbsp;✗ &nbsp;(1 is not a set)</li>
+      <li><span class="m">{1} ∈ <i>Ω</i></span> &nbsp;✗ &nbsp;(the elements of Ω are numbers, not sets)</li>
+    </ul>
+    <p>But <span class="m">{1} ∈ 2<sup><i>Ω</i></sup></span> is <strong>correct</strong>, because the elements of a power set are themselves sets. Section 07 comes back to this.</p>
+
+    <h4>Repeats and order are ignored</h4>
+    <p><span class="m">{1, 1, 2} = {1, 2}</span> and <span class="m">{1, 2} = {2, 1}</span>. That is just "distinct objects" from the definition. When order does matter you are not holding a set, you are holding a <em>tuple</em>. In HW1 Problem 3 the sample space for sending two packets is <span class="m"><i>Ω</i> = {SS, SF, FS, FF}</span>, where SF and FS have to stay <strong>separate</strong>, because each element is an ordered pair. Elements <em>inside</em> a set have no order, but an element <em>itself</em> can be an ordered object.</p>
+
+    <h4>∅ and {∅} are not the same</h4>
+    <p><span class="m">∅</span> has <strong>zero</strong> elements. <span class="m">{∅}</span> has <strong>one</strong>, and that one element happens to be the empty set. An empty box, versus a box containing an empty box.</p>
+
+    <h4>∅ is a subset of every set</h4>
+    <p><span class="m">∅ ⊆ <i>A</i></span> is <strong>always true</strong>, whatever <span class="m"><i>A</i></span> is. The definition asks that every element of <span class="m">∅</span> also lies in <span class="m"><i>A</i></span>, and since <span class="m">∅</span> has no elements there is no counterexample available, so it holds automatically. That is a vacuous truth. It feels like a technicality at first, but the power set count <span class="m">2<sup><i>n</i></sup></span> in section 07 only works out because of it.</p>
+
+    <h4>Disjoint is not the same as complement</h4>
+    <p><span class="m"><i>A</i> ∩ <i>B</i> = ∅</span> does not give you <span class="m"><i>B</i> = <i>A</i><sup>c</sup></span>. In the fourth picture above, <span class="m"><i>A</i></span> and <span class="m"><i>B</i></span> are disjoint, yet putting them together still leaves part of <span class="m"><i>Ω</i></span> uncovered. For a complement you need <strong>disjoint and covering all of Ω at the same time</strong>. That is the preview of partition in section 09.</p>
+  </div>
 </section>
 
 <!-- ══ 04 ══ -->
 <section id="s4">
-  <div class="sec-head" data-slide="19-22"><span class="sec-num">04</span><h2>집합 연산</h2></div>
-  <p class="sec-sub">Definition 6–9. 여집합 · 교집합 · 합집합 · 차집합.</p>
+  <div class="sec-head" data-slide="19-22"><span class="sec-num">04</span><h2 lang="ko">집합 연산</h2><h2 lang="en">Set operations</h2></div>
+  <p class="sec-sub" lang="ko">Definition 6–9. 여집합 · 교집합 · 합집합 · 차집합.</p>
+  <p class="sec-sub" lang="en">Definitions 6–9. Complement, intersection, union, difference.</p>
 
   <div class="grid4">
     <div class="mini">
@@ -793,7 +858,8 @@ html[data-lang="en"] [lang="ko"]{display:none}
         <text x="102" y="60" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--pink)">B</text>
         <text x="11" y="17" class="svglab" style="font-size:9px">Ω</text>
       </svg>
-      <div class="cap">A ∩ B<br>둘 다 (AND)</div>
+      <div class="cap" lang="ko">A ∩ B<br>둘 다 (AND)</div>
+      <div class="cap" lang="en">A ∩ B<br>both (AND)</div>
     </div>
     <div class="mini">
       <svg viewBox="0 0 130 106" aria-label="합집합">
@@ -804,7 +870,8 @@ html[data-lang="en"] [lang="ko"]{display:none}
         <text x="102" y="60" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--pink)">B</text>
         <text x="11" y="17" class="svglab" style="font-size:9px">Ω</text>
       </svg>
-      <div class="cap">A ∪ B<br>적어도 하나 (OR)</div>
+      <div class="cap" lang="ko">A ∪ B<br>적어도 하나 (OR)</div>
+      <div class="cap" lang="en">A ∪ B<br>at least one (OR)</div>
     </div>
     <div class="mini">
       <svg viewBox="0 0 130 106" aria-label="차집합">
@@ -817,16 +884,22 @@ html[data-lang="en"] [lang="ko"]{display:none}
         <text x="102" y="60" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--pink)">B</text>
         <text x="11" y="17" class="svglab" style="font-size:9px">Ω</text>
       </svg>
-      <div class="cap">A \ B = A ∩ Bᶜ<br>A인데 B는 아닌</div>
+      <div class="cap" lang="ko">A \ B = A ∩ Bᶜ<br>A인데 B는 아닌</div>
+      <div class="cap" lang="en">A \ B = A ∩ Bᶜ<br>in A but not B</div>
     </div>
   </div>
 
-  <div class="callout">
+  <div class="callout" lang="ko">
     네 번째를 잘 봐. <span class="m"><i>A</i> \ <i>B</i> = <i>A</i> ∩ <i>B</i><sup>c</sup></span>야. <strong>차집합은 새로운 연산이 아니라 교집합과 여집합의 조합이야.</strong> HW1 Problem 2(c)가 정확히 이걸 증명하라는 문제고, 증명은 사실 정의를 양쪽에 적으면 두 줄로 끝나.
   </div>
+  <div class="callout" lang="en">
+    Look closely at the fourth one: <span class="m"><i>A</i> \ <i>B</i> = <i>A</i> ∩ <i>B</i><sup>c</sup></span>. <strong>Set difference is not a new operation. It is intersection and complement stacked together.</strong> HW1 Problem 2(c) asks you to prove exactly this, and the proof runs about two lines once you write the definition on both sides.
+  </div>
 
-  <h3>직접 만져보기</h3>
-  <p>아래 벤 다이어그램의 <strong>각 영역을 클릭</strong>하면 선택돼. 선택한 영역들이 어떤 집합식인지, 그리고 그 안에 어떤 원소가 들어있는지 실시간으로 보여줘. 아래 버튼들은 유명한 항등식들인데, <strong>서로 다른 식인데 같은 그림이 나오는 쌍</strong>을 찾아보는 게 이 도구의 핵심 사용법이야.</p>
+  <h3 lang="ko">직접 만져보기</h3>
+  <h3 lang="en">Try it yourself</h3>
+  <p lang="ko">아래 벤 다이어그램의 <strong>각 영역을 클릭</strong>하면 선택돼. 선택한 영역들이 어떤 집합식인지, 그리고 그 안에 어떤 원소가 들어있는지 실시간으로 보여줘. 아래 버튼들은 유명한 항등식들인데, <strong>서로 다른 식인데 같은 그림이 나오는 쌍</strong>을 찾아보는 게 이 도구의 핵심 사용법이야.</p>
+  <p lang="en"><strong>Click any region</strong> of the Venn diagram below to select it. As you do, the tool shows which set expression your selection corresponds to and which elements sit inside it. The buttons underneath are the standard identities, and the real way to use this tool is to hunt for <strong>pairs of different expressions that produce the same picture</strong>.</p>
 
   <div class="play">
     <div class="play-grid">
@@ -890,19 +963,26 @@ html[data-lang="en"] [lang="ko"]{display:none}
       </div>
 
       <div>
-        <div class="plab">선택한 영역 = 집합식</div>
+        <div class="plab" lang="ko">선택한 영역 = 집합식</div>
+        <div class="plab" lang="en">selected regions = set expression</div>
         <div class="readout" id="readout"><span class="empty">영역을 클릭해봐.</span></div>
         <div class="elems" id="elems">원소: <b>∅</b></div>
 
-        <div class="plab">기본 연산</div>
+        <div class="plab" lang="ko">기본 연산</div>
+        <div class="plab" lang="en">basic operations</div>
         <div class="presets" id="p1"></div>
 
-        <div class="plab">항등식 확인 — 짝지어 눌러봐</div>
+        <div class="plab" lang="ko">항등식 확인 — 짝지어 눌러봐</div>
+        <div class="plab" lang="en">check an identity: press them in pairs</div>
         <div class="presets" id="p2"></div>
 
-        <div class="hintline">
+        <div class="hintline" lang="ko">
           <strong>De Morgan</strong>: <span class="m">(<i>A</i>∪<i>B</i>)<sup>c</sup></span> 와 <span class="m"><i>A</i><sup>c</sup>∩<i>B</i><sup>c</sup></span> 를 번갈아 눌러봐. 그림이 똑같으면 항등식이 참인 거야.<br>
           <strong>분배법칙</strong>: <span class="m"><i>A</i>∩(<i>B</i>∪<i>C</i>)</span> 와 <span class="m">(<i>A</i>∩<i>B</i>)∪(<i>A</i>∩<i>C</i>)</span> 도 같은 방식으로.
+        </div>
+        <div class="hintline" lang="en">
+          <strong>De Morgan</strong>: press <span class="m">(<i>A</i>∪<i>B</i>)<sup>c</sup></span> and <span class="m"><i>A</i><sup>c</sup>∩<i>B</i><sup>c</sup></span> one after the other. If the picture does not move, the identity holds.<br>
+          <strong>Distributive law</strong>: do the same with <span class="m"><i>A</i>∩(<i>B</i>∪<i>C</i>)</span> and <span class="m">(<i>A</i>∩<i>B</i>)∪(<i>A</i>∩<i>C</i>)</span>.
         </div>
       </div>
     </div>
@@ -1625,6 +1705,9 @@ html[data-lang="en"] [lang="ko"]{display:none}
     render();
   }
 
+  // 화면에 찍는 문구는 현재 언어를 따른다.
+  function L(ko, en){ return document.documentElement.dataset.lang === "en" ? en : ko; }
+
   function render(){
     var chosen = ORDER.filter(function(id){ return sel[id]; });
     nodes.forEach(function(n){
@@ -1636,20 +1719,22 @@ html[data-lang="en"] [lang="ko"]{display:none}
       }
     });
     if(chosen.length === 0){
-      out.innerHTML = '<span class="empty">영역을 클릭해봐.</span>';
-      elm.innerHTML = '원소: <b>∅</b>';
+      out.innerHTML = '<span class="empty">' + L("영역을 클릭해봐.", "Click a region.") + '</span>';
+      elm.innerHTML = L("원소", "elements") + ': <b>∅</b>';
       return;
     }
     if(chosen.length === 8){
-      out.innerHTML = "<i>Ω</i> &nbsp;<span style='font-family:inherit;font-size:13px;color:var(--ink3)'>(전체)</span>";
+      out.innerHTML = "<i>Ω</i> &nbsp;<span style='font-family:inherit;font-size:13px;color:var(--ink3)'>(" + L("전체", "everything") + ")</span>";
     } else {
       out.innerHTML = chosen.map(function(id){ return "(" + REG[id].ex + ")"; }).join(" ∪ ");
     }
     var els = [];
     chosen.forEach(function(id){ els = els.concat(REG[id].el); });
     els.sort(function(a,b){ return a-b; });
-    elm.innerHTML = '원소: <b>{' + els.join(", ") + '}</b>';
+    elm.innerHTML = L("원소", "elements") + ': <b>{' + els.join(", ") + '}</b>';
   }
+  // 언어를 바꾸면 이미 그려진 판독부도 다시 그린다.
+  window.addEventListener("langchange", render);
 
   nodes.forEach(function(n){ n.setAttribute("data-fill", n.getAttribute("fill")); });
 
@@ -1663,8 +1748,9 @@ html[data-lang="en"] [lang="ko"]{display:none}
     });
     var c = document.createElement("button");
     c.className = "clear";
-    c.textContent = "지우기";
+    c.textContent = L("지우기", "clear");
     c.addEventListener("click", function(){ setAll([]); });
+    window.addEventListener("langchange", function(){ c.textContent = L("지우기", "clear"); });
     box.appendChild(c);
   }
   buildBtns("p1", P1);
@@ -1725,6 +1811,7 @@ html[data-lang="en"] [lang="ko"]{display:none}
   btn.addEventListener('click', function () {
     root.dataset.lang = root.dataset.lang === 'en' ? 'ko' : 'en';
     paint();
+    window.dispatchEvent(new Event('langchange'));
   });
   paint();
 })();
