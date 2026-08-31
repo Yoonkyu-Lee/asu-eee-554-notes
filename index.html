@@ -369,6 +369,7 @@ html[data-lang="en"] [lang="ko"]{display:none}
   btn.addEventListener('click', function () {
     root.dataset.lang = root.dataset.lang === 'en' ? 'ko' : 'en';
     paint();
+    window.dispatchEvent(new Event('langchange'));
   });
   paint();
 })();

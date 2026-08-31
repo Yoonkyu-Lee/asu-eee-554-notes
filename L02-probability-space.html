@@ -709,26 +709,33 @@ html[data-lang="en"] [lang="ko"]{display:none}
 
 <!-- ══ 04 ══ -->
 <section id="s4">
-  <div class="sec-head"><span class="sec-num">04</span><h2>직접 검증해보기</h2></div>
-  <p class="sec-sub">아래 도구로 σ-algebra 조건을 손으로 확인하는 감각을 익혀.</p>
+  <div class="sec-head"><span class="sec-num">04</span><h2 lang="ko">직접 검증해보기</h2><h2 lang="en">Check it yourself</h2></div>
+  <p class="sec-sub" lang="ko">아래 도구로 σ-algebra 조건을 손으로 확인하는 감각을 익혀.</p>
+  <p class="sec-sub" lang="en">Use the tool below to build a feel for checking the σ-algebra conditions by hand.</p>
 
-  <p><span class="m"><i>Ω</i> = {1, 2, 3, 4}</span>의 부분집합 16개가 아래에 있어. <strong>클릭해서 <span class="m">ℱ</span>에 넣거나 빼봐.</strong> 세 조건을 실시간으로 검사해서, 안 되면 <em>무엇이 빠졌는지</em>까지 알려줘. 점선으로 표시되는 게 "추가되어야 하는 것"이야.</p>
+  <p lang="ko"><span class="m"><i>Ω</i> = {1, 2, 3, 4}</span>의 부분집합 16개가 아래에 있어. <strong>클릭해서 <span class="m">ℱ</span>에 넣거나 빼봐.</strong> 세 조건을 실시간으로 검사해서, 안 되면 <em>무엇이 빠졌는지</em>까지 알려줘. 점선으로 표시되는 게 "추가되어야 하는 것"이야.</p>
+  <p lang="en">All 16 subsets of <span class="m"><i>Ω</i> = {1, 2, 3, 4}</span> are laid out below. <strong>Click to put one into <span class="m">ℱ</span> or take it out.</strong> The three conditions are checked as you go, and when one fails the tool names <em>exactly what is missing</em>. Anything drawn with a dashed border is a set you would have to add.</p>
 
   <div class="play">
-    <div class="plab">Ω = {1, 2, 3, 4} 의 부분집합 16개 — 클릭해서 ℱ 구성</div>
+    <div class="plab" lang="ko">Ω = {1, 2, 3, 4} 의 부분집합 16개 — 클릭해서 ℱ 구성</div>
+    <div class="plab" lang="en">the 16 subsets of Ω = {1, 2, 3, 4} — click to build ℱ</div>
     <div class="subsets" id="subs"></div>
 
     <div class="verdict" id="verdict"></div>
 
-    <div class="plab">예제 불러오기</div>
+    <div class="plab" lang="ko">예제 불러오기</div>
+    <div class="plab" lang="en">load an example</div>
     <div class="presets" id="presets"></div>
 
-    <div class="hintline">
+    <div class="hintline" lang="ko">
       <strong>추천 실험:</strong> "HW1 4(b)의 G" 를 눌러보면 왜 σ-algebra가 아닌지 정확히 어떤 집합이 빠졌는지 나와. 그다음 <strong>σ(·) 로 닫기</strong>를 누르면 필요한 것들이 자동으로 채워지면서 05번에서 배울 "생성된 σ-algebra"가 뭔지 눈으로 보여.
+    </div>
+    <div class="hintline" lang="en">
+      <strong>Worth trying:</strong> load "𝒢 from HW1 4(b)" and the tool tells you exactly which sets are missing and why it fails. Then press <strong>close under σ(·)</strong> and watch the missing pieces fill themselves in. That is the "generated σ-algebra" of section 05, happening in front of you.
     </div>
   </div>
 
-  <div class="ex">
+  <div class="ex" lang="ko">
     <span class="tag">예제 4.1 — HW1 Problem 4(a) 유형</span>
     <p><span class="m"><i>Ω</i> = {1,2,3,4}</span>, <span class="m">ℱ = {∅, <i>Ω</i>, {1,2}, {3,4}}</span>. 이것이 σ-algebra인지 확인해라.</p>
     <details><summary>풀이 — 세 조건 전부 훑기</summary><div class="body">
@@ -751,8 +758,31 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <p><strong>의미:</strong> 이 <span class="m">ℱ</span>는 "결과가 <span class="m">{1,2}</span>쪽인가 <span class="m">{3,4}</span>쪽인가"만 구별해. 1과 2를 구별하는 질문은 못 던져. 정보가 절반만 있는 상태야.</p>
     </div></details>
   </div>
+  <div class="ex" lang="en">
+    <span class="tag">Example 4.1 — the HW1 Problem 4(a) pattern</span>
+    <p><span class="m"><i>Ω</i> = {1,2,3,4}</span>, <span class="m">ℱ = {∅, <i>Ω</i>, {1,2}, {3,4}}</span>. Verify whether this is a σ-algebra.</p>
+    <details><summary>Solution — walking all three conditions</summary><div class="body">
+      <p><strong>① Is <span class="m"><i>Ω</i> ∈ ℱ</span>?</strong> It is on the list. ✓ (and <span class="m">∅</span> comes along too)</p>
+      <p><strong>② Closed under complement?</strong> Take the four elements one at a time:</p>
+      <ul>
+        <li><span class="m">∅<sup>c</sup> = <i>Ω</i> ∈ ℱ</span> ✓</li>
+        <li><span class="m"><i>Ω</i><sup>c</sup> = ∅ ∈ ℱ</span> ✓</li>
+        <li><span class="m">{1,2}<sup>c</sup> = {3,4} ∈ ℱ</span> ✓</li>
+        <li><span class="m">{3,4}<sup>c</sup> = {1,2} ∈ ℱ</span> ✓</li>
+      </ul>
+      <p><strong>③ Closed under union?</strong> <span class="m"><i>Ω</i></span> is finite, so countable unions are just finite unions. That is <span class="m">4×3/2 = 6</span> pairs:</p>
+      <ul>
+        <li><span class="m">∅ ∪ (anything) = that thing</span> ✓ (three pairs pass automatically)</li>
+        <li><span class="m"><i>Ω</i> ∪ (anything) = <i>Ω</i></span> ✓ (two more pairs)</li>
+        <li><span class="m">{1,2} ∪ {3,4} = <i>Ω</i> ∈ ℱ</span> ✓ ← <strong>in practice this is the only one worth checking</strong></li>
+      </ul>
+      <p>So <span class="m">ℱ</span> is a σ-algebra. ✓</p>
+      <p><strong>Shortcut:</strong> any pair involving <span class="m">∅</span> or <span class="m"><i>Ω</i></span> passes for free. The only real work is <em>pairs of the non-trivial elements</em>. Still write the lines out as above, but you may group the easy ones as "pairs involving ∅ and Ω hold trivially".</p>
+      <p><strong>What it means:</strong> this <span class="m">ℱ</span> can only distinguish "is the outcome on the <span class="m">{1,2}</span> side or the <span class="m">{3,4}</span> side". It cannot express a question that separates 1 from 2. You are holding half the information.</p>
+    </div></details>
+  </div>
 
-  <div class="ex">
+  <div class="ex" lang="ko">
     <span class="tag">예제 4.2 — 실패하는 경우</span>
     <p><span class="m"><i>Ω</i> = {1,2,3,4}</span>, <span class="m">𝒢 = {∅, <i>Ω</i>, {1}, {2}, {3,4}}</span>. σ-algebra인가? 아니라면 어떤 조건이 깨지는지 밝혀라.</p>
     <details><summary>풀이</summary><div class="body">
@@ -762,6 +792,18 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <p>따라서 σ-algebra가 <strong>아니다.</strong> 조건 ②와 ③이 모두 깨져.</p>
       <p><strong>답안 작성 요령:</strong> 문제가 "identify at least one property that fails"라고 하면 하나만 짚어도 되지만, <strong>반례를 구체적으로 제시해야 해.</strong> "닫혀 있지 않다"라고만 쓰면 부족하고, "<span class="m">{1} ∪ {2} = {1,2}</span>인데 <span class="m">{1,2} ∉ 𝒢</span>이므로 합집합에 닫혀 있지 않다"라고 써야 완결돼.</p>
       <p>HW1 Problem 4(b)에 나오는 <span class="m">𝒢 = {∅, <i>Ω</i>, {1}, {2,3,4}, {2}}</span>도 같은 방식으로 하면 돼. 위 도구에서 프리셋으로 불러올 수 있어.</p>
+    </div></details>
+  </div>
+  <div class="ex" lang="en">
+    <span class="tag">Example 4.2 — one that fails</span>
+    <p><span class="m"><i>Ω</i> = {1,2,3,4}</span>, <span class="m">𝒢 = {∅, <i>Ω</i>, {1}, {2}, {3,4}}</span>. Is it a σ-algebra? If not, say which condition breaks.</p>
+    <details><summary>Solution</summary><div class="body">
+      <p><strong>① </strong><span class="m"><i>Ω</i> ∈ 𝒢</span> ✓</p>
+      <p><strong>② Complement:</strong> <span class="m">{1}<sup>c</sup> = {2,3,4}</span>, and <span class="m">{2,3,4} ∉ 𝒢</span>. <strong>✗ it already fails here.</strong></p>
+      <p><strong>③ Union:</strong> <span class="m">{1} ∪ {2} = {1,2} ∉ 𝒢</span>. <strong>✗ it fails here too.</strong></p>
+      <p>So it is <strong>not</strong> a σ-algebra. Conditions ② and ③ both break.</p>
+      <p><strong>How to write the answer:</strong> when a problem says "identify at least one property that fails", naming one is enough, but <strong>you have to give the concrete counterexample.</strong> Writing "it is not closed" is incomplete. Write "<span class="m">{1} ∪ {2} = {1,2}</span> and <span class="m">{1,2} ∉ 𝒢</span>, so it is not closed under union" and it is finished.</p>
+      <p>The <span class="m">𝒢 = {∅, <i>Ω</i>, {1}, {2,3,4}, {2}}</span> in HW1 Problem 4(b) works the same way. You can load it as a preset in the tool above.</p>
     </div></details>
   </div>
 </section>
@@ -1496,6 +1538,9 @@ html[data-lang="en"] [lang="ko"]{display:none}
   var verdict = document.getElementById("verdict");
   var presetBox = document.getElementById("presets");
 
+  // 화면에 찍는 문구는 현재 언어를 따른다.
+  function L(ko, en){ return document.documentElement.dataset.lang === "en" ? en : ko; }
+
   function name(m){
     if(m === 0) return "∅";
     if(m === 15) return "Ω";
@@ -1539,7 +1584,7 @@ html[data-lang="en"] [lang="ko"]{display:none}
     var reasons = [];
     if(F.length === 0) return {empty:true};
 
-    if(!inF[15]) reasons.push({txt:"조건 ① 위반: <span class='m'>Ω ∉ ℱ</span>", add:[15]});
+    if(!inF[15]) reasons.push({txt:L("조건 ① 위반: ","breaks ①: ") + "<span class='m'>Ω ∉ ℱ</span>", add:[15]});
 
     var compBad = [];
     F.forEach(function(m){
@@ -1550,8 +1595,8 @@ html[data-lang="en"] [lang="ko"]{display:none}
       var s = compBad.slice(0,3).map(function(p){
         return "<span class='m'>" + name(p[0]) + "<sup>c</sup> = " + name(p[1]) + " ∉ ℱ</span>";
       }).join(", ");
-      if(compBad.length > 3) s += " 외 " + (compBad.length-3) + "건";
-      reasons.push({txt:"조건 ② 위반 (여집합): " + s});
+      if(compBad.length > 3) s += L(" 외 " + (compBad.length-3) + "건", " and " + (compBad.length-3) + " more");
+      reasons.push({txt:L("조건 ② 위반 (여집합): ","breaks ② (complement): ") + s});
     }
 
     var uniBad = [];
@@ -1565,8 +1610,8 @@ html[data-lang="en"] [lang="ko"]{display:none}
       var s2 = uniBad.slice(0,3).map(function(p){
         return "<span class='m'>" + name(p[0]) + " ∪ " + name(p[1]) + " = " + name(p[2]) + " ∉ ℱ</span>";
       }).join(", ");
-      if(uniBad.length > 3) s2 += " 외 " + (uniBad.length-3) + "건";
-      reasons.push({txt:"조건 ③ 위반 (합집합): " + s2});
+      if(uniBad.length > 3) s2 += L(" 외 " + (uniBad.length-3) + "건", " and " + (uniBad.length-3) + " more");
+      reasons.push({txt:L("조건 ③ 위반 (합집합): ","breaks ③ (union): ") + s2});
     }
 
     if(!inF[15]) missing[15] = true;
@@ -1581,20 +1626,28 @@ html[data-lang="en"] [lang="ko"]{display:none}
     }
     if(r.empty){
       verdict.className = "verdict bad";
-      verdict.innerHTML = "<span class='hd'>비어 있음</span>ℱ 는 최소한 <span class='m'>Ω</span> 를 포함해야 한다. 위에서 부분집합을 골라봐.";
+      verdict.innerHTML = "<span class='hd'>" + L("비어 있음","Empty") + "</span>" +
+        L("ℱ 는 최소한 <span class='m'>Ω</span> 를 포함해야 한다. 위에서 부분집합을 골라봐.",
+          "ℱ has to contain at least <span class='m'>Ω</span>. Pick some subsets above.");
       return;
     }
     if(r.reasons.length === 0){
       verdict.className = "verdict ok";
-      verdict.innerHTML = "<span class='hd'>✓ σ-algebra 다</span>세 조건을 모두 만족한다. 원소 " + r.count + "개." +
-        (r.count === 16 ? " 이건 <span class='m'>2<sup>Ω</sup></span> 전체야 — 가장 큰 σ-algebra." :
-         r.count === 2 ? " 이건 <span class='m'>{∅, Ω}</span> — 가장 작은 σ-algebra." : "");
+      verdict.innerHTML = "<span class='hd'>" + L("✓ σ-algebra 다","✓ this is a σ-algebra") + "</span>" +
+        L("세 조건을 모두 만족한다. 원소 " + r.count + "개.",
+          "All three conditions hold. " + r.count + " elements.") +
+        (r.count === 16 ? L(" 이건 <span class='m'>2<sup>Ω</sup></span> 전체야 — 가장 큰 σ-algebra.",
+                           " That is all of <span class='m'>2<sup>Ω</sup></span>, the largest one there is.") :
+         r.count === 2 ? L(" 이건 <span class='m'>{∅, Ω}</span> — 가장 작은 σ-algebra.",
+                           " That is <span class='m'>{∅, Ω}</span>, the smallest one there is.") : "");
       return;
     }
     verdict.className = "verdict bad";
-    var html = "<span class='hd'>✗ σ-algebra 가 아니다</span><ul>";
+    var html = "<span class='hd'>" + L("✗ σ-algebra 가 아니다","✗ not a σ-algebra") + "</span><ul>";
     r.reasons.forEach(function(x){ html += "<li>" + x.txt + "</li>"; });
-    html += "</ul><div style='margin-top:10px;font-size:13.5px'>점선으로 표시된 칸이 <strong>추가되어야 하는 집합</strong>이야.</div>";
+    html += "</ul><div style='margin-top:10px;font-size:13.5px'>" +
+      L("점선으로 표시된 칸이 <strong>추가되어야 하는 집합</strong>이야.",
+        "The dashed cells are <strong>the sets you would have to add</strong>.") + "</div>";
     verdict.innerHTML = html;
   }
 
@@ -1628,29 +1681,39 @@ html[data-lang="en"] [lang="ko"]{display:none}
   }
 
   var PRESETS = [
-    {label:"{∅, Ω} — 가장 작은", set:[0,15]},
-    {label:"예제 4.1 — {∅,Ω,{1,2},{3,4}}", set:[0,15,maskOf([1,2]),maskOf([3,4])]},
-    {label:"예제 4.2 — 실패하는 𝒢", set:[0,15,maskOf([1]),maskOf([2]),maskOf([3,4])]},
-    {label:"HW1 4(b)의 𝒢", set:[0,15,maskOf([1]),maskOf([2,3,4]),maskOf([2])]},
-    {label:"σ(A,B), A={1,2} B={2,3}", set:[maskOf([1,2]),maskOf([2,3])]},
-    {label:"2^Ω — 전체", set:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]}
+    {ko:"{∅, Ω} — 가장 작은", en:"{∅, Ω} — smallest", set:[0,15]},
+    {ko:"예제 4.1 — {∅,Ω,{1,2},{3,4}}", en:"Example 4.1 — {∅,Ω,{1,2},{3,4}}", set:[0,15,maskOf([1,2]),maskOf([3,4])]},
+    {ko:"예제 4.2 — 실패하는 𝒢", en:"Example 4.2 — the 𝒢 that fails", set:[0,15,maskOf([1]),maskOf([2]),maskOf([3,4])]},
+    {ko:"HW1 4(b)의 𝒢", en:"𝒢 from HW1 4(b)", set:[0,15,maskOf([1]),maskOf([2,3,4]),maskOf([2])]},
+    {ko:"σ(A,B), A={1,2} B={2,3}", en:"σ(A,B), A={1,2} B={2,3}", set:[maskOf([1,2]),maskOf([2,3])]},
+    {ko:"2^Ω — 전체", en:"2^Ω — everything", set:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]}
   ];
 
+  var langBtns = [];
   PRESETS.forEach(function(p){
     var b = document.createElement("button");
-    b.textContent = p.label;
+    b.textContent = L(p.ko, p.en);
     b.addEventListener("click", function(){ setF(p.set); });
+    langBtns.push(function(){ b.textContent = L(p.ko, p.en); });
     presetBox.appendChild(b);
   });
   var cb = document.createElement("button");
   cb.className = "act";
-  cb.textContent = "σ(·) 로 닫기";
+  cb.textContent = L("σ(·) 로 닫기", "close under σ(·)");
   cb.addEventListener("click", closure);
+  langBtns.push(function(){ cb.textContent = L("σ(·) 로 닫기", "close under σ(·)"); });
   presetBox.appendChild(cb);
   var clr = document.createElement("button");
-  clr.textContent = "지우기";
+  clr.textContent = L("지우기", "clear");
   clr.addEventListener("click", function(){ setF([]); });
+  langBtns.push(function(){ clr.textContent = L("지우기", "clear"); });
   presetBox.appendChild(clr);
+
+  // 언어를 바꾸면 버튼 라벨과 판정 문구를 다시 그린다.
+  window.addEventListener("langchange", function(){
+    langBtns.forEach(function(f){ f(); });
+    render();
+  });
 
   setF([0,15,maskOf([1,2]),maskOf([3,4])]);
 })();
@@ -1708,6 +1771,7 @@ html[data-lang="en"] [lang="ko"]{display:none}
   btn.addEventListener('click', function () {
     root.dataset.lang = root.dataset.lang === 'en' ? 'ko' : 'en';
     paint();
+    window.dispatchEvent(new Event('langchange'));
   });
   paint();
 })();
