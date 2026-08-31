@@ -1453,29 +1453,43 @@ html[data-lang="en"] [lang="ko"]{display:none}
 <!-- ══ 07 ══ -->
 <section id="s7">
   <div class="sec-head" data-slide="32"><span class="sec-num">07</span><h2>Power Set</h2></div>
-  <p class="sec-sub">Definition 13. 가능한 모든 질문을 한 자루에 담기.</p>
+  <p class="sec-sub" lang="ko">Definition 13. 가능한 모든 질문을 한 자루에 담기.</p>
+  <p class="sec-sub" lang="en">Definition 13. Every question you could ask, gathered into one bag.</p>
 
-  <div class="def">
+  <div class="def" lang="ko">
     <span class="tag">Definition 13</span>
     <p><span class="m"><i>Ω</i></span>의 <strong>멱집합(power set)</strong> <span class="m">2<sup><i>Ω</i></sup></span>는 <span class="m"><i>Ω</i></span>의 모든 부분집합을 원소로 갖는 집합이다.</p>
     <div class="eq" style="margin:14px 0 0">2<sup><i>Ω</i></sup> = {<i>A</i> : <i>A</i> ⊆ <i>Ω</i>}</div>
   </div>
+  <div class="def" lang="en">
+    <span class="tag">Definition 13</span>
+    <p>The <strong>power set</strong> of <span class="m"><i>Ω</i></span>, written <span class="m">2<sup><i>Ω</i></sup></span>, is the set whose elements are all the subsets of <span class="m"><i>Ω</i></span>.</p>
+    <div class="eq" style="margin:14px 0 0">2<sup><i>Ω</i></sup> = {<i>A</i> : <i>A</i> ⊆ <i>Ω</i>}</div>
+  </div>
 
-  <p>02번에서 "질문 하나 = 부분집합 하나"라고 했지. 그러면 <span class="m">2<sup><i>Ω</i></sup></span>는 <strong>이 실험에 대해 던질 수 있는 모든 질문의 모음</strong>이야. 슬라이드 표현으로는 <em>"encodes all possible questions about the outcome"</em>.</p>
+  <p lang="ko">02번에서 "질문 하나 = 부분집합 하나"라고 했지. 그러면 <span class="m">2<sup><i>Ω</i></sup></span>는 <strong>이 실험에 대해 던질 수 있는 모든 질문의 모음</strong>이야. 슬라이드 표현으로는 <em>"encodes all possible questions about the outcome"</em>.</p>
+  <p lang="en">Section 02 established that one question equals one subset. Put those together and <span class="m">2<sup><i>Ω</i></sup></span> is <strong>the collection of every question you could ask about this experiment</strong>. The slide phrases it as <em>"encodes all possible questions about the outcome"</em>.</p>
 
-  <h3>왜 하필 기호가 2<sup>Ω</sup> 인가</h3>
-  <p>이름이 이상해 보이는데, 이유가 있어. 그리고 이 이유가 컴공 배경이면 바로 와닿을 거야.</p>
+  <h3 lang="ko">왜 하필 기호가 2<sup>Ω</sup> 인가</h3>
+  <h3 lang="en">Why the symbol is 2<sup>Ω</sup></h3>
+  <p lang="ko">이름이 이상해 보이는데, 이유가 있어. 그리고 이 이유가 컴공 배경이면 바로 와닿을 거야.</p>
+  <p lang="en">The notation looks odd until you see where it comes from, and with a computer engineering background it lands immediately.</p>
 
   <figure>
   <svg viewBox="0 0 700 250" role="img" aria-label="멱집합과 비트마스크의 대응">
-    <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em">Ω = {1, 2, 3} 일 때 2^Ω 의 원소 8개 = 3비트 마스크 8개</text>
+    <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="ko">Ω = {1, 2, 3} 일 때 2^Ω 의 원소 8개 = 3비트 마스크 8개</text>
+    <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="en">for Ω = {1, 2, 3}: the 8 elements of 2^Ω = the 8 three-bit masks</text>
 
     <g class="svgnum" style="font-size:13px">
       <!-- header -->
-      <text x="60"  y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--ink3)">비트</text>
-      <text x="210" y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--ink3)">부분집합</text>
-      <text x="400" y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--ink3)">비트</text>
-      <text x="550" y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--ink3)">부분집합</text>
+      <text x="60"  y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--ink3)" lang="ko">비트</text>
+      <text x="60"  y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--ink3)" lang="en">bits</text>
+      <text x="210" y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--ink3)" lang="ko">부분집합</text>
+      <text x="210" y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--ink3)" lang="en">subset</text>
+      <text x="400" y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--ink3)" lang="ko">비트</text>
+      <text x="400" y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--ink3)" lang="en">bits</text>
+      <text x="550" y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--ink3)" lang="ko">부분집합</text>
+      <text x="550" y="52" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--ink3)" lang="en">subset</text>
     </g>
     <line x1="14" y1="60" x2="686" y2="60" stroke="var(--rule)"/>
 
@@ -1501,13 +1515,16 @@ html[data-lang="en"] [lang="ko"]{display:none}
     </g>
     <g stroke="var(--rule)"><line x1="120" y1="72" x2="120" y2="188"/><line x1="460" y1="72" x2="460" y2="188"/><line x1="340" y1="60" x2="340" y2="188"/></g>
 
-    <text x="14" y="222" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)">원소마다 "넣을까 말까" 2가지 선택 × 3개 원소 = <tspan font-weight="700" fill="var(--ink)">2³ = 8가지</tspan>. 일반적으로 |Ω| = n 이면 |2^Ω| = 2ⁿ.</text>
-    <text x="14" y="242" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)">그래서 기호가 2^Ω 야. 지수 표기가 개수를 그대로 말해주는 거지.</text>
+    <text x="14" y="222" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)" lang="ko">원소마다 "넣을까 말까" 2가지 선택 × 3개 원소 = <tspan font-weight="700" fill="var(--ink)">2³ = 8가지</tspan>. 일반적으로 |Ω| = n 이면 |2^Ω| = 2ⁿ.</text>
+    <text x="14" y="222" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)" lang="en">2 choices per element (in or out) × 3 elements = <tspan font-weight="700" fill="var(--ink)">2³ = 8</tspan>. In general |Ω| = n gives |2^Ω| = 2ⁿ.</text>
+    <text x="14" y="242" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)" lang="ko">그래서 기호가 2^Ω 야. 지수 표기가 개수를 그대로 말해주는 거지.</text>
+    <text x="14" y="242" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)" lang="en">Hence the symbol 2^Ω. The exponent is literally the count.</text>
   </svg>
-  <figcaption>ECE 385/391에서 쓰던 비트마스크 그대로야. 집합 연산이 비트 연산이 되고(∪ = OR, ∩ = AND, ᶜ = NOT), 부분집합의 총 개수가 <span class="m">2<sup><i>n</i></sup></span>인 이유도 한눈에 보여.</figcaption>
+  <figcaption lang="ko">ECE 385/391에서 쓰던 비트마스크 그대로야. 집합 연산이 비트 연산이 되고(∪ = OR, ∩ = AND, ᶜ = NOT), 부분집합의 총 개수가 <span class="m">2<sup><i>n</i></sup></span>인 이유도 한눈에 보여.</figcaption>
+  <figcaption lang="en">These are the same bitmasks you used in ECE 385/391. Set operations become bit operations (∪ = OR, ∩ = AND, ᶜ = NOT), and the reason the subset count is <span class="m">2<sup><i>n</i></sup></span> is visible at a glance.</figcaption>
   </figure>
 
-  <div class="ex">
+  <div class="ex" lang="ko">
     <span class="tag">예제 7.1</span>
     <p>(a) <span class="m"><i>Ω</i> = {1, 2}</span>의 멱집합을 모두 써라. &nbsp; (b) <span class="m"><i>Ω</i> = {1,2,3,4}</span>일 때 <span class="m">|2<sup><i>Ω</i></sup>|</span>는? &nbsp; (c) <span class="m"><i>Ω</i></span>의 원소가 10개면?</p>
     <details><summary>풀이</summary><div class="body">
@@ -1516,8 +1533,17 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <p>(c) <span class="m">2<sup>10</sup> = 1024</span>. 원소 10개짜리 실험에 대해 던질 수 있는 서로 다른 질문이 1024개라는 뜻이야.</p>
     </div></details>
   </div>
+  <div class="ex" lang="en">
+    <span class="tag">Example 7.1</span>
+    <p>(a) Write out the whole power set of <span class="m"><i>Ω</i> = {1, 2}</span>. &nbsp; (b) For <span class="m"><i>Ω</i> = {1,2,3,4}</span>, what is <span class="m">|2<sup><i>Ω</i></sup>|</span>? &nbsp; (c) And if <span class="m"><i>Ω</i></span> has 10 elements?</p>
+    <details><summary>Solution</summary><div class="body">
+      <p>(a) <span class="m">2<sup><i>Ω</i></sup> = {∅, {1}, {2}, {1,2}}</span>, four of them. <strong>Do not drop ∅ or Ω itself.</strong> That is the single most common slip.</p>
+      <p>(b) <span class="m">2<sup>4</sup> = 16</span>. HW1 Problem 4(d) asks exactly this.</p>
+      <p>(c) <span class="m">2<sup>10</sup> = 1024</span>, meaning there are 1024 distinct questions you can ask about an experiment with 10 outcomes.</p>
+    </div></details>
+  </div>
 
-  <div class="trap">
+  <div class="trap" lang="ko">
     <span class="tag">함정</span>
 
     <h4>2^Ω 의 원소는 "집합"이지 "숫자"가 아니다</h4>
@@ -1534,45 +1560,88 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <h4>Ω가 무한하면 2^Ω 는 급격히 커진다</h4>
     <p><span class="m"><i>Ω</i> = ℕ</span>처럼 <em>가산</em>무한이어도 <span class="m">2<sup><i>Ω</i></sup></span>는 <strong>비가산</strong>이 돼. (부분집합 하나 = 무한 이진 수열 하나 = 06번 예제 6.1의 3번) 그래서 무한 표본공간에서는 멱집합 전체를 사건 모음으로 쓰는 게 부담스러워지고, 여기서 σ-algebra가 등장해. Module 2에서 바로 이어져.</p>
   </div>
+  <div class="trap" lang="en">
+    <span class="tag">Trap</span>
+
+    <h4>The elements of 2^Ω are sets, not numbers</h4>
+    <p>With <span class="m"><i>Ω</i> = {1,2,3}</span>:</p>
+    <ul>
+      <li><span class="m">{1} ∈ 2<sup><i>Ω</i></sup></span> ✓ &nbsp;/&nbsp; <span class="m">1 ∈ 2<sup><i>Ω</i></sup></span> ✗</li>
+      <li><span class="m">{1} ⊆ <i>Ω</i></span> ✓ &nbsp;/&nbsp; <span class="m">{1} ∈ <i>Ω</i></span> ✗</li>
+    </ul>
+    <p>You have moved up one level. The elements of <span class="m"><i>Ω</i></span> are outcomes; the elements of <span class="m">2<sup><i>Ω</i></sup></span> are events. Whenever an exam asks you to judge an <span class="m">∈</span> or <span class="m">⊆</span> statement, first ask <strong>"what are the elements of the set I am talking about right now?"</strong></p>
+
+    <h4>∅ and Ω are elements of the power set too</h4>
+    <p>Both are subsets of <span class="m"><i>Ω</i></span>, so of course they are in there. <span class="m">∅</span> is the event that never happens and <span class="m"><i>Ω</i></span> is the event that always happens. In probability terms, 0 and 1.</p>
+
+    <h4>An infinite Ω blows the power set up fast</h4>
+    <p>Even when <span class="m"><i>Ω</i> = ℕ</span> is only <em>countably</em> infinite, <span class="m">2<sup><i>Ω</i></sup></span> comes out <strong>uncountable</strong>. One subset is one infinite binary sequence, which is item 3 of Example 6.1. So on an infinite sample space, using the entire power set as your event collection becomes unworkable, and that is exactly where the σ-algebra walks in. Module 2 picks this up directly.</p>
+  </div>
 </section>
 
 <!-- ══ 08 ══ -->
 <section id="s8">
-  <div class="sec-head" data-slide="33-39"><span class="sec-num">08</span><h2>Index Set과 무한 연산</h2></div>
-  <p class="sec-sub">Definition 14. 집합이 두세 개가 아니라 무한히 많을 때의 표기법.</p>
+  <div class="sec-head" data-slide="33-39"><span class="sec-num">08</span><h2 lang="ko">Index Set과 무한 연산</h2><h2 lang="en">Index sets and infinite operations</h2></div>
+  <p class="sec-sub" lang="ko">Definition 14. 집합이 두세 개가 아니라 무한히 많을 때의 표기법.</p>
+  <p class="sec-sub" lang="en">Definition 14. Notation for when you have infinitely many sets instead of two or three.</p>
 
-  <div class="def">
+  <div class="def" lang="ko">
     <span class="tag">Definition 14</span>
     <p>집합 <span class="m"><i>I</i></span>가 있을 때, <span class="m">{<i>A<sub>i</sub></i> : <i>i</i> ∈ <i>I</i>}</span>를 <span class="m"><i>I</i></span>로 <strong>인덱싱된 집합족(indexed family)</strong>이라 하고, <span class="m"><i>I</i></span>를 <strong>인덱스 집합(index set)</strong>이라 한다.</p>
   </div>
+  <div class="def" lang="en">
+    <span class="tag">Definition 14</span>
+    <p>Given a set <span class="m"><i>I</i></span>, the collection <span class="m">{<i>A<sub>i</sub></i> : <i>i</i> ∈ <i>I</i>}</span> is a <strong>family indexed by</strong> <span class="m"><i>I</i></span>, and <span class="m"><i>I</i></span> is called the <strong>index set</strong>.</p>
+  </div>
 
-  <p>이건 사실 새로운 개념이 아니라 <strong>표기법</strong>이야. 코드로 치면 배열 인덱스랑 똑같아. <code>A[i]</code>에서 <code>i</code>가 돌 수 있는 범위가 <span class="m"><i>I</i></span>인 거지. 다만 <span class="m"><i>I</i></span>가 유한할 필요도, 정수일 필요도 없어.</p>
+  <p lang="ko">이건 사실 새로운 개념이 아니라 <strong>표기법</strong>이야. 코드로 치면 배열 인덱스랑 똑같아. <code>A[i]</code>에서 <code>i</code>가 돌 수 있는 범위가 <span class="m"><i>I</i></span>인 거지. 다만 <span class="m"><i>I</i></span>가 유한할 필요도, 정수일 필요도 없어.</p>
+  <p lang="en">This is <strong>notation</strong>, not a new idea. In code it is an array index: in <code>A[i]</code>, the range that <code>i</code> is allowed to run over is <span class="m"><i>I</i></span>. The only difference is that <span class="m"><i>I</i></span> need not be finite, and need not be made of integers.</p>
 
-  <table>
+  <table lang="ko">
     <tr><th>인덱스 집합</th><th>표기</th><th>이 과목/전공에서 어디에 쓰이나</th></tr>
     <tr><td><span class="m">ℕ = {1,2,3,…}</span></td><td><span class="m">{<i>A<sub>n</sub></i> : <i>n</i> ∈ ℕ}</span></td><td>countable additivity, 무한 수열</td></tr>
     <tr><td><span class="m">ℤ</span></td><td><span class="m">{<i>x</i>[<i>n</i>] : <i>n</i> ∈ ℤ}</span></td><td>이산시간 신호 (DSP)</td></tr>
     <tr><td><span class="m">ℝ</span></td><td><span class="m">{<i>x</i>(<i>t</i>) : <i>t</i> ∈ ℝ}</span></td><td>연속시간 신호, <strong>random process</strong></td></tr>
     <tr><td><span class="m">ℝ<sup>+</sup> = [0, ∞)</span></td><td><span class="m">{<i>X</i>(<i>t</i>) : <i>t</i> ≥ 0}</span></td><td>이 과목 후반부의 random process 전체</td></tr>
   </table>
+  <table lang="en">
+    <tr><th>index set</th><th>notation</th><th>where it shows up</th></tr>
+    <tr><td><span class="m">ℕ = {1,2,3,…}</span></td><td><span class="m">{<i>A<sub>n</sub></i> : <i>n</i> ∈ ℕ}</span></td><td>countable additivity, infinite sequences</td></tr>
+    <tr><td><span class="m">ℤ</span></td><td><span class="m">{<i>x</i>[<i>n</i>] : <i>n</i> ∈ ℤ}</span></td><td>discrete-time signals (DSP)</td></tr>
+    <tr><td><span class="m">ℝ</span></td><td><span class="m">{<i>x</i>(<i>t</i>) : <i>t</i> ∈ ℝ}</span></td><td>continuous-time signals, <strong>random processes</strong></td></tr>
+    <tr><td><span class="m">ℝ<sup>+</sup> = [0, ∞)</span></td><td><span class="m">{<i>X</i>(<i>t</i>) : <i>t</i> ≥ 0}</span></td><td>the entire second half of this course</td></tr>
+  </table>
 
-  <div class="callout">
+  <div class="callout" lang="ko">
     <strong>이거 왜 배우는지:</strong> 이 과목 제목이 "Probability and <em>Random Processes</em>"잖아. random process가 뭐냐면 <strong><span class="m">ℝ</span>로 인덱싱된 확률변수의 족</strong>이야. 즉 <span class="m">{<i>X</i>(<i>t</i>) : <i>t</i> ∈ ℝ}</span>. 지금 배우는 index set 표기가 학기 후반의 주인공을 위한 준비운동이야.
   </div>
+  <div class="callout" lang="en">
+    <strong>Why this is worth your time:</strong> the course is called "Probability and <em>Random Processes</em>". A random process is precisely <strong>a family of random variables indexed by <span class="m">ℝ</span></strong>, that is <span class="m">{<i>X</i>(<i>t</i>) : <i>t</i> ∈ ℝ}</span>. The index-set notation you are learning right now is the warm-up for the main character of the second half of the semester.
+  </div>
 
-  <h3 data-slide="37-38">무한 개의 합집합과 교집합</h3>
-  <div class="eq">
+  <h3 data-slide="37-38" lang="ko">무한 개의 합집합과 교집합</h3>
+  <h3 data-slide="37-38" lang="en">Unions and intersections over infinitely many sets</h3>
+  <div class="eq" lang="ko">
     ⋃<sub><i>i</i>∈<i>I</i></sub> <i>A<sub>i</sub></i> = {<i>ω</i> : <strong>적어도 하나</strong>의 <i>i</i>에 대해 <i>ω</i> ∈ <i>A<sub>i</sub></i>}
     <span class="note">"어느 하나라도 걸리면 통과" · OR의 무한 버전</span>
   </div>
-  <div class="eq">
+  <div class="eq" lang="en">
+    ⋃<sub><i>i</i>∈<i>I</i></sub> <i>A<sub>i</sub></i> = {<i>ω</i> : <i>ω</i> ∈ <i>A<sub>i</sub></i> for <strong>at least one</strong> <i>i</i>}
+    <span class="note">passes if it lands in any one of them · OR, extended to infinity</span>
+  </div>
+  <div class="eq" lang="ko">
     ⋂<sub><i>i</i>∈<i>I</i></sub> <i>A<sub>i</sub></i> = {<i>ω</i> : <strong>모든</strong> <i>i</i>에 대해 <i>ω</i> ∈ <i>A<sub>i</sub></i>}
     <span class="note">"전부 다 통과해야 통과" · AND의 무한 버전</span>
+  </div>
+  <div class="eq" lang="en">
+    ⋂<sub><i>i</i>∈<i>I</i></sub> <i>A<sub>i</sub></i> = {<i>ω</i> : <i>ω</i> ∈ <i>A<sub>i</sub></i> for <strong>every</strong> <i>i</i>}
+    <span class="note">has to clear all of them · AND, extended to infinity</span>
   </div>
 
   <figure>
   <svg viewBox="0 0 700 280" role="img" aria-label="중첩된 구간들의 무한 교집합">
-    <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em">Aₙ = (0, 1/n) 을 겹쳐 그리면</text>
+    <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="ko">Aₙ = (0, 1/n) 을 겹쳐 그리면</text>
+    <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="en">stack the intervals Aₙ = (0, 1/n) on top of each other</text>
 
     <!-- axis -->
     <line x1="60" y1="200" x2="660" y2="200" stroke="var(--ink3)" stroke-width="1.2"/>
@@ -1600,15 +1669,20 @@ html[data-lang="en"] [lang="ko"]{display:none}
     </g>
 
     <circle cx="60" cy="200" r="4.5" fill="var(--paper)" stroke="var(--pink)" stroke-width="1.8"/>
-    <text x="86" y="248" class="svgtxt" style="font-size:13.5px;fill:var(--ink)">
+    <text x="86" y="248" class="svgtxt" style="font-size:13.5px;fill:var(--ink)" lang="ko">
       모든 구간이 0에 붙어있지만 <tspan font-weight="700">0은 어느 구간에도 안 들어간다</tspan> (열린 구간이라서).
     </text>
-    <text x="86" y="268" class="svgtxt" style="font-size:13.5px;fill:var(--ink)">그래서 ⋂ₙ Aₙ = ∅.</text>
+    <text x="86" y="248" class="svgtxt" style="font-size:13.5px;fill:var(--ink)" lang="en">
+      every interval hugs 0, yet <tspan font-weight="700">0 is in none of them</tspan>, because they are open.
+    </text>
+    <text x="86" y="268" class="svgtxt" style="font-size:13.5px;fill:var(--ink)" lang="ko">그래서 ⋂ₙ Aₙ = ∅.</text>
+    <text x="86" y="268" class="svgtxt" style="font-size:13.5px;fill:var(--ink)" lang="en">so ⋂ₙ Aₙ = ∅.</text>
   </svg>
-  <figcaption>유한 개만 교집합하면 항상 비어있지 않은데(<span class="m"><i>A</i><sub>1</sub>∩…∩<i>A</i><sub><i>N</i></sub> = (0, 1/<i>N</i>) ≠ ∅</span>), <strong>무한 개를 다 교집합하면 비어버려.</strong> 무한 연산은 유한 연산의 단순 연장이 아니야.</figcaption>
+  <figcaption lang="ko">유한 개만 교집합하면 항상 비어있지 않은데(<span class="m"><i>A</i><sub>1</sub>∩…∩<i>A</i><sub><i>N</i></sub> = (0, 1/<i>N</i>) ≠ ∅</span>), <strong>무한 개를 다 교집합하면 비어버려.</strong> 무한 연산은 유한 연산의 단순 연장이 아니야.</figcaption>
+  <figcaption lang="en">Intersect finitely many and you always get something (<span class="m"><i>A</i><sub>1</sub>∩…∩<i>A</i><sub><i>N</i></sub> = (0, 1/<i>N</i>) ≠ ∅</span>), but <strong>intersect all of them and it comes out empty.</strong> Infinite operations are not just finite ones continued.</figcaption>
   </figure>
 
-  <div class="ex">
+  <div class="ex" lang="ko">
     <span class="tag">예제 8.1</span>
     <p>다음 무한 합집합/교집합을 구해.</p>
     <ol>
@@ -1624,8 +1698,24 @@ html[data-lang="en"] [lang="ko"]{display:none}
       </ol>
     </div></details>
   </div>
+  <div class="ex" lang="en">
+    <span class="tag">Example 8.1</span>
+    <p>Work out each infinite union or intersection.</p>
+    <ol>
+      <li><span class="m"><i>A<sub>n</sub></i> = [0, 1 − 1/<i>n</i>]</span> for <span class="m"><i>n</i> ∈ ℕ</span>: find <span class="m">⋃<sub><i>n</i></sub> <i>A<sub>n</sub></i></span></li>
+      <li><span class="m"><i>B<sub>n</sub></i> = (−1/<i>n</i>, 1/<i>n</i>)</span>: find <span class="m">⋂<sub><i>n</i></sub> <i>B<sub>n</sub></i></span></li>
+      <li><span class="m"><i>C<sub>n</sub></i> = {<i>n</i>, <i>n</i>+1, <i>n</i>+2, …}</span>: find <span class="m">⋂<sub><i>n</i></sub> <i>C<sub>n</sub></i></span></li>
+    </ol>
+    <details><summary>Solution</summary><div class="body">
+      <ol>
+        <li><span class="m">[0, 1)</span>. Each <span class="m"><i>A<sub>n</sub></i></span> is a closed interval, yet the union comes out <strong>open</strong>. You get arbitrarily close to 1, but 1 itself is in no <span class="m"><i>A<sub>n</sub></i></span>.</li>
+        <li><span class="m">{0}</span>. An intersection of open intervals producing a <strong>closed</strong> set, a single point. 0 belongs to every <span class="m"><i>B<sub>n</sub></i></span>, while any nonzero <span class="m"><i>x</i></span> drops out as soon as <span class="m">1/<i>n</i> &lt; |<i>x</i>|</span>.</li>
+        <li><span class="m">∅</span>. Whatever natural number <span class="m"><i>k</i></span> you pick, it is missing from <span class="m"><i>C</i><sub><i>k</i>+1</sub></span>. <strong>This is HW1 Problem 7(e).</strong> There it appears as <span class="m"><i>A<sub>n</sub></i> = {<i>n</i>, <i>n</i>+1, …}</span>, and you then check <span class="m">lim <i>P</i>(<i>A<sub>n</sub></i>) = <i>P</i>(∅) = 0</span> to verify <em>continuity of probability</em>.</li>
+      </ol>
+    </div></details>
+  </div>
 
-  <div class="trap">
+  <div class="trap" lang="ko">
     <span class="tag">함정</span>
     <h4>유한에서 참인 게 무한에서 깨진다</h4>
     <p>위 예제가 전부 그 얘기야. <strong>열린 집합들의 무한 교집합이 닫힐 수 있고, 닫힌 집합들의 무한 합집합이 열릴 수 있어.</strong> 유한 개면 절대 안 그래. 그래서 무한 연산이 나오면 "유한할 때랑 같겠지"라고 넘기지 말고 극한을 직접 확인해야 해.</p>
@@ -1633,6 +1723,15 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <p>이게 위 함정의 정확한 형태야. <span class="m"><i>A<sub>n</sub></i> ≠ ∅</span>이 모든 <span class="m"><i>n</i></span>에 대해 성립해도 <span class="m">⋂<sub><i>n</i></sub> <i>A<sub>n</sub></i> = ∅</span>일 수 있어. 각 집합이 비어있지 않다는 것과, <em>모두에 공통으로</em> 들어있는 원소가 있다는 건 다른 얘기야.</p>
     <h4>인덱스 집합은 정수가 아니어도 된다</h4>
     <p><span class="m"><i>I</i> = ℝ</span>이면 집합이 <em>비가산 개</em> 있는 거야. 이때 <span class="m">⋃<sub><i>t</i>∈ℝ</sub> <i>A<sub>t</sub></i></span>는 집합으로는 잘 정의되지만, <strong>확률에서는 이걸 함부로 쓸 수 없어.</strong> 확률의 additivity 공리는 <em>가산</em> 개까지만 보장하거든. Module 2에서 "countable additivity"라고 <em>countable</em>을 굳이 붙여 쓰는 이유가 이거야.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Trap</span>
+    <h4>What holds for finitely many breaks for infinitely many</h4>
+    <p>All three parts of the example above make this point. <strong>An infinite intersection of open sets can be closed, and an infinite union of closed sets can be open.</strong> Neither ever happens with finitely many. So when an infinite operation shows up, do not assume it behaves like the finite case. Check the limit.</p>
+    <h4>"Every <i>A<sub>n</sub></i> is nonempty" does not give "the intersection is nonempty"</h4>
+    <p>This is the precise form of the trap above. <span class="m"><i>A<sub>n</sub></i> ≠ ∅</span> can hold for every <span class="m"><i>n</i></span> while <span class="m">⋂<sub><i>n</i></sub> <i>A<sub>n</sub></i> = ∅</span>. "Each set has something in it" and "there is something common to all of them" are different claims.</p>
+    <h4>An index set does not have to be integers</h4>
+    <p>Take <span class="m"><i>I</i> = ℝ</span> and you have <em>uncountably many</em> sets. As a set operation, <span class="m">⋃<sub><i>t</i>∈ℝ</sub> <i>A<sub>t</sub></i></span> is perfectly well defined, but <strong>you cannot use it freely in probability.</strong> The additivity axiom only guarantees <em>countably</em> many. That is why Module 2 spells it out as "countable additivity" rather than just "additivity".</p>
   </div>
 </section>
 
