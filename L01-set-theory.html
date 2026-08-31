@@ -302,7 +302,7 @@ html[data-lang="en"] [lang="ko"]{display:none}
   <div class="eyebrow">EEE 554 · Probability and Random Processes · Michelusi</div>
   <h1 class="title">Module 1<br>Introduction &amp; Set Theory</h1>
   <p class="subtitle" lang="ko">확률을 배우기 전에, 확률이 쓸 언어부터 깔아두는 단원.</p>
-  <p class="subtitle" lang="en">Before any probability, the module that lays down the language probability will speak.</p>
+  <p class="subtitle" lang="en">Before you touch probability, you lay down the language probability is going to speak.</p>
   <div class="meta" lang="ko">
     <span class="chip">슬라이드 40쪽</span>
     <span class="chip hot">HW1 마감 8/30 (일) 자정</span>
@@ -344,70 +344,91 @@ html[data-lang="en"] [lang="ko"]{display:none}
 
 <!-- ══ 00 ══ -->
 <section id="s0">
-  <div class="sec-head" data-slide="1"><span class="sec-num">00</span><h2>이 모듈이 하는 일</h2></div>
-  <p class="sec-sub">한 줄 요약: <strong>"질문"을 "집합"으로 바꾸는 법을 배운다.</strong></p>
+  <div class="sec-head" data-slide="1"><span class="sec-num">00</span><h2 lang="ko">이 모듈이 하는 일</h2><h2 lang="en">What this module does</h2></div>
+  <p class="sec-sub" lang="ko">한 줄 요약: <strong>"질문"을 "집합"으로 바꾸는 법을 배운다.</strong></p>
+  <p class="sec-sub" lang="en">In one line: <strong>you learn how to turn a "question" into a "set".</strong></p>
 
-  <p>이 모듈에는 확률이 거의 안 나와. 슬라이드 40장 중 확률 기호 <span class="m">P</span>(·)가 등장하는 건 딱 한 번이야. 그래서 노잼으로 느껴지는 게 정상이야. 목적이 다르거든.</p>
+  <p lang="ko">이 모듈에는 확률이 거의 안 나와. 슬라이드 40장 중 확률 기호 <span class="m">P</span>(·)가 등장하는 건 딱 한 번이야. 그래서 노잼으로 느껴지는 게 정상이야. 목적이 다르거든.</p>
+  <p lang="en">You'll barely see any probability in this module. Out of 40 slides, the symbol <span class="m">P</span>(·) shows up exactly once. So if it feels dry, that's normal. It's doing a different job.</p>
 
-  <p>확률론이 답하고 싶은 건 "이 일이 일어날 가능성은 얼마인가"인데, 그러려면 먼저 <strong>"이 일"이라는 게 수학적으로 뭔지</strong> 못 박아야 해. 그 정의가 바로 집합이야. 이 모듈은 확률을 계산하는 법이 아니라, 확률이 올라탈 <strong>도로를 까는 단계</strong>야.</p>
+  <p lang="ko">확률론이 답하고 싶은 건 "이 일이 일어날 가능성은 얼마인가"인데, 그러려면 먼저 <strong>"이 일"이라는 게 수학적으로 뭔지</strong> 못 박아야 해. 그 정의가 바로 집합이야. 이 모듈은 확률을 계산하는 법이 아니라, 확률이 올라탈 <strong>도로를 까는 단계</strong>야.</p>
+  <p lang="en">What probability theory wants to answer is "how likely is this thing to happen?" But before you can answer that, you have to pin down <strong>what "this thing" even is, mathematically</strong>. That definition is a set. So this module isn't about computing probabilities. It's about <strong>paving the road</strong> that probability will later drive on.</p>
 
-  <div class="callout">
+  <div class="callout" lang="ko">
     <strong>이 모듈에서 새로 나오는 단어들:</strong> sample space, event, power set, countable / uncountable, index set, partition.<br>
     이 중 <strong>countable</strong>과 <strong>partition</strong> 두 개가 나중에 결정적으로 쓰여. countable은 Module 2에서 σ-algebra가 왜 필요한지를 결정하고, partition은 Module 3의 law of total probability와 Bayes 정리가 통째로 그 위에서 돌아가. 나머지는 도구야.
   </div>
+  <div class="callout" lang="en">
+    <strong>New vocabulary in this module:</strong> sample space, event, power set, countable / uncountable, index set, partition.<br>
+    Two of these carry real weight later. <strong>Countable</strong> is what decides why you need a σ-algebra at all in Module 2, and <strong>partition</strong> is the thing the law of total probability and Bayes' theorem sit on top of in Module 3. The rest are tools.
+  </div>
 
-  <h3>전체 흐름</h3>
+  <h3 lang="ko">전체 흐름</h3>
+  <h3 lang="en">The whole chain</h3>
   <figure>
-  <svg viewBox="0 0 720 130" role="img" aria-label="질문에서 확률로 가는 흐름도">
+  <svg viewBox="0 0 720 130" role="img" aria-label="질문에서 확률로 가는 흐름도 / from a question to a probability">
     <defs>
       <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
         <path d="M0,0 L9,4.5 L0,9 z" fill="var(--ink3)"/>
       </marker>
     </defs>
     <rect x="10" y="34" width="150" height="58" rx="8" fill="var(--card)" stroke="var(--rule)"/>
-    <text x="85" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)">현실의 질문</text>
-    <text x="85" y="79" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)">"짝수 나왔나?"</text>
+    <text x="85" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)" lang="ko">현실의 질문</text>
+    <text x="85" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)" lang="en">A real question</text>
+    <text x="85" y="79" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="ko">"짝수 나왔나?"</text>
+    <text x="85" y="79" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="en">"Was it even?"</text>
 
     <line x1="168" y1="63" x2="205" y2="63" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#ar)"/>
     <text x="186" y="48" text-anchor="middle" class="svglab" style="font-size:9.5px">Module 1</text>
 
     <rect x="213" y="34" width="150" height="58" rx="8" fill="var(--card)" stroke="var(--blue)" stroke-width="1.5"/>
-    <text x="288" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--blue)">사건 (집합)</text>
+    <text x="288" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--blue)" lang="ko">사건 (집합)</text>
+    <text x="288" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--blue)" lang="en">Event (a set)</text>
     <text x="288" y="79" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--blue)">A = {2, 4, 6}</text>
 
     <line x1="371" y1="63" x2="408" y2="63" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#ar)"/>
     <text x="389" y="48" text-anchor="middle" class="svglab" style="font-size:9.5px">Module 2</text>
 
     <rect x="416" y="34" width="150" height="58" rx="8" fill="var(--card)" stroke="var(--rule)"/>
-    <text x="491" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)">확률 공간</text>
+    <text x="491" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)" lang="ko">확률 공간</text>
+    <text x="491" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)" lang="en">Probability space</text>
     <text x="491" y="79" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--ink2)">(Ω, ℱ, P)</text>
 
     <line x1="574" y1="63" x2="611" y2="63" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#ar)"/>
 
     <rect x="619" y="34" width="92" height="58" rx="8" fill="var(--card)" stroke="var(--rule)"/>
-    <text x="665" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)">숫자</text>
+    <text x="665" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)" lang="ko">숫자</text>
+    <text x="665" y="59" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)" lang="en">A number</text>
     <text x="665" y="79" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--ink2)">P(A) = ½</text>
   </svg>
-  <figcaption>Module 1은 이 사슬의 첫 번째 화살표만 담당해. 지금 하는 게 답답하게 느껴지면, 아직 두 번째 칸에 머물러 있어서 그런 거야.</figcaption>
+  <figcaption lang="ko">Module 1은 이 사슬의 첫 번째 화살표만 담당해. 지금 하는 게 답답하게 느껴지면, 아직 두 번째 칸에 머물러 있어서 그런 거야.</figcaption>
+  <figcaption lang="en">Module 1 only owns the first arrow in this chain. If what you're doing right now feels frustrating, it's because you're still parked in the second box.</figcaption>
   </figure>
 </section>
 
 <!-- ══ 01 ══ -->
 <section id="s1">
   <div class="sec-head" data-slide="2-5"><span class="sec-num">01</span><h2>Probability vs Statistics</h2></div>
-  <p class="sec-sub">화살표 방향이 반대인 두 학문.</p>
+  <p class="sec-sub" lang="ko">화살표 방향이 반대인 두 학문.</p>
+  <p class="sec-sub" lang="en">Two fields with the arrow pointing opposite ways.</p>
 
-  <div class="def">
+  <div class="def" lang="ko">
     <span class="tag">핵심 대비</span>
     <p><strong>Probability</strong>: 불확실성의 <em>수학적 모델</em>에서 출발해서, 여러 결과가 나올 가능성을 분석한다. &nbsp;<span class="m">Model → Data</span></p>
     <p style="margin-bottom:0"><strong>Statistics</strong>: <em>관측된 데이터</em>에서 출발해서, 그 밑에 깔린 확률 모델이나 미지의 파라미터를 추론한다. &nbsp;<span class="m">Data → Model</span></p>
   </div>
+  <div class="def" lang="en">
+    <span class="tag">The contrast</span>
+    <p><strong>Probability</strong>: you start from a <em>mathematical model</em> of uncertainty and analyse how likely the various outcomes are. &nbsp;<span class="m">Model → Data</span></p>
+    <p style="margin-bottom:0"><strong>Statistics</strong>: you start from <em>observed data</em> and infer the probability model underneath it, or its unknown parameters. &nbsp;<span class="m">Data → Model</span></p>
+  </div>
 
   <figure>
-  <svg viewBox="0 0 640 190" role="img" aria-label="확률과 통계의 방향 비교">
+  <svg viewBox="0 0 640 190" role="img" aria-label="확률과 통계의 방향 비교 / probability and statistics point opposite ways">
     <rect x="40" y="62" width="180" height="66" rx="9" fill="rgba(var(--blue-rgb),.08)" stroke="var(--blue)" stroke-width="1.4"/>
     <text x="130" y="90" text-anchor="middle" class="svglab" style="font-size:11px;fill:var(--blue)">MODEL</text>
-    <text x="130" y="112" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)">주사위는 공정하다</text>
+    <text x="130" y="112" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="ko">주사위는 공정하다</text>
+    <text x="130" y="112" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="en">the die is fair</text>
 
     <rect x="420" y="62" width="180" height="66" rx="9" fill="rgba(var(--pink-rgb),.08)" stroke="var(--pink)" stroke-width="1.4"/>
     <text x="510" y="90" text-anchor="middle" class="svglab" style="font-size:11px;fill:var(--pink)">DATA</text>
@@ -422,12 +443,14 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <text x="320" y="72" text-anchor="middle" class="svglab" style="font-size:11px;fill:var(--blue);letter-spacing:.1em">PROBABILITY</text>
     <text x="320" y="134" text-anchor="middle" class="svglab" style="font-size:11px;fill:var(--pink);letter-spacing:.1em">STATISTICS</text>
 
-    <text x="320" y="30" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink3)">같은 세계, 반대 방향</text>
+    <text x="320" y="30" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink3)" lang="ko">같은 세계, 반대 방향</text>
+    <text x="320" y="30" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink3)" lang="en">same world, opposite directions</text>
   </svg>
-  <figcaption>같은 주사위를 두고, 위쪽 화살표는 "공정하다면 6이 세 번 연속 나올 확률은?"을 묻고, 아래쪽 화살표는 "이런 데이터가 나왔는데 이 주사위 공정한 거 맞아?"를 묻는다.</figcaption>
+  <figcaption lang="ko">같은 주사위를 두고, 위쪽 화살표는 "공정하다면 6이 세 번 연속 나올 확률은?"을 묻고, 아래쪽 화살표는 "이런 데이터가 나왔는데 이 주사위 공정한 거 맞아?"를 묻는다.</figcaption>
+  <figcaption lang="en">Same die, two directions. The top arrow asks "if it's fair, what's the chance of three 6s in a row?" The bottom arrow asks "I got this data, is this die actually fair?"</figcaption>
   </figure>
 
-  <div class="ex">
+  <div class="ex" lang="ko">
     <span class="tag">예제 1.1</span>
     <p>다음 질문이 probability인지 statistics인지 판정해.</p>
     <ol>
@@ -441,13 +464,34 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <p>재밌는 건 3번과 4번이 사실상 같은 계산을 쓴다는 거야. 통계에서 하는 가설검정은 "공정하다고 가정했을 때 이 데이터가 나올 확률"(= 3번)을 계산해서, 그게 너무 작으면 가정을 버리는 방식이거든. 그래서 statistics는 probability를 <em>도구로</em> 써.</p>
     </div></details>
   </div>
+  <div class="ex" lang="en">
+    <span class="tag">Example 1.1</span>
+    <p>Decide whether each question is probability or statistics.</p>
+    <ol>
+      <li>On a link whose packet loss rate is exactly 0.1, you send 10 packets. What's the chance exactly 2 are dropped?</li>
+      <li>You sent 1000 packets over some link and 87 were dropped. What is that link's loss rate?</li>
+      <li>You flip a fair coin 100 times. What's the chance of 70 or more heads?</li>
+      <li>You flipped a coin 100 times and got 70 heads. Is this coin fair?</li>
+    </ol>
+    <details><summary>Solution</summary><div class="body">
+      <p>1 and 3 are probability. The model (loss rate 0.1 / a fair coin) is <em>handed to you first</em>, and you compute how likely the data is. 2 and 4 are statistics: the data comes first and you work back to the model. The tell is simple. <strong>If the sentence opens with "if…", it's probability. If it opens with "I observed…", it's statistics.</strong></p>
+      <p>What's worth noticing is that 3 and 4 run essentially the same computation. Hypothesis testing works by computing "the probability of seeing this data assuming the coin is fair" (that's 3) and throwing away the assumption if that number is too small. So statistics uses probability <em>as a tool</em>.</p>
+    </div></details>
+  </div>
 
-  <div class="trap">
+  <div class="trap" lang="ko">
     <span class="tag">함정</span>
     <h4>"statistics가 probability의 상위 과목"이 아니다</h4>
     <p>둘은 위아래 관계가 아니라 화살표 방향이 반대인 관계야. 이 과목(554)은 <strong>화살표 위쪽만</strong> 다뤄. 데이터에서 모델을 추정하는 얘기는 여기서 안 나와. 그래서 "실제 데이터가 하나도 안 나오네?"라고 느끼는 게 맞아. 이 과목은 원래 그래.</p>
     <h4>"확률은 빈도다"라고 정의하면 막힌다</h4>
     <p>"많이 던져보면 1/2에 수렴하니까 확률이 1/2"이라는 설명은 직관적이지만 <em>정의</em>로는 못 써. 순환논법이거든. "수렴한다"는 것 자체가 확률의 개념을 이미 쓰고 있어. 그래서 Module 2에서 확률을 빈도가 아니라 <strong>세 개의 공리를 만족하는 함수</strong>로 정의해. 이 과목의 확률은 처음부터 끝까지 공리적 정의야.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Trap</span>
+    <h4>Statistics is not "the advanced version" of probability</h4>
+    <p>They aren't stacked on top of each other. The arrow just runs the other way. This course (554) covers <strong>only the top arrow</strong>. Estimating a model from data never comes up here. So if you're thinking "we never see any real data," you're right. That's what this course is.</p>
+    <h4>Defining probability as frequency gets you stuck</h4>
+    <p>"Flip it enough times and it converges to 1/2, so the probability is 1/2" is intuitive, but you can't use it as a <em>definition</em>. It's circular: "converges" already leans on the notion of probability. That's why Module 2 defines probability not as a frequency but as <strong>a function satisfying three axioms</strong>. Probability in this course is axiomatic from start to finish.</p>
   </div>
 </section>
 
