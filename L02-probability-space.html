@@ -290,56 +290,73 @@ html[data-lang="en"] [lang="ko"]{display:none}
 <header class="top">
   <div class="eyebrow">EEE 554 · Probability and Random Processes · Michelusi</div>
   <h1 class="title">Module 2<br>Probability Spaces</h1>
-  <p class="subtitle">집합 위에 드디어 숫자를 얹는다. 삼중항 <span class="m">(<i>Ω</i>, ℱ, <i>P</i>)</span>의 정체.</p>
-  <div class="meta">
+  <p class="subtitle" lang="ko">집합 위에 드디어 숫자를 얹는다. 삼중항 <span class="m">(<i>Ω</i>, ℱ, <i>P</i>)</span>의 정체.</p>
+  <p class="subtitle" lang="en">Numbers finally go on top of the sets. What the triple <span class="m">(<i>Ω</i>, ℱ, <i>P</i>)</span> actually is.</p>
+  <div class="meta" lang="ko">
     <span class="chip">슬라이드 41쪽</span>
     <span class="chip hot">HW1 Problem 4–8 이 범위</span>
     <span class="chip">Module 1의 06번과 직결</span>
   </div>
-  <a class="backlink" href="index.html">← 모듈 목록으로</a>
+  <div class="meta" lang="en">
+    <span class="chip">41 slides</span>
+    <span class="chip hot">Covers HW1 Problems 4–8</span>
+    <span class="chip">Follows directly from Module 1 §06</span>
+  </div>
+  <a class="backlink" href="index.html" lang="ko">← 모듈 목록으로</a>
+  <a class="backlink" href="index.html" lang="en">← All modules</a>
 </header>
 
 <nav class="toc">
   <div class="mini-head">
-    <a class="back" href="index.html">← 모듈 목록</a>
+    <a class="back" href="index.html" lang="ko">← 모듈 목록</a>
+    <a class="back" href="index.html" lang="en">← All modules</a>
     <div class="mod">Module 2</div>
     <div class="name">Probability Spaces</div>
     <div class="rule"></div>
   </div>
-  <div class="lab">목차</div>
-  <a href="#s0"><span class="n">00</span><span>이 모듈이 하는 일</span></a>
-  <a href="#s1"><span class="n">01</span><span>세 가지 재료</span></a>
-  <a href="#s2"><span class="n">02</span><span>ℱ는 왜 필요한가</span></a>
+  <div class="lab" lang="ko">목차</div>
+  <div class="lab" lang="en">Contents</div>
+  <a href="#s0"><span class="n">00</span><span lang="ko">이 모듈이 하는 일</span><span lang="en">What this module does</span></a>
+  <a href="#s1"><span class="n">01</span><span lang="ko">세 가지 재료</span><span lang="en">Three ingredients</span></a>
+  <a href="#s2"><span class="n">02</span><span lang="ko">ℱ는 왜 필요한가</span><span lang="en">Why ℱ is needed</span></a>
   <a href="#s3"><span class="n">03</span><span>σ-algebra</span></a>
-  <a href="#s4"><span class="n">04</span><span>직접 검증해보기</span></a>
-  <a href="#s5"><span class="n">05</span><span>생성된 σ-algebra</span></a>
-  <a href="#s6"><span class="n">06</span><span>Kolmogorov 공리</span></a>
-  <a href="#s7"><span class="n">07</span><span>공리에서 나오는 성질</span></a>
-  <a href="#s8"><span class="n">08</span><span>이산 vs 연속</span></a>
+  <a href="#s4"><span class="n">04</span><span lang="ko">직접 검증해보기</span><span lang="en">Check it yourself</span></a>
+  <a href="#s5"><span class="n">05</span><span lang="ko">생성된 σ-algebra</span><span lang="en">Generated σ-algebra</span></a>
+  <a href="#s6"><span class="n">06</span><span lang="ko">Kolmogorov 공리</span><span lang="en">Kolmogorov's axioms</span></a>
+  <a href="#s7"><span class="n">07</span><span lang="ko">공리에서 나오는 성질</span><span lang="en">What follows from them</span></a>
+  <a href="#s8"><span class="n">08</span><span lang="ko">이산 vs 연속</span><span lang="en">Discrete vs continuous</span></a>
   <a href="#s9"><span class="n">09</span><span>Borel σ-algebra</span></a>
-  <a href="#s10"><span class="n">10</span><span>PMF와 PDF</span></a>
-  <a href="#s11"><span class="n">11</span><span>반복 실험</span></a>
-  <a href="#s12"><span class="n">12</span><span>확률의 연속성</span></a>
-  <a href="#s13"><span class="n">13</span><span>정리 &amp; 다음 모듈</span></a>
+  <a href="#s10"><span class="n">10</span><span lang="ko">PMF와 PDF</span><span lang="en">PMF and PDF</span></a>
+  <a href="#s11"><span class="n">11</span><span lang="ko">반복 실험</span><span lang="en">Repeated trials</span></a>
+  <a href="#s12"><span class="n">12</span><span lang="ko">확률의 연속성</span><span lang="en">Continuity of probability</span></a>
+  <a href="#s13"><span class="n">13</span><span lang="ko">정리 &amp; 다음 모듈</span><span lang="en">Recap &amp; next module</span></a>
 </nav>
 
 <main>
 
 <!-- ══ 00 ══ -->
 <section id="s0">
-  <div class="sec-head" data-slide="2-4"><span class="sec-num">00</span><h2>이 모듈이 하는 일</h2></div>
-  <p class="sec-sub">한 줄 요약: <strong>확률이 뭔지 "정의"한다. 빈도가 아니라 공리로.</strong></p>
+  <div class="sec-head" data-slide="2-4"><span class="sec-num">00</span><h2 lang="ko">이 모듈이 하는 일</h2><h2 lang="en">What this module does</h2></div>
+  <p class="sec-sub" lang="ko">한 줄 요약: <strong>확률이 뭔지 "정의"한다. 빈도가 아니라 공리로.</strong></p>
+  <p class="sec-sub" lang="en">In one line: <strong>this is where probability gets defined. By axioms, not by frequency.</strong></p>
 
-  <p>Module 1에서 질문을 집합으로 바꾸는 법을 배웠어. 이제 그 집합에 숫자를 붙일 차례야. 그런데 이 모듈에서 하는 일이 좀 의외인데, <strong>"확률을 계산하는 법"이 아니라 "확률이 되기 위한 자격 요건"을 정하는 거야.</strong></p>
+  <p lang="ko">Module 1에서 질문을 집합으로 바꾸는 법을 배웠어. 이제 그 집합에 숫자를 붙일 차례야. 그런데 이 모듈에서 하는 일이 좀 의외인데, <strong>"확률을 계산하는 법"이 아니라 "확률이 되기 위한 자격 요건"을 정하는 거야.</strong></p>
+  <p lang="en">Module 1 taught you to turn questions into sets. Now those sets get numbers. What may surprise you is the job this module actually does: <strong>it does not teach you to compute probabilities, it sets out the requirements something must meet to count as a probability at all.</strong></p>
 
-  <p>비유하자면 이런 거야. 어떤 함수가 "거리(distance)"라고 불릴 자격이 있으려면 세 조건을 만족해야 하잖아 (음수가 아니고, 0이면 같은 점이고, 삼각부등식). 확률도 똑같아. 어떤 함수가 "확률"이라고 불리려면 <strong>Kolmogorov의 세 공리</strong>를 만족해야 해. 그 이상도 이하도 아니야.</p>
+  <p lang="ko">비유하자면 이런 거야. 어떤 함수가 "거리(distance)"라고 불릴 자격이 있으려면 세 조건을 만족해야 하잖아 (음수가 아니고, 0이면 같은 점이고, 삼각부등식). 확률도 똑같아. 어떤 함수가 "확률"이라고 불리려면 <strong>Kolmogorov의 세 공리</strong>를 만족해야 해. 그 이상도 이하도 아니야.</p>
+  <p lang="en">Think of how a function earns the name "distance": it has to be non-negative, vanish only when the two points coincide, and obey the triangle inequality. Probability works the same way. To be called a probability, a function has to satisfy <strong>Kolmogorov's three axioms</strong>. Nothing more, nothing less.</p>
 
-  <div class="callout">
+  <div class="callout" lang="ko">
     <strong>새로 나오는 단어들:</strong> probability space, event space, σ-algebra, generated σ-algebra, Kolmogorov's axioms, countable additivity, Borel σ-algebra, PMF, PDF, Cartesian product, continuity of probability.<br><br>
     이 중 <strong>σ-algebra</strong>가 제일 낯설고 제일 중요해. 그리고 Module 1의 <strong>06번(가산/비가산)</strong>을 안 읽었으면 이게 왜 필요한지 절대 안 와닿아. 거기서 "비가산 표본공간에서는 모든 부분집합에 확률을 줄 수 없다"고 했던 게 이 모듈의 전제야.
   </div>
+  <div class="callout" lang="en">
+    <strong>New vocabulary:</strong> probability space, event space, σ-algebra, generated σ-algebra, Kolmogorov's axioms, countable additivity, Borel σ-algebra, PMF, PDF, Cartesian product, continuity of probability.<br><br>
+    <strong>σ-algebra</strong> is the least familiar of these and the most important. And if you skipped <strong>§06 of Module 1</strong> on countability, why it is needed will never land. The claim there, that you cannot assign a probability to every subset of an uncountable sample space, is the premise this entire module rests on.
+  </div>
 
-  <h3>삼중항의 지도</h3>
+  <h3 lang="ko">삼중항의 지도</h3>
+  <h3 lang="en">A map of the triple</h3>
   <figure>
   <svg viewBox="0 0 700 260" role="img" aria-label="확률 공간 삼중항 구조도">
     <defs>
@@ -356,10 +373,12 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <circle cx="55" cy="160" r="3" fill="var(--blue)"/><text x="66" y="164">ω₃</text>
       <circle cx="115" cy="160" r="3" fill="var(--blue)"/><text x="126" y="164">…</text>
     </g>
-    <text x="105" y="212" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)">일어날 수 있는 결과들</text>
+    <text x="105" y="212" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)" lang="ko">일어날 수 있는 결과들</text>
+    <text x="105" y="212" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)" lang="en">outcomes that can occur</text>
 
     <line x1="198" y1="125" x2="240" y2="125" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#a1)"/>
-    <text x="219" y="112" text-anchor="middle" class="svglab" style="font-size:9px">부분집합</text>
+    <text x="219" y="112" text-anchor="middle" class="svglab" style="font-size:9px" lang="ko">부분집합</text>
+    <text x="219" y="112" text-anchor="middle" class="svglab" style="font-size:9px" lang="en">subsets</text>
 
     <!-- F -->
     <rect x="248" y="60" width="180" height="130" rx="10" fill="rgba(var(--pink-rgb),.07)" stroke="var(--pink)" stroke-width="1.5"/>
@@ -369,10 +388,12 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <text x="338" y="130" text-anchor="middle">∅, Ω, <tspan font-style="italic">A</tspan>, <tspan font-style="italic">A</tspan><tspan font-size="9" dy="-4">c</tspan><tspan dy="4">, …</tspan></text>
       <text x="338" y="152" text-anchor="middle" style="font-size:11.5px;fill:var(--ink3)">ℱ ⊆ 2^Ω</text>
     </g>
-    <text x="338" y="212" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)">물어봐도 되는 질문들</text>
+    <text x="338" y="212" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)" lang="ko">물어봐도 되는 질문들</text>
+    <text x="338" y="212" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)" lang="en">questions you may ask</text>
 
     <line x1="436" y1="125" x2="478" y2="125" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#a1)"/>
-    <text x="457" y="112" text-anchor="middle" class="svglab" style="font-size:9px">측도</text>
+    <text x="457" y="112" text-anchor="middle" class="svglab" style="font-size:9px" lang="ko">측도</text>
+    <text x="457" y="112" text-anchor="middle" class="svglab" style="font-size:9px" lang="en">measure</text>
 
     <!-- P -->
     <rect x="486" y="60" width="190" height="130" rx="10" fill="rgba(var(--green-rgb),.07)" stroke="var(--green)" stroke-width="1.5"/>
@@ -383,21 +404,26 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <line x1="652" y1="139" x2="652" y2="151" stroke="var(--green)" stroke-width="2"/>
     <text x="510" y="167" text-anchor="middle" class="svgnum" style="font-size:12px;fill:var(--green)">0</text>
     <text x="652" y="167" text-anchor="middle" class="svgnum" style="font-size:12px;fill:var(--green)">1</text>
-    <text x="581" y="212" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)">각 질문에 붙는 숫자</text>
+    <text x="581" y="212" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)" lang="ko">각 질문에 붙는 숫자</text>
+    <text x="581" y="212" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)" lang="en">a number for each question</text>
 
-    <text x="350" y="34" text-anchor="middle" class="svgtxt" style="font-size:16px;fill:var(--ink)">확률 공간 &nbsp; (<tspan font-style="italic">Ω</tspan>, ℱ, <tspan font-style="italic">P</tspan>)</text>
-    <text x="350" y="248" text-anchor="middle" class="svglab" style="font-size:11px;fill:var(--ink3)">이 셋이 다 갖춰져야 "확률 문제"가 성립한다</text>
+    <text x="350" y="34" text-anchor="middle" class="svgtxt" style="font-size:16px;fill:var(--ink)" lang="ko">확률 공간 &nbsp; (<tspan font-style="italic">Ω</tspan>, ℱ, <tspan font-style="italic">P</tspan>)</text>
+    <text x="350" y="34" text-anchor="middle" class="svgtxt" style="font-size:16px;fill:var(--ink)" lang="en">probability space &nbsp; (<tspan font-style="italic">Ω</tspan>, ℱ, <tspan font-style="italic">P</tspan>)</text>
+    <text x="350" y="248" text-anchor="middle" class="svglab" style="font-size:11px;fill:var(--ink3)" lang="ko">이 셋이 다 갖춰져야 "확률 문제"가 성립한다</text>
+    <text x="350" y="248" text-anchor="middle" class="svglab" style="font-size:11px;fill:var(--ink3)" lang="en">all three must be present before a "probability problem" exists</text>
   </svg>
-  <figcaption>세 칸 중 가운데 <span class="m">ℱ</span>가 이번 모듈의 주인공이야. <span class="m"><i>Ω</i></span>는 Module 1에서 이미 했고, <span class="m"><i>P</i></span>는 공리 세 줄이면 끝나거든.</figcaption>
+  <figcaption lang="ko">세 칸 중 가운데 <span class="m">ℱ</span>가 이번 모듈의 주인공이야. <span class="m"><i>Ω</i></span>는 Module 1에서 이미 했고, <span class="m"><i>P</i></span>는 공리 세 줄이면 끝나거든.</figcaption>
+  <figcaption lang="en">Of the three boxes, the middle one, <span class="m">ℱ</span>, is the star of this module. <span class="m"><i>Ω</i></span> was settled in Module 1, and <span class="m"><i>P</i></span> takes only three lines of axioms.</figcaption>
   </figure>
 </section>
 
 <!-- ══ 01 ══ -->
 <section id="s1">
-  <div class="sec-head" data-slide="5-6"><span class="sec-num">01</span><h2>확률 모델의 세 가지 재료</h2></div>
-  <p class="sec-sub">슬라이드 5쪽. 이 세 줄이 이번 모듈 전체의 목차야.</p>
+  <div class="sec-head" data-slide="5-6"><span class="sec-num">01</span><h2 lang="ko">확률 모델의 세 가지 재료</h2><h2 lang="en">The three ingredients of a probability model</h2></div>
+  <p class="sec-sub" lang="ko">슬라이드 5쪽. 이 세 줄이 이번 모듈 전체의 목차야.</p>
+  <p class="sec-sub" lang="en">Slide 5. These three lines are the table of contents for the whole module.</p>
 
-  <div class="def">
+  <div class="def" lang="ko">
     <span class="tag">확률 모델을 만들려면 정해야 할 것</span>
     <ol style="margin-bottom:0">
       <li><strong>어떤 결과가 가능한가</strong> &nbsp;→&nbsp; <span class="m"><i>Ω</i></span></li>
@@ -405,26 +431,44 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <li><strong>각 사건에 어떤 확률을 부여할 것인가</strong> &nbsp;→&nbsp; <span class="m"><i>P</i></span></li>
     </ol>
   </div>
+  <div class="def" lang="en">
+    <span class="tag">What you must fix to build a probability model</span>
+    <ol style="margin-bottom:0">
+      <li><strong>which outcomes are possible</strong> &nbsp;→&nbsp; <span class="m"><i>Ω</i></span></li>
+      <li><strong>which events get assigned a probability</strong> &nbsp;→&nbsp; <span class="m">ℱ</span></li>
+      <li><strong>what probability each event gets</strong> &nbsp;→&nbsp; <span class="m"><i>P</i></span></li>
+    </ol>
+  </div>
 
-  <p>1번과 3번은 자연스러워. 그런데 <strong>2번이 이상하지 않아?</strong> "어떤 사건에 확률을 부여할 것인가"라니. 모든 사건에 부여하면 되는 거 아닌가?</p>
+  <p lang="ko">1번과 3번은 자연스러워. 그런데 <strong>2번이 이상하지 않아?</strong> "어떤 사건에 확률을 부여할 것인가"라니. 모든 사건에 부여하면 되는 거 아닌가?</p>
+  <p lang="en">Items 1 and 3 feel natural. But <strong>doesn't item 2 look strange?</strong> "Which events get a probability" implies some do not. Why not just give one to every event?</p>
 
-  <p>Module 1에서 <span class="m">2<sup><i>Ω</i></sup></span>가 "가능한 모든 질문의 모음"이라고 했잖아. 그러면 그냥 <span class="m">ℱ = 2<sup><i>Ω</i></sup></span>로 두고 끝내면 될 것 같은데, 슬라이드는 굳이 <span class="m">ℱ ⊆ 2<sup><i>Ω</i></sup></span>라고 써. <strong>부분집합 기호가 붙어있어.</strong> 즉 일부만 골라도 된다는 뜻이야.</p>
+  <p lang="ko">Module 1에서 <span class="m">2<sup><i>Ω</i></sup></span>가 "가능한 모든 질문의 모음"이라고 했잖아. 그러면 그냥 <span class="m">ℱ = 2<sup><i>Ω</i></sup></span>로 두고 끝내면 될 것 같은데, 슬라이드는 굳이 <span class="m">ℱ ⊆ 2<sup><i>Ω</i></sup></span>라고 써. <strong>부분집합 기호가 붙어있어.</strong> 즉 일부만 골라도 된다는 뜻이야.</p>
+  <p lang="en">Module 1 called <span class="m">2<sup><i>Ω</i></sup></span> the collection of every question you could ask. So setting <span class="m">ℱ = 2<sup><i>Ω</i></sup></span> and moving on seems obvious. Yet the slide deliberately writes <span class="m">ℱ ⊆ 2<sup><i>Ω</i></sup></span>. <strong>That subset symbol is doing work.</strong> It says you are allowed to keep only some of them.</p>
 
-  <div class="callout">
+  <div class="callout" lang="ko">
     <strong>이 모듈을 관통하는 질문:</strong> 왜 모든 사건에 확률을 주지 않는가? 그리고 일부만 고른다면, 아무렇게나 골라도 되는가?<br>
     답: 아니. 02번에서 "골라도 되는 방식"에 제약이 생기고, 그 제약의 이름이 σ-algebra야.
+  </div>
+  <div class="callout" lang="en">
+    <strong>The question running through this module:</strong> why not give every event a probability, and if you keep only some, can you keep whichever you like?<br>
+    The answer is no. Section 02 shows what constrains that choice, and the constraint has a name: σ-algebra.
   </div>
 </section>
 
 <!-- ══ 02 ══ -->
 <section id="s2">
-  <div class="sec-head" data-slide="7-8"><span class="sec-num">02</span><h2>ℱ는 왜 필요한가</h2></div>
-  <p class="sec-sub">두 가지 답이 있다. 하나는 실용적, 하나는 수학적.</p>
+  <div class="sec-head" data-slide="7-8"><span class="sec-num">02</span><h2 lang="ko">ℱ는 왜 필요한가</h2><h2 lang="en">Why ℱ has to exist</h2></div>
+  <p class="sec-sub" lang="ko">두 가지 답이 있다. 하나는 실용적, 하나는 수학적.</p>
+  <p class="sec-sub" lang="en">There are two answers. One practical, one mathematical.</p>
 
-  <h3>답 1: 질문에는 짝이 있다</h3>
-  <p>슬라이드 7~8쪽의 논리는 이래. <strong>"결과가 <span class="m"><i>A</i></span>에 있는가?"를 물어볼 수 있다면, "<span class="m"><i>A</i></span>에 없는가?"도 당연히 물어볼 수 있어야 해.</strong> 앞의 질문에 답할 수 있는데 뒤의 질문에 답을 못 한다는 건 말이 안 되잖아.</p>
+  <h3 lang="ko">답 1: 질문에는 짝이 있다</h3>
+  <h3 lang="en">Answer 1: questions come in pairs</h3>
+  <p lang="ko">슬라이드 7~8쪽의 논리는 이래. <strong>"결과가 <span class="m"><i>A</i></span>에 있는가?"를 물어볼 수 있다면, "<span class="m"><i>A</i></span>에 없는가?"도 당연히 물어볼 수 있어야 해.</strong> 앞의 질문에 답할 수 있는데 뒤의 질문에 답을 못 한다는 건 말이 안 되잖아.</p>
+  <p lang="en">Slides 7 and 8 argue it like this. <strong>If you can ask "is the outcome in <span class="m"><i>A</i></span>?", you must also be able to ask "is it not in <span class="m"><i>A</i></span>?"</strong> Being able to answer the first while having no answer to the second makes no sense.</p>
 
-  <p>마찬가지로 <span class="m"><i>A</i></span>와 <span class="m"><i>B</i></span>를 각각 물어볼 수 있다면 "<span class="m"><i>A</i></span> 또는 <span class="m"><i>B</i></span>인가?"도 물어볼 수 있어야 해.</p>
+  <p lang="ko">마찬가지로 <span class="m"><i>A</i></span>와 <span class="m"><i>B</i></span>를 각각 물어볼 수 있다면 "<span class="m"><i>A</i></span> 또는 <span class="m"><i>B</i></span>인가?"도 물어볼 수 있어야 해.</p>
+  <p lang="en">By the same logic, if <span class="m"><i>A</i></span> and <span class="m"><i>B</i></span> are each askable, then so is "<span class="m"><i>A</i></span> or <span class="m"><i>B</i></span>?"</p>
 
   <figure>
   <svg viewBox="0 0 700 272" role="img" aria-label="이벤트 스페이스가 연산에 대해 닫혀 있어야 한다는 그림">
@@ -433,7 +477,8 @@ html[data-lang="en"] [lang="ko"]{display:none}
     </defs>
     <ellipse cx="350" cy="130" rx="290" ry="105" fill="rgba(var(--pink-rgb),.05)" stroke="var(--pink)" stroke-width="1.6"/>
     <text x="350" y="42" text-anchor="middle" class="svgtxt it" style="font-size:19px;fill:var(--pink)">ℱ</text>
-    <text x="350" y="60" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--pink);letter-spacing:.1em">물어봐도 되는 질문들</text>
+    <text x="350" y="60" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--pink);letter-spacing:.1em" lang="ko">물어봐도 되는 질문들</text>
+    <text x="350" y="60" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--pink);letter-spacing:.1em" lang="en">questions you may ask</text>
 
     <g class="svgtxt" style="font-size:15px">
       <rect x="120" y="98" width="66" height="34" rx="7" fill="var(--card)" stroke="var(--blue)" stroke-width="1.4"/>
@@ -458,19 +503,26 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <text x="338" y="127" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--pink)">OR</text>
     <text x="338" y="196" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--pink)">AND</text>
 
-    <text x="350" y="262" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)">연산 결과가 반드시 ℱ 안으로 다시 들어와야 한다 = <tspan font-weight="700" fill="var(--ink)">닫혀 있다 (closed)</tspan></text>
+    <text x="350" y="262" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="ko">연산 결과가 반드시 ℱ 안으로 다시 들어와야 한다 = <tspan font-weight="700" fill="var(--ink)">닫혀 있다 (closed)</tspan></text>
+    <text x="350" y="262" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="en">the result must land back inside ℱ = <tspan font-weight="700" fill="var(--ink)">closed under the operation</tspan></text>
   </svg>
-  <figcaption>"닫혀 있다"는 표현이 이 그림이야. 안에 있는 것들끼리 연산해서 밖으로 나가버리면 안 돼. 프로그래밍으로 치면 <code>int + int = int</code>인 것처럼, 타입이 보존되어야 한다는 뜻이지.</figcaption>
+  <figcaption lang="ko">"닫혀 있다"는 표현이 이 그림이야. 안에 있는 것들끼리 연산해서 밖으로 나가버리면 안 돼. 프로그래밍으로 치면 <code>int + int = int</code>인 것처럼, 타입이 보존되어야 한다는 뜻이지.</figcaption>
+  <figcaption lang="en">This picture is what "closed" means. Combine things that are inside and you must not end up outside. In programming terms it is <code>int + int = int</code>: the type has to be preserved.</figcaption>
   </figure>
 
-  <h3>답 2: 비가산 공간에서는 2<sup>Ω</sup>가 너무 크다</h3>
-  <p>이게 진짜 이유야. Module 1 06번에서 깔아둔 복선이 여기서 회수돼.</p>
+  <h3 lang="ko">답 2: 비가산 공간에서는 2<sup>Ω</sup>가 너무 크다</h3>
+  <h3 lang="en">Answer 2: on an uncountable space, 2<sup>Ω</sup> is too big</h3>
+  <p lang="ko">이게 진짜 이유야. Module 1 06번에서 깔아둔 복선이 여기서 회수돼.</p>
+  <p lang="en">This is the real reason. The setup planted back in Module 1 §06 pays off here.</p>
 
-  <p><span class="m"><i>Ω</i></span>가 유한하거나 가산이면 사실 <span class="m">ℱ = 2<sup><i>Ω</i></sup></span>로 두어도 아무 문제가 없어. 주사위면 <span class="m">2<sup>6</sup> = 64</span>개 사건 전부에 확률을 줄 수 있어.</p>
+  <p lang="ko"><span class="m"><i>Ω</i></span>가 유한하거나 가산이면 사실 <span class="m">ℱ = 2<sup><i>Ω</i></sup></span>로 두어도 아무 문제가 없어. 주사위면 <span class="m">2<sup>6</sup> = 64</span>개 사건 전부에 확률을 줄 수 있어.</p>
+  <p lang="en">When <span class="m"><i>Ω</i></span> is finite or countable, taking <span class="m">ℱ = 2<sup><i>Ω</i></sup></span> causes no trouble at all. For a die you can hand a probability to all <span class="m">2<sup>6</sup> = 64</span> events.</p>
 
-  <p>그런데 <span class="m"><i>Ω</i> = ℝ</span>이면 얘기가 달라져. 슬라이드 27쪽 표현 그대로: <em>"the power set <span class="m">2<sup>ℝ</sup></span> is too large for probability theory."</em> <strong><span class="m">ℝ</span>의 모든 부분집합에 길이(측도)를 일관되게 부여하는 게 수학적으로 불가능해.</strong> 시도하면 모순이 나와 (Vitali set. 09번에서 다시 얘기할게).</p>
+  <p lang="ko">그런데 <span class="m"><i>Ω</i> = ℝ</span>이면 얘기가 달라져. 슬라이드 27쪽 표현 그대로: <em>"the power set <span class="m">2<sup>ℝ</sup></span> is too large for probability theory."</em> <strong><span class="m">ℝ</span>의 모든 부분집합에 길이(측도)를 일관되게 부여하는 게 수학적으로 불가능해.</strong> 시도하면 모순이 나와 (Vitali set. 09번에서 다시 얘기할게).</p>
+  <p lang="en">With <span class="m"><i>Ω</i> = ℝ</span> the situation changes. Slide 27 puts it directly: <em>"the power set <span class="m">2<sup>ℝ</sup></span> is too large for probability theory."</em> <strong>Assigning a consistent length, a measure, to every subset of <span class="m">ℝ</span> is mathematically impossible.</strong> Attempt it and you produce a contradiction, the Vitali set. Section 09 returns to this.</p>
 
-  <p>그래서 타협을 해. <strong>확률을 줄 수 있는 사건들만 골라 모으되, 그 모음이 연산에 대해 닫혀 있게 만든다.</strong> 그 모음의 이름이 σ-algebra야.</p>
+  <p lang="ko">그래서 타협을 해. <strong>확률을 줄 수 있는 사건들만 골라 모으되, 그 모음이 연산에 대해 닫혀 있게 만든다.</strong> 그 모음의 이름이 σ-algebra야.</p>
+  <p lang="en">So you compromise. <strong>Keep only the events you can actually measure, but require the collection you keep to be closed under the operations.</strong> That collection is called a σ-algebra.</p>
 </section>
 
 <!-- ══ 03 ══ -->
