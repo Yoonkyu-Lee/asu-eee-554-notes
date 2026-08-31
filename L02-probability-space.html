@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-lang="ko">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -267,6 +267,21 @@ footer a{color:var(--blue)}
 .theme-btn:hover{border-color:var(--sel);color:var(--sel)}
 @media(max-width:900px){.theme-btn{left:10px;bottom:10px;font-size:10.5px;padding:6px 9px}}
 @media(prefers-reduced-motion:reduce){.theme-btn{transition:none}}
+
+/* ── 언어 전환 ──────────────────────────── */
+/* 한 파일에 한국어와 영어를 나란히 두고 보이는 쪽만 남긴다.
+   도해·앵커·CSS·리더를 공유하므로 두 언어의 구조가 어긋날 수 없다.
+   lang 속성을 쓰는 건 스크린리더와 하이픈 처리도 같이 얻기 위해서다. */
+html[data-lang="ko"] [lang="en"]{display:none}
+html[data-lang="en"] [lang="ko"]{display:none}
+.lang-btn{position:fixed;left:16px;bottom:56px;z-index:70;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 6px var(--shadow);transition:.13s}
+.lang-btn:hover{border-color:var(--blue);color:var(--blue)}
+@media(max-width:900px){.lang-btn{left:10px;bottom:46px;font-size:10.5px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.lang-btn{transition:none}}
 </style>
 </head>
 <body>
@@ -1533,6 +1548,7 @@ footer a{color:var(--blue)}
 })();
 </script>
 <script src="reader.js" type="module"></script>
+<button class="lang-btn" type="button">English</button>
 <button class="theme-btn" type="button">☾ 다크</button>
 <script>
 // 테마 토글. 기본은 OS 설정을 따르고, 누르면 그 반대로 고정한다.
@@ -1555,6 +1571,25 @@ footer a{color:var(--blue)}
     paint();
   });
   if (osDark && osDark.addEventListener) osDark.addEventListener('change', paint);
+  paint();
+})();
+</script>
+<script>
+// 언어 토글. 기본은 한국어. 저장하지 않으므로 페이지를 옮기면 한국어로 돌아간다.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.lang-btn');
+  if (!btn) return;
+  function paint() {
+    var en = root.dataset.lang === 'en';
+    btn.textContent = en ? '한국어' : 'English';
+    btn.setAttribute('aria-label', en ? '한국어로 보기' : 'View in English');
+    root.lang = en ? 'en' : 'ko';
+  }
+  btn.addEventListener('click', function () {
+    root.dataset.lang = root.dataset.lang === 'en' ? 'ko' : 'en';
+    paint();
+  });
   paint();
 })();
 </script>

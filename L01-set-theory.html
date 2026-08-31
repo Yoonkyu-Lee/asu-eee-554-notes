@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-lang="ko">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -278,6 +278,21 @@ footer a{color:var(--blue)}
 .theme-btn:hover{border-color:var(--sel);color:var(--sel)}
 @media(max-width:900px){.theme-btn{left:10px;bottom:10px;font-size:10.5px;padding:6px 9px}}
 @media(prefers-reduced-motion:reduce){.theme-btn{transition:none}}
+
+/* ── 언어 전환 ──────────────────────────── */
+/* 한 파일에 한국어와 영어를 나란히 두고 보이는 쪽만 남긴다.
+   도해·앵커·CSS·리더를 공유하므로 두 언어의 구조가 어긋날 수 없다.
+   lang 속성을 쓰는 건 스크린리더와 하이픈 처리도 같이 얻기 위해서다. */
+html[data-lang="ko"] [lang="en"]{display:none}
+html[data-lang="en"] [lang="ko"]{display:none}
+.lang-btn{position:fixed;left:16px;bottom:56px;z-index:70;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 6px var(--shadow);transition:.13s}
+.lang-btn:hover{border-color:var(--blue);color:var(--blue)}
+@media(max-width:900px){.lang-btn{left:10px;bottom:46px;font-size:10.5px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.lang-btn{transition:none}}
 </style>
 </head>
 <body>
@@ -286,34 +301,43 @@ footer a{color:var(--blue)}
 <header class="top">
   <div class="eyebrow">EEE 554 · Probability and Random Processes · Michelusi</div>
   <h1 class="title">Module 1<br>Introduction &amp; Set Theory</h1>
-  <p class="subtitle">확률을 배우기 전에, 확률이 쓸 언어부터 깔아두는 단원.</p>
-  <div class="meta">
+  <p class="subtitle" lang="ko">확률을 배우기 전에, 확률이 쓸 언어부터 깔아두는 단원.</p>
+  <p class="subtitle" lang="en">Before any probability, the module that lays down the language probability will speak.</p>
+  <div class="meta" lang="ko">
     <span class="chip">슬라이드 40쪽</span>
     <span class="chip hot">HW1 마감 8/30 (일) 자정</span>
     <span class="chip">HW1 Problem 1 · 2 · 3 이 범위</span>
   </div>
-  <a class="backlink" href="index.html">← 모듈 목록으로</a>
+  <div class="meta" lang="en">
+    <span class="chip">40 slides</span>
+    <span class="chip hot">HW1 due Aug 30 (Sun) midnight</span>
+    <span class="chip">Covers HW1 Problems 1 · 2 · 3</span>
+  </div>
+  <a class="backlink" href="index.html" lang="ko">← 모듈 목록으로</a>
+  <a class="backlink" href="index.html" lang="en">← All modules</a>
 </header>
 
 <nav class="toc">
   <div class="mini-head">
-    <a class="back" href="index.html">← 모듈 목록</a>
+    <a class="back" href="index.html" lang="ko">← 모듈 목록</a>
+    <a class="back" href="index.html" lang="en">← All modules</a>
     <div class="mod">Module 1</div>
     <div class="name">Introduction &amp; Set Theory</div>
     <div class="rule"></div>
   </div>
-  <div class="lab">목차</div>
-  <a href="#s0"><span class="n">00</span><span>이 모듈이 하는 일</span></a>
+  <div class="lab" lang="ko">목차</div>
+  <div class="lab" lang="en">Contents</div>
+  <a href="#s0"><span class="n">00</span><span lang="ko">이 모듈이 하는 일</span><span lang="en">What this module does</span></a>
   <a href="#s1"><span class="n">01</span><span>Probability vs Statistics</span></a>
-  <a href="#s2"><span class="n">02</span><span>왜 집합인가</span></a>
-  <a href="#s3"><span class="n">03</span><span>집합의 기초</span></a>
-  <a href="#s4"><span class="n">04</span><span>집합 연산</span></a>
-  <a href="#s5"><span class="n">05</span><span>집합 대수</span></a>
-  <a href="#s6"><span class="n">06</span><span>가산 · 비가산</span></a>
+  <a href="#s2"><span class="n">02</span><span lang="ko">왜 집합인가</span><span lang="en">Why sets</span></a>
+  <a href="#s3"><span class="n">03</span><span lang="ko">집합의 기초</span><span lang="en">Set basics</span></a>
+  <a href="#s4"><span class="n">04</span><span lang="ko">집합 연산</span><span lang="en">Set operations</span></a>
+  <a href="#s5"><span class="n">05</span><span lang="ko">집합 대수</span><span lang="en">Algebra of sets</span></a>
+  <a href="#s6"><span class="n">06</span><span lang="ko">가산 · 비가산</span><span lang="en">Countable · uncountable</span></a>
   <a href="#s7"><span class="n">07</span><span>Power Set</span></a>
   <a href="#s8"><span class="n">08</span><span>Index Set</span></a>
   <a href="#s9"><span class="n">09</span><span>Partition</span></a>
-  <a href="#s10"><span class="n">10</span><span>정리 &amp; 다음 모듈</span></a>
+  <a href="#s10"><span class="n">10</span><span lang="ko">정리 &amp; 다음 모듈</span><span lang="en">Recap &amp; next module</span></a>
 </nav>
 
 <main>
@@ -1583,6 +1607,7 @@ footer a{color:var(--blue)}
 })();
 </script>
 <script src="reader.js" type="module"></script>
+<button class="lang-btn" type="button">English</button>
 <button class="theme-btn" type="button">☾ 다크</button>
 <script>
 // 테마 토글. 기본은 OS 설정을 따르고, 누르면 그 반대로 고정한다.
@@ -1605,6 +1630,25 @@ footer a{color:var(--blue)}
     paint();
   });
   if (osDark && osDark.addEventListener) osDark.addEventListener('change', paint);
+  paint();
+})();
+</script>
+<script>
+// 언어 토글. 기본은 한국어. 저장하지 않으므로 페이지를 옮기면 한국어로 돌아간다.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.lang-btn');
+  if (!btn) return;
+  function paint() {
+    var en = root.dataset.lang === 'en';
+    btn.textContent = en ? '한국어' : 'English';
+    btn.setAttribute('aria-label', en ? '한국어로 보기' : 'View in English');
+    root.lang = en ? 'en' : 'ko';
+  }
+  btn.addEventListener('click', function () {
+    root.dataset.lang = root.dataset.lang === 'en' ? 'ko' : 'en';
+    paint();
+  });
   paint();
 })();
 </script>
