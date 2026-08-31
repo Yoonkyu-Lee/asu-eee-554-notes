@@ -2,7 +2,10 @@
    색은 노트가 이미 정의한 디자인 토큰을 그대로 쓴다. 여기서 새 색을 만들지 않는다. */
 
 :root {
-  --rdr-w: 520px;
+  /* 본문이 500px 아래로 내려가지 않는 선에서 리더를 최대한 넓게 잡는다.
+     본문 폭 = min(1180, 100vw − rdr-w) − 314 이므로 100vw − rdr-w ≥ 814 이어야 한다.
+     계단식(media query)으로 하면 경계에서 본문이 오히려 좁아지는 구간이 생긴다. */
+  --rdr-w: clamp(400px, calc(100vw - 814px), 520px);
   --rdr-head: 46px;
 }
 
@@ -229,8 +232,9 @@ body:not(.rdr-on) #rdr-needle { display: none }
 #rdr-open:hover { color: var(--sel); border-color: var(--sel); }
 
 /* ── 데스크톱 전용 ───────────────────────── */
-/* 1100px 아래에서는 리더를 아예 감춘다. PDF도 받지 않는다(reader.js에서 처리). */
-@media (max-width: 1099px) {
+/* 1220px 아래에서는 리더를 아예 감춘다. PDF도 받지 않는다(reader.js에서 처리).
+   그 아래로 가면 리더를 400px 까지 줄여도 본문이 500px 을 못 지킨다. */
+@media (max-width: 1219px) {
   #rdr, #rdr-open, #rdr-needle { display: none; }
   body.rdr-on { padding-right: 0; }
 }

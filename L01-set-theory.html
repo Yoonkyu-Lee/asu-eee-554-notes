@@ -265,6 +265,9 @@ td .m{font-size:1.02em}
 
 footer{grid-column:1/-1;border-top:1px solid var(--rule);padding-top:28px;margin-top:20px;font-size:13.5px;color:var(--ink3);line-height:1.7}
 footer a{color:var(--blue)}
+/* 본문 링크. 규칙이 없으면 브라우저 기본 남색이 나오고 다크모드에서 묻는다. */
+main a{color:var(--blue);text-decoration:none;border-bottom:1px solid rgba(var(--blue-rgb),.4)}
+main a:hover{border-bottom-color:var(--blue);background:rgba(var(--blue-rgb),.09)}
 :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 
@@ -295,6 +298,27 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
 .lang-btn:hover{border-color:var(--blue);color:var(--blue)}
 @media(max-width:900px){.lang-btn{left:10px;bottom:46px;font-size:10.5px;padding:6px 9px}}
 @media(prefers-reduced-motion:reduce){.lang-btn{transition:none}}
+
+/* ── 기호 뜯어보기 ────────────────────────────────────────────────
+   수학 표기 관습을 모르면 정의가 통째로 안 읽힌다. 그 관습만 따로 푼다.
+   기본은 펼쳐둔다(open). 모르는 사람에게 보이지 않으면 의미가 없기 때문이다.
+   대신 접을 수 있다. 알고 나면 매번 지나가야 하는 장애물이 되면 안 된다. */
+.nota{margin:18px 0;border:1px dashed var(--rule);border-radius:8px;background:var(--chip)}
+.nota>summary{cursor:pointer;list-style:none;padding:9px 14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);display:flex;align-items:center;gap:8px;user-select:none}
+.nota>summary::-webkit-details-marker{display:none}
+.nota>summary::before{content:"\25be";font-size:9px;display:inline-block;transition:transform .15s}
+.nota:not([open])>summary::before{transform:rotate(-90deg)}
+.nota>summary:hover{color:var(--ink2)}
+.nota .body{padding:2px 16px 14px;font-size:14px;color:var(--ink2);line-height:1.7}
+.nota .body>*:first-child{margin-top:0}
+.nota .body>*:last-child{margin-bottom:0}
+.nota .parts{width:100%;border-collapse:collapse;margin:12px 0}
+.nota .parts td{padding:6px 12px 6px 0;vertical-align:top;border-bottom:1px solid var(--rule);font-size:13.5px}
+.nota .parts tr:last-child td{border-bottom:0}
+.nota .parts td:first-child{white-space:nowrap;width:1%;color:var(--ink);padding-right:18px}
+.nota figure{margin:14px 0;background:var(--card);border:1px solid var(--rule)}
+.nota .eq{margin:12px 0}
+@media(max-width:900px){.nota .parts td:first-child{white-space:normal}}
 </style>
 </head>
 <body>
@@ -1469,6 +1493,30 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
     <div class="eq" style="margin:14px 0 0">2<sup><i>Ω</i></sup> = {<i>A</i> : <i>A</i> ⊆ <i>Ω</i>}</div>
   </div>
 
+  <details class="nota" open>
+    <summary><span lang="ko">기호 뜯어보기 · 2<sup>Ω</sup> 와 콜론</span><span lang="en">Unpacking the notation · 2<sup>Ω</sup> and the colon</span></summary>
+    <div class="body">
+      <div lang="ko">
+        <p>이 한 줄에 처음 보는 관습이 두 개 들어 있어.</p>
+        <table class="parts">
+          <tr><td><span class="m">2<sup><i>Ω</i></sup></span></td><td>거듭제곱이 아니다. "<span class="m"><i>Ω</i></span>의 멱집합"을 가리키는 <strong>이름</strong>이야. 하필 2인 건 부분집합 개수가 <span class="m">2<sup>|<i>Ω</i>|</sup></span>이라서고, 원소 하나마다 넣는다/뺀다 두 갈래가 생기기 때문이야.</td></tr>
+          <tr><td><span class="m">{ <i>A</i> : ⋯ }</span></td><td>조건제시법. 콜론은 <strong>"such that", 즉 '단,'</strong>으로 읽는다. <span class="m">|</span>를 쓰는 책도 많은데 같은 뜻이야.</td></tr>
+        </table>
+        <p>그래서 <span class="m">2<sup><i>Ω</i></sup> = {<i>A</i> : <i>A</i> ⊆ <i>Ω</i>}</span>는 이렇게 읽어. <strong>"<span class="m"><i>Ω</i></span>의 부분집합인 <span class="m"><i>A</i></span>를 전부 모은 것."</strong> 콜론 왼쪽이 <em>모을 대상</em>, 오른쪽이 <em>모으는 조건</em>이야.</p>
+        <p>왼쪽에 식이 올 수도 있어. <span class="m">{2<i>n</i> : <i>n</i> ∈ ℕ}</span>은 짝수 전체고, 이때는 "<span class="m"><i>n</i></span>이 자연수일 때 <span class="m">2<i>n</i></span>을 전부 모은 것"이 돼.</p>
+      </div>
+      <div lang="en">
+        <p>That one line carries two conventions you may not have met.</p>
+        <table class="parts">
+          <tr><td><span class="m">2<sup><i>Ω</i></sup></span></td><td>Not an exponent being computed. It is a <strong>name</strong> for the power set of <span class="m"><i>Ω</i></span>. The 2 is there because the number of subsets is <span class="m">2<sup>|<i>Ω</i>|</sup></span>: every element gives you a two-way choice, in or out.</td></tr>
+          <tr><td><span class="m">{ <i>A</i> : ⋯ }</span></td><td>Set-builder notation. Read the colon as <strong>"such that"</strong>. Plenty of books write <span class="m">|</span> instead, meaning the same thing.</td></tr>
+        </table>
+        <p>So <span class="m">2<sup><i>Ω</i></sup> = {<i>A</i> : <i>A</i> ⊆ <i>Ω</i>}</span> reads as <strong>"the collection of all <span class="m"><i>A</i></span> that are subsets of <span class="m"><i>Ω</i></span>."</strong> Left of the colon is <em>what you collect</em>, right of it is <em>the condition for collecting it</em>.</p>
+        <p>The left side can be an expression too. <span class="m">{2<i>n</i> : <i>n</i> ∈ ℕ}</span> is the set of even numbers: collect <span class="m">2<i>n</i></span> for every natural <span class="m"><i>n</i></span>.</p>
+      </div>
+    </div>
+  </details>
+
   <p lang="ko">02번에서 "질문 하나 = 부분집합 하나"라고 했지. 그러면 <span class="m">2<sup><i>Ω</i></sup></span>는 <strong>이 실험에 대해 던질 수 있는 모든 질문의 모음</strong>이야. 슬라이드 표현으로는 <em>"encodes all possible questions about the outcome"</em>.</p>
   <p lang="en">Section 02 established that one question equals one subset. Put those together and <span class="m">2<sup><i>Ω</i></sup></span> is <strong>the collection of every question you could ask about this experiment</strong>. The slide phrases it as <em>"encodes all possible questions about the outcome"</em>.</p>
 
@@ -1639,6 +1687,34 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
     ⋂<sub><i>i</i>∈<i>I</i></sub> <i>A<sub>i</sub></i> = {<i>ω</i> : <i>ω</i> ∈ <i>A<sub>i</sub></i> for <strong>every</strong> <i>i</i>}
     <span class="note">has to clear all of them · AND, extended to infinity</span>
   </div>
+
+  <details class="nota" open>
+    <summary><span lang="ko">기호 뜯어보기 · <i>i</i> ∈ <i>I</i> 와 콜론</span><span lang="en">Unpacking the notation · <i>i</i> ∈ <i>I</i> and the colon</span></summary>
+    <div class="body">
+      <div lang="ko">
+        <p>위 두 식의 뼈대는 같아. <strong>"어떤 조건을 만족하는 <span class="m"><i>ω</i></span>를 전부 모은 것"</strong>이고, 합집합이냐 교집합이냐에 따라 조건이 "적어도 하나"냐 "모든"이냐로 갈릴 뿐이야.</p>
+        <table class="parts">
+          <tr><td><span class="m">⋃</span> / <span class="m">⋂</span></td><td><span class="m">∪</span>와 <span class="m">∩</span>를 <strong>여러 번 반복</strong>하는 큰 기호. <span class="m">+</span>에 대한 <span class="m">∑</span>와 정확히 같은 자리야. 두 개짜리는 작은 기호, 여러 개짜리는 큰 기호.</td></tr>
+          <tr><td><span class="m"><i>i</i> ∈ <i>I</i></span></td><td>아래에 붙는 <strong>색인(index)</strong>. "<span class="m"><i>i</i></span>가 <span class="m"><i>I</i></span>의 값들을 하나씩 훑는다"는 뜻이야. <span class="m"><i>I</i></span>를 <strong>index set</strong>이라고 불러.</td></tr>
+          <tr><td><span class="m"><i>A<sub>i</sub></i></span></td><td>훑을 때마다 하나씩 나오는 집합. <span class="m"><i>i</i></span>가 바뀌면 다른 집합이야.</td></tr>
+          <tr><td><span class="m">{<i>ω</i> : ⋯}</span></td><td>콜론은 "단,"으로 읽는다. 왼쪽이 모을 대상, 오른쪽이 조건.</td></tr>
+        </table>
+        <p><span class="m"><i>I</i></span>가 <span class="m">{1, 2, 3, …}</span>이면 <span class="m">⋃<sub><i>i</i>∈<i>I</i></sub></span> 대신 <span class="m">⋃<sub><i>i</i>=1</sub><sup>∞</sup></span>라고 쓰기도 해. <strong>같은 것을 다르게 적은 것뿐</strong>이고, 아래위에 시작과 끝을 명시한 형태야. Module 2에서 이 형태가 계속 나와.</p>
+        <p><span class="m"><i>I</i></span>가 굳이 숫자일 필요는 없어. 그래서 <span class="m"><i>i</i> ∈ <i>I</i></span> 쪽이 더 일반적인 표기야. 다만 이 과목에서는 거의 항상 <span class="m">1, 2, 3, …</span>이라고 봐도 돼.</p>
+      </div>
+      <div lang="en">
+        <p>Both expressions above share one skeleton: <strong>"collect every <span class="m"><i>ω</i></span> meeting some condition."</strong> Union and intersection differ only in whether that condition says "at least one" or "every".</p>
+        <table class="parts">
+          <tr><td><span class="m">⋃</span> / <span class="m">⋂</span></td><td>The big versions of <span class="m">∪</span> and <span class="m">∩</span>, meaning <strong>apply it repeatedly</strong>. Exactly the relationship <span class="m">∑</span> has to <span class="m">+</span>: small symbol for two, big symbol for many.</td></tr>
+          <tr><td><span class="m"><i>i</i> ∈ <i>I</i></span></td><td>The <strong>index</strong> underneath. It says "<span class="m"><i>i</i></span> runs through the values in <span class="m"><i>I</i></span>", and <span class="m"><i>I</i></span> is called the <strong>index set</strong>.</td></tr>
+          <tr><td><span class="m"><i>A<sub>i</sub></i></span></td><td>The set you get on each pass. Change <span class="m"><i>i</i></span> and you get a different set.</td></tr>
+          <tr><td><span class="m">{<i>ω</i> : ⋯}</span></td><td>Read the colon as "such that". Left of it is what you collect, right of it is the condition.</td></tr>
+        </table>
+        <p>When <span class="m"><i>I</i></span> is <span class="m">{1, 2, 3, …}</span> you will also see <span class="m">⋃<sub><i>i</i>=1</sub><sup>∞</sup></span> in place of <span class="m">⋃<sub><i>i</i>∈<i>I</i></sub></span>. <strong>Same thing, written differently</strong>, with the start and the end spelled out above and below. That is the form Module 2 uses throughout.</p>
+        <p>Nothing forces <span class="m"><i>I</i></span> to hold numbers, which is why <span class="m"><i>i</i> ∈ <i>I</i></span> is the more general notation. In this course you can safely read it as <span class="m">1, 2, 3, …</span> nearly every time.</p>
+      </div>
+    </div>
+  </details>
 
   <figure>
   <svg viewBox="0 0 700 280" role="img" aria-label="중첩된 구간들의 무한 교집합">

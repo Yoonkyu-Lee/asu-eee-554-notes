@@ -340,6 +340,60 @@ for (const theme of ['light', 'dark']) {
 }
 await page.evaluate(() => { delete document.documentElement.dataset.theme; });
 
+// ── <details> 하나에 <summary>가 둘 이상인지 ──────────────────────
+// 개폐 버튼이 되는 건 첫 번째 <summary> 하나뿐이다. 이중 언어를 만든다고
+// <summary>를 두 벌 넣으면, 숨겨진 쪽이 첫 번째가 되는 언어에서
+// 누를 수 있는 것이 사라져 내용에 영원히 도달할 수 없게 된다.
+// 이중 언어는 <summary> 안에 <span lang>을 두 개 넣어서 해결한다.
+const dupSummary = await page.evaluate(() =>
+  [...document.querySelectorAll('details')]
+    .filter(d => d.querySelectorAll(':scope > summary').length > 1)
+    .map(d => (d.querySelector(':scope > summary')?.textContent || '')
+      .replace(/\s+/g, ' ').trim().slice(0, 40)));
+
+// 접힌 <details> 를 각 언어에서 실제로 열 수 있는지
+await page.evaluate(() => document.querySelectorAll('details').forEach(d => d.open = false));
+const unopenable = [];
+for (const lang of ['ko', 'en']) {
+  await page.evaluate(l => {
+    document.documentElement.dataset.lang = l;
+    document.documentElement.lang = l;
+  }, lang);
+  await page.waitForTimeout(120);
+  const bad = await page.evaluate((l) =>
+    [...document.querySelectorAll('details')].map((d, i) => {
+      const dr = d.getBoundingClientRect();
+      if (dr.width === 0 && dr.height === 0) return null;   // 블록째 숨겨진 건 정상
+      const sum = d.querySelector(':scope > summary');
+      if (!sum) return l + ': summary 자체가 없는 details';
+      const r = sum.getBoundingClientRect();
+      if (getComputedStyle(sum).display === 'none' || r.width === 0 || r.height === 0)
+        return l + ': 개폐 버튼이 보이지 않는 details #' + (i + 1);
+      return null;
+    }).filter(Boolean), lang);
+  unopenable.push(...bad);
+}
+await page.evaluate(() => {
+  document.documentElement.dataset.lang = 'ko';
+  document.documentElement.lang = 'ko';
+  document.querySelectorAll('details').forEach(d => d.open = true);
+});
+
+// ── 리더가 켜졌을 때 본문이 읽을 수 있는 폭을 유지하는지 ──────────
+// 리더는 폭을 차지하므로 화면이 좁으면 본문을 그만큼 밀어낸다. 실제로
+// 1100px 에서 본문이 266px 까지 눌린 적이 있다. 모바일 기준(390px)보다
+// 좁아서 표와 도해가 깨진다. 리더가 뜨는 가장 좁은 화면에서 재둔다.
+let narrowMain = 0;
+try {
+  await page.setViewportSize({ width: 1220, height: 900 });
+  await page.goto(url, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(900);
+  narrowMain = await page.evaluate(() => {
+    const m = document.querySelector('main');
+    return m ? Math.round(m.getBoundingClientRect().width) : 0;
+  });
+} catch { narrowMain = 0; }
+
 await browser.close();
 await site.close();
 
@@ -385,6 +439,24 @@ if (litColors.length) {
   litColors.slice(0, 12).forEach(e => line("  · " + e));
   line("  디자인 토큰을 쓸 것: var(--blue), rgba(var(--blue-rgb),.16) 형태.");
 } else line("[OK] 하드코딩된 색 없음 (전부 디자인 토큰)");
+if (narrowMain && narrowMain < 480) {
+  fail = 1;
+  line('\n[FAIL] 리더가 뜨는 최소 폭(1220px)에서 본문이 ' + narrowMain + 'px 뿐이다');
+  line('  모바일 기준(390px)에 가깝게 눌리면 표와 도해가 깨진다.');
+  line('  reader.css 의 --rdr-w 를 줄이거나 리더 임계폭을 올릴 것.');
+} else if (narrowMain) {
+  line('[OK] 리더 최소 폭에서 본문 ' + narrowMain + 'px 확보');
+}
+if (dupSummary.length || unopenable.length) {
+  fail = 1;
+  line('\n[FAIL] 열 수 없는 <details> ' + (dupSummary.length + unopenable.length) + '건');
+  dupSummary.forEach(x => line('  · <summary>가 2개 이상: "' + x + '"'));
+  unopenable.forEach(x => line('  · ' + x));
+  line('  개폐 버튼이 되는 건 첫 번째 <summary> 하나뿐이다. 이중 언어로 두 벌을 넣으면');
+  line('  한쪽 언어에서 누를 것이 사라진다. <summary> 안에 <span lang>을 두 개 넣을 것.');
+} else {
+  line('[OK] 모든 <details> 가 양쪽 언어에서 열린다');
+}
 if (linkContrast.length) {
   fail = 1;
   line('\n[FAIL] 배경에 묻는 링크 ' + linkContrast.length + '건 (대비 3:1 미만)');

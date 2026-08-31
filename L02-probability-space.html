@@ -254,6 +254,9 @@ th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:u
 
 footer{grid-column:1/-1;border-top:1px solid var(--rule);padding-top:28px;margin-top:20px;font-size:13.5px;color:var(--ink3);line-height:1.7}
 footer a{color:var(--blue)}
+/* 본문 링크. 규칙이 없으면 브라우저 기본 남색이 나오고 다크모드에서 묻는다. */
+main a{color:var(--blue);text-decoration:none;border-bottom:1px solid rgba(var(--blue-rgb),.4)}
+main a:hover{border-bottom-color:var(--blue);background:rgba(var(--blue-rgb),.09)}
 :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 
@@ -284,6 +287,27 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
 .lang-btn:hover{border-color:var(--blue);color:var(--blue)}
 @media(max-width:900px){.lang-btn{left:10px;bottom:46px;font-size:10.5px;padding:6px 9px}}
 @media(prefers-reduced-motion:reduce){.lang-btn{transition:none}}
+
+/* ── 기호 뜯어보기 ────────────────────────────────────────────────
+   수학 표기 관습을 모르면 정의가 통째로 안 읽힌다. 그 관습만 따로 푼다.
+   기본은 펼쳐둔다(open). 모르는 사람에게 보이지 않으면 의미가 없기 때문이다.
+   대신 접을 수 있다. 알고 나면 매번 지나가야 하는 장애물이 되면 안 된다. */
+.nota{margin:18px 0;border:1px dashed var(--rule);border-radius:8px;background:var(--chip)}
+.nota>summary{cursor:pointer;list-style:none;padding:9px 14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);display:flex;align-items:center;gap:8px;user-select:none}
+.nota>summary::-webkit-details-marker{display:none}
+.nota>summary::before{content:"\25be";font-size:9px;display:inline-block;transition:transform .15s}
+.nota:not([open])>summary::before{transform:rotate(-90deg)}
+.nota>summary:hover{color:var(--ink2)}
+.nota .body{padding:2px 16px 14px;font-size:14px;color:var(--ink2);line-height:1.7}
+.nota .body>*:first-child{margin-top:0}
+.nota .body>*:last-child{margin-bottom:0}
+.nota .parts{width:100%;border-collapse:collapse;margin:12px 0}
+.nota .parts td{padding:6px 12px 6px 0;vertical-align:top;border-bottom:1px solid var(--rule);font-size:13.5px}
+.nota .parts tr:last-child td{border-bottom:0}
+.nota .parts td:first-child{white-space:nowrap;width:1%;color:var(--ink);padding-right:18px}
+.nota figure{margin:14px 0;background:var(--card);border:1px solid var(--rule)}
+.nota .eq{margin:12px 0}
+@media(max-width:900px){.nota .parts td:first-child{white-space:normal}}
 </style>
 </head>
 <body>
@@ -565,6 +589,65 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
       <span class="note" style="margin-left:0">closed under <strong>countable</strong> union</span>
     </div>
   </div>
+
+  <details class="nota" open>
+    <summary><span lang="ko">기호 뜯어보기 · 조건 ③</span><span lang="en">Unpacking the notation · condition ③</span></summary>
+    <div class="body">
+      <figure>
+        <svg viewBox="0 0 560 186" role="img" aria-label="큰 합집합 기호의 각 부위가 무엇을 뜻하는지 짚어주는 그림">
+          <text x="76" y="52" text-anchor="middle" class="svgtxt" style="font-size:20px">∞</text>
+          <text x="76" y="118" text-anchor="middle" class="svgtxt" style="font-size:58px">⋃</text>
+          <text x="76" y="152" text-anchor="middle" class="svgtxt" style="font-size:20px"><tspan style="font-style:italic">i</tspan> = 1</text>
+          <text x="114" y="118" class="svgtxt it" style="font-size:30px">A</text>
+          <text x="136" y="126" class="svgtxt it" style="font-size:19px">i</text>
+
+          <path d="M240 38 L95 45" style="stroke:var(--rule);stroke-width:1;fill:none"/>
+          <path d="M240 80 L101 92" style="stroke:var(--rule);stroke-width:1;fill:none"/>
+          <path d="M240 122 L152 110" style="stroke:var(--rule);stroke-width:1;fill:none"/>
+          <path d="M240 160 L100 148" style="stroke:var(--rule);stroke-width:1;fill:none"/>
+          <circle cx="95" cy="45" r="2.8" style="fill:var(--ink3)"/>
+          <circle cx="101" cy="92" r="2.8" style="fill:var(--ink3)"/>
+          <circle cx="152" cy="110" r="2.8" style="fill:var(--ink3)"/>
+          <circle cx="100" cy="148" r="2.8" style="fill:var(--ink3)"/>
+
+          <text x="250" y="43" class="svgtxt" style="font-size:15px;fill:var(--ink2)" lang="ko">위: 끝이 없다. 마지막 항이 없다</text>
+          <text x="250" y="43" class="svgtxt" style="font-size:15px;fill:var(--ink2)" lang="en">top: no end, there is no last term</text>
+          <text x="250" y="85" class="svgtxt" style="font-size:15px;fill:var(--ink2)" lang="ko">연산: 합집합 ∪ 를 반복한다</text>
+          <text x="250" y="85" class="svgtxt" style="font-size:15px;fill:var(--ink2)" lang="en">operator: union ∪, done repeatedly</text>
+          <text x="250" y="127" class="svgtxt" style="font-size:15px;fill:var(--ink2)" lang="ko">대상: 번호 <tspan style="font-style:italic">i</tspan> 가 붙은 집합들</text>
+          <text x="250" y="127" class="svgtxt" style="font-size:15px;fill:var(--ink2)" lang="en">operand: the sets indexed by <tspan style="font-style:italic">i</tspan></text>
+          <text x="250" y="165" class="svgtxt" style="font-size:15px;fill:var(--ink2)" lang="ko">아래: 번호를 1부터 센다</text>
+          <text x="250" y="165" class="svgtxt" style="font-size:15px;fill:var(--ink2)" lang="en">bottom: the index starts at 1</text>
+        </svg>
+        <figcaption lang="ko">큰 기호는 <span class="m">∑</span>와 같은 골격이다. 아래에 시작, 위에 끝, 오른쪽에 반복할 대상.</figcaption>
+        <figcaption lang="en">The big operator has the same skeleton as <span class="m">∑</span>: start below, end above, operand to the right.</figcaption>
+      </figure>
+      <div lang="ko">
+        <p>③을 소리 내어 읽으면 이렇게 돼. <strong>"<span class="m"><i>A</i><sub>1</sub>, <i>A</i><sub>2</sub>, …</span>가 전부 <span class="m">ℱ</span> 안에 있으면, 그것들을 전부 합집합한 것도 <span class="m">ℱ</span> 안에 있다."</strong></p>
+        <table class="parts">
+          <tr><td><span class="m"><i>A</i><sub>1</sub>, <i>A</i><sub>2</sub>, …</span></td><td>집합에 번호를 붙여 늘어놓은 것. <span class="m">…</span>는 "이 규칙으로 끝없이 계속"이라는 뜻이야.</td></tr>
+          <tr><td><span class="m">⟹</span></td><td><strong>"이면"</strong>. 왼쪽이 참일 때 오른쪽도 참이라는 뜻이지, 둘이 같다는 게 아니야. 양방향이면 <span class="m">⟺</span>를 쓴다.</td></tr>
+          <tr><td><span class="m">∈ ℱ</span></td><td>"<span class="m">ℱ</span>의 <strong>원소</strong>다". <span class="m">ℱ</span>는 집합들의 모음이라 그 원소도 집합이야.</td></tr>
+        </table>
+        <p>그래서 합집합 부분을 펼치면 이거야.</p>
+        <div class="eq">⋃<sub><i>i</i>=1</sub><sup>∞</sup> <i>A<sub>i</sub></i> &nbsp;=&nbsp; <i>A</i><sub>1</sub> ∪ <i>A</i><sub>2</sub> ∪ <i>A</i><sub>3</sub> ∪ ⋯</div>
+        <p>덧셈에 비유하면 딱 맞아. <span class="m">∑<sub><i>i</i>=1</sub><sup><i>n</i></sup> <i>x<sub>i</sub></i> = <i>x</i><sub>1</sub> + ⋯ + <i>x<sub>n</sub></i></span>과 골격이 같고, <span class="m">+</span> 자리에 <span class="m">∪</span>가 들어간 것뿐이야. 색인을 <span class="m"><i>i</i>∈<i>I</i></span>로 쓰는 형태는 <a href="L01-set-theory.html#s8">Module 1 · 08</a>에 있어.</p>
+        <p><strong>제일 조심할 건 맨 끝의 <span class="m">∈ ℱ</span>야.</strong> <span class="m">⊆ ℱ</span>가 아니다. 합집합한 결과는 집합 <em>하나</em>고, 그 집합 자체가 <span class="m">ℱ</span>가 들고 있는 원소여야 한다는 뜻이야. 이 레벨 구분이 계속 발목을 잡으니 헷갈리면 <a href="L01-set-theory.html#s7">Module 1 · 07</a>을 다시 봐.</p>
+      </div>
+      <div lang="en">
+        <p>Read ③ out loud and it says: <strong>"if <span class="m"><i>A</i><sub>1</sub>, <i>A</i><sub>2</sub>, …</span> all live in <span class="m">ℱ</span>, then the union of all of them lives in <span class="m">ℱ</span> too."</strong></p>
+        <table class="parts">
+          <tr><td><span class="m"><i>A</i><sub>1</sub>, <i>A</i><sub>2</sub>, …</span></td><td>Sets laid out and numbered. The <span class="m">…</span> means "keep going by the same rule, forever".</td></tr>
+          <tr><td><span class="m">⟹</span></td><td><strong>"implies"</strong>. The left being true forces the right to be true. It does not say the two are the same. When it runs both ways you write <span class="m">⟺</span>.</td></tr>
+          <tr><td><span class="m">∈ ℱ</span></td><td>"is an <strong>element</strong> of <span class="m">ℱ</span>". Since <span class="m">ℱ</span> is a collection of sets, its elements are themselves sets.</td></tr>
+        </table>
+        <p>Written out, the union part is just this.</p>
+        <div class="eq">⋃<sub><i>i</i>=1</sub><sup>∞</sup> <i>A<sub>i</sub></i> &nbsp;=&nbsp; <i>A</i><sub>1</sub> ∪ <i>A</i><sub>2</sub> ∪ <i>A</i><sub>3</sub> ∪ ⋯</div>
+        <p>The comparison with addition is exact. <span class="m">∑<sub><i>i</i>=1</sub><sup><i>n</i></sup> <i>x<sub>i</sub></i> = <i>x</i><sub>1</sub> + ⋯ + <i>x<sub>n</sub></i></span> has the same skeleton, with <span class="m">∪</span> sitting where <span class="m">+</span> sits. For the <span class="m"><i>i</i>∈<i>I</i></span> style of index, see <a href="L01-set-theory.html#s8">Module 1 · 08</a>.</p>
+        <p><strong>The part to watch is the <span class="m">∈ ℱ</span> at the end.</strong> It is not <span class="m">⊆ ℱ</span>. The union produces <em>one</em> set, and that set has to be one of the things <span class="m">ℱ</span> holds. This level distinction keeps tripping people up, so revisit <a href="L01-set-theory.html#s7">Module 1 · 07</a> whenever it blurs.</p>
+      </div>
+    </div>
+  </details>
 
   <p lang="ko">이름의 <strong>σ</strong>가 바로 ③의 "가산 무한까지"를 뜻해. 유한 합집합만 닫혀 있으면 그냥 <em>algebra</em>(또는 field)라고 부르고, 무한 개까지 되면 <em>σ-algebra</em>야.</p>
   <p lang="en">The <strong>σ</strong> in the name is exactly the "countably infinite" part of ③. Closed under finite unions only and it is just an <em>algebra</em>, or a field. Extend that to infinitely many and it becomes a <em>σ-algebra</em>.</p>
@@ -1011,6 +1094,30 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
       <span class="note" style="margin-left:0">countable additivity</span>
     </div>
   </div>
+
+  <details class="nota" open>
+    <summary><span lang="ko">기호 뜯어보기 · 화살표와 ∑, 그리고 <i>i</i> ≠ <i>j</i></span><span lang="en">Unpacking the notation · the arrow, ∑, and <i>i</i> ≠ <i>j</i></span></summary>
+    <div class="body">
+      <div lang="ko">
+        <table class="parts">
+          <tr><td><span class="m"><i>P</i> : ℱ → [0,1]</span></td><td>함수의 <strong>정의역과 공역</strong>을 밝히는 표기. "<span class="m"><i>P</i></span>는 <span class="m">ℱ</span>의 원소를 받아서 0과 1 사이 수를 뱉는다"는 뜻이야. <span class="m">ℱ</span>의 원소가 사건(집합)이니, <strong>확률은 집합을 먹고 숫자를 낸다.</strong> 결과 하나를 먹는 게 아니야.</td></tr>
+          <tr><td><span class="m">[0,1]</span></td><td>대괄호는 <strong>양 끝을 포함</strong>. 소괄호 <span class="m">(0,1)</span>이면 끝을 뺀다. 확률은 0과 1이 될 수 있으니 대괄호야.</td></tr>
+          <tr><td><span class="m">∑<sub><i>i</i>=1</sub><sup>∞</sup></span></td><td><span class="m">⋃</span>와 골격이 같고 연산만 <span class="m">+</span>야. 펼치면 <span class="m"><i>P</i>(<i>A</i><sub>1</sub>) + <i>P</i>(<i>A</i><sub>2</sub>) + ⋯</span>.</td></tr>
+          <tr><td><span class="m"><i>i</i> ≠ <i>j</i></span></td><td>"서로 다른 번호 둘을 아무렇게나 골라도"라는 뜻. 이게 <strong>pairwise disjoint</strong>의 정확한 표현이야. 전체 교집합이 <span class="m">∅</span>인 것과 <em>다르다.</em></td></tr>
+        </table>
+        <p>③ 전체를 문장으로 읽으면 이래. <strong>"서로 겹치지 않는 사건들이라면, 그것들을 합친 사건의 확률은 각 확률을 그냥 더한 값이다."</strong> 겹치면 이 식은 못 쓰고, 그때 필요한 게 포함배제야.</p>
+      </div>
+      <div lang="en">
+        <table class="parts">
+          <tr><td><span class="m"><i>P</i> : ℱ → [0,1]</span></td><td>Notation naming a function's <strong>domain and codomain</strong>: "<span class="m"><i>P</i></span> takes an element of <span class="m">ℱ</span> and returns a number between 0 and 1." Elements of <span class="m">ℱ</span> are events, which are sets, so <strong>probability eats a set and produces a number.</strong> It does not eat a single outcome.</td></tr>
+          <tr><td><span class="m">[0,1]</span></td><td>Square brackets <strong>include the endpoints</strong>; round ones as in <span class="m">(0,1)</span> exclude them. Probabilities can be exactly 0 or 1, hence square.</td></tr>
+          <tr><td><span class="m">∑<sub><i>i</i>=1</sub><sup>∞</sup></span></td><td>Same skeleton as <span class="m">⋃</span>, with <span class="m">+</span> as the operation. Written out: <span class="m"><i>P</i>(<i>A</i><sub>1</sub>) + <i>P</i>(<i>A</i><sub>2</sub>) + ⋯</span>.</td></tr>
+          <tr><td><span class="m"><i>i</i> ≠ <i>j</i></span></td><td>"for any two different indices you care to pick". That is precisely what <strong>pairwise disjoint</strong> means, and it is <em>not</em> the same as the total intersection being <span class="m">∅</span>.</td></tr>
+        </table>
+        <p>As a sentence, ③ reads: <strong>"for events that never overlap, the probability of their combined event is just the sum of the individual probabilities."</strong> Once they do overlap this formula is off the table, and inclusion-exclusion is what you reach for.</p>
+      </div>
+    </div>
+  </details>
 
   <p lang="ko">①과 ②는 그냥 눈금 맞추기야. "확률은 음수가 될 수 없고, 전체는 1이다." ③이 진짜 내용이야.</p>
   <p lang="en">The first two are just calibration: probability cannot go negative, and the whole thing is 1. ③ is where the content is.</p>
