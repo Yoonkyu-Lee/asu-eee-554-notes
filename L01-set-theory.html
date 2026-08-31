@@ -988,7 +988,7 @@ html[data-lang="en"] [lang="ko"]{display:none}
     </div>
   </div>
 
-  <div class="ex">
+  <div class="ex" lang="ko">
     <span class="tag">예제 4.1 — HW1 Problem 1 유형</span>
     <p><span class="m"><i>Ω</i> = {1,…,8}</span>, <span class="m"><i>A</i> = {1,2,3,4}</span>, <span class="m"><i>B</i> = {3,4,5,6}</span>, <span class="m"><i>C</i> = {2,4,6,8}</span>. 다음을 <span class="m"><i>Ω</i></span>의 부분집합으로 명시적으로 구해.</p>
     <p style="font-family:var(--serif);font-size:17px">(a) <i>A</i> ∪ <i>B</i> &nbsp;&nbsp; (b) <i>A</i> ∩ <i>B</i> &nbsp;&nbsp; (c) <i>A</i><sup>c</sup> &nbsp;&nbsp; (d) <i>A</i> ∩ <i>C</i><sup>c</sup> &nbsp;&nbsp; (e) (<i>A</i> ∪ <i>B</i>)<sup>c</sup> &nbsp;&nbsp; (f) (<i>A</i> ∩ <i>B</i>) ∪ <i>C</i></p>
@@ -1012,8 +1012,32 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <p>(e)를 De Morgan으로 검산해봐. <span class="m"><i>A</i><sup>c</sup> ∩ <i>B</i><sup>c</sup> = {5,6,7,8} ∩ {1,2,7,8} = {7,8}</span>. 맞지.</p>
     </div></details>
   </div>
+  <div class="ex" lang="en">
+    <span class="tag">Example 4.1 — the HW1 Problem 1 pattern</span>
+    <p><span class="m"><i>Ω</i> = {1,…,8}</span>, <span class="m"><i>A</i> = {1,2,3,4}</span>, <span class="m"><i>B</i> = {3,4,5,6}</span>, <span class="m"><i>C</i> = {2,4,6,8}</span>. Write each of the following out explicitly as a subset of <span class="m"><i>Ω</i></span>.</p>
+    <p style="font-family:var(--serif);font-size:17px">(a) <i>A</i> ∪ <i>B</i> &nbsp;&nbsp; (b) <i>A</i> ∩ <i>B</i> &nbsp;&nbsp; (c) <i>A</i><sup>c</sup> &nbsp;&nbsp; (d) <i>A</i> ∩ <i>C</i><sup>c</sup> &nbsp;&nbsp; (e) (<i>A</i> ∪ <i>B</i>)<sup>c</sup> &nbsp;&nbsp; (f) (<i>A</i> ∩ <i>B</i>) ∪ <i>C</i></p>
+    <details><summary>Solution, and how to do it by hand</summary><div class="body">
+      <p>Draw one table and you will almost never slip. Mark each element's membership with O or ·:</p>
+      <table style="margin-top:8px">
+        <tr><th>ω</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th></tr>
+        <tr><td class="cA">A</td><td>O</td><td>O</td><td>O</td><td>O</td><td>·</td><td>·</td><td>·</td><td>·</td></tr>
+        <tr><td class="cB">B</td><td>·</td><td>·</td><td>O</td><td>O</td><td>O</td><td>O</td><td>·</td><td>·</td></tr>
+        <tr><td class="cC">C</td><td>·</td><td>O</td><td>·</td><td>O</td><td>·</td><td>O</td><td>·</td><td>O</td></tr>
+      </table>
+      <p>Now just read it column by column. What you have built is a <strong>truth table</strong>. It is the same object you used in ECE 385, and each row doubles as an 8-bit mask: <code>A = 11110000</code>, <code>B = 00111100</code>, <code>C = 01010101</code>.</p>
+      <ol>
+        <li><span class="m"><i>A</i> ∪ <i>B</i> = {1,2,3,4,5,6}</span> &nbsp;<code>11111100</code></li>
+        <li><span class="m"><i>A</i> ∩ <i>B</i> = {3,4}</span> &nbsp;<code>00110000</code></li>
+        <li><span class="m"><i>A</i><sup>c</sup> = {5,6,7,8}</span> &nbsp;<code>00001111</code></li>
+        <li><span class="m"><i>C</i><sup>c</sup> = {1,3,5,7}</span>, so <span class="m"><i>A</i> ∩ <i>C</i><sup>c</sup> = {1,3}</span></li>
+        <li><span class="m">(<i>A</i> ∪ <i>B</i>)<sup>c</sup> = {7,8}</span></li>
+        <li><span class="m">(<i>A</i> ∩ <i>B</i>) ∪ <i>C</i> = {3,4} ∪ {2,4,6,8} = {2,3,4,6,8}</span></li>
+      </ol>
+      <p>Check (e) against De Morgan: <span class="m"><i>A</i><sup>c</sup> ∩ <i>B</i><sup>c</sup> = {5,6,7,8} ∩ {1,2,7,8} = {7,8}</span>. Matches.</p>
+    </div></details>
+  </div>
 
-  <div class="trap">
+  <div class="trap" lang="ko">
     <span class="tag">함정</span>
 
     <h4>합집합의 "또는"은 포함적 or 이다</h4>
@@ -1028,6 +1052,18 @@ html[data-lang="en"] [lang="ko"]{display:none}
 
     <h4>여집합에는 숨은 인자가 있다</h4>
     <p><span class="m"><i>A</i><sup>c</sup></span>는 사실 <span class="m"><i>Ω</i> \ <i>A</i></span>야. 즉 <strong>Ω에 의존하는 연산</strong>인데 표기에는 Ω가 안 보여. 시험에서 표본공간을 중간에 바꾸는 문제가 나오면 여기서 다 틀려. 항상 "지금 Ω가 뭐지?"를 먼저 확인해.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Trap</span>
+    <h4>The "or" in a union is inclusive</h4>
+    <p><span class="m"><i>A</i> ∪ <i>B</i></span> <strong>contains</strong> <span class="m"><i>A</i> ∩ <i>B</i></span>. Everyday "coffee or tea" is usually exclusive, but the mathematical ∪ is not. Press <span class="m"><i>A</i> ∪ <i>B</i></span> in the Venn tool above and you will see the overlapping middle light up along with everything else.</p>
+    <p>If you want an exclusive or, you need the <strong>symmetric difference</strong>: <span class="m"><i>A</i> △ <i>B</i> = (<i>A</i>\<i>B</i>) ∪ (<i>B</i>\<i>A</i>)</span>. That is XOR.</p>
+    <h4>Set difference is not symmetric</h4>
+    <p><span class="m"><i>A</i> \ <i>B</i> ≠ <i>B</i> \ <i>A</i></span>. From the example above, <span class="m"><i>A</i>\<i>B</i> = {1,2}</span> while <span class="m"><i>B</i>\<i>A</i> = {5,6}</span>. ∪ and ∩ commute. The backslash does not.</p>
+    <h4>Set difference is not associative either</h4>
+    <p><span class="m"><i>A</i> \ (<i>B</i> \ <i>C</i>) ≠ (<i>A</i> \ <i>B</i>) \ <i>C</i></span> in general. Counterexample: <span class="m"><i>A</i>={1,2}, <i>B</i>={2}, <i>C</i>={2}</span>. On the left, <span class="m"><i>B</i>\<i>C</i> = ∅</span> so you get <span class="m"><i>A</i>\∅ = {1,2}</span>. On the right, <span class="m">{1}\{2} = {1}</span>. <strong>So whenever more than one difference shows up, rewrite every one of them as <span class="m">∩ <i>B</i><sup>c</sup></span> before you start.</strong> Once only ∩ and ᶜ remain, associativity comes back.</p>
+    <h4>Complement has a hidden argument</h4>
+    <p><span class="m"><i>A</i><sup>c</sup></span> is really <span class="m"><i>Ω</i> \ <i>A</i></span>. It is <strong>an operation that depends on Ω</strong>, and the notation hides that dependency completely. Any exam problem that swaps the sample space midway will collect points here. Always check what Ω is right now before you take a complement.</p>
   </div>
 </section>
 

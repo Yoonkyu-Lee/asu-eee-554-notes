@@ -324,15 +324,21 @@ function setCurrent(n) {
   ui.next.disabled = n >= pages.length;
 }
 
+// 언어 전환 때문에 같은 앵커가 한국어판과 영어판 두 벌로 존재한다.
+// 숨겨진 쪽은 getBoundingClientRect()가 전부 0이라 "화면 맨 위"로 오인되므로
+// 반드시 걸러야 한다. 보이는 것만 위치 기준으로 쓴다.
+const shown = a => a.el.offsetParent !== null;
+
 // 화면 위쪽 기준선에 걸린 마지막 앵커 = 지금 읽고 있는 구간.
 function anchorFromNote() {
   const line = window.innerHeight * followLine;
-  let found = anchors[0];
+  let found = null;
   for (const a of anchors) {
+    if (!shown(a)) continue;
     if (a.el.getBoundingClientRect().top <= line) found = a;
     else break;
   }
-  return found;
+  return found || anchors.find(shown) || anchors[0];
 }
 
 // 지금 리더가 보고 있는 쪽.
@@ -353,6 +359,7 @@ const inRange = (a, n) => !!a && n >= a.from && n <= a.to;
 function anchorForPage(n) {
   let best = null, fallback = null;
   for (const a of anchors) {
+    if (!shown(a)) continue;           // 숨겨진 언어판은 위치를 못 준다
     if (inRange(a, n)) {
       if (!best || (a.to - a.from) <= (best.to - best.from)) best = a;
     }
