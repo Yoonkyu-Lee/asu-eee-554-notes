@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="ko" data-lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EEE 554 · Homework 2 공략</title>
+<style>
+:root{
+  color-scheme:light dark;
+
+  /* 색 성분. rgba(var(--blue-rgb),.16) 형태로 농도 변형을 만든다. */
+  --ink-rgb:20,22,26;
+  --blue-rgb:18,80,196;
+  --pink-rgb:217,20,122;
+  --violet-rgb:107,47,168;
+  --green-rgb:0,132,95;
+  --amber-rgb:178,106,0;
+  --sel-rgb:75,29,140;
+
+  --paper:#FAFAF8;
+  --card:#FFFFFF;
+  --ink:rgb(var(--ink-rgb));
+  --ink2:#565D66;
+  --ink3:#8A9099;
+  --rule:#E2E1DB;
+  --blue:rgb(var(--blue-rgb));
+  --pink:rgb(var(--pink-rgb));
+  --violet:rgb(var(--violet-rgb));
+  --green:rgb(var(--green-rgb));
+  --amber:rgb(var(--amber-rgb));
+  --amber-bg:#FDF6E9;
+  --red:#C02626;
+  --sel:rgb(var(--sel-rgb));
+
+  /* 보조 표면과 진한 변형 */
+  --amber-line:#F0E2C4;
+  --code-bg:#F0EFEA;
+  --chip:#F1F0EB;
+  --sel-soft:#F6F2FB;
+  --pink-deep:#8B0D4E;
+  --green-deep:#005A42;
+  --amber-deep:#7A4A00;
+  --violet-deep:#3B1E70;
+  --brown:#A3532B;
+  --teal:#0E7490;
+  --shadow:rgba(var(--ink-rgb),.06);
+
+  --mono:ui-monospace,"Cascadia Mono","Cascadia Code",Consolas,"SFMono-Regular",monospace;
+  --sans:"Pretendard","Pretendard Variable",-apple-system,"Segoe UI Variable Text","Segoe UI","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --serif:"Cambria Math","STIX Two Math","Latin Modern Math",Cambria,"Times New Roman",serif;
+}
+
+/* 다크 팔레트. 의미 고정 색상(A=blue, B=pink, 교집합=violet, 함정=amber)은
+   그대로 두고 밝기만 어두운 배경에 맞게 올린다. */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 120px;display:grid;grid-template-columns:210px minmax(0,1fr);gap:56px}
+@media(max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);gap:0;padding:0 18px 80px}}
+
+header.top{grid-column:1/-1;padding:64px 0 40px;border-bottom:1px solid var(--rule);margin-bottom:48px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+h1.title{font-size:clamp(30px,5vw,50px);line-height:1.1;letter-spacing:-.025em;font-weight:800;margin:14px 0 6px}
+.subtitle{font-size:17px;color:var(--ink2);margin:0}
+.meta{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--mono);font-size:11px;letter-spacing:.05em;padding:5px 11px;border:1px solid var(--rule);border-radius:999px;color:var(--ink2);background:var(--card)}
+.chip.hot{border-color:var(--amber);color:var(--amber);background:var(--amber-bg)}
+.backlink{display:inline-block;margin-top:20px;font-family:var(--mono);font-size:11.5px;color:var(--blue);text-decoration:none;letter-spacing:.04em}
+.backlink:hover{text-decoration:underline}
+
+nav.toc{position:sticky;top:24px;align-self:start;font-size:13.5px;line-height:1.5}
+nav.toc .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:14px}
+nav.toc a{display:flex;gap:9px;padding:5px 0;color:var(--ink2);text-decoration:none;border-left:2px solid transparent;padding-left:11px;margin-left:-13px}
+nav.toc a:hover{color:var(--ink);border-left-color:var(--blue)}
+nav.toc a .n{font-family:var(--mono);font-size:11px;color:var(--ink3);padding-top:2px;min-width:14px}
+@media(max-width:900px){nav.toc{position:static;margin-bottom:44px;padding-bottom:28px;border-bottom:1px solid var(--rule)}}
+/* ── 상단 미니 헤더 ─────────────────────── */
+/* 큰 제목이 화면 밖으로 나가면 목차 위에 작게 나타나 계속 남는다.
+   목차가 이미 sticky라 그 안에 넣으면 따로 고정 장치가 필요 없다.
+   모바일에서는 목차가 static이라 의미가 없으므로 숨긴다. */
+.mini-head{max-height:0;opacity:0;visibility:hidden;overflow:hidden;margin-bottom:0;
+  transition:max-height .22s ease,opacity .18s ease,margin-bottom .22s ease,visibility .18s}
+.mini-head.on{max-height:150px;opacity:1;visibility:visible;margin-bottom:22px}
+nav.toc .mini-head a.back{display:inline-block;margin:0 0 12px;padding:0;border-left:none;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--blue);text-decoration:none}
+nav.toc .mini-head a.back:hover{text-decoration:underline;color:var(--blue);border-left-color:transparent}
+.mini-head .mod{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:3px}
+.mini-head .name{font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--ink);line-height:1.3}
+.mini-head .rule{height:1px;background:var(--rule);margin-top:16px}
+@media(max-width:900px){.mini-head{display:none}}
+
+section{margin-bottom:76px;scroll-margin-top:20px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+.sec-num{font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:.1em;padding-top:4px}
+h2{font-size:clamp(22px,3vw,29px);letter-spacing:-.02em;font-weight:750;margin:0;line-height:1.25}
+.sec-sub{color:var(--ink2);font-size:15px;margin:0 0 30px 0}
+h3{font-size:17.5px;font-weight:700;letter-spacing:-.01em;margin:38px 0 12px}
+h4{font-size:15px;font-weight:700;margin:26px 0 8px;color:var(--ink)}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 16px;padding-left:22px}
+li{margin-bottom:7px}
+code{font-family:var(--mono);font-size:.87em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+
+.m{font-family:var(--serif);font-style:normal;font-size:1.07em;white-space:nowrap}
+@media(max-width:900px){.m{white-space:normal}}
+.m i{font-style:italic}
+.eq{font-family:var(--serif);font-size:19px;text-align:center;margin:22px 0;line-height:1.9}
+.eq i{font-style:italic}
+.eq .note{font-family:var(--sans);font-size:13px;color:var(--ink3);display:block;margin-top:4px}
+.cA{color:var(--blue);font-weight:600}
+.cB{color:var(--pink);font-weight:600}
+.cC{color:var(--green);font-weight:600}
+
+.def{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--ink);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.def .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:7px}
+.def p:last-child,.def ol:last-child,.def ul:last-child{margin-bottom:0}
+
+.trap{background:var(--amber-bg);border:1px solid var(--amber-line);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.trap .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:7px;font-weight:600}
+.trap p:last-child,.trap ul:last-child{margin-bottom:0}
+.trap h4{margin-top:18px;font-size:14.5px}
+.trap h4:first-of-type{margin-top:0}
+
+.ex{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:18px 22px;margin:20px 0}
+.ex .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:7px;font-weight:600}
+.ex p:last-child,.ex ul:last-child,.ex ol:last-child{margin-bottom:0}
+details{margin-top:12px;border-top:1px dashed var(--rule);padding-top:12px}
+details summary{cursor:pointer;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--blue);list-style:none;user-select:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"▸ ";display:inline-block}
+details[open] summary::before{content:"▾ "}
+details .body{margin-top:12px}
+details .body p:last-child,details .body ol:last-child{margin-bottom:0}
+
+.callout{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:16px 0;margin:26px 0;font-size:15px;color:var(--ink2)}
+.callout strong{color:var(--ink)}
+
+/* ── 슬라이드 출처 표시 ─────────────────── */
+/* data-slide 값에서 라벨을 직접 만든다. 라벨과 앵커가 어긋날 수 없다.
+   리더가 꺼져 있어도, 모바일이어도 "이 대목이 슬라이드 몇 쪽인지"는 보여야 한다. */
+.sec-head[data-slide],h3[data-slide]{display:flex;align-items:baseline;gap:14px}
+.sec-head[data-slide]>h2,h3[data-slide]{min-width:0}
+.sec-head[data-slide]::before,h3[data-slide]::before{
+  content:"";order:1;flex:1 1 auto;min-width:16px;height:1px;
+  background:var(--rule);align-self:center;opacity:.75}
+.sec-head[data-slide]::after,h3[data-slide]::after{
+  content:"슬라이드 " attr(data-slide) "쪽";order:2;flex:none;
+  font-family:var(--mono);font-size:10px;letter-spacing:.05em;
+  color:var(--ink3);white-space:nowrap;align-self:center}
+@media(max-width:900px){
+  .sec-head[data-slide]::before,h3[data-slide]::before{min-width:10px}
+  .sec-head[data-slide]::after,h3[data-slide]::after{font-size:9.5px}
+}
+
+figure{margin:28px 0;background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:22px}
+figure svg{display:block;width:100%;height:auto;max-width:100%}
+figcaption{font-size:13px;color:var(--ink2);margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:720px){.grid2,.grid3{grid-template-columns:1fr}}
+.mini{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px}
+.mini .cap{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--ink2);text-align:center;margin-top:8px;line-height:1.4}
+.mini svg{display:block;width:100%;height:auto}
+.svgtxt{font-family:var(--serif);font-size:15px;fill:var(--ink)}
+.svgtxt.it{font-style:italic}
+.svglab{font-family:var(--mono);font-size:11px;fill:var(--ink2)}
+.svgnum{font-family:var(--mono);font-size:13px;font-weight:600}
+
+/* sigma-algebra checker */
+.play{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:22px;margin:28px 0}
+.plab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin:20px 0 9px}
+.plab:first-child{margin-top:0}
+.subsets{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+@media(max-width:560px){.subsets{grid-template-columns:repeat(2,1fr)}}
+.sub{font-family:var(--serif);font-size:15px;padding:9px 6px;text-align:center;background:var(--paper);border:1px solid var(--rule);border-radius:6px;cursor:pointer;user-select:none;transition:.12s;position:relative}
+.sub:hover{border-color:var(--sel)}
+.sub.on{background:var(--sel);border-color:var(--sel);color:var(--card);font-weight:600}
+.sub.need{background:var(--amber-bg);border-color:var(--amber);border-style:dashed;color:var(--amber)}
+.verdict{margin-top:18px;border-radius:8px;padding:15px 18px;font-size:14.5px;line-height:1.65}
+.verdict.ok{background:rgba(var(--green-rgb),.08);border:1px solid rgba(var(--green-rgb),.3);color:var(--green-deep)}
+.verdict.bad{background:var(--amber-bg);border:1px solid var(--amber-line);color:var(--amber-deep)}
+.verdict .hd{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:8px}
+.verdict ul{margin:8px 0 0;padding-left:20px}
+.verdict li{margin-bottom:5px;font-size:14px}
+.verdict .m{font-size:1em}
+.presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.presets button{font-family:var(--sans);font-size:12.5px;padding:7px 12px;background:var(--paper);border:1px solid var(--rule);border-radius:6px;color:var(--ink2);cursor:pointer;transition:.13s}
+.presets button:hover{border-color:var(--sel);color:var(--sel);background:var(--sel-soft)}
+.presets button.act{border-color:var(--green);color:var(--green);background:rgba(var(--green-rgb),.06);font-weight:600}
+.hintline{font-size:13px;color:var(--ink2);margin-top:16px;line-height:1.6;border-top:1px solid var(--rule);padding-top:13px}
+
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14.5px}
+@media(max-width:900px){table{display:block;max-width:100%;overflow-x:auto}}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);font-weight:500}
+
+footer{grid-column:1/-1;border-top:1px solid var(--rule);padding-top:28px;margin-top:20px;font-size:13.5px;color:var(--ink3);line-height:1.7}
+footer a{color:var(--blue)}
+/* 공략 페이지는 본문이 링크 덩어리다. 규칙이 없으면 브라우저 기본 남색이 나와서
+   다크모드에서 거의 안 읽힌다. 반드시 토큰으로 고정한다. */
+main a{color:var(--blue);text-decoration:none;border-bottom:1px solid rgba(var(--blue-rgb),.4)}
+main a:hover{border-bottom-color:var(--blue);background:rgba(var(--blue-rgb),.09)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ── 테마 토글 ──────────────────────────── */
+/* 기본은 OS 설정(prefers-color-scheme)을 따른다. 이 버튼은 그걸 덮어쓴다. */
+.theme-btn{position:fixed;left:16px;bottom:16px;z-index:70;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 6px var(--shadow);transition:.13s}
+.theme-btn:hover{border-color:var(--sel);color:var(--sel)}
+@media(max-width:900px){.theme-btn{left:10px;bottom:10px;font-size:10.5px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.theme-btn{transition:none}}
+
+/* ── 언어 전환 ──────────────────────────── */
+/* 한 파일에 한국어와 영어를 나란히 두고 보이는 쪽만 남긴다.
+   도해·앵커·CSS·리더를 공유하므로 두 언어의 구조가 어긋날 수 없다.
+   lang 속성을 쓰는 건 스크린리더와 하이픈 처리도 같이 얻기 위해서다. */
+/* 언어 표시는 어떤 규칙보다 우선해야 한다. 목차나 도해 쪽 선택자가
+   더 구체적이어서 display를 되살리는 일이 실제로 있었다. */
+html[data-lang="ko"] [lang="en"]{display:none!important}
+html[data-lang="en"] [lang="ko"]{display:none!important}
+.lang-btn{position:fixed;left:16px;bottom:56px;z-index:70;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 6px var(--shadow);transition:.13s}
+.lang-btn:hover{border-color:var(--blue);color:var(--blue)}
+@media(max-width:900px){.lang-btn{left:10px;bottom:46px;font-size:10.5px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.lang-btn{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="eyebrow">EEE 554 · Probability and Random Processes · Michelusi</div>
+  <h1 class="title">Homework 2<br>Conditional Probability &amp; Independence</h1>
+  <p class="subtitle" lang="ko">문제를 풀려면 뭘 알아야 하는지, 첫 수를 어디에 두는지.</p>
+  <p class="subtitle" lang="en">What you need for each problem, and where to put your first move.</p>
+  <div class="meta" lang="ko">
+    <span class="chip hot">마감 9월 6일 (일) 자정</span>
+    <span class="chip">문제 8개 + Reflection</span>
+    <span class="chip">P1–4 · P8 Module 3 · P5–7 Module 4</span>
+  </div>
+  <div class="meta" lang="en">
+    <span class="chip hot">due midnight, Sunday September 6</span>
+    <span class="chip">8 problems + reflection</span>
+    <span class="chip">P1–4 and P8 in Module 3 · P5–7 in Module 4</span>
+  </div>
+  <a class="backlink" href="index.html" lang="ko">← 모듈 목록으로</a>
+  <a class="backlink" href="index.html" lang="en">← All modules</a>
+</header>
+
+<nav class="toc">
+  <div class="mini-head">
+    <a class="back" href="index.html" lang="ko">← 모듈 목록</a>
+    <a class="back" href="index.html" lang="en">← All modules</a>
+    <div class="mod">Homework 2</div>
+    <div class="name">Conditional Probability &amp; Independence</div>
+    <div class="rule"></div>
+  </div>
+  <div class="lab" lang="ko">문제</div>
+  <div class="lab" lang="en">Problems</div>
+  <a href="#p0"><span class="n">00</span><span lang="ko">먼저 읽을 것</span><span lang="en">Read first</span></a>
+  <a href="#p1"><span class="n">P1</span><span lang="ko">조건부 확률</span><span lang="en">Conditional probability</span></a>
+  <a href="#p2"><span class="n">P2</span><span lang="ko">전확률 법칙</span><span lang="en">Total probability</span></a>
+  <a href="#p3"><span class="n">P3</span><span>Bayes</span></a>
+  <a href="#p4"><span class="n">P4</span><span lang="ko">MAP과 ML</span><span lang="en">MAP and ML</span></a>
+  <a href="#p5"><span class="n">P5</span><span lang="ko">pairwise와 mutual</span><span lang="en">Pairwise vs mutual</span></a>
+  <a href="#p6"><span class="n">P6</span><span lang="ko">반복 전송</span><span lang="en">Repeated trials</span></a>
+  <a href="#p7"><span class="n">P7</span><span lang="ko">반복부호</span><span lang="en">Repetition coding</span></a>
+  <a href="#p8"><span class="n">P8</span><span lang="ko">희귀 사건 검출</span><span lang="en">Rare-event detection</span></a>
+  <a href="#p9"><span class="n">99</span><span lang="ko">복습 체크리스트</span><span lang="en">Review checklist</span></a>
+</nav>
+
+<main>
+
+<!-- ══ 00 ══ -->
+<section id="p0">
+  <div class="sec-head"><span class="sec-num">00</span><h2 lang="ko">먼저 읽을 것</h2><h2 lang="en">Read first</h2></div>
+  <p class="sec-sub" lang="ko">답이 아니라 진입점이다. 계산 결과는 안 적었다.</p>
+  <p class="sec-sub" lang="en">An entry point, not an answer key. No final numbers here.</p>
+
+  <div class="callout" lang="ko">
+    <strong>채점 방침은 HW1과 같아.</strong> <em>"Homework is evaluated primarily based on honest effort and engagement rather than correctness."</em> 정답보다 시도와 추론으로 평가하고, 강의 자료를 봐도 돼. <strong>HW2에는 "노트 보지 말고 풀어라" 문제가 없어.</strong> HW1의 P8 같은 항목이 이번엔 없으니 전부 자료를 보면서 풀어도 돼.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Grading works the same as HW1:</strong> <em>"Homework is evaluated primarily based on honest effort and engagement rather than correctness."</em> The attempt and the reasoning are what count, and course materials are allowed. <strong>HW2 has no closed-book problem</strong>, unlike HW1's P8, so you may work through all eight with your notes open.
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">이번 과제의 구조</span>
+    <h4>P2와 P3, P4와 P8은 각각 이어진다</h4>
+    <p><strong>P3은 P2의 설정을 그대로 이어받아.</strong> P2에서 <span class="m"><i>P</i>(<i>E</i>)</span>를 구해두면 그게 P3 전체의 분모야. P2를 틀리면 P3이 통째로 틀어져. <strong>P2(b)를 반드시 검산하고 넘어가.</strong></p>
+    <p>P4와 P8은 둘 다 ML/MAP 문제야. P4가 간단한 이진 채널이고, P8이 같은 구조에 오경보·미검출까지 붙인 확장판이야. <strong>P4를 확실히 하고 P8로 가는 게 훨씬 빠르다.</strong></p>
+    <h4>Module 4는 슬라이드 없이 쓴 노트다</h4>
+    <p>P5–P7이 해당하는 강의 슬라이드가 아직 안 올라왔어. <a href="L04-independence.html">Module 4</a>는 교재와 이 과제의 <em>Topics to Review</em>를 근거로 썼어. 강의가 다른 순서나 표기를 쓸 수 있으니 슬라이드가 올라오면 그쪽을 기준으로 삼아.</p>
+    <h4>Reflection이 HW1보다 한 문항 늘었다</h4>
+    <p>(e)가 <strong>"어느 개념을 가장 복습하고 싶은가"</strong>로 바뀌었고 (f)가 소요 시간이야. 총 6문항이야. 풀면서 메모해둬.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">How this set is put together</span>
+    <h4>P2 feeds P3, and P4 feeds P8</h4>
+    <p><strong>P3 continues the exact setup from P2.</strong> The <span class="m"><i>P</i>(<i>E</i>)</span> you compute in P2 is the denominator for all of P3, so an error in P2 propagates through the whole of P3. <strong>Check P2(b) before moving on.</strong></p>
+    <p>P4 and P8 are both ML/MAP problems: P4 is a plain binary channel, P8 the same structure extended with false alarms and misdetections. <strong>Nailing P4 first makes P8 much faster.</strong></p>
+    <h4>Module 4 was written without slides</h4>
+    <p>The deck covering P5 through P7 has not been posted. <a href="L04-independence.html">Module 4</a> is written from the textbook and this assignment's <em>Topics to Review</em> list. The lecture may order or notate things differently, so prefer the slides once they appear.</p>
+    <h4>The reflection has one more question than HW1</h4>
+    <p>Part (e) now asks <strong>which concept you would most like to review</strong>, and (f) is the time spent. Six questions in total. Jot notes as you go.</p>
+  </div>
+</section>
+
+<!-- ══ P1 ══ -->
+<section id="p1">
+  <div class="sec-head"><span class="sec-num">P1</span><h2 lang="ko">조건부 확률</h2><h2 lang="en">Conditional probability</h2></div>
+  <p class="sec-sub" lang="ko">패킷 2회 전송. 곱셈 규칙, 여집합, Bayes, 독립 판정까지 (a)–(f)</p>
+  <p class="sec-sub" lang="en">Two packet transmissions, covering the multiplication rule, complements, Bayes and an independence test, (a) through (f).</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>곱셈 규칙</td><td><a href="L03-conditional-probability.html#s2">Module 3 · 02 정의</a></td></tr>
+    <tr><td><strong>같은 구조의 풀이</strong></td><td><a href="L03-conditional-probability.html#s2">Module 3 · 예제 2.1</a>: (a)(c)(d)가 1:1, 숫자만 다름</td></tr>
+    <tr><td>(e) 독립 판정</td><td><a href="L04-independence.html#s1">Module 4 · 01</a>, 예제 1.1</td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>the multiplication rule</td><td><a href="L03-conditional-probability.html#s2">Module 3 · 02 the definition</a></td></tr>
+    <tr><td><strong>the same structure worked out</strong></td><td><a href="L03-conditional-probability.html#s2">Module 3 · Example 2.1</a>: parts (a), (c), (d) line up, only the numbers differ</td></tr>
+    <tr><td>(e) testing independence</td><td><a href="L04-independence.html#s1">Module 4 · 01</a> and Example 1.1</td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p><strong>네 결과의 확률을 먼저 다 채워라.</strong> <span class="m"><i>S</i><sub>1</sub>∩<i>S</i><sub>2</sub></span>, <span class="m"><i>S</i><sub>1</sub>∩<i>S</i><sub>2</sub><sup>c</sup></span>, <span class="m"><i>S</i><sub>1</sub><sup>c</sup>∩<i>S</i><sub>2</sub></span>, <span class="m"><i>S</i><sub>1</sub><sup>c</sup>∩<i>S</i><sub>2</sub><sup>c</sup></span> 네 칸짜리 표를 만들고 곱셈 규칙으로 채워. <strong>합이 1이 되는지 확인하면 그 자리에서 검산이 돼.</strong></p>
+    <p style="margin-bottom:0">그러고 나면 (a)부터 (d)까지가 전부 <em>칸을 골라 더하는 작업</em>으로 바뀌어. (c) "정확히 하나"는 가운데 두 칸, (d)는 Bayes인데 분모 <span class="m"><i>P</i>(<i>S</i><sub>2</sub>)</span>도 표에서 두 칸을 더하면 나와.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p><strong>Fill in all four outcome probabilities before anything else.</strong> Build a four-cell table for <span class="m"><i>S</i><sub>1</sub>∩<i>S</i><sub>2</sub></span>, <span class="m"><i>S</i><sub>1</sub>∩<i>S</i><sub>2</sub><sup>c</sup></span>, <span class="m"><i>S</i><sub>1</sub><sup>c</sup>∩<i>S</i><sub>2</sub></span>, <span class="m"><i>S</i><sub>1</sub><sup>c</sup>∩<i>S</i><sub>2</sub><sup>c</sup></span> and populate it with the multiplication rule. <strong>Checking that it sums to 1 gives you a free verification.</strong></p>
+    <p style="margin-bottom:0">After that, (a) through (d) are all just <em>picking cells and adding</em>. "Exactly one" in (c) is the two middle cells; (d) is Bayes, and even its denominator <span class="m"><i>P</i>(<i>S</i><sub>2</sub>)</span> is two cells of the same table.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>(e)가 "두 가지 방법으로" 정당화하라고 한다</h4>
+    <p>한 가지만 쓰면 요구를 안 지킨 거야. <a href="L04-independence.html#s1">Module 4 예제 1.1</a>에 세 가지 방법을 적어놨어. 곱 비교, 조건부 비교, 그리고 <span class="m"><i>P</i>(<i>S</i><sub>2</sub>|<i>S</i><sub>1</sub>) ≠ <i>P</i>(<i>S</i><sub>2</sub>|<i>S</i><sub>1</sub><sup>c</sup>)</span>. 이 중 둘을 골라 써.</p>
+    <h4>(d)는 시간을 거슬러 가는 것처럼 보인다</h4>
+    <p><span class="m"><i>P</i>(<i>S</i><sub>1</sub>|<i>S</i><sub>2</sub>)</span>는 "나중 일을 알고 앞선 일을 묻는" 형태야. 이상한 게 아니야. <strong>확률은 사건의 시간 순서가 아니라 정보의 양에 대한 진술이야.</strong> (f)가 말로 설명하라는 게 대략 이 얘기야.</p>
+    <h4>(f)는 계산이 아니라 서술이다</h4>
+    <p>(e)의 결과가 두 전송의 관계에 대해 뭘 말해주는지 <em>문장으로</em> 써야 해. 독립이 아니라는 건 첫 전송의 성패가 두 번째에 정보를 준다는 뜻이고, 물리적으로는 채널 상태가 짧은 시간 동안 유지되기 때문이라고 볼 수 있어.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>(e) says justify it in two different ways</h4>
+    <p>One route does not meet the requirement. <a href="L04-independence.html#s1">Module 4, Example 1.1</a> lays out three: compare the products, compare the conditionals, or note that <span class="m"><i>P</i>(<i>S</i><sub>2</sub>|<i>S</i><sub>1</sub>) ≠ <i>P</i>(<i>S</i><sub>2</sub>|<i>S</i><sub>1</sub><sup>c</sup>)</span>. Pick any two.</p>
+    <h4>(d) looks like running time backwards</h4>
+    <p><span class="m"><i>P</i>(<i>S</i><sub>1</sub>|<i>S</i><sub>2</sub>)</span> asks about the earlier event given the later one. Nothing is wrong: <strong>probability describes how much you know, not the order in which things happened.</strong> That is roughly what (f) wants you to say in words.</p>
+    <h4>(f) is prose, not arithmetic</h4>
+    <p>Write a sentence about what (e) tells you about the two transmissions. Not being independent means the outcome of the first carries information about the second, which physically comes from the channel state persisting over a short interval.</p>
+  </div>
+</section>
+
+<!-- ══ P2 ══ -->
+<section id="p2">
+  <div class="sec-head"><span class="sec-num">P2</span><h2 lang="ko">전확률 법칙</h2><h2 lang="en">Law of total probability</h2></div>
+  <p class="sec-sub" lang="ko">채널 상태 세 개. 분할 확인 → 전체 오류율 → 기여도 비교</p>
+  <p class="sec-sub" lang="en">Three channel states: verify the partition, get the overall error rate, compare contributions.</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>전확률 법칙</td><td><a href="L03-conditional-probability.html#s6">Module 3 · 06</a></td></tr>
+    <tr><td>(a) 분할의 두 조건</td><td><a href="L01-set-theory.html#s9">Module 1 · 09 Partition</a></td></tr>
+    <tr><td><strong>같은 유형의 풀이</strong></td><td><a href="L03-conditional-probability.html#s7">Module 3 · 예제 7.1</a> (상태 2개, 숫자 다름)</td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>law of total probability</td><td><a href="L03-conditional-probability.html#s6">Module 3 · 06</a></td></tr>
+    <tr><td>(a) the two partition conditions</td><td><a href="L01-set-theory.html#s9">Module 1 · 09 Partition</a></td></tr>
+    <tr><td><strong>the same type worked out</strong></td><td><a href="L03-conditional-probability.html#s7">Module 3 · Example 7.1</a>, two states and different numbers</td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p><strong>세 항을 각각 따로 적고 나서 더해라.</strong> <span class="m"><i>P</i>(<i>E</i>|<i>G</i>)<i>P</i>(<i>G</i>)</span>, <span class="m"><i>P</i>(<i>E</i>|<i>M</i>)<i>P</i>(<i>M</i>)</span>, <span class="m"><i>P</i>(<i>E</i>|<i>B</i>)<i>P</i>(<i>B</i>)</span>. 이 세 값이 (b)의 재료이자 <strong>(d)의 답 그 자체</strong>고, P3의 분자 세 개이기도 해. <strong>한 번 계산해서 네 번 쓴다.</strong></p>
+    <p style="margin-bottom:0">(c) "정확히 수신될 확률"은 <span class="m">1 − <i>P</i>(<i>E</i>)</span>야. 다시 세 항을 더하지 마.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p><strong>Write the three terms out separately before summing.</strong> <span class="m"><i>P</i>(<i>E</i>|<i>G</i>)<i>P</i>(<i>G</i>)</span>, <span class="m"><i>P</i>(<i>E</i>|<i>M</i>)<i>P</i>(<i>M</i>)</span>, <span class="m"><i>P</i>(<i>E</i>|<i>B</i>)<i>P</i>(<i>B</i>)</span>. Those three numbers feed (b), <strong>are literally the answer to (d)</strong>, and become the three numerators in P3. <strong>Compute once, use four times.</strong></p>
+    <p style="margin-bottom:0">For (c), the probability of correct reception is <span class="m">1 − <i>P</i>(<i>E</i>)</span>. Do not re-sum three terms.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>(a)를 한 줄로 때우지 말 것</h4>
+    <p>분할은 <strong>서로소</strong>와 <strong>덮음</strong> 둘 다야. 채널이 동시에 두 상태일 수 없다는 것(서로소)과 세 상태 말고는 없다는 것(덮음)을 각각 써야 해. <span class="m">0.5 + 0.3 + 0.2 = 1</span>도 덮음의 근거로 쓸 수 있어.</p>
+    <h4>조건부 확률을 그냥 더하는 것</h4>
+    <p><span class="m"><i>P</i>(<i>E</i>|<i>G</i>) + <i>P</i>(<i>E</i>|<i>M</i>) + <i>P</i>(<i>E</i>|<i>B</i>) = 0.26</span>은 <strong>아무 의미 없는 숫자야.</strong> 반드시 <span class="m"><i>P</i>(<i>A<sub>i</sub></i>)</span>로 가중해서 더해. <a href="L03-conditional-probability.html#s6">Module 3 · 06번 함정</a>에 있어.</p>
+    <h4>(d)의 "가장 크게 기여하는 상태"가 직관과 다를 수 있다</h4>
+    <p>오류를 낼 확률이 가장 높은 건 나쁜 채널(0.20)인데, <strong>기여도는 그 상태가 얼마나 자주 일어나는지까지 곱한 값</strong>이야. 드물지만 위험한 상태와 흔하지만 안전한 상태 중 어느 쪽이 이기는지는 계산해봐야 알아. <strong>이 감각이 P8에서 그대로 쓰인다.</strong></p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>Do not answer (a) in one line</h4>
+    <p>A partition needs <strong>disjointness</strong> and <strong>coverage</strong>. Say that the channel cannot be in two states at once, and that there are no states beyond these three. The fact that <span class="m">0.5 + 0.3 + 0.2 = 1</span> is legitimate evidence for coverage.</p>
+    <h4>Adding the conditionals directly</h4>
+    <p><span class="m"><i>P</i>(<i>E</i>|<i>G</i>) + <i>P</i>(<i>E</i>|<i>M</i>) + <i>P</i>(<i>E</i>|<i>B</i>) = 0.26</span> is <strong>a meaningless number.</strong> Weight by <span class="m"><i>P</i>(<i>A<sub>i</sub></i>)</span> before summing. See the <a href="L03-conditional-probability.html#s6">§06 traps in Module 3</a>.</p>
+    <h4>The largest contributor in (d) may not be the obvious one</h4>
+    <p>The bad channel has the highest error rate (0.20), but <strong>contribution multiplies that by how often the state occurs.</strong> Whether a rare dangerous state beats a common safe one is something you have to compute. <strong>That instinct carries straight into P8.</strong></p>
+  </div>
+</section>
+
+<!-- ══ P3 ══ -->
+<section id="p3">
+  <div class="sec-head"><span class="sec-num">P3</span><h2>Bayes</h2></div>
+  <p class="sec-sub" lang="ko">P2를 이어받아 조건을 뒤집는다. 오류를 봤을 때 채널 상태의 posterior.</p>
+  <p class="sec-sub" lang="en">Continues P2 and flips the conditioning: the posterior over channel states given an error.</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>분할과 합친 Bayes</td><td><a href="L03-conditional-probability.html#s7">Module 3 · 07</a></td></tr>
+    <tr><td><strong>같은 유형의 풀이</strong></td><td><a href="L03-conditional-probability.html#s7">예제 7.1(b)(c)</a></td></tr>
+    <tr><td>prior가 posterior로 바뀌는 의미</td><td><a href="L03-conditional-probability.html#s8">Module 3 · 08</a></td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>Bayes with a partition</td><td><a href="L03-conditional-probability.html#s7">Module 3 · 07</a></td></tr>
+    <tr><td><strong>the same type worked out</strong></td><td><a href="L03-conditional-probability.html#s7">Example 7.1(b) and (c)</a></td></tr>
+    <tr><td>what it means for a prior to become a posterior</td><td><a href="L03-conditional-probability.html#s8">Module 3 · 08</a></td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p><strong>새로 계산할 게 거의 없다.</strong> 분모는 P2(b)의 <span class="m"><i>P</i>(<i>E</i>)</span>이고, 분자 셋은 P2(d)에서 이미 구한 <span class="m"><i>P</i>(<i>E</i>∩<i>G</i>)</span>, <span class="m"><i>P</i>(<i>E</i>∩<i>M</i>)</span>, <span class="m"><i>P</i>(<i>E</i>∩<i>B</i>)</span>야. <strong>(a)(b)(c)는 나눗셈 세 번이야.</strong></p>
+    <p style="margin-bottom:0">그래서 P2를 정확히 해두면 P3이 몇 분 만에 끝나. 반대로 P2가 틀리면 세 문항이 다 틀려.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p><strong>Almost nothing new needs computing.</strong> The denominator is the <span class="m"><i>P</i>(<i>E</i>)</span> from P2(b), and the three numerators are the <span class="m"><i>P</i>(<i>E</i>∩<i>G</i>)</span>, <span class="m"><i>P</i>(<i>E</i>∩<i>M</i>)</span>, <span class="m"><i>P</i>(<i>E</i>∩<i>B</i>)</span> you already produced in P2(d). <strong>Parts (a), (b) and (c) are three divisions.</strong></p>
+    <p style="margin-bottom:0">Get P2 right and P3 takes minutes. Get P2 wrong and all three parts fall with it.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>(d)는 검산 장치다</h4>
+    <p>세 posterior의 합이 1이어야 해. <a href="L03-conditional-probability.html#s7">분자들을 다 더하면 분모가 되기 때문</a>이야. <strong>1이 안 나오면 P2로 돌아가.</strong> 문제가 이 문항을 넣은 이유가 이거야.</p>
+    <h4>(f)가 이 문제의 목적이다</h4>
+    <p>(a)–(e)는 계산이고, <strong>(f)에서 <span class="m"><i>P</i>(<i>B</i>)</span>와 <span class="m"><i>P</i>(<i>B</i>|<i>E</i>)</span>를 비교하고 왜 믿음이 바뀌는지 말로 설명</strong>해야 끝나. 두 값을 나란히 적고, 나쁜 채널이 오류를 낼 확률이 다른 상태보다 훨씬 크기 때문에 오류 관측이 그쪽을 강하게 지지한다고 쓰면 돼.</p>
+    <h4>(e)의 "가장 그럴듯한 상태"는 posterior 기준이다</h4>
+    <p>prior가 가장 큰 상태(G, 0.5)와 posterior가 가장 큰 상태가 다를 수 있어. 질문이 <em>"given that an error occurred"</em>라고 했으니 <strong>반드시 posterior로 비교해.</strong></p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>(d) is a checksum</h4>
+    <p>The three posteriors must sum to 1, <a href="L03-conditional-probability.html#s7">because adding the numerators rebuilds the denominator</a>. <strong>If it does not, go back to P2.</strong> That is precisely why the part is there.</p>
+    <h4>(f) is the point of the problem</h4>
+    <p>Parts (a) through (e) are arithmetic. The problem is finished only when <strong>(f) compares <span class="m"><i>P</i>(<i>B</i>)</span> with <span class="m"><i>P</i>(<i>B</i>|<i>E</i>)</span> and explains in words why the belief moved.</strong> Put the two numbers side by side and say that a bad channel produces errors far more readily than the other states, so observing one is strong evidence for it.</p>
+    <h4>"Most likely state" in (e) means by posterior</h4>
+    <p>The state with the largest prior (G, at 0.5) need not be the one with the largest posterior. The question says <em>given that an error occurred</em>, so <strong>compare posteriors.</strong></p>
+  </div>
+</section>
+
+<!-- ══ P4 ══ -->
+<section id="p4">
+  <div class="sec-head"><span class="sec-num">P4</span><h2 lang="ko">MAP과 ML 검출</h2><h2 lang="en">MAP and ML detection</h2></div>
+  <p class="sec-sub" lang="ko">이진 대칭 채널. 슬라이드 예제와 <strong>prior가 뒤집혀 있다.</strong></p>
+  <p class="sec-sub" lang="en">A binary symmetric channel, with <strong>the prior flipped</strong> relative to the slide example.</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>likelihood의 정의</td><td><a href="L03-conditional-probability.html#s8">Module 3 · 08</a></td></tr>
+    <tr><td>ML 규칙</td><td><a href="L03-conditional-probability.html#s10">Module 3 · 10</a> (arg max 설명 포함)</td></tr>
+    <tr><td>MAP 규칙</td><td><a href="L03-conditional-probability.html#s11">Module 3 · 11</a></td></tr>
+    <tr><td><strong>직접 만져보기</strong></td><td><a href="L03-conditional-probability.html#s14">Module 3 · 14 도구</a>: ω와 prior를 이 문제 값으로 맞춰볼 수 있음</td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>what a likelihood is</td><td><a href="L03-conditional-probability.html#s8">Module 3 · 08</a></td></tr>
+    <tr><td>the ML rule</td><td><a href="L03-conditional-probability.html#s10">Module 3 · 10</a>, including arg max</td></tr>
+    <tr><td>the MAP rule</td><td><a href="L03-conditional-probability.html#s11">Module 3 · 11</a></td></tr>
+    <tr><td><strong>hands on</strong></td><td><a href="L03-conditional-probability.html#s14">the §14 tool in Module 3</a>: dial ω and the prior to this problem's values</td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p><strong>(a)가 이미 절반이야.</strong> 두 likelihood <span class="m"><i>P</i>(<i>R</i><sub>1</sub>|<i>T</i><sub>0</sub>) = 0.1</span>과 <span class="m"><i>P</i>(<i>R</i><sub>1</sub>|<i>T</i><sub>1</sub>) = 0.9</span>를 적으면 (b)는 둘 중 큰 쪽을 고르는 것뿐이야.</p>
+    <p style="margin-bottom:0">(d)는 posterior 두 개인데, <strong>분모 <span class="m"><i>P</i>(<i>R</i><sub>1</sub>)</span>이 (c)에서 이미 나와.</strong> 순서가 (c) → (d)인 게 그래서야. (e)는 (d)의 두 값을 비교만 하면 돼.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p><strong>Part (a) is already half the work.</strong> Once you write the two likelihoods <span class="m"><i>P</i>(<i>R</i><sub>1</sub>|<i>T</i><sub>0</sub>) = 0.1</span> and <span class="m"><i>P</i>(<i>R</i><sub>1</sub>|<i>T</i><sub>1</sub>) = 0.9</span>, part (b) is picking the larger.</p>
+    <p style="margin-bottom:0">Part (d) wants two posteriors, and <strong>their denominator <span class="m"><i>P</i>(<i>R</i><sub>1</sub>)</span> is exactly what (c) produced.</strong> That is why they come in that order. Part (e) only compares the two numbers from (d).</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>슬라이드 예제와 prior가 반대다</h4>
+    <p>슬라이드는 <span class="m"><i>P</i>(<i>S</i>=0) = 0.9</span>인데 이 문제는 <span class="m"><i>P</i>(<i>T</i><sub>0</sub>) = 0.8</span>이고 <span class="m"><i>ε</i> = 0.1</span>이야. <strong>슬라이드의 결론(<span class="m"><i>ω</i> &gt; 0.1</span>이면 MAP이 항상 0)을 그대로 옮겨 쓰면 안 돼.</strong> 이 문제의 숫자로 다시 비교해야 해. <a href="L03-conditional-probability.html#s14">도구</a>에 <span class="m"><i>ω</i> = 0.1</span>, prior <span class="m">0.8</span>을 넣어보면 어떻게 되는지 바로 보여.</p>
+    <h4>(f)가 이 문제의 결론이다</h4>
+    <p>ML과 MAP이 <em>같은</em> 결정을 내리는지 묻고 있어. 같다면 왜 같은지도 생각해봐. <strong>prior가 충분히 치우치지 않으면 likelihood의 차이를 뒤집지 못하기 때문</strong>이야. 어느 쪽이든 답을 확인하고 이유를 한 줄 붙이면 좋아.</p>
+    <h4>likelihood를 posterior라고 부르지 말 것</h4>
+    <p>(a)가 묻는 건 <span class="m"><i>P</i>(<i>R</i><sub>1</sub>|<i>T<sub>i</sub></i>)</span>이고 (d)가 묻는 건 <span class="m"><i>P</i>(<i>T<sub>i</sub></i>|<i>R</i><sub>1</sub>)</span>이야. 조건이 반대야. 답안에 이름을 붙일 때 헷갈리기 쉬워.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>The prior is flipped relative to the slide example</h4>
+    <p>The slides use <span class="m"><i>P</i>(<i>S</i>=0) = 0.9</span>; this problem has <span class="m"><i>P</i>(<i>T</i><sub>0</sub>) = 0.8</span> with <span class="m"><i>ε</i> = 0.1</span>. <strong>Do not transplant the slide's conclusion that MAP always answers 0 once <span class="m"><i>ω</i> &gt; 0.1</span>.</strong> Redo the comparison with these numbers. Setting <span class="m"><i>ω</i> = 0.1</span> and prior <span class="m">0.8</span> in <a href="L03-conditional-probability.html#s14">the tool</a> shows you what happens immediately.</p>
+    <h4>(f) is the conclusion</h4>
+    <p>It asks whether ML and MAP make the <em>same</em> decision. If they do, think about why: <strong>a prior that is not skewed enough cannot overturn the likelihood gap.</strong> Either way, state the answer and add a line of reasoning.</p>
+    <h4>Do not call a likelihood a posterior</h4>
+    <p>Part (a) asks for <span class="m"><i>P</i>(<i>R</i><sub>1</sub>|<i>T<sub>i</sub></i>)</span> and part (d) for <span class="m"><i>P</i>(<i>T<sub>i</sub></i>|<i>R</i><sub>1</sub>)</span>. The conditioning is reversed, and it is easy to mislabel them when writing up.</p>
+  </div>
+</section>
+
+<!-- ══ P5 ══ -->
+<section id="p5">
+  <div class="sec-head"><span class="sec-num">P5</span><h2 lang="ko">pairwise와 mutual 독립</h2><h2 lang="en">Pairwise and mutual independence</h2></div>
+  <p class="sec-sub" lang="ko">공정한 비트 두 개. 이 과제에서 개념적으로 가장 중요한 문제.</p>
+  <p class="sec-sub" lang="en">Two fair bits. Conceptually the most important problem on this set.</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>두 정의의 차이</td><td><a href="L04-independence.html#s4">Module 4 · 04</a></td></tr>
+    <tr><td><strong>같은 문제의 풀이</strong></td><td><a href="L04-independence.html#s4">Module 4 · 예제 4.1</a>: <strong>설정이 완전히 동일하다</strong></td></tr>
+    <tr><td>독립 ≠ 서로소</td><td><a href="L04-independence.html#s2">Module 4 · 02</a></td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>how the two definitions differ</td><td><a href="L04-independence.html#s4">Module 4 · 04</a></td></tr>
+    <tr><td><strong>this exact problem worked out</strong></td><td><a href="L04-independence.html#s4">Module 4 · Example 4.1</a>: <strong>the setup is identical</strong></td></tr>
+    <tr><td>independent is not disjoint</td><td><a href="L04-independence.html#s2">Module 4 · 02</a></td></tr>
+  </table>
+
+  <div class="callout" lang="ko">
+    <strong>노트의 예제 4.1이 이 문제와 설정이 똑같아.</strong> 숫자를 바꾸지 않았어. 이 유형은 절차가 아니라 <em>개념</em>이 핵심이라, 숫자를 바꾸면 배울 게 사라지기 때문이야. <strong>그러니 먼저 직접 풀고 나서 대조해.</strong> 풀이를 읽고 옮겨 적으면 (f)에서 무슨 일이 일어난 건지 영영 안 잡혀.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Example 4.1 in the notes uses the same setup as this problem.</strong> The numbers were deliberately left alone: this type is about the <em>concept</em> rather than a procedure, and changing the numbers would remove what there is to learn. <strong>So attempt it first, then compare.</strong> Reading the solution and copying it out means never seeing what actually happens in (f).
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p>(a)에서 <strong>세 집합을 원소로 다 써라.</strong> <span class="m"><i>Ω</i></span>가 네 개뿐이라 나열이 끝나. 그러고 나면 (b)–(e)가 전부 <em>원소를 세는 작업</em>이야.</p>
+    <p style="margin-bottom:0"><span class="m"><i>C</i></span>가 "두 비트가 같다"라는 걸 <span class="m">{00, 11}</span>로 옮기는 게 유일한 생각할 거리야.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p>In (a), <strong>write all three sets out elementwise.</strong> With only four outcomes in <span class="m"><i>Ω</i></span> the enumeration finishes immediately, and then (b) through (e) are just <em>counting outcomes</em>.</p>
+    <p style="margin-bottom:0">The only thing to actually think about is translating <span class="m"><i>C</i></span>, "the two bits are equal", into <span class="m">{00, 11}</span>.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>(d)를 끝내고 (f)도 끝났다고 생각하는 것</h4>
+    <p><strong>이게 이 문제 전체의 함정이야.</strong> 세 쌍을 다 확인했어도 삼중 교집합은 따로 확인해야 해. (e)가 <span class="m"><i>P</i>(<i>A</i>∩<i>B</i>∩<i>C</i>)</span>를 따로 묻는 게 그 준비 작업이야.</p>
+    <h4>(f)에 "아니다"만 쓰면 부족하다</h4>
+    <p><em>"Explain"</em>이라고 했어. 어느 등식이 깨지는지 숫자로 보이고, <strong>왜</strong> 깨지는지도 한 줄 써. <span class="m"><i>C</i></span>가 <span class="m"><i>A</i></span>와 <span class="m"><i>B</i></span>로 완전히 결정된다는 게 이유야.</p>
+    <h4>세 사건이 서로소가 아니라는 점</h4>
+    <p>셋 다 <span class="m">{00}</span>을 포함해. 겹치는데도 pairwise 독립이야. <a href="L04-independence.html#s2">Module 4 · 02</a>에서 말한 "독립이려면 오히려 겹쳐야 한다"의 실례야.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>Thinking (d) settles (f)</h4>
+    <p><strong>This is the trap the whole problem is built around.</strong> Verifying all three pairs says nothing about the triple intersection. Part (e) asking for <span class="m"><i>P</i>(<i>A</i>∩<i>B</i>∩<i>C</i>)</span> separately is the setup for exactly this.</p>
+    <h4>Answering (f) with just "no"</h4>
+    <p>It says <em>explain</em>. Show numerically which equation fails, and add a line on <strong>why</strong>: <span class="m"><i>C</i></span> is completely determined by <span class="m"><i>A</i></span> and <span class="m"><i>B</i></span>.</p>
+    <h4>Notice the three events are not disjoint</h4>
+    <p>All three contain <span class="m">{00}</span>. They overlap and are still pairwise independent, which is a live example of the point in <a href="L04-independence.html#s2">Module 4 · 02</a> that independence actually requires overlap.</p>
+  </div>
+</section>
+
+<!-- ══ P6 ══ -->
+<section id="p6">
+  <div class="sec-head"><span class="sec-num">P6</span><h2 lang="ko">반복 전송</h2><h2 lang="en">Repeated transmissions</h2></div>
+  <p class="sec-sub" lang="ko">10회 전송, <span class="m"><i>p</i> = 0.8</span>. 순수 계산 문제.</p>
+  <p class="sec-sub" lang="en">Ten transmissions at <span class="m"><i>p</i> = 0.8</span>. Pure computation.</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>이항 공식과 이항계수</td><td><a href="L04-independence.html#s6">Module 4 · 06</a> (기호 뜯어보기 포함)</td></tr>
+    <tr><td>왜 곱해도 되는지</td><td><a href="L04-independence.html#s5">Module 4 · 05</a></td></tr>
+    <tr><td>"적어도 하나"의 여집합</td><td><a href="L02-probability-space.html#s7">Module 2 · 07</a></td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>the binomial formula and coefficient</td><td><a href="L04-independence.html#s6">Module 4 · 06</a>, with the notation unpacked</td></tr>
+    <tr><td>why the factors multiply</td><td><a href="L04-independence.html#s5">Module 4 · 05</a></td></tr>
+    <tr><td>the complement trick for "at least one"</td><td><a href="L02-probability-space.html#s7">Module 2 · 07</a></td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p><span class="m">(<sup>10</sup><sub><i>k</i></sub>)</span>를 <span class="m"><i>k</i> = 8, 9, 10</span>에 대해 먼저 계산해두면 (a)(b)(c)(d)가 전부 그걸 재활용해. <span class="m">(<sup>10</sup><sub>8</sub>) = (<sup>10</sup><sub>2</sub>)</span>로 세는 게 빨라.</p>
+    <p style="margin-bottom:0"><strong>(d)와 (e)는 접근이 정반대야.</strong> (d) "적어도 9번 성공"은 두 항을 <em>직접</em> 더하고, (e) "적어도 한 번 실패"는 <em>여집합</em>으로 한 항이야. 어느 쪽이 항이 적은지 세어보고 고르는 게 요령이야.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p>Compute <span class="m">(<sup>10</sup><sub><i>k</i></sub>)</span> for <span class="m"><i>k</i> = 8, 9, 10</span> up front and (a) through (d) all reuse them. Evaluate <span class="m">(<sup>10</sup><sub>8</sub>)</span> as <span class="m">(<sup>10</sup><sub>2</sub>)</span> for speed.</p>
+    <p style="margin-bottom:0"><strong>(d) and (e) go opposite ways.</strong> "At least 9 successes" in (d) sums two terms <em>directly</em>; "at least one failure" in (e) is a single term <em>via the complement</em>. Count the terms each way and take the cheaper one.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>(f)는 <span class="m"><i>n</i></span>이 10이 아니라 5다</h4>
+    <p><em>"the last five transmissions"</em>라고 했어. <strong>마지막 다섯 번만 보는 문제</strong>야. 독립이니까 앞의 다섯 번은 아무 영향이 없고, <span class="m"><i>n</i> = 5</span>로 다시 계산하면 돼. (e)의 답과 비교하라는 게 문항의 의도야.</p>
+    <h4><span class="m"><i>p</i> = 0.8</span>이 성공 확률이다</h4>
+    <p>실패 확률은 0.2야. P7에서는 <span class="m"><i>ε</i> = 0.1</span>이 <em>오류</em> 확률이라 방향이 반대니, 두 문제를 연달아 풀 때 헷갈리기 쉬워.</p>
+    <h4>(e)를 아홉 항으로 더하려 하는 것</h4>
+    <p><span class="m">1 − (0.8)<sup>10</sup></span> 한 줄이야. 0번부터 9번까지 더하고 있으면 방향을 잘못 잡은 거야.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>In (f), <span class="m"><i>n</i></span> is 5, not 10</h4>
+    <p>It says <em>the last five transmissions</em>, so <strong>only those five are in scope.</strong> Independence means the first five are irrelevant; redo it with <span class="m"><i>n</i> = 5</span>. Comparing against (e) is the point of the part.</p>
+    <h4><span class="m"><i>p</i> = 0.8</span> is the success probability</h4>
+    <p>Failure is 0.2. In P7 the given <span class="m"><i>ε</i> = 0.1</span> is an <em>error</em> probability, pointing the other way, which is easy to mix up when doing the two back to back.</p>
+    <h4>Summing nine terms for (e)</h4>
+    <p>It is the single expression <span class="m">1 − (0.8)<sup>10</sup></span>. If you are adding up <span class="m"><i>k</i> = 0</span> through 9, you have taken the long way round.</p>
+  </div>
+</section>
+
+<!-- ══ P7 ══ -->
+<section id="p7">
+  <div class="sec-head"><span class="sec-num">P7</span><h2 lang="ko">반복부호</h2><h2 lang="en">Repetition coding</h2></div>
+  <p class="sec-sub" lang="ko">같은 심볼을 5번 보내고 다수결. 신뢰성과 전송률의 맞바꿈.</p>
+  <p class="sec-sub" lang="en">Send the symbol five times and vote. Reliability traded against rate.</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>다수결 오류 조건</td><td><a href="L04-independence.html#s7">Module 4 · 07</a></td></tr>
+    <tr><td><strong>같은 유형의 풀이</strong></td><td><a href="L04-independence.html#s7">Module 4 · 예제 7.1</a> (<span class="m"><i>n</i>=3</span>, 숫자 다름)</td></tr>
+    <tr><td><strong>직접 만져보기</strong></td><td><a href="L04-independence.html#s8">Module 4 · 08 도구</a>: <span class="m"><i>ε</i>=0.1</span>에 <span class="m"><i>n</i></span>을 1·3·5로</td></tr>
+    <tr><td>왜 이게 필요한가</td><td><a href="L03-conditional-probability.html#s13">Module 3 · 13번 함정</a></td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>when the majority vote fails</td><td><a href="L04-independence.html#s7">Module 4 · 07</a></td></tr>
+    <tr><td><strong>the same type worked out</strong></td><td><a href="L04-independence.html#s7">Module 4 · Example 7.1</a>, with <span class="m"><i>n</i>=3</span> and different numbers</td></tr>
+    <tr><td><strong>hands on</strong></td><td><a href="L04-independence.html#s8">the §08 tool</a>: set <span class="m"><i>ε</i>=0.1</span> and step <span class="m"><i>n</i></span> through 1, 3, 5</td></tr>
+    <tr><td>why any of this is needed</td><td><a href="L03-conditional-probability.html#s13">the §13 traps in Module 3</a></td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p><strong>(a)를 먼저 정확히 쓰면 나머지가 따라와.</strong> 5개 중 <strong>3개 이상</strong>이 틀리면 다수결이 틀려. 이 "3개 이상"을 확정하고 시작해.</p>
+    <p style="margin-bottom:0">(c)는 <span class="m"><i>k</i> = 3, 4, 5</span> 세 항의 합이고 (b)가 그중 첫 항이야. <strong>(b)를 (c)에 재활용해.</strong></p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p><strong>Pin down (a) precisely and the rest follows.</strong> The vote is wrong when <strong>three or more</strong> of the five copies are wrong. Establish that "three or more" before computing anything.</p>
+    <p style="margin-bottom:0">Part (c) is the sum over <span class="m"><i>k</i> = 3, 4, 5</span>, and (b) is its first term. <strong>Reuse (b) inside (c).</strong></p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>"절반 이상"이 아니라 "절반 초과"</h4>
+    <p>5개 중 2개가 틀리면 3개가 맞으니 다수결은 <strong>성공</strong>이야. 합을 <span class="m"><i>k</i>=2</span>부터 시작하면 답이 통째로 달라져. 이 문제에서 제일 흔한 실수야.</p>
+    <h4>(f)가 이 문제의 목적이다</h4>
+    <p>1·3·5회의 오류 확률을 나란히 놓고 <strong>"무엇을 얻고 무엇을 잃는가"</strong>에 답해야 해. 얻는 건 신뢰성이고 <strong>잃는 건 전송률</strong>이야. 심볼 하나에 채널을 <span class="m"><i>n</i></span>번 쓰니 처리량이 <span class="m">1/<i>n</i></span>로 떨어져. <em>이 대가를 안 적으면 절반만 답한 거야.</em></p>
+    <h4>줄어드는 폭이 점점 작아진다는 것</h4>
+    <p>1 → 3에서 크게 떨어지고 3 → 5에서는 덜 떨어져. <a href="L04-independence.html#s8">도구</a>에서 막대로 보면 바로 보여. (f)에 이 관찰을 덧붙이면 좋은 답이 돼.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>"More than half", not "at least half"</h4>
+    <p>Two wrong out of five leaves three correct, so the vote <strong>succeeds</strong>. Starting the sum at <span class="m"><i>k</i>=2</span> changes the answer entirely. This is the most common slip on this problem.</p>
+    <h4>(f) is the point of the problem</h4>
+    <p>Line up the error probabilities for 1, 3 and 5 copies and answer <strong>what is gained and what it costs</strong>. You gain reliability; <strong>you pay in rate</strong>, since one symbol now uses the channel <span class="m"><i>n</i></span> times and throughput falls to <span class="m">1/<i>n</i></span>. <em>Leaving out the cost is answering half the question.</em></p>
+    <h4>The returns diminish</h4>
+    <p>Going from 1 to 3 buys a lot; 3 to 5 buys noticeably less. The bars in <a href="L04-independence.html#s8">the tool</a> make it obvious at a glance, and noting it strengthens the answer to (f).</p>
+  </div>
+</section>
+
+<!-- ══ P8 ══ -->
+<section id="p8">
+  <div class="sec-head"><span class="sec-num">P8</span><h2 lang="ko">희귀 사건 검출</h2><h2 lang="en">Detecting rare events</h2></div>
+  <p class="sec-sub" lang="ko">8문항짜리 최대 문제. P3과 P4를 합친 구조에 오경보·미검출이 붙는다.</p>
+  <p class="sec-sub" lang="en">The big one, eight parts. P3 and P4 combined, plus false alarms and misdetections.</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>(a) 전확률 법칙</td><td><a href="L03-conditional-probability.html#s6">Module 3 · 06</a></td></tr>
+    <tr><td>(b) ML</td><td><a href="L03-conditional-probability.html#s10">Module 3 · 10</a></td></tr>
+    <tr><td>(c) posterior와 MAP</td><td><a href="L03-conditional-probability.html#s7">07</a>, <a href="L03-conditional-probability.html#s11">11</a></td></tr>
+    <tr><td>(h) prior가 왜 지배하는가</td><td><a href="L03-conditional-probability.html#s13">Module 3 · 13</a></td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>(a) law of total probability</td><td><a href="L03-conditional-probability.html#s6">Module 3 · 06</a></td></tr>
+    <tr><td>(b) ML</td><td><a href="L03-conditional-probability.html#s10">Module 3 · 10</a></td></tr>
+    <tr><td>(c) posteriors and MAP</td><td><a href="L03-conditional-probability.html#s7">07</a> and <a href="L03-conditional-probability.html#s11">11</a></td></tr>
+    <tr><td>(h) why the prior dominates</td><td><a href="L03-conditional-probability.html#s13">Module 3 · 13</a></td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p><strong>네 칸짜리 결합확률 표를 먼저 만들어라.</strong> <span class="m"><i>P</i>(<i>A</i>∩<i>D</i>)</span>, <span class="m"><i>P</i>(<i>A</i>∩<i>D</i><sup>c</sup>)</span>, <span class="m"><i>P</i>(<i>A</i><sup>c</sup>∩<i>D</i>)</span>, <span class="m"><i>P</i>(<i>A</i><sup>c</sup>∩<i>D</i><sup>c</sup>)</span>. 네 값이면 <strong>(a)부터 (f)까지 전부 이 표에서 나와.</strong> 합이 1인지 확인하면 검산도 돼.</p>
+    <p style="margin-bottom:0">(g)는 숫자가 아니라 <strong>부등식을 유도</strong>하는 문항이야. <span class="m">0.05·<i>p</i><sub>D</sub> &gt; 0.95·<i>p</i><sub>FA</sub></span> 형태를 정리하면 돼. (h)는 그 부등식이 무엇을 요구하는지 말로 푸는 것이고.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p><strong>Build the four-cell joint table first:</strong> <span class="m"><i>P</i>(<i>A</i>∩<i>D</i>)</span>, <span class="m"><i>P</i>(<i>A</i>∩<i>D</i><sup>c</sup>)</span>, <span class="m"><i>P</i>(<i>A</i><sup>c</sup>∩<i>D</i>)</span>, <span class="m"><i>P</i>(<i>A</i><sup>c</sup>∩<i>D</i><sup>c</sup>)</span>. Those four numbers deliver <strong>everything from (a) through (f)</strong>, and checking that they sum to 1 verifies them.</p>
+    <p style="margin-bottom:0">Part (g) asks for <strong>a derived inequality</strong> rather than a number: rearrange <span class="m">0.05·<i>p</i><sub>D</sub> &gt; 0.95·<i>p</i><sub>FA</sub></span>. Part (h) then explains in words what that inequality demands.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>ML과 MAP이 <em>다른</em> 답을 내는 게 이 문제의 핵심이다</h4>
+    <p>P4에서는 둘이 같았을 수 있지만, 여기서는 <span class="m"><i>P</i>(<i>A</i>) = 0.05</span>로 극단적으로 치우쳐 있어. <strong>희귀 사건이라 prior가 likelihood를 이긴다.</strong> (c)에서 그 결과가 나오는데, 놀랍다고 느껴져도 계산이 맞으면 맞는 거야.</p>
+    <h4>(d)와 (e)의 조건이 무엇인지 정확히 볼 것</h4>
+    <p><span class="m"><i>P</i><sub>FA</sub> = <i>P</i>(비정상이라고 판정 | <i>A</i><sup>c</sup>)</span>이고 <span class="m"><i>P</i><sub>MD</sub> = <i>P</i>(정상이라고 판정 | <i>A</i>)</span>야. <strong>둘 다 실제 상태로 조건을 건 값</strong>이지 posterior가 아니야. 검출기가 무엇을 판정하는지에 따라 값이 달라지니 ML용과 MAP용을 따로 계산해.</p>
+    <h4>(f)의 "전체 오류 확률"은 가중합이다</h4>
+    <p><span class="m"><i>P</i><sub>FA</sub> + <i>P</i><sub>MD</sub></span>가 아니야. <span class="m"><i>P</i>(<i>A</i><sup>c</sup>)<i>P</i><sub>FA</sub> + <i>P</i>(<i>A</i>)<i>P</i><sub>MD</sub></span>로 <strong>각 상태의 확률로 가중</strong>해야 해. P2(d)에서 연습한 감각이 여기서 쓰여.</p>
+    <h4>(h)는 이 과제 전체의 결론이다</h4>
+    <p>왜 희귀 사건을 안정적으로 검출하려면 센서가 아주 정확해야 하는가. 답의 뼈대는 이거야. <strong>비정상이 0.05로 드물기 때문에, 오경보율이 조금만 높아도 알람의 대부분이 정상 상태에서 나온다.</strong> (c)의 <span class="m"><i>P</i>(<i>A</i>|<i>D</i>)</span> 값이 그 증거야. 검출률을 올리는 것보다 오경보율을 낮추는 게 더 중요하다는 얘기로 이어가면 좋아.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>ML and MAP disagreeing is the point here</h4>
+    <p>They may have agreed in P4, but <span class="m"><i>P</i>(<i>A</i>) = 0.05</span> is a heavily skewed prior. <strong>Because the event is rare, the prior beats the likelihood.</strong> Part (c) produces that result, and however surprising it feels, correct arithmetic is correct.</p>
+    <h4>Read the conditioning in (d) and (e) carefully</h4>
+    <p><span class="m"><i>P</i><sub>FA</sub> = <i>P</i>(decide abnormal | <i>A</i><sup>c</sup>)</span> and <span class="m"><i>P</i><sub>MD</sub> = <i>P</i>(decide normal | <i>A</i>)</span>. <strong>Both condition on the true state</strong>, so neither is a posterior. The values depend on what the detector decides, so compute them separately for ML and for MAP.</p>
+    <h4>"Overall probability of error" in (f) is a weighted sum</h4>
+    <p>Not <span class="m"><i>P</i><sub>FA</sub> + <i>P</i><sub>MD</sub></span>, but <span class="m"><i>P</i>(<i>A</i><sup>c</sup>)<i>P</i><sub>FA</sub> + <i>P</i>(<i>A</i>)<i>P</i><sub>MD</sub></span>, <strong>weighted by how often each state occurs</strong>. That is the instinct P2(d) was training.</p>
+    <h4>(h) is the conclusion of the whole assignment</h4>
+    <p>Why does reliable rare-event detection demand a very accurate sensor? The skeleton of the answer: <strong>because the abnormal condition occurs only 5% of the time, even a modest false-alarm rate means most alarms originate from normal operation.</strong> The <span class="m"><i>P</i>(<i>A</i>|<i>D</i>)</span> you computed in (c) is the evidence. A good answer continues that lowering the false-alarm rate matters more than raising the detection rate.</p>
+  </div>
+</section>
+
+<!-- ══ 99 ══ -->
+<section id="p9">
+  <div class="sec-head"><span class="sec-num">99</span><h2 lang="ko">복습 체크리스트와 회고</h2><h2 lang="en">Review checklist and reflection</h2></div>
+
+  <div class="callout" lang="ko">
+    <strong>과제를 마치면 이 열 가지가 편해야 한다</strong> (문제지 <em>Topics to Review</em>):<br><br>
+    조건부 확률 · 곱셈 규칙 · 전확률 법칙 · Bayes' rule · prior, likelihood, posterior ·
+    ML과 MAP 결정 · 사건의 독립 · pairwise와 mutual 독립 · 반복 독립 시행 ·
+    Bernoulli 시행과 이항분포, 다수결과 반복부호<br><br>
+    앞의 여섯 개가 <a href="L03-conditional-probability.html">Module 3</a>, 뒤의 네 개가 <a href="L04-independence.html">Module 4</a>야.
+  </div>
+  <div class="callout" lang="en">
+    <strong>By the end these ten should feel comfortable</strong> (the assignment's <em>Topics to Review</em>):<br><br>
+    conditional probability · the multiplication rule · the law of total probability · Bayes' rule ·
+    prior, likelihood and posterior · ML and MAP decisions · independence of events ·
+    pairwise and mutual independence · repeated independent experiments ·
+    Bernoulli trials and the binomial, majority voting and repetition coding<br><br>
+    The first six live in <a href="L03-conditional-probability.html">Module 3</a>, the last four in <a href="L04-independence.html">Module 4</a>.
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">Reflection · 제출물의 일부 (6문항)</span>
+    <ol style="margin-bottom:0">
+      <li>가장 쉬웠던 문제나 개념은? 왜?</li>
+      <li>가장 어려웠던 것은? 구체적으로 뭐가 어려웠나?</li>
+      <li>아직 답이 맞는지 확신 없는 문제가 있나? 어디가 불확실한가?</li>
+      <li>스스로 알아채고 고친 실수가 있나? 거기서 뭘 배웠나?</li>
+      <li><strong>조건부 확률 · 전확률 법칙 · Bayes · 독립 · 반복 시행</strong> 중 가장 복습하고 싶은 것은? 왜?</li>
+      <li>총 몇 시간쯤 걸렸나?</li>
+    </ol>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Reflection · part of the submission (six questions)</span>
+    <ol style="margin-bottom:0">
+      <li>Which problem or concept was easiest, and why?</li>
+      <li>Which was hardest, and what specifically made it hard?</li>
+      <li>Is there a problem you are still unsure about? Where exactly?</li>
+      <li>Did you catch and correct a mistake? What did you learn from it?</li>
+      <li>Of <strong>conditional probability, total probability, Bayes, independence, repeated trials</strong>, which would you most like to review, and why?</li>
+      <li>Roughly how long did it take?</li>
+    </ol>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>5번은 HW1에 없던 문항이야.</strong> 솔직하게 쓰면 교수가 어디를 더 다룰지 정하는 데 쓰여. 3번과 함께 <em>진짜로</em> 답하면 다음 강의나 office hour에서 뭘 물어볼지도 같이 정해져.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Question 5 is new since HW1.</strong> Answered honestly it feeds into what gets revisited in lecture. Take it and question 3 seriously and they also decide what you walk into office hours to ask.
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span lang="ko">EEE 554 Probability and Random Processes · Homework 2 공략<br>
+  강의: Nicolò Michelusi, Arizona State University · Fall 2026<br>
+  이 페이지는 수강생이 만든 개인 학습 자료이며, 공식 강의 자료나 해답이 아닙니다.<br>
+  과제 문제의 원문은 싣지 않았습니다. 저작권은 Nicolò Michelusi 교수와 Arizona State University에 있습니다.</span><span lang="en">EEE 554 Probability and Random Processes · Homework 2 study guide<br>
+  Course: Nicolò Michelusi, Arizona State University · Fall 2026<br>
+  This page is personal study material written by a student. It is neither official course material nor a solution set.<br>
+  The problem statements are not reproduced here. Copyright belongs to Professor Nicolò Michelusi and Arizona State University.</span>
+</footer>
+
+</div>
+<button class="lang-btn" type="button">English</button>
+<button class="theme-btn" type="button">☾ 다크</button>
+
+<script>
+// 큰 제목이 화면에서 사라지면 목차 위 미니 헤더를 띄운다.
+(function () {
+  var title = document.querySelector('header.top h1.title');
+  var mini = document.querySelector('nav.toc .mini-head');
+  if (!title || !mini || !window.IntersectionObserver) return;
+  new IntersectionObserver(function (es) {
+    mini.classList.toggle('on', !es[0].isIntersecting);
+  }, { threshold: 0 }).observe(title);
+})();
+</script>
+<script>
+// 테마 토글. 기본은 OS 설정을 따르고, 누르면 그 반대로 고정한다.
+// 저장하지 않으므로 페이지를 옮기면 다시 OS 설정을 따른다.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.theme-btn');
+  if (!btn) return;
+  var osDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  function current() {
+    return root.dataset.theme || (osDark && osDark.matches ? 'dark' : 'light');
+  }
+  function paint() {
+    var dark = current() === 'dark';
+    btn.textContent = dark ? '☀ 라이트' : '☾ 다크';
+    btn.setAttribute('aria-label', dark ? '라이트 모드로' : '다크 모드로');
+  }
+  btn.addEventListener('click', function () {
+    root.dataset.theme = current() === 'dark' ? 'light' : 'dark';
+    paint();
+  });
+  if (osDark && osDark.addEventListener) osDark.addEventListener('change', paint);
+  paint();
+})();
+</script>
+<script>
+// 언어 토글. 기본은 한국어. 저장하지 않으므로 페이지를 옮기면 한국어로 돌아간다.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.lang-btn');
+  if (!btn) return;
+  function paint() {
+    var en = root.dataset.lang === 'en';
+    btn.textContent = en ? '한국어' : 'English';
+    btn.setAttribute('aria-label', en ? '한국어로 보기' : 'View in English');
+    root.lang = en ? 'en' : 'ko';
+  }
+  btn.addEventListener('click', function () {
+    root.dataset.lang = root.dataset.lang === 'en' ? 'ko' : 'en';
+    paint();
+    window.dispatchEvent(new Event('langchange'));
+  });
+  paint();
+})();
+</script>
+</body>
+</html>

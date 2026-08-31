@@ -222,31 +222,33 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
   <p class="lede" lang="en">Personal study notes rebuilt slide by slide from the lecture deck, with a picture attached to every formula and worked examples and counterexamples filled in.</p>
 
   <div class="facts" lang="ko">
-    <span class="chip">Module 2 / 3 완료</span>
-    <span class="chip">인터랙티브 도구 2종</span>
+    <span class="chip">Module 4 / 4 완료</span>
+    <span class="chip">인터랙티브 도구 4종</span>
     <span class="chip">슬라이드 동기화</span>
     <span class="chip">한국어</span>
   </div>
   <div class="facts" lang="en">
-    <span class="chip">Modules 1–2 done of 3</span>
-    <span class="chip">2 interactive tools</span>
+    <span class="chip">Modules 1–4 done</span>
+    <span class="chip">4 interactive tools</span>
     <span class="chip">slide sync</span>
     <span class="chip">Korean &amp; English</span>
   </div>
 
-  <a class="hw" id="hwbox" href="HW1-sets-and-probability-spaces.html">
-    <div class="d" id="hwd">HW1</div>
+  <a class="hw" id="hwbox" href="HW2-conditional-probability-and-independence.html">
+    <div class="d" id="hwd">HW2</div>
     <div class="txt" lang="ko">
-      <b>Homework 1 · Sets and Probability Spaces</b> · 마감 8월 30일 (일) 자정<br>
-      문제마다 뭘 알아야 풀리는지, 첫 수를 어디에 두는지, 뭘 빠뜨리기 쉬운지. Problem 1·2·3은 Module 1, 4–8은 Module 2로 커버된다.
+      <b>Homework 2 · Conditional Probability and Independence</b> · 마감 9월 6일 (일) 자정<br>
+      문제마다 뭘 알아야 풀리는지, 첫 수를 어디에 두는지, 뭘 빠뜨리기 쉬운지. P1–4와 P8은 Module 3, P5–7은 Module 4로 커버된다.
     </div>
     <div class="txt" lang="en">
-      <b>Homework 1 · Sets and Probability Spaces</b> · due midnight, Sunday August 30<br>
-      What each problem needs, where to put your first move, and what people leave out. Problems 1·2·3 are covered by Module 1, and 4–8 by Module 2.
+      <b>Homework 2 · Conditional Probability and Independence</b> · due midnight, Sunday September 6<br>
+      What each problem needs, where to put your first move, and what people leave out. P1 through P4 and P8 are covered by Module 3, P5 through P7 by Module 4.
     </div>
     <span class="hwgo" lang="ko">공략 보기 →</span>
     <span class="hwgo" lang="en">Open the guide →</span>
   </a>
+  <p style="margin:10px 0 0;font-size:12.5px;color:var(--ink3)" lang="ko">지난 과제: <a href="HW1-sets-and-probability-spaces.html">HW1 · Sets and Probability Spaces 공략</a></p>
+  <p style="margin:10px 0 0;font-size:12.5px;color:var(--ink3)" lang="en">Previous set: <a href="HW1-sets-and-probability-spaces.html">the HW1 guide, Sets and Probability Spaces</a></p>
 </header>
 
 <h2 lang="ko">모듈</h2>
@@ -294,23 +296,44 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
   <span class="status done" lang="ko">읽기</span><span class="status done" lang="en">read</span>
 </a>
 
-<div class="mod soon">
+<a class="mod" href="L03-conditional-probability.html">
   <div class="num">03</div>
   <div>
     <div class="en">Conditional Probability</div>
     <h3 lang="ko">조건부 확률</h3>
     <h3 lang="en">Conditional Probability</h3>
-    <p lang="ko">"이미 B가 일어났다는 걸 알 때 A의 확률"로 표본공간을 좁히는 법. 독립, 전확률 법칙, 베이즈 정리로 이어진다.</p>
-    <p lang="en">Narrowing the sample space: the probability of A given that B has already happened. Leads into independence, the law of total probability, and Bayes' theorem.</p>
+    <p lang="ko">"이미 B가 일어났다는 걸 알 때 A의 확률"로 표본공간을 좁히는 법. Bayes와 전확률 법칙을 거쳐 ML·MAP 검출까지 간다. 두 검출기가 갈라지는 지점을 찾는 도구가 들어있다.</p>
+    <p lang="en">Narrowing the sample space: the probability of A given that B has already happened. Runs through Bayes, the law of total probability, and on to ML and MAP detection. Includes a tool for finding where the two detectors part ways.</p>
     <div class="tags">
-      <span class="tag">conditioning</span>
-      <span class="tag">independence</span>
+      <span class="tag a">P(A|B)</span>
+      <span class="tag">multiplication rule</span>
       <span class="tag c">total probability</span>
-      <span class="tag">Bayes</span>
+      <span class="tag b">Bayes</span>
+      <span class="tag">prior · likelihood · posterior</span>
+      <span class="tag">ML / MAP</span>
     </div>
   </div>
-  <span class="status wait" lang="ko">준비 중</span><span class="status wait" lang="en">coming soon</span>
-</div>
+  <span class="status done" lang="ko">읽기</span><span class="status done" lang="en">read</span>
+</a>
+
+<a class="mod" href="L04-independence.html">
+  <div class="num">04</div>
+  <div>
+    <div class="en">Independence</div>
+    <h3 lang="ko">독립과 반복 시행</h3>
+    <h3 lang="en">Independence &amp; Repeated Trials</h3>
+    <p lang="ko">조건을 걸어도 확률이 안 변하는 경우. 서로소와 정반대라는 것, 셋 이상에서 pairwise와 mutual이 갈라진다는 것. 반복 시행에서 이항분포가 나오고 반복부호로 이어진다. <strong>강의 슬라이드가 아직 배포되지 않아 교재를 근거로 썼다.</strong></p>
+    <p lang="en">The case where conditioning changes nothing: the exact opposite of disjoint, and where pairwise splits from mutual once there are three events. Repeated trials give the binomial distribution and lead into repetition coding. <strong>The lecture deck is not out yet, so this one is written from the textbook.</strong></p>
+    <div class="tags">
+      <span class="tag a">independence</span>
+      <span class="tag">pairwise vs mutual</span>
+      <span class="tag b">Bernoulli</span>
+      <span class="tag c">binomial</span>
+      <span class="tag">repetition coding</span>
+    </div>
+  </div>
+  <span class="status done" lang="ko">읽기</span><span class="status done" lang="en">read</span>
+</a>
 
 <h2 lang="ko">노트 구조</h2>
 <h2 lang="en">How the notes are built</h2>
@@ -364,12 +387,14 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
 
 <script>
 (function(){
-  var due = new Date(2026, 7, 31, 0, 0, 0); // Aug 30 midnight = Aug 31 00:00 local
+  var due = new Date(2026, 8, 7, 0, 0, 0); // Sep 6 midnight = Sep 7 00:00 local
   var now = new Date();
   var ms = due - now;
   var el = document.getElementById("hwd");
   if(!el) return;
-  if(ms <= 0){ el.textContent = "제출"; el.style.fontSize = "17px"; return; }
+  var L = function(ko,en){ return document.documentElement.dataset.lang==="en" ? en : ko; };
+  if(ms <= 0){ el.textContent = L("마감","due"); el.style.fontSize = "17px";
+    window.addEventListener("langchange", function(){ el.textContent = L("마감","due"); }); return; }
   var days = Math.ceil(ms / 86400000);
   el.textContent = "D-" + days;
 })();

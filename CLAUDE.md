@@ -21,6 +21,15 @@ GitHub Pages로 배포된다: https://yoonkyu-lee.github.io/asu-eee-554-notes/
 
 Drive 미러 폴더는 절대 수정하지 않는다. 읽기만 한다.
 
+**Drive 원본은 학기 중에 갱신된다.** 교수가 손글씨를 더하거나 슬라이드를 끼워 넣는다.
+실제로 `slides/L03-conditional-probability.pdf`가 29쪽짜리 낡은 사본이었는데
+Drive 원본은 30쪽으로 늘어 있었다. **노트를 쓰거나 고치기 전에 반드시 다시 복사하고
+쪽수를 대조한다.** 낡은 사본으로 앵커를 달면 전부 한 칸씩 어긋난다.
+
+```bash
+node -e "..."   # 두 파일의 numPages 를 찍어 비교한다
+```
+
 **커밋하는 것**: 모듈에 대응되는 강의 슬라이드 PDF만. `slides/`에 사본을 두고 커밋한다.
 사이트에 PDF 리더를 붙여 노트와 슬라이드를 나란히 보기 위한 것이다.
 
@@ -76,6 +85,7 @@ index.html                          허브 (모듈 목록)
 L01-set-theory.html                 Module 1
 L02-probability-space.html          Module 2
 L03-conditional-probability.html    Module 3
+L04-independence.html               Module 4 (슬라이드 없음, 위 참조)
 L{NN}-{kebab-case-영문주제}.html
 
 HW1-sets-and-probability-spaces.html   HW1 공략 (아래 참조)
@@ -96,6 +106,24 @@ vendor/pdf.js/                      pdf.js 런타임 (아래 참조)
 `03 ConditionalProbability.pdf`지만 URL에 쓰기 나쁘다. `slides/`에 복사하면서
 `L03-conditional-probability.pdf`로 바꾼다. 그러면 노트 파일명에서 슬라이드 경로가
 바로 유도되므로 리더가 하드코딩된 매핑 표를 들 필요가 없다.
+
+### 슬라이드가 아직 없는 모듈
+
+과제 범위가 슬라이드보다 앞서 나가는 일이 있다. HW2가 그랬다. 제목이
+"Conditional probability, **independence**"인데 03번 덱에는 독립이 아예 없었다.
+
+그래도 노트를 쓴다. 다만 **출처를 숨기지 않는다.**
+
+- 헤더에 `.chip.warn`으로 **슬라이드 미배포**를 표시한다.
+- 00번 첫 블록을 `.trap`으로 두고 무엇을 근거로 썼는지 적는다.
+  교재 절 번호와 과제의 <em>Topics to Review</em>를 명시한다.
+- **"슬라이드가 올라오면 그쪽을 기준으로 삼아라"를 노트에 적는다.**
+  강의가 다른 순서나 표기를 쓸 수 있기 때문이다.
+- `data-slide`를 붙이지 않고 `reader.js`도 넣지 않는다. 앵커가 없으면
+  리더가 알아서 안 뜨지만, 스크립트를 아예 빼두는 게 의도가 분명하다.
+- footer 교재 줄에도 슬라이드 없이 썼다는 사실을 적는다.
+- **슬라이드가 배포되면 앵커를 달고 순서를 맞추는 작업이 따로 필요하다.**
+  그때 이 표시들을 걷어낸다.
 
 ## 언어와 문체
 
@@ -538,7 +566,9 @@ GitHub Pages와 같은 조건으로 맞추기 위해서다.
 `scripts/verify.mjs`가 **자동으로 잡는 것** (하나라도 걸리면 exit 1):
 - 페이지 로드 시 JS 콘솔 에러
 - SVG `<text>`가 부모 viewBox를 벗어나는 경우
-- 중복된 DOM id, 해결되지 않는 `url(#...)` 참조
+- 중복된 DOM id, 해결되지 않는 `url(#...)` 참조.
+  **`<a>` 안에 `<a>`를 넣으면 여기서 걸린다.** 브라우저 파서가 바깥 앵커를 쪼개서
+  같은 id를 가진 요소를 두 개 만든다. 소스에는 하나뿐이라 눈으로는 안 보인다
 - 모바일(390px) 가로 오버플로우. **`<details>`를 전부 펼친 상태로 잰다.**
   풀이가 접혀 있을 때는 멀쩡하다가 펼치면 터지는 경우가 실제로 있었다.
 - 슬라이드 리더가 실제로 떠서 첫 쪽을 렌더하는지

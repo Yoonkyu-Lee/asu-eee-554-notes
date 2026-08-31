@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="ko" data-lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EEE 554 · Module 3 · Conditional Probability &amp; Bayes’ Rule</title>
+<style>
+:root{
+  color-scheme:light dark;
+
+  /* 색 성분. rgba(var(--blue-rgb),.16) 형태로 농도 변형을 만든다. */
+  --ink-rgb:20,22,26;
+  --blue-rgb:18,80,196;
+  --pink-rgb:217,20,122;
+  --violet-rgb:107,47,168;
+  --green-rgb:0,132,95;
+  --amber-rgb:178,106,0;
+  --sel-rgb:75,29,140;
+
+  --paper:#FAFAF8;
+  --card:#FFFFFF;
+  --ink:rgb(var(--ink-rgb));
+  --ink2:#565D66;
+  --ink3:#8A9099;
+  --rule:#E2E1DB;
+  --blue:rgb(var(--blue-rgb));
+  --pink:rgb(var(--pink-rgb));
+  --violet:rgb(var(--violet-rgb));
+  --green:rgb(var(--green-rgb));
+  --amber:rgb(var(--amber-rgb));
+  --amber-bg:#FDF6E9;
+  --red:#C02626;
+  --sel:rgb(var(--sel-rgb));
+
+  /* 보조 표면과 진한 변형 */
+  --amber-line:#F0E2C4;
+  --code-bg:#F0EFEA;
+  --chip:#F1F0EB;
+  --sel-soft:#F6F2FB;
+  --pink-deep:#8B0D4E;
+  --green-deep:#005A42;
+  --amber-deep:#7A4A00;
+  --violet-deep:#3B1E70;
+  --brown:#A3532B;
+  --teal:#0E7490;
+  --shadow:rgba(var(--ink-rgb),.06);
+
+  --mono:ui-monospace,"Cascadia Mono","Cascadia Code",Consolas,"SFMono-Regular",monospace;
+  --sans:"Pretendard","Pretendard Variable",-apple-system,"Segoe UI Variable Text","Segoe UI","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --serif:"Cambria Math","STIX Two Math","Latin Modern Math",Cambria,"Times New Roman",serif;
+}
+
+/* 다크 팔레트. 의미 고정 색상(A=blue, B=pink, 교집합=violet, 함정=amber)은
+   그대로 두고 밝기만 어두운 배경에 맞게 올린다. */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 120px;display:grid;grid-template-columns:210px minmax(0,1fr);gap:56px}
+@media(max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);gap:0;padding:0 18px 80px}}
+
+header.top{grid-column:1/-1;padding:64px 0 40px;border-bottom:1px solid var(--rule);margin-bottom:48px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+h1.title{font-size:clamp(30px,5vw,50px);line-height:1.1;letter-spacing:-.025em;font-weight:800;margin:14px 0 6px}
+.subtitle{font-size:17px;color:var(--ink2);margin:0}
+.meta{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--mono);font-size:11px;letter-spacing:.05em;padding:5px 11px;border:1px solid var(--rule);border-radius:999px;color:var(--ink2);background:var(--card)}
+.chip.hot{border-color:var(--amber);color:var(--amber);background:var(--amber-bg)}
+.backlink{display:inline-block;margin-top:20px;font-family:var(--mono);font-size:11.5px;color:var(--blue);text-decoration:none;letter-spacing:.04em}
+.backlink:hover{text-decoration:underline}
+
+nav.toc{position:sticky;top:24px;align-self:start;font-size:13.5px;line-height:1.5}
+nav.toc .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:14px}
+nav.toc a{display:flex;gap:9px;padding:5px 0;color:var(--ink2);text-decoration:none;border-left:2px solid transparent;padding-left:11px;margin-left:-13px}
+nav.toc a:hover{color:var(--ink);border-left-color:var(--blue)}
+nav.toc a .n{font-family:var(--mono);font-size:11px;color:var(--ink3);padding-top:2px;min-width:14px}
+@media(max-width:900px){nav.toc{position:static;margin-bottom:44px;padding-bottom:28px;border-bottom:1px solid var(--rule)}}
+/* ── 상단 미니 헤더 ─────────────────────── */
+/* 큰 제목이 화면 밖으로 나가면 목차 위에 작게 나타나 계속 남는다.
+   목차가 이미 sticky라 그 안에 넣으면 따로 고정 장치가 필요 없다.
+   모바일에서는 목차가 static이라 의미가 없으므로 숨긴다. */
+.mini-head{max-height:0;opacity:0;visibility:hidden;overflow:hidden;margin-bottom:0;
+  transition:max-height .22s ease,opacity .18s ease,margin-bottom .22s ease,visibility .18s}
+.mini-head.on{max-height:150px;opacity:1;visibility:visible;margin-bottom:22px}
+nav.toc .mini-head a.back{display:inline-block;margin:0 0 12px;padding:0;border-left:none;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--blue);text-decoration:none}
+nav.toc .mini-head a.back:hover{text-decoration:underline;color:var(--blue);border-left-color:transparent}
+.mini-head .mod{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:3px}
+.mini-head .name{font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--ink);line-height:1.3}
+.mini-head .rule{height:1px;background:var(--rule);margin-top:16px}
+@media(max-width:900px){.mini-head{display:none}}
+
+section{margin-bottom:76px;scroll-margin-top:20px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+.sec-num{font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:.1em;padding-top:4px}
+h2{font-size:clamp(22px,3vw,29px);letter-spacing:-.02em;font-weight:750;margin:0;line-height:1.25}
+.sec-sub{color:var(--ink2);font-size:15px;margin:0 0 30px 0}
+h3{font-size:17.5px;font-weight:700;letter-spacing:-.01em;margin:38px 0 12px}
+h4{font-size:15px;font-weight:700;margin:26px 0 8px;color:var(--ink)}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 16px;padding-left:22px}
+li{margin-bottom:7px}
+code{font-family:var(--mono);font-size:.87em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+
+.m{font-family:var(--serif);font-style:normal;font-size:1.07em;white-space:nowrap}
+@media(max-width:900px){.m{white-space:normal}}
+.m i{font-style:italic}
+.eq{font-family:var(--serif);font-size:19px;text-align:center;margin:22px 0;line-height:1.9}
+.eq i{font-style:italic}
+.eq .note{font-family:var(--sans);font-size:13px;color:var(--ink3);display:block;margin-top:4px}
+.cA{color:var(--blue);font-weight:600}
+.cB{color:var(--pink);font-weight:600}
+.cC{color:var(--green);font-weight:600}
+
+.def{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--ink);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.def .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:7px}
+.def p:last-child,.def ol:last-child,.def ul:last-child{margin-bottom:0}
+
+.trap{background:var(--amber-bg);border:1px solid var(--amber-line);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.trap .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:7px;font-weight:600}
+.trap p:last-child,.trap ul:last-child{margin-bottom:0}
+.trap h4{margin-top:18px;font-size:14.5px}
+.trap h4:first-of-type{margin-top:0}
+
+.ex{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:18px 22px;margin:20px 0}
+.ex .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:7px;font-weight:600}
+.ex p:last-child,.ex ul:last-child,.ex ol:last-child{margin-bottom:0}
+details{margin-top:12px;border-top:1px dashed var(--rule);padding-top:12px}
+details summary{cursor:pointer;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--blue);list-style:none;user-select:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"▸ ";display:inline-block}
+details[open] summary::before{content:"▾ "}
+details .body{margin-top:12px}
+details .body p:last-child,details .body ol:last-child{margin-bottom:0}
+
+.callout{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:16px 0;margin:26px 0;font-size:15px;color:var(--ink2)}
+.callout strong{color:var(--ink)}
+
+/* ── 슬라이드 출처 표시 ─────────────────── */
+/* data-slide 값에서 라벨을 직접 만든다. 라벨과 앵커가 어긋날 수 없다.
+   리더가 꺼져 있어도, 모바일이어도 "이 대목이 슬라이드 몇 쪽인지"는 보여야 한다. */
+.sec-head[data-slide],h3[data-slide]{display:flex;align-items:baseline;gap:14px}
+.sec-head[data-slide]>h2,h3[data-slide]{min-width:0}
+.sec-head[data-slide]::before,h3[data-slide]::before{
+  content:"";order:1;flex:1 1 auto;min-width:16px;height:1px;
+  background:var(--rule);align-self:center;opacity:.75}
+.sec-head[data-slide]::after,h3[data-slide]::after{
+  content:"슬라이드 " attr(data-slide) "쪽";order:2;flex:none;
+  font-family:var(--mono);font-size:10px;letter-spacing:.05em;
+  color:var(--ink3);white-space:nowrap;align-self:center}
+@media(max-width:900px){
+  .sec-head[data-slide]::before,h3[data-slide]::before{min-width:10px}
+  .sec-head[data-slide]::after,h3[data-slide]::after{font-size:9.5px}
+}
+
+figure{margin:28px 0;background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:22px}
+figure svg{display:block;width:100%;height:auto;max-width:100%}
+figcaption{font-size:13px;color:var(--ink2);margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:720px){.grid2,.grid3{grid-template-columns:1fr}}
+.mini{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px}
+.mini .cap{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--ink2);text-align:center;margin-top:8px;line-height:1.4}
+.mini svg{display:block;width:100%;height:auto}
+.svgtxt{font-family:var(--serif);font-size:15px;fill:var(--ink)}
+.svgtxt.it{font-style:italic}
+.svglab{font-family:var(--mono);font-size:11px;fill:var(--ink2)}
+.svgnum{font-family:var(--mono);font-size:13px;font-weight:600}
+
+/* sigma-algebra checker */
+.play{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:22px;margin:28px 0}
+.plab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin:20px 0 9px}
+.plab:first-child{margin-top:0}
+.subsets{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+@media(max-width:560px){.subsets{grid-template-columns:repeat(2,1fr)}}
+.sub{font-family:var(--serif);font-size:15px;padding:9px 6px;text-align:center;background:var(--paper);border:1px solid var(--rule);border-radius:6px;cursor:pointer;user-select:none;transition:.12s;position:relative}
+.sub:hover{border-color:var(--sel)}
+.sub.on{background:var(--sel);border-color:var(--sel);color:var(--card);font-weight:600}
+.sub.need{background:var(--amber-bg);border-color:var(--amber);border-style:dashed;color:var(--amber)}
+.verdict{margin-top:18px;border-radius:8px;padding:15px 18px;font-size:14.5px;line-height:1.65}
+.verdict.ok{background:rgba(var(--green-rgb),.08);border:1px solid rgba(var(--green-rgb),.3);color:var(--green-deep)}
+.verdict.bad{background:var(--amber-bg);border:1px solid var(--amber-line);color:var(--amber-deep)}
+.verdict .hd{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:8px}
+.verdict ul{margin:8px 0 0;padding-left:20px}
+.verdict li{margin-bottom:5px;font-size:14px}
+.verdict .m{font-size:1em}
+.presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.presets button{font-family:var(--sans);font-size:12.5px;padding:7px 12px;background:var(--paper);border:1px solid var(--rule);border-radius:6px;color:var(--ink2);cursor:pointer;transition:.13s}
+.presets button:hover{border-color:var(--sel);color:var(--sel);background:var(--sel-soft)}
+.presets button.act{border-color:var(--green);color:var(--green);background:rgba(var(--green-rgb),.06);font-weight:600}
+.hintline{font-size:13px;color:var(--ink2);margin-top:16px;line-height:1.6;border-top:1px solid var(--rule);padding-top:13px}
+
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14.5px}
+@media(max-width:900px){table{display:block;max-width:100%;overflow-x:auto}}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);font-weight:500}
+
+footer{grid-column:1/-1;border-top:1px solid var(--rule);padding-top:28px;margin-top:20px;font-size:13.5px;color:var(--ink3);line-height:1.7}
+footer a{color:var(--blue)}
+/* 본문 링크. 규칙이 없으면 브라우저 기본 남색이 나오고 다크모드에서 묻는다. */
+main a{color:var(--blue);text-decoration:none;border-bottom:1px solid rgba(var(--blue-rgb),.4)}
+main a:hover{border-bottom-color:var(--blue);background:rgba(var(--blue-rgb),.09)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ── 테마 토글 ──────────────────────────── */
+/* 기본은 OS 설정(prefers-color-scheme)을 따른다. 이 버튼은 그걸 덮어쓴다. */
+.theme-btn{position:fixed;left:16px;bottom:16px;z-index:70;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 6px var(--shadow);transition:.13s}
+.theme-btn:hover{border-color:var(--sel);color:var(--sel)}
+@media(max-width:900px){.theme-btn{left:10px;bottom:10px;font-size:10.5px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.theme-btn{transition:none}}
+
+/* ── 언어 전환 ──────────────────────────── */
+/* 한 파일에 한국어와 영어를 나란히 두고 보이는 쪽만 남긴다.
+   도해·앵커·CSS·리더를 공유하므로 두 언어의 구조가 어긋날 수 없다.
+   lang 속성을 쓰는 건 스크린리더와 하이픈 처리도 같이 얻기 위해서다. */
+/* 언어 표시는 어떤 규칙보다 우선해야 한다. 목차나 도해 쪽 선택자가
+   더 구체적이어서 display를 되살리는 일이 실제로 있었다. */
+html[data-lang="ko"] [lang="en"]{display:none!important}
+html[data-lang="en"] [lang="ko"]{display:none!important}
+.lang-btn{position:fixed;left:16px;bottom:56px;z-index:70;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 6px var(--shadow);transition:.13s}
+.lang-btn:hover{border-color:var(--blue);color:var(--blue)}
+@media(max-width:900px){.lang-btn{left:10px;bottom:46px;font-size:10.5px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.lang-btn{transition:none}}
+
+/* ── 기호 뜯어보기 ────────────────────────────────────────────────
+   수학 표기 관습을 모르면 정의가 통째로 안 읽힌다. 그 관습만 따로 푼다.
+   기본은 펼쳐둔다(open). 모르는 사람에게 보이지 않으면 의미가 없기 때문이다.
+   대신 접을 수 있다. 알고 나면 매번 지나가야 하는 장애물이 되면 안 된다. */
+.nota{margin:18px 0;border:1px dashed var(--rule);border-radius:8px;background:var(--chip)}
+.nota>summary{cursor:pointer;list-style:none;padding:9px 14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);display:flex;align-items:center;gap:8px;user-select:none}
+.nota>summary::-webkit-details-marker{display:none}
+.nota>summary::before{content:"\25be";font-size:9px;display:inline-block;transition:transform .15s}
+.nota:not([open])>summary::before{transform:rotate(-90deg)}
+.nota>summary:hover{color:var(--ink2)}
+.nota .body{padding:2px 16px 14px;font-size:14px;color:var(--ink2);line-height:1.7}
+.nota .body>*:first-child{margin-top:0}
+.nota .body>*:last-child{margin-bottom:0}
+.nota .parts{width:100%;border-collapse:collapse;margin:12px 0}
+.nota .parts td{padding:6px 12px 6px 0;vertical-align:top;border-bottom:1px solid var(--rule);font-size:13.5px}
+.nota .parts tr:last-child td{border-bottom:0}
+.nota .parts td:first-child{white-space:nowrap;width:1%;color:var(--ink);padding-right:18px}
+.nota figure{margin:14px 0;background:var(--card);border:1px solid var(--rule)}
+.nota .eq{margin:12px 0}
+@media(max-width:900px){.nota .parts td:first-child{white-space:normal}}
+
+/* 인터랙티브 도구 (14번). .play 안에서만 쓴다. */
+.play button{font-family:var(--mono);font-size:11px;padding:6px 11px;background:var(--paper);color:var(--ink2);border:1px solid var(--rule);border-radius:6px;cursor:pointer;transition:.12s}
+.play button:hover{border-color:var(--ink3);color:var(--ink)}
+.play input[type=range]{accent-color:var(--sel)}
+.play table td,.play table th{padding:7px 10px}
+.play .win{color:var(--green);font-weight:700}
+.play .lose{color:var(--ink3)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="eyebrow">EEE 554 · Probability and Random Processes · Michelusi</div>
+  <h1 class="title">Module 3<br>Conditional Probability &amp; Bayes' Rule</h1>
+  <p class="subtitle" lang="ko">정보가 들어오면 확률을 갱신한다. 그 갱신 규칙이 Bayes야.</p>
+  <p class="subtitle" lang="en">New information arrives and the probability updates. Bayes is that update rule.</p>
+  <div class="meta" lang="ko">
+    <span class="chip">슬라이드 30쪽</span>
+    <span class="chip hot">HW2 Problem 1–4 이 범위</span>
+    <span class="chip">Module 1의 partition이 여기서 일한다</span>
+  </div>
+  <div class="meta" lang="en">
+    <span class="chip">30 slides</span>
+    <span class="chip hot">Covers HW2 Problems 1–4</span>
+    <span class="chip">Module 1's partition goes to work here</span>
+  </div>
+  <a class="backlink" href="index.html" lang="ko">← 모듈 목록으로</a>
+  <a class="backlink" href="index.html" lang="en">← All modules</a>
+</header>
+
+<nav class="toc">
+  <div class="mini-head">
+    <a class="back" href="index.html" lang="ko">← 모듈 목록</a>
+    <a class="back" href="index.html" lang="en">← All modules</a>
+    <div class="mod">Module 3</div>
+    <div class="name">Conditional Probability &amp; Bayes' Rule</div>
+    <div class="rule"></div>
+  </div>
+  <div class="lab" lang="ko">목차</div>
+  <div class="lab" lang="en">Contents</div>
+  <a href="#s0"><span class="n">00</span><span lang="ko">이 모듈이 하는 일</span><span lang="en">What this module does</span></a>
+  <a href="#s1"><span class="n">01</span><span lang="ko">왜 조건부 확률인가</span><span lang="en">Why condition at all</span></a>
+  <a href="#s2"><span class="n">02</span><span lang="ko">정의</span><span lang="en">The definition</span></a>
+  <a href="#s3"><span class="n">03</span><span lang="ko">세 가지 성질</span><span lang="en">Three properties</span></a>
+  <a href="#s4"><span class="n">04</span><span lang="ko">조건부 확률도 확률이다</span><span lang="en">It is itself a measure</span></a>
+  <a href="#s5"><span class="n">05</span><span lang="ko">Bayes 정리</span><span lang="en">Bayes' theorem</span></a>
+  <a href="#s6"><span class="n">06</span><span lang="ko">전확률 법칙</span><span lang="en">Law of total probability</span></a>
+  <a href="#s7"><span class="n">07</span><span lang="ko">분할과 합친 Bayes</span><span lang="en">Bayes with a partition</span></a>
+  <a href="#s8"><span class="n">08</span><span lang="ko">prior · likelihood · posterior</span><span lang="en">Prior, likelihood, posterior</span></a>
+  <a href="#s9"><span class="n">09</span><span lang="ko">검출 문제</span><span lang="en">The detection problem</span></a>
+  <a href="#s10"><span class="n">10</span><span lang="ko">ML 검출</span><span lang="en">ML detection</span></a>
+  <a href="#s11"><span class="n">11</span><span lang="ko">MAP 검출</span><span lang="en">MAP detection</span></a>
+  <a href="#s12"><span class="n">12</span><span lang="ko">BSC 예제</span><span lang="en">The BSC example</span></a>
+  <a href="#s13"><span class="n">13</span><span lang="ko">오류 확률</span><span lang="en">Probability of error</span></a>
+  <a href="#s14"><span class="n">14</span><span lang="ko">직접 만져보기</span><span lang="en">Try it yourself</span></a>
+  <a href="#s99"><span class="n">99</span><span lang="ko">정리 &amp; 다음 모듈</span><span lang="en">Recap &amp; what's next</span></a>
+</nav>
+
+<main>
+
+<!-- ══ 00 ══ -->
+<section id="s0">
+  <div class="sec-head"><span class="sec-num">00</span><h2 lang="ko">이 모듈이 하는 일</h2><h2 lang="en">What this module does</h2></div>
+  <p class="sec-sub" lang="ko">한 줄 요약: 정보가 들어오면 표본공간을 좁힌다.</p>
+  <p class="sec-sub" lang="en">In one line: new information shrinks the sample space.</p>
+
+  <p lang="ko">Module 2까지는 확률이 <strong>고정</strong>돼 있었어. <span class="m">(<i>Ω</i>, ℱ, <i>P</i>)</span>를 정하면 각 사건의 확률이 정해지고 끝이야. 그런데 현실에서는 정보가 계속 들어와. 패킷이 깨졌다는 걸 알았다, 검사 결과가 양성이다, 수신 신호가 1이었다. <strong>그 정보를 확률에 반영하는 방법</strong>이 이 모듈이야.</p>
+  <p lang="en">Through Module 2 probability was <strong>fixed</strong>. Pin down <span class="m">(<i>Ω</i>, ℱ, <i>P</i>)</span> and every event has its number, end of story. Real systems keep receiving information though: a packet came back corrupted, a test came back positive, the receiver saw a 1. This module is about <strong>folding that information into the probability</strong>.</p>
+
+  <div class="callout" lang="ko">
+    <strong>Module 1의 partition이 여기서 진짜로 일한다.</strong> Module 2에서는 공리 ③의 조건으로만 등장했는데, 06번의 전확률 법칙은 <em>분할이 있어야 성립하는 정리</em>야. "겹치지 않고 다 덮는다"는 두 조건이 각각 "두 번 세지 않는다"와 "빠뜨리지 않는다"로 직결돼. HW1 Problem 3(e)에서 "분할이 왜 유용한지 말로 설명하라"고 물었던 게 바로 이걸 예고한 거야.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Module 1's partition finally does real work.</strong> In Module 2 it only appeared as a side condition on axiom ③. The law of total probability in §06 is a theorem that <em>needs</em> a partition: its two requirements, no overlap and full coverage, map directly onto "nothing counted twice" and "nothing left out". HW1 Problem 3(e), which asked you to explain in words why partitions are useful, was setting this up.
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">새로 나오는 단어들</span>
+    <table>
+      <tr><th>용어</th><th>뜻</th><th>어디서 쓰이나</th></tr>
+      <tr><td><span class="m"><i>P</i>(<i>A</i>|<i>B</i>)</span></td><td>B가 일어났다는 걸 알 때 A의 확률</td><td>전부의 출발점</td></tr>
+      <tr><td>multiplication rule</td><td><span class="m"><i>P</i>(<i>A</i>∩<i>B</i>) = <i>P</i>(<i>A</i>|<i>B</i>)<i>P</i>(<i>B</i>)</span></td><td>HW2 P1</td></tr>
+      <tr><td>law of total probability</td><td>분할로 쪼개서 전부 더하기</td><td>HW2 P2</td></tr>
+      <tr><td>Bayes' rule</td><td>조건을 뒤집는 규칙</td><td>HW2 P3</td></tr>
+      <tr><td><strong>prior</strong></td><td>관측 전의 믿음 <span class="m"><i>P</i>(<i>A<sub>i</sub></i>)</span></td><td>MAP</td></tr>
+      <tr><td><strong>likelihood</strong></td><td><span class="m"><i>P</i>(<i>B</i>|<i>A<sub>i</sub></i>)</span>를 <em>i의 함수로</em> 본 것</td><td>ML</td></tr>
+      <tr><td><strong>posterior</strong></td><td>관측 후의 믿음 <span class="m"><i>P</i>(<i>A<sub>i</sub></i>|<i>B</i>)</span></td><td>MAP</td></tr>
+      <tr><td>ML / MAP</td><td>likelihood만 / prior까지 써서 고르기</td><td>HW2 P4, P8</td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>이 중 제일 중요한 건 prior · likelihood · posterior 세 단어야.</strong> 식은 한 줄이지만 이 셋을 구분 못 하면 ML과 MAP이 왜 다른지 영원히 안 잡혀. 08번에서 집중적으로 다뤄.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">New vocabulary</span>
+    <table>
+      <tr><th>term</th><th>what it means</th><th>where it lands</th></tr>
+      <tr><td><span class="m"><i>P</i>(<i>A</i>|<i>B</i>)</span></td><td>probability of A once you know B happened</td><td>everything starts here</td></tr>
+      <tr><td>multiplication rule</td><td><span class="m"><i>P</i>(<i>A</i>∩<i>B</i>) = <i>P</i>(<i>A</i>|<i>B</i>)<i>P</i>(<i>B</i>)</span></td><td>HW2 P1</td></tr>
+      <tr><td>law of total probability</td><td>split along a partition, add it all up</td><td>HW2 P2</td></tr>
+      <tr><td>Bayes' rule</td><td>the rule that flips the conditioning</td><td>HW2 P3</td></tr>
+      <tr><td><strong>prior</strong></td><td>belief before observing, <span class="m"><i>P</i>(<i>A<sub>i</sub></i>)</span></td><td>MAP</td></tr>
+      <tr><td><strong>likelihood</strong></td><td><span class="m"><i>P</i>(<i>B</i>|<i>A<sub>i</sub></i>)</span> read as a function <em>of i</em></td><td>ML</td></tr>
+      <tr><td><strong>posterior</strong></td><td>belief after observing, <span class="m"><i>P</i>(<i>A<sub>i</sub></i>|<i>B</i>)</span></td><td>MAP</td></tr>
+      <tr><td>ML / MAP</td><td>use only the likelihood / use the prior too</td><td>HW2 P4, P8</td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>The three that matter most are prior, likelihood, and posterior.</strong> The formula is one line, but if those three blur together you will never see why ML and MAP differ. Section 08 is built around keeping them apart.</p>
+  </div>
+</section>
+
+<!-- ══ 01 ══ -->
+<section id="s1">
+  <div class="sec-head" data-slide="2-3"><span class="sec-num">01</span><h2 lang="ko">왜 조건부 확률인가</h2><h2 lang="en">Why condition at all</h2></div>
+  <p class="sec-sub" lang="ko">확률은 "지금 가진 정보 기준"의 값이다.</p>
+  <p class="sec-sub" lang="en">A probability is always relative to what you currently know.</p>
+
+  <p lang="ko">슬라이드가 드는 예가 전부 공학 문제야. <em>네트워크가 혼잡할 때</em> 패킷 손실 확률, <em>어떤 심볼을 보냈을 때</em> 통신 오류 확률, <em>검사가 양성일 때</em> 질병 확률, <em>이 신호를 받았을 때</em> 표적 검출 확률. 공통점은 <strong>"~일 때"가 붙었다는 것</strong>이고, 그 조건이 확률을 바꾼다는 거야.</p>
+  <p lang="en">Every example on the slides is an engineering one: packet loss <em>given</em> network congestion, a communication error <em>given</em> the transmitted symbol, disease <em>given</em> a positive test, target detection <em>given</em> the received signal. They all share the word <strong>given</strong>, and in each case that condition changes the number.</p>
+
+  <div class="callout" lang="ko">
+    <strong><span class="m"><i>P</i>(<i>A</i>)</span>도 사실은 조건부다.</strong> "정보가 없을 때의 A의 확률"이라는 뜻이거든. 그래서 조건부 확률은 새로운 종류의 물건이 아니라, <em>지금까지 쓰던 것을 명시적으로 쓴 것</em>에 가까워. 이 관점이 04번에서 "조건부 확률도 확률 측도다"로 정확히 이어져.
+  </div>
+  <div class="callout" lang="en">
+    <strong><span class="m"><i>P</i>(<i>A</i>)</span> is itself conditional.</strong> It means "the probability of A given what we know so far". So conditioning is not a new kind of object; it is closer to <em>writing down explicitly what you were already doing</em>. That view is exactly what §04 makes precise when it says a conditional probability is again a probability measure.
+  </div>
+</section>
+
+<!-- ══ 02 ══ -->
+<section id="s2">
+  <div class="sec-head" data-slide="4-6"><span class="sec-num">02</span><h2 lang="ko">정의</h2><h2 lang="en">The definition</h2></div>
+  <p class="sec-sub" lang="ko">B 안으로 세계를 좁히고, 다시 1이 되도록 나눈다.</p>
+  <p class="sec-sub" lang="en">Shrink the world down to B, then rescale so it sums to 1 again.</p>
+
+  <p lang="ko">B가 일어났다는 걸 알면 <strong>B 밖의 결과는 더 이상 가능하지 않아.</strong> 그러면 표본공간이 사실상 B로 줄어들어. 이 좁아진 세계 안에서 A도 같이 일어나는 부분은 <span class="m"><i>A</i> ∩ <i>B</i></span>야.</p>
+  <p lang="en">Once you know B happened, <strong>outcomes outside B are no longer possible.</strong> The sample space effectively shrinks to B, and inside that shrunken world the part where A also happens is <span class="m"><i>A</i> ∩ <i>B</i></span>.</p>
+
+  <p lang="ko">그런데 <span class="m"><i>P</i>(<i>A</i> ∩ <i>B</i>)</span>를 그대로 쓰면 안 돼. 새 세계인 B의 전체 확률이 1이 아니라 <span class="m"><i>P</i>(<i>B</i>)</span>거든. 공리 ②(<span class="m"><i>P</i>(<i>Ω</i>) = 1</span>)를 지키려면 <strong>다시 정규화</strong>해야 해. 그래서 <span class="m"><i>P</i>(<i>B</i>)</span>로 나눠.</p>
+  <p lang="en">You cannot just use <span class="m"><i>P</i>(<i>A</i> ∩ <i>B</i>)</span>, though. In the new world the total probability is <span class="m"><i>P</i>(<i>B</i>)</span>, not 1. To keep axiom ② (<span class="m"><i>P</i>(<i>Ω</i>) = 1</span>) you have to <strong>renormalize</strong>, which is what dividing by <span class="m"><i>P</i>(<i>B</i>)</span> does.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">Definition 1</span>
+    <p><span class="m"><i>A</i>, <i>B</i> ∈ ℱ</span>이고 <span class="m"><i>P</i>(<i>B</i>) &gt; 0</span>일 때, <strong>B가 주어졌을 때 A의 조건부 확률</strong>은</p>
+    <div class="eq"><i>P</i>(<i>A</i> | <i>B</i>) = <span style="display:inline-block;text-align:center;vertical-align:-.6em"><span style="display:block;border-bottom:1px solid currentColor;padding:0 6px 2px"><i>P</i>(<i>A</i> ∩ <i>B</i>)</span><span style="display:block;padding-top:2px"><i>P</i>(<i>B</i>)</span></span></div>
+    <p style="margin-bottom:0"><strong><span class="m"><i>P</i>(<i>B</i>) &gt; 0</span>이라는 단서를 빼먹지 마.</strong> 0으로 나눌 수 없어서가 아니라, <span class="m"><i>P</i>(<i>B</i>) = 0</span>이면 조건부 확률이 <em>정의되지 않기</em> 때문이야. 03번 함정에서 다시 짚을게.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Definition 1</span>
+    <p>For <span class="m"><i>A</i>, <i>B</i> ∈ ℱ</span> with <span class="m"><i>P</i>(<i>B</i>) &gt; 0</span>, the <strong>conditional probability of A given B</strong> is</p>
+    <div class="eq"><i>P</i>(<i>A</i> | <i>B</i>) = <span style="display:inline-block;text-align:center;vertical-align:-.6em"><span style="display:block;border-bottom:1px solid currentColor;padding:0 6px 2px"><i>P</i>(<i>A</i> ∩ <i>B</i>)</span><span style="display:block;padding-top:2px"><i>P</i>(<i>B</i>)</span></span></div>
+    <p style="margin-bottom:0"><strong>Do not drop the <span class="m"><i>P</i>(<i>B</i>) &gt; 0</span> clause.</strong> It is not there because dividing by zero is awkward; it is there because when <span class="m"><i>P</i>(<i>B</i>) = 0</span> the conditional probability is <em>undefined</em>. The traps in §03 come back to this.</p>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 700 250" role="img" aria-label="조건부 확률이 표본공간을 B로 좁히고 다시 정규화하는 과정">
+      <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="ko">조건이 붙으면 세계가 줄어든다</text>
+      <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="en">conditioning shrinks the world</text>
+
+      <g transform="translate(0,0)">
+        <rect x="30" y="46" width="250" height="140" rx="8" style="fill:var(--paper);stroke:var(--rule)"/>
+        <text x="42" y="64" class="svgtxt it" style="font-size:12px;fill:var(--ink3)">Ω</text>
+        <circle cx="128" cy="118" r="46" style="fill:rgba(var(--blue-rgb),.35);stroke:var(--blue);stroke-width:1.4"/>
+        <circle cx="188" cy="118" r="46" style="fill:rgba(var(--pink-rgb),.35);stroke:var(--pink);stroke-width:1.4"/>
+        <text x="96" y="123" text-anchor="middle" class="svgtxt it" style="font-size:15px;fill:var(--blue)">A</text>
+        <text x="220" y="123" text-anchor="middle" class="svgtxt it" style="font-size:15px;fill:var(--pink)">B</text>
+        <text x="155" y="212" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="ko">조건 붙기 전</text>
+        <text x="155" y="212" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="en">before conditioning</text>
+      </g>
+
+      <text x="330" y="124" text-anchor="middle" class="svgtxt" style="font-size:22px;fill:var(--ink3)">→</text>
+      <text x="330" y="150" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:var(--ink3)" lang="ko">B를 알았다</text>
+      <text x="330" y="150" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:var(--ink3)" lang="en">B is known</text>
+
+      <g transform="translate(350,0)">
+        <defs><clipPath id="cp-b"><circle cx="188" cy="118" r="46"/></clipPath></defs>
+        <rect x="30" y="46" width="250" height="140" rx="8" style="fill:var(--paper);stroke:var(--rule)"/>
+        <circle cx="128" cy="118" r="46" style="fill:none;stroke:var(--blue);stroke-width:1.2;stroke-dasharray:3 3"/>
+        <circle cx="188" cy="118" r="46" style="fill:rgba(var(--pink-rgb),.35);stroke:var(--pink);stroke-width:1.8"/>
+        <g clip-path="url(#cp-b)"><circle cx="128" cy="118" r="46" style="fill:rgba(var(--violet-rgb),.55)"/></g>
+        <text x="220" y="123" text-anchor="middle" class="svgtxt it" style="font-size:15px;fill:var(--pink)">B</text>
+        <text x="150" y="100" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:var(--violet)">A∩B</text>
+        <text x="155" y="212" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="ko">B가 새로운 전체</text>
+        <text x="155" y="212" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="en">B is the new whole</text>
+      </g>
+    </svg>
+    <figcaption lang="ko">오른쪽에서 B 바깥은 사라진 것으로 친다. 보라색이 새 세계에서 A가 차지하는 몫이고, 그 몫을 <span class="m"><i>P</i>(<i>B</i>)</span>로 나눠서 다시 1을 기준으로 잰 게 <span class="m"><i>P</i>(<i>A</i>|<i>B</i>)</span>다.</figcaption>
+    <figcaption lang="en">On the right, everything outside B is treated as gone. The violet region is A's share of the new world, and dividing that share by <span class="m"><i>P</i>(<i>B</i>)</span> to measure it against 1 again is exactly <span class="m"><i>P</i>(<i>A</i>|<i>B</i>)</span>.</figcaption>
+  </figure>
+
+  <details class="nota" open>
+    <summary><span lang="ko">기호 뜯어보기 · 세로줄</span><span lang="en">Unpacking the notation · the vertical bar</span></summary>
+    <div class="body">
+      <div lang="ko">
+        <table class="parts">
+          <tr><td><span class="m">|</span></td><td>"주어졌을 때(given)". <strong>나눗셈이 아니야.</strong> <span class="m"><i>P</i>(<i>A</i>|<i>B</i>)</span>는 "<i>A</i> given <i>B</i>"라고 읽어. 집합 표기의 <span class="m">{<i>x</i> | 조건}</span>에 쓰이는 세로줄과 글자만 같고 뜻은 달라.</td></tr>
+          <tr><td><span class="m"><i>P</i>(<i>A</i>|<i>B</i>)</span></td><td>인자가 <strong>두 개인 함수가 아니다.</strong> <span class="m"><i>B</i></span>를 고정해서 만든 <em>새 확률 측도</em>에 <span class="m"><i>A</i></span>를 넣은 값이야. 그래서 04번 제목이 "조건부 확률도 확률이다"인 거야.</td></tr>
+          <tr><td>순서</td><td><span class="m"><i>P</i>(<i>A</i>|<i>B</i>)</span>와 <span class="m"><i>P</i>(<i>B</i>|<i>A</i>)</span>는 <strong>완전히 다른 값</strong>이야. 세로줄 <em>뒤</em>가 조건이고 <em>앞</em>이 묻는 대상이야. 이 둘을 잇는 게 05번의 Bayes 정리야.</td></tr>
+        </table>
+        <p>교재(Hajek §1.2)는 이걸 <span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = <i>P</i>(<i>AB</i>)/<i>P</i>(<i>B</i>)</span>로 써. <span class="m"><i>AB</i></span>가 <span class="m"><i>A</i> ∩ <i>B</i></span>라는 건 <a href="L02-probability-space.html#s6">Module 2 · 06</a>에서 짚었어.</p>
+      </div>
+      <div lang="en">
+        <table class="parts">
+          <tr><td><span class="m">|</span></td><td>Reads as "given". <strong>It is not division.</strong> Say <span class="m"><i>P</i>(<i>A</i>|<i>B</i>)</span> out loud as "A given B". It shares a glyph with the bar in set-builder notation <span class="m">{<i>x</i> | condition}</span> and means something else.</td></tr>
+          <tr><td><span class="m"><i>P</i>(<i>A</i>|<i>B</i>)</span></td><td><strong>Not a two-argument function.</strong> Fix <span class="m"><i>B</i></span>, and you get a <em>new probability measure</em>; this is that measure evaluated at <span class="m"><i>A</i></span>. That is why §04 is titled the way it is.</td></tr>
+          <tr><td>order</td><td><span class="m"><i>P</i>(<i>A</i>|<i>B</i>)</span> and <span class="m"><i>P</i>(<i>B</i>|<i>A</i>)</span> are <strong>completely different numbers.</strong> What sits <em>after</em> the bar is the condition, what sits <em>before</em> it is the question. Bayes' theorem in §05 is the bridge between them.</td></tr>
+        </table>
+        <p>The textbook (Hajek §1.2) writes this as <span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = <i>P</i>(<i>AB</i>)/<i>P</i>(<i>B</i>)</span>. That <span class="m"><i>AB</i></span> means <span class="m"><i>A</i> ∩ <i>B</i></span> was covered in <a href="L02-probability-space.html#s6">Module 2 · 06</a>.</p>
+      </div>
+    </div>
+  </details>
+
+  <div class="def" lang="ko">
+    <span class="tag">곱셈 규칙 (multiplication rule)</span>
+    <p>정의의 양변에 <span class="m"><i>P</i>(<i>B</i>)</span>를 곱하면 이게 나와. 실전에서는 이쪽을 훨씬 많이 써.</p>
+    <div class="eq"><i>P</i>(<i>A</i> ∩ <i>B</i>) = <i>P</i>(<i>A</i> | <i>B</i>) <i>P</i>(<i>B</i>) = <i>P</i>(<i>B</i> | <i>A</i>) <i>P</i>(<i>A</i>)</div>
+    <p style="margin-bottom:0">문제가 <span class="m"><i>P</i>(<i>S</i><sub>1</sub>)</span>과 <span class="m"><i>P</i>(<i>S</i><sub>2</sub>|<i>S</i><sub>1</sub>)</span>를 주고 <span class="m"><i>P</i>(<i>S</i><sub>1</sub> ∩ <i>S</i><sub>2</sub>)</span>를 물으면 이걸 쓰라는 뜻이야. <strong>HW2 Problem 1(a)가 정확히 이 형태다.</strong></p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">The multiplication rule</span>
+    <p>Multiply the definition through by <span class="m"><i>P</i>(<i>B</i>)</span> and you get this. In practice you reach for this form far more often.</p>
+    <div class="eq"><i>P</i>(<i>A</i> ∩ <i>B</i>) = <i>P</i>(<i>A</i> | <i>B</i>) <i>P</i>(<i>B</i>) = <i>P</i>(<i>B</i> | <i>A</i>) <i>P</i>(<i>A</i>)</div>
+    <p style="margin-bottom:0">When a problem hands you <span class="m"><i>P</i>(<i>S</i><sub>1</sub>)</span> and <span class="m"><i>P</i>(<i>S</i><sub>2</sub>|<i>S</i><sub>1</sub>)</span> and asks for <span class="m"><i>P</i>(<i>S</i><sub>1</sub> ∩ <i>S</i><sub>2</sub>)</span>, it is asking for this. <strong>HW2 Problem 1(a) is exactly that shape.</strong></p>
+  </div>
+
+  <div class="ex">
+    <span class="tag" lang="ko">예제 2.1 · HW2 Problem 1 유형</span>
+    <span class="tag" lang="en">Example 2.1 · the HW2 Problem 1 pattern</span>
+    <p lang="ko">패킷을 두 번 연속 보낸다. <span class="m"><i>S</i><sub>1</sub></span> = 첫 번째 성공, <span class="m"><i>S</i><sub>2</sub></span> = 두 번째 성공.<br>
+    <span class="m"><i>P</i>(<i>S</i><sub>1</sub>) = 0.6</span>, <span class="m"><i>P</i>(<i>S</i><sub>2</sub>|<i>S</i><sub>1</sub>) = 0.8</span>, <span class="m"><i>P</i>(<i>S</i><sub>2</sub>|<i>S</i><sub>1</sub><sup>c</sup>) = 0.3</span>일 때 (a) <span class="m"><i>P</i>(<i>S</i><sub>1</sub> ∩ <i>S</i><sub>2</sub>)</span>, (b) 정확히 하나만 성공할 확률, (c) <span class="m"><i>P</i>(<i>S</i><sub>1</sub>|<i>S</i><sub>2</sub>)</span>를 구해.</p>
+    <p lang="en">Two packets are sent back to back. <span class="m"><i>S</i><sub>1</sub></span> is "first succeeds", <span class="m"><i>S</i><sub>2</sub></span> is "second succeeds".<br>
+    Given <span class="m"><i>P</i>(<i>S</i><sub>1</sub>) = 0.6</span>, <span class="m"><i>P</i>(<i>S</i><sub>2</sub>|<i>S</i><sub>1</sub>) = 0.8</span> and <span class="m"><i>P</i>(<i>S</i><sub>2</sub>|<i>S</i><sub>1</sub><sup>c</sup>) = 0.3</span>, find (a) <span class="m"><i>P</i>(<i>S</i><sub>1</sub> ∩ <i>S</i><sub>2</sub>)</span>, (b) the probability that exactly one succeeds, (c) <span class="m"><i>P</i>(<i>S</i><sub>1</sub>|<i>S</i><sub>2</sub>)</span>.</p>
+    <details>
+      <summary><span lang="ko">풀이</span><span lang="en">Solution</span></summary>
+      <div class="body">
+        <div lang="ko">
+          <p><strong>(a)</strong> 곱셈 규칙 그대로. <span class="m"><i>P</i>(<i>S</i><sub>1</sub> ∩ <i>S</i><sub>2</sub>) = <i>P</i>(<i>S</i><sub>2</sub>|<i>S</i><sub>1</sub>)<i>P</i>(<i>S</i><sub>1</sub>) = 0.8 × 0.6 = <strong>0.48</strong></span></p>
+          <p><strong>(b)</strong> "정확히 하나"는 <span class="m">(<i>S</i><sub>1</sub> ∩ <i>S</i><sub>2</sub><sup>c</sup>) ∪ (<i>S</i><sub>1</sub><sup>c</sup> ∩ <i>S</i><sub>2</sub>)</span>이고 두 조각은 서로소야.</p>
+          <div class="eq" style="font-size:15px"><i>P</i>(<i>S</i><sub>1</sub> ∩ <i>S</i><sub>2</sub><sup>c</sup>) = (1 − 0.8)(0.6) = 0.12 &nbsp;&nbsp; <i>P</i>(<i>S</i><sub>1</sub><sup>c</sup> ∩ <i>S</i><sub>2</sub>) = (0.3)(0.4) = 0.12</div>
+          <p>합쳐서 <strong>0.24</strong>. 두 번째 항에서 <span class="m"><i>P</i>(<i>S</i><sub>1</sub><sup>c</sup>) = 0.4</span>를 쓴 걸 놓치지 마.</p>
+          <p><strong>(c)</strong> 조건이 뒤집혔으니 Bayes야. 분모부터 구해야 해 (전확률 법칙, 06번).</p>
+          <div class="eq" style="font-size:15px"><i>P</i>(<i>S</i><sub>2</sub>) = (0.8)(0.6) + (0.3)(0.4) = 0.48 + 0.12 = 0.60</div>
+          <div class="eq" style="font-size:15px"><i>P</i>(<i>S</i><sub>1</sub>|<i>S</i><sub>2</sub>) = 0.48 / 0.60 = <strong>0.8</strong></div>
+          <p style="margin-bottom:0"><span class="m"><i>P</i>(<i>S</i><sub>1</sub>) = 0.6</span>이었는데 <span class="m"><i>S</i><sub>2</sub></span>를 관측하고 나니 0.8로 올랐어. <strong>두 번째가 성공했다는 사실이 첫 번째에 대한 믿음을 바꾼 거야.</strong> 시간을 거슬러 올라가는 것처럼 보여도 이상한 게 아니야. 확률은 사건의 순서가 아니라 정보의 양에 대한 진술이거든.</p>
+        </div>
+        <div lang="en">
+          <p><strong>(a)</strong> The multiplication rule verbatim: <span class="m"><i>P</i>(<i>S</i><sub>1</sub> ∩ <i>S</i><sub>2</sub>) = <i>P</i>(<i>S</i><sub>2</sub>|<i>S</i><sub>1</sub>)<i>P</i>(<i>S</i><sub>1</sub>) = 0.8 × 0.6 = <strong>0.48</strong></span></p>
+          <p><strong>(b)</strong> "Exactly one" is <span class="m">(<i>S</i><sub>1</sub> ∩ <i>S</i><sub>2</sub><sup>c</sup>) ∪ (<i>S</i><sub>1</sub><sup>c</sup> ∩ <i>S</i><sub>2</sub>)</span>, and those two pieces are disjoint.</p>
+          <div class="eq" style="font-size:15px"><i>P</i>(<i>S</i><sub>1</sub> ∩ <i>S</i><sub>2</sub><sup>c</sup>) = (1 − 0.8)(0.6) = 0.12 &nbsp;&nbsp; <i>P</i>(<i>S</i><sub>1</sub><sup>c</sup> ∩ <i>S</i><sub>2</sub>) = (0.3)(0.4) = 0.12</div>
+          <p>Together, <strong>0.24</strong>. Note the <span class="m"><i>P</i>(<i>S</i><sub>1</sub><sup>c</sup>) = 0.4</span> in the second term; it is easy to miss.</p>
+          <p><strong>(c)</strong> The conditioning is reversed, so this is Bayes, and you need the denominator first (law of total probability, §06).</p>
+          <div class="eq" style="font-size:15px"><i>P</i>(<i>S</i><sub>2</sub>) = (0.8)(0.6) + (0.3)(0.4) = 0.48 + 0.12 = 0.60</div>
+          <div class="eq" style="font-size:15px"><i>P</i>(<i>S</i><sub>1</sub>|<i>S</i><sub>2</sub>) = 0.48 / 0.60 = <strong>0.8</strong></div>
+          <p style="margin-bottom:0">It started at <span class="m"><i>P</i>(<i>S</i><sub>1</sub>) = 0.6</span> and rose to 0.8 once <span class="m"><i>S</i><sub>2</sub></span> was observed. <strong>Learning the second one succeeded changed our belief about the first.</strong> That reads like running time backwards, but nothing is wrong: probability is a statement about how much you know, not about the order events occurred in.</p>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ══ 03 ══ -->
+<section id="s3">
+  <div class="sec-head" data-slide="8-9"><span class="sec-num">03</span><h2 lang="ko">세 가지 성질</h2><h2 lang="en">Three properties</h2></div>
+  <p class="sec-sub" lang="ko">포함 관계가 극단이면 조건부 확률도 극단이 된다.</p>
+  <p class="sec-sub" lang="en">When the containment is extreme, so is the conditional probability.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드의 세 성질</span>
+    <table>
+      <tr><th>상황</th><th>결과</th><th>왜</th></tr>
+      <tr><td><span class="m"><i>A</i> ⊆ <i>B</i></span></td><td><span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = <i>P</i>(<i>A</i>)/<i>P</i>(<i>B</i>) ≥ <i>P</i>(<i>A</i>)</span></td><td><span class="m"><i>A</i> ∩ <i>B</i> = <i>A</i></span>이고 <span class="m"><i>P</i>(<i>B</i>) ≤ 1</span>이라 나누면 커진다</td></tr>
+      <tr><td><span class="m"><i>B</i> ⊆ <i>A</i></span></td><td><span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = 1</span></td><td><span class="m"><i>A</i> ∩ <i>B</i> = <i>B</i></span>. B가 일어나면 A는 이미 일어난 것</td></tr>
+      <tr><td><span class="m"><i>A</i> ∩ <i>B</i> = ∅</span></td><td><span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = 0</span></td><td>B 안에 A의 결과가 하나도 없다</td></tr>
+    </table>
+    <p style="margin-bottom:0">셋 다 <strong>외울 게 아니라 정의에 대입하면 바로 나오는 것들</strong>이야. 시험에서 헷갈리면 <span class="m"><i>P</i>(<i>A</i>∩<i>B</i>)/<i>P</i>(<i>B</i>)</span>에 그림을 넣어봐.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">The three from the slides</span>
+    <table>
+      <tr><th>situation</th><th>result</th><th>why</th></tr>
+      <tr><td><span class="m"><i>A</i> ⊆ <i>B</i></span></td><td><span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = <i>P</i>(<i>A</i>)/<i>P</i>(<i>B</i>) ≥ <i>P</i>(<i>A</i>)</span></td><td><span class="m"><i>A</i> ∩ <i>B</i> = <i>A</i></span> and <span class="m"><i>P</i>(<i>B</i>) ≤ 1</span>, so dividing grows it</td></tr>
+      <tr><td><span class="m"><i>B</i> ⊆ <i>A</i></span></td><td><span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = 1</span></td><td><span class="m"><i>A</i> ∩ <i>B</i> = <i>B</i></span>. If B happens, A already has</td></tr>
+      <tr><td><span class="m"><i>A</i> ∩ <i>B</i> = ∅</span></td><td><span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = 0</span></td><td>no outcome of A survives inside B</td></tr>
+    </table>
+    <p style="margin-bottom:0">None of these are worth memorising: <strong>they drop straight out of the definition.</strong> If one of them slips in an exam, put the picture back into <span class="m"><i>P</i>(<i>A</i>∩<i>B</i>)/<i>P</i>(<i>B</i>)</span>.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">함정</span>
+    <h4>서로소와 독립은 정반대다</h4>
+    <p>세 번째 성질을 다시 봐. <span class="m"><i>A</i> ∩ <i>B</i> = ∅</span>이면 <span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = 0</span>이야. 그런데 독립은 <span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = <i>P</i>(<i>A</i>)</span>라는 뜻이거든. 둘이 같으려면 <span class="m"><i>P</i>(<i>A</i>) = 0</span>이어야 해.</p>
+    <p><strong>즉 확률이 양수인 두 사건이 서로소면 절대 독립이 아니다.</strong> 오히려 <em>가장 강하게 의존</em>하는 관계야. B가 일어났다는 걸 아는 순간 A가 불가능해지니까. "서로소니까 서로 상관없겠지"가 이 과목에서 제일 흔한 오해야. Module 4에서 다시 짚을게.</p>
+    <h4><span class="m"><i>P</i>(<i>B</i>) = 0</span>이면 "0"이 아니라 "정의되지 않음"</h4>
+    <p>교재(Hajek §1.2)가 이걸 특이하게 강조해. <em>"P(A|B)를 계산하는 함수를 짤 때 입력이 P(AB)=0, P(B)=0이면 그냥 0을 반환하면 안 된다. 오류 메시지를 내야 한다."</em> 확률 0인 사건에 조건을 걸면 답이 0인 게 아니라 <strong>질문 자체가 성립하지 않아.</strong></p>
+    <h4><span class="m"><i>P</i>(<i>A</i>|<i>B</i>)</span>가 <span class="m"><i>P</i>(<i>A</i>)</span>보다 항상 크지는 않다</h4>
+    <p>첫 번째 성질이 <span class="m"><i>A</i> ⊆ <i>B</i></span>일 때만 성립한다는 걸 놓치기 쉬워. 일반적으로는 커질 수도 작아질 수도 있어. <span class="m"><i>Ω</i> = {1,2,3,4}</span>, 균등분포, <span class="m"><i>A</i> = {1,2}</span>, <span class="m"><i>B</i> = {2,3}</span>이면 <span class="m"><i>P</i>(<i>A</i>) = 0.5</span>이고 <span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = 0.25/0.5 = 0.5</span>로 <em>같아</i>. <span class="m"><i>B</i> = {3,4}</span>로 바꾸면 <span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = 0</span>으로 <em>작아져</em>.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Traps</span>
+    <h4>Disjoint and independent are opposites</h4>
+    <p>Look at the third property again: <span class="m"><i>A</i> ∩ <i>B</i> = ∅</span> gives <span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = 0</span>. Independence means <span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = <i>P</i>(<i>A</i>)</span>. For both to hold you would need <span class="m"><i>P</i>(<i>A</i>) = 0</span>.</p>
+    <p><strong>So two events with positive probability that are disjoint are never independent.</strong> They are as <em>dependent</em> as events get: the moment you learn B happened, A becomes impossible. "They're disjoint, so they don't affect each other" is the single most common confusion in this course. Module 4 returns to it.</p>
+    <h4>When <span class="m"><i>P</i>(<i>B</i>) = 0</span> the answer is not 0, it is "undefined"</h4>
+    <p>The textbook (Hajek §1.2) makes a point of this: <em>if you write a routine to compute P(A|B) and it gets P(AB)=0 and P(B)=0 as inputs, it should not simply return 0; it should raise an error.</em> Conditioning on a probability-zero event does not give you a small answer, it means <strong>the question does not parse.</strong></p>
+    <h4><span class="m"><i>P</i>(<i>A</i>|<i>B</i>)</span> is not always larger than <span class="m"><i>P</i>(<i>A</i>)</span></h4>
+    <p>The first property holds only when <span class="m"><i>A</i> ⊆ <i>B</i></span>, which is easy to forget. In general conditioning can move the probability either way. Take <span class="m"><i>Ω</i> = {1,2,3,4}</span> uniform, <span class="m"><i>A</i> = {1,2}</span>, <span class="m"><i>B</i> = {2,3}</span>: then <span class="m"><i>P</i>(<i>A</i>) = 0.5</span> and <span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = 0.25/0.5 = 0.5</span>, <em>unchanged</em>. Switch to <span class="m"><i>B</i> = {3,4}</span> and <span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = 0</span>, strictly <em>smaller</em>.</p>
+  </div>
+</section>
+
+<!-- ══ 04 ══ -->
+<section id="s4">
+  <div class="sec-head" data-slide="10"><span class="sec-num">04</span><h2 lang="ko">조건부 확률도 확률이다</h2><h2 lang="en">A conditional probability is itself a measure</h2></div>
+  <p class="sec-sub" lang="ko">B를 고정하면 <span class="m"><i>P</i>(·|<i>B</i>)</span>가 새로운 확률 측도가 된다.</p>
+  <p class="sec-sub" lang="en">Fix B and <span class="m"><i>P</i>(·|<i>B</i>)</span> becomes a probability measure in its own right.</p>
+
+  <p lang="ko">슬라이드는 이걸 <span class="m">(<i>Ω</i>, ℱ, <i>P</i>) → (<i>Ω</i>, ℱ, <i>P</i>(·|<i>B</i>))</span>로 써. <strong>표본공간도 사건공간도 그대로고 측도만 바뀌어.</strong> 조건을 건다는 건 모델을 갱신하는 것이지 새 모델을 만드는 게 아니야.</p>
+  <p lang="en">The slides write this as <span class="m">(<i>Ω</i>, ℱ, <i>P</i>) → (<i>Ω</i>, ℱ, <i>P</i>(·|<i>B</i>))</span>. <strong>The sample space and the event space are untouched; only the measure changes.</strong> Conditioning updates the model rather than replacing it.</p>
+
+  <div class="callout" lang="ko">
+    <strong>이게 왜 중요하냐면, Module 2에서 증명한 것들이 전부 공짜로 따라오기 때문이야.</strong> <span class="m"><i>P</i>(·|<i>B</i>)</span>가 공리 ①②③을 만족하니까 <span class="m"><i>P</i>(<i>A</i><sup>c</sup>|<i>B</i>) = 1 − <i>P</i>(<i>A</i>|<i>B</i>)</span>도, 포함배제도, 단조성도 그대로 써도 돼. <a href="L02-probability-space.html#s7">Module 2 · 07</a>에서 유도한 성질 전부가 조건부 버전으로 자동 성립해. 새로 증명할 필요 없어.
+  </div>
+  <div class="callout" lang="en">
+    <strong>This matters because everything proved in Module 2 comes along for free.</strong> Since <span class="m"><i>P</i>(·|<i>B</i>)</span> satisfies axioms ①②③, you may use <span class="m"><i>P</i>(<i>A</i><sup>c</sup>|<i>B</i>) = 1 − <i>P</i>(<i>A</i>|<i>B</i>)</span>, inclusion-exclusion, monotonicity, all of it. Every property derived in <a href="L02-probability-space.html#s7">Module 2 · 07</a> holds in its conditional form automatically. Nothing needs reproving.
+  </div>
+
+  <div class="ex">
+    <span class="tag" lang="ko">예제 4.1 · 공리 검증</span>
+    <span class="tag" lang="en">Example 4.1 · checking the axioms</span>
+    <p lang="ko"><span class="m"><i>P</i>(·|<i>B</i>)</span>가 Kolmogorov의 세 공리를 만족하는지 확인해. 교재가 "직접 해보라(Try showing that)"고 남겨둔 문제야.</p>
+    <p lang="en">Verify that <span class="m"><i>P</i>(·|<i>B</i>)</span> satisfies Kolmogorov's three axioms. The textbook leaves this as "try showing that".</p>
+    <details>
+      <summary><span lang="ko">풀이</span><span lang="en">Solution</span></summary>
+      <div class="body">
+        <div lang="ko">
+          <p><strong>① 비음수성.</strong> <span class="m"><i>P</i>(<i>A</i>∩<i>B</i>) ≥ 0</span>이고 <span class="m"><i>P</i>(<i>B</i>) &gt; 0</span>이니 몫도 <span class="m">≥ 0</span>.</p>
+          <p><strong>② 정규화.</strong> <span class="m"><i>P</i>(<i>Ω</i>|<i>B</i>) = <i>P</i>(<i>Ω</i>∩<i>B</i>)/<i>P</i>(<i>B</i>) = <i>P</i>(<i>B</i>)/<i>P</i>(<i>B</i>) = 1</span>. ✓</p>
+          <p><strong>③ 가산 가법성.</strong> <span class="m"><i>A</i><sub>1</sub>, <i>A</i><sub>2</sub>, …</span>가 서로소면 <span class="m"><i>A</i><sub>1</sub>∩<i>B</i>, <i>A</i><sub>2</sub>∩<i>B</i>, …</span>도 서로소야. 그러면</p>
+          <div class="eq" style="font-size:15px"><i>P</i>(⋃<sub><i>i</i></sub> <i>A<sub>i</sub></i> | <i>B</i>) = <i>P</i>((⋃<sub><i>i</i></sub> <i>A<sub>i</sub></i>) ∩ <i>B</i>) / <i>P</i>(<i>B</i>) = <i>P</i>(⋃<sub><i>i</i></sub> (<i>A<sub>i</sub></i> ∩ <i>B</i>)) / <i>P</i>(<i>B</i>) = ∑<sub><i>i</i></sub> <i>P</i>(<i>A<sub>i</sub></i> ∩ <i>B</i>) / <i>P</i>(<i>B</i>) = ∑<sub><i>i</i></sub> <i>P</i>(<i>A<sub>i</sub></i>|<i>B</i>)</div>
+          <p style="margin-bottom:0"><strong>가운데에서 분배법칙을 썼어.</strong> <span class="m">(⋃<i>A<sub>i</sub></i>) ∩ <i>B</i> = ⋃(<i>A<sub>i</sub></i> ∩ <i>B</i>)</span>. <a href="L01-set-theory.html#s5">Module 1 · 05</a>의 분배법칙이고, HW1 Problem 2(b)에서 증명한 바로 그거야. 무한 버전도 같은 방식으로 성립해.</p>
+        </div>
+        <div lang="en">
+          <p><strong>① Non-negativity.</strong> <span class="m"><i>P</i>(<i>A</i>∩<i>B</i>) ≥ 0</span> and <span class="m"><i>P</i>(<i>B</i>) &gt; 0</span>, so the quotient is <span class="m">≥ 0</span>.</p>
+          <p><strong>② Normalization.</strong> <span class="m"><i>P</i>(<i>Ω</i>|<i>B</i>) = <i>P</i>(<i>Ω</i>∩<i>B</i>)/<i>P</i>(<i>B</i>) = <i>P</i>(<i>B</i>)/<i>P</i>(<i>B</i>) = 1</span>. ✓</p>
+          <p><strong>③ Countable additivity.</strong> If <span class="m"><i>A</i><sub>1</sub>, <i>A</i><sub>2</sub>, …</span> are disjoint then so are <span class="m"><i>A</i><sub>1</sub>∩<i>B</i>, <i>A</i><sub>2</sub>∩<i>B</i>, …</span>, and</p>
+          <div class="eq" style="font-size:15px"><i>P</i>(⋃<sub><i>i</i></sub> <i>A<sub>i</sub></i> | <i>B</i>) = <i>P</i>((⋃<sub><i>i</i></sub> <i>A<sub>i</sub></i>) ∩ <i>B</i>) / <i>P</i>(<i>B</i>) = <i>P</i>(⋃<sub><i>i</i></sub> (<i>A<sub>i</sub></i> ∩ <i>B</i>)) / <i>P</i>(<i>B</i>) = ∑<sub><i>i</i></sub> <i>P</i>(<i>A<sub>i</sub></i> ∩ <i>B</i>) / <i>P</i>(<i>B</i>) = ∑<sub><i>i</i></sub> <i>P</i>(<i>A<sub>i</sub></i>|<i>B</i>)</div>
+          <p style="margin-bottom:0"><strong>The middle step is the distributive law:</strong> <span class="m">(⋃<i>A<sub>i</sub></i>) ∩ <i>B</i> = ⋃(<i>A<sub>i</sub></i> ∩ <i>B</i>)</span>. That is <a href="L01-set-theory.html#s5">Module 1 · 05</a>, the identity you proved in HW1 Problem 2(b). The infinite version goes through the same way.</p>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ══ 05 ══ -->
+<section id="s5">
+  <div class="sec-head" data-slide="11"><span class="sec-num">05</span><h2 lang="ko">Bayes 정리</h2><h2 lang="en">Bayes' theorem</h2></div>
+  <p class="sec-sub" lang="ko">조건의 방향을 뒤집는 규칙. 한 줄짜리 항등식이다.</p>
+  <p class="sec-sub" lang="en">The rule that flips the conditioning. It is a one-line identity.</p>
+
+  <p lang="ko">출발점은 곱셈 규칙 하나야. <span class="m"><i>P</i>(<i>A</i>∩<i>B</i>)</span>를 <strong>두 가지 방법으로</strong> 쓸 수 있다는 것뿐이야.</p>
+  <p lang="en">It starts from the multiplication rule alone: <span class="m"><i>P</i>(<i>A</i>∩<i>B</i>)</span> can be written <strong>two different ways</strong>.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">유도</span>
+    <div class="eq"><i>P</i>(<i>A</i> ∩ <i>B</i>) = <i>P</i>(<i>A</i>|<i>B</i>) <i>P</i>(<i>B</i>) &nbsp;=&nbsp; <i>P</i>(<i>B</i>|<i>A</i>) <i>P</i>(<i>A</i>)</div>
+    <p>오른쪽 두 항을 같다고 놓고 <span class="m"><i>P</i>(<i>B</i>)</span>로 나누면 끝이야.</p>
+    <div class="eq" style="margin-bottom:0"><i>P</i>(<i>A</i> | <i>B</i>) = <span style="display:inline-block;text-align:center;vertical-align:-.6em"><span style="display:block;border-bottom:1px solid currentColor;padding:0 6px 2px"><i>P</i>(<i>B</i> | <i>A</i>) <i>P</i>(<i>A</i>)</span><span style="display:block;padding-top:2px"><i>P</i>(<i>B</i>)</span></span></div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Derivation</span>
+    <div class="eq"><i>P</i>(<i>A</i> ∩ <i>B</i>) = <i>P</i>(<i>A</i>|<i>B</i>) <i>P</i>(<i>B</i>) &nbsp;=&nbsp; <i>P</i>(<i>B</i>|<i>A</i>) <i>P</i>(<i>A</i>)</div>
+    <p>Set the two right-hand expressions equal, divide through by <span class="m"><i>P</i>(<i>B</i>)</span>, and you are done.</p>
+    <div class="eq" style="margin-bottom:0"><i>P</i>(<i>A</i> | <i>B</i>) = <span style="display:inline-block;text-align:center;vertical-align:-.6em"><span style="display:block;border-bottom:1px solid currentColor;padding:0 6px 2px"><i>P</i>(<i>B</i> | <i>A</i>) <i>P</i>(<i>A</i>)</span><span style="display:block;padding-top:2px"><i>P</i>(<i>B</i>)</span></span></div>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>Bayes 정리는 새로운 내용이 아니다.</strong> 곱셈 규칙을 두 번 쓴 것뿐이라 증명이 두 줄이야. 어려운 건 정리가 아니라 <strong>분모 <span class="m"><i>P</i>(<i>B</i>)</span>를 어떻게 구하느냐</strong>야. 문제는 보통 <span class="m"><i>P</i>(<i>B</i>)</span>를 안 주고 <span class="m"><i>P</i>(<i>B</i>|<i>A<sub>i</sub></i>)</span>들만 줘. 그래서 06번의 전확률 법칙이 필요해. <strong>실제로 Bayes 문제의 계산량은 대부분 분모에 들어간다.</strong>
+  </div>
+  <div class="callout" lang="en">
+    <strong>Bayes' theorem contains nothing new.</strong> It is the multiplication rule used twice, and the proof is two lines. The hard part is never the theorem; it is <strong>getting the denominator <span class="m"><i>P</i>(<i>B</i>)</span></strong>. Problems almost never hand you <span class="m"><i>P</i>(<i>B</i>)</span> directly, only the <span class="m"><i>P</i>(<i>B</i>|<i>A<sub>i</sub></i>)</span> values, which is why §06 exists. <strong>In practice most of the arithmetic in a Bayes problem lives in the denominator.</strong>
+  </div>
+</section>
+
+<!-- ══ 06 ══ -->
+<section id="s6">
+  <div class="sec-head" data-slide="12-13"><span class="sec-num">06</span><h2 lang="ko">전확률 법칙</h2><h2 lang="en">The law of total probability</h2></div>
+  <p class="sec-sub" lang="ko">Module 1의 partition이 처음으로 정리의 전제가 된다.</p>
+  <p class="sec-sub" lang="en">The first theorem that actually requires Module 1's partition.</p>
+
+  <p lang="ko">분할 <span class="m"><i>A</i><sub>1</sub>, …, <i>A<sub>n</sub></i></span>은 <span class="m"><i>Ω</i></span>를 겹치지 않게 다 덮어. 그러면 <strong>어떤 사건 B든 그 조각들로 잘려.</strong></p>
+  <p lang="en">A partition <span class="m"><i>A</i><sub>1</sub>, …, <i>A<sub>n</sub></i></span> covers <span class="m"><i>Ω</i></span> without overlap. So <strong>any event B gets cut into those same pieces.</strong></p>
+
+  <div class="eq"><i>B</i> = (<i>B</i> ∩ <i>A</i><sub>1</sub>) ∪ ⋯ ∪ (<i>B</i> ∩ <i>A<sub>n</sub></i>)</div>
+
+  <p lang="ko">조각들이 서로소니까 공리 ③을 쓸 수 있고, 각 조각에 곱셈 규칙을 적용하면 이렇게 돼.</p>
+  <p lang="en">The pieces are disjoint, so axiom ③ applies, and the multiplication rule on each piece gives this.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">전확률 법칙</span>
+    <div class="eq" style="margin-bottom:0"><i>P</i>(<i>B</i>) = ∑<sub><i>i</i>=1</sub><sup><i>n</i></sup> <i>P</i>(<i>B</i> ∩ <i>A<sub>i</sub></i>) = ∑<sub><i>i</i>=1</sub><sup><i>n</i></sup> <i>P</i>(<i>B</i> | <i>A<sub>i</sub></i>) <i>P</i>(<i>A<sub>i</sub></i>)</div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Law of total probability</span>
+    <div class="eq" style="margin-bottom:0"><i>P</i>(<i>B</i>) = ∑<sub><i>i</i>=1</sub><sup><i>n</i></sup> <i>P</i>(<i>B</i> ∩ <i>A<sub>i</sub></i>) = ∑<sub><i>i</i>=1</sub><sup><i>n</i></sup> <i>P</i>(<i>B</i> | <i>A<sub>i</sub></i>) <i>P</i>(<i>A<sub>i</sub></i>)</div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 700 236" role="img" aria-label="분할이 사건 B를 조각으로 자르는 그림">
+      <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="ko">분할이 B를 조각낸다</text>
+      <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="en">the partition slices B</text>
+
+      <defs><clipPath id="lt-b"><ellipse cx="350" cy="128" rx="272" ry="56"/></clipPath></defs>
+      <rect x="40" y="44" width="620" height="150" rx="8" style="fill:var(--paper);stroke:var(--rule)"/>
+      <text x="52" y="62" class="svgtxt it" style="font-size:12px;fill:var(--ink3)">Ω</text>
+
+      <line x1="195" y1="44" x2="195" y2="194" style="stroke:var(--rule);stroke-width:1"/>
+      <line x1="350" y1="44" x2="350" y2="194" style="stroke:var(--rule);stroke-width:1"/>
+      <line x1="505" y1="44" x2="505" y2="194" style="stroke:var(--rule);stroke-width:1"/>
+
+      <g clip-path="url(#lt-b)">
+        <rect x="40" y="44" width="155" height="150" style="fill:rgba(var(--blue-rgb),.45)"/>
+        <rect x="195" y="44" width="155" height="150" style="fill:rgba(var(--pink-rgb),.45)"/>
+        <rect x="350" y="44" width="155" height="150" style="fill:rgba(var(--green-rgb),.45)"/>
+        <rect x="505" y="44" width="155" height="150" style="fill:rgba(var(--violet-rgb),.45)"/>
+      </g>
+      <ellipse cx="350" cy="128" rx="272" ry="56" style="fill:none;stroke:var(--ink);stroke-width:1.8"/>
+
+      <text x="117" y="64" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:var(--blue)">A₁</text>
+      <text x="272" y="64" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:var(--pink)">A₂</text>
+      <text x="427" y="64" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:var(--green)">A₃</text>
+      <text x="582" y="64" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:var(--violet)">A₄</text>
+      <text x="300" y="168" text-anchor="middle" class="svgtxt it" style="font-size:16px;fill:var(--ink)">B</text>
+
+      <text x="350" y="222" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="ko">P(B) = P(B∩A₁) + P(B∩A₂) + P(B∩A₃) + P(B∩A₄)</text>
+      <text x="350" y="222" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="en">P(B) = P(B∩A₁) + P(B∩A₂) + P(B∩A₃) + P(B∩A₄)</text>
+    </svg>
+    <figcaption lang="ko">세로선이 분할이다. B가 네 조각으로 잘리는데, <strong>겹치지 않으니 두 번 세지 않고 다 덮으니 빠뜨리지 않는다.</strong> 분할의 두 조건이 각각 하나씩 담당한다. 교재 Figure 1.3이 같은 그림이다.</figcaption>
+    <figcaption lang="en">The vertical lines are the partition. B is cut into four pieces, and <strong>because they do not overlap nothing is double counted, because they cover everything nothing is missed.</strong> One partition condition for each guarantee. The textbook's Figure 1.3 is the same picture.</figcaption>
+  </figure>
+
+  <div class="trap" lang="ko">
+    <span class="tag">함정</span>
+    <h4>분할인지 먼저 확인해야 한다</h4>
+    <p>전확률 법칙은 <span class="m"><i>A<sub>i</sub></i></span>들이 <strong>분할일 때만</strong> 성립해. 겹치면 두 번 세고, 덜 덮으면 빠뜨려. <strong>HW2 Problem 2(a)가 "{G, M, B}가 분할인 이유를 설명하라"고 먼저 묻는 게 우연이 아니야.</strong> 계산 전에 전제를 확인하라는 뜻이야. <a href="L01-set-theory.html#s9">Module 1 · 09</a>의 두 조건을 그대로 쓰면 돼.</p>
+    <h4>가장 흔한 분할은 <span class="m">{<i>A</i>, <i>A</i><sup>c</sup>}</span>다</h4>
+    <p>분할이라고 하면 세 조각 이상을 떠올리기 쉬운데, <strong>두 조각짜리가 제일 많이 쓰여.</strong></p>
+    <div class="eq" style="font-size:15px"><i>P</i>(<i>B</i>) = <i>P</i>(<i>B</i>|<i>A</i>)<i>P</i>(<i>A</i>) + <i>P</i>(<i>B</i>|<i>A</i><sup>c</sup>)<i>P</i>(<i>A</i><sup>c</sup>)</div>
+    <p>예제 2.1의 (c)에서 <span class="m"><i>P</i>(<i>S</i><sub>2</sub>)</span>를 구할 때 쓴 게 이거야. HW2 Problem 1과 Problem 8도 이 형태야.</p>
+    <h4><span class="m"><i>P</i>(<i>B</i>|<i>A<sub>i</sub></i>)</span>를 더하면 1이 되지 않는다</h4>
+    <p>더해서 1이 되는 건 <span class="m"><i>P</i>(<i>A<sub>i</sub></i>)</span>들이야. <span class="m">∑<sub><i>i</i></sub> <i>P</i>(<i>B</i>|<i>A<sub>i</sub></i>)</span>는 아무 의미 없는 값이고 1을 넘을 수도 있어. HW2 Problem 2에서 <span class="m"><i>P</i>(<i>E</i>|<i>G</i>) + <i>P</i>(<i>E</i>|<i>M</i>) + <i>P</i>(<i>E</i>|<i>B</i>) = 0.26</span>인데 이 숫자는 쓸 데가 없어. <strong>반드시 <span class="m"><i>P</i>(<i>A<sub>i</sub></i>)</span>로 가중해서 더해야 해.</strong></p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Traps</span>
+    <h4>Check that it really is a partition first</h4>
+    <p>The law holds <strong>only when</strong> the <span class="m"><i>A<sub>i</sub></i></span> form a partition. Overlap and you double count; incomplete coverage and you drop mass. <strong>It is no accident that HW2 Problem 2(a) asks you to explain why {G, M, B} is a partition before any arithmetic.</strong> Verify the hypothesis first, using the two conditions from <a href="L01-set-theory.html#s9">Module 1 · 09</a>.</p>
+    <h4>The most common partition is <span class="m">{<i>A</i>, <i>A</i><sup>c</sup>}</span></h4>
+    <p>The word "partition" suggests three or more pieces, but <strong>the two-piece one gets used most.</strong></p>
+    <div class="eq" style="font-size:15px"><i>P</i>(<i>B</i>) = <i>P</i>(<i>B</i>|<i>A</i>)<i>P</i>(<i>A</i>) + <i>P</i>(<i>B</i>|<i>A</i><sup>c</sup>)<i>P</i>(<i>A</i><sup>c</sup>)</div>
+    <p>That is what computed <span class="m"><i>P</i>(<i>S</i><sub>2</sub>)</span> in Example 2.1(c). HW2 Problems 1 and 8 have the same shape.</p>
+    <h4>The <span class="m"><i>P</i>(<i>B</i>|<i>A<sub>i</sub></i>)</span> do not sum to 1</h4>
+    <p>What sums to 1 is the <span class="m"><i>P</i>(<i>A<sub>i</sub></i>)</span>. The quantity <span class="m">∑<sub><i>i</i></sub> <i>P</i>(<i>B</i>|<i>A<sub>i</sub></i>)</span> means nothing and can exceed 1. In HW2 Problem 2 you get <span class="m"><i>P</i>(<i>E</i>|<i>G</i>) + <i>P</i>(<i>E</i>|<i>M</i>) + <i>P</i>(<i>E</i>|<i>B</i>) = 0.26</span>, a number with no use. <strong>You must weight by <span class="m"><i>P</i>(<i>A<sub>i</sub></i>)</span> before adding.</strong></p>
+  </div>
+</section>
+
+<!-- ══ 07 ══ -->
+<section id="s7">
+  <div class="sec-head" data-slide="14"><span class="sec-num">07</span><h2 lang="ko">분할과 합친 Bayes</h2><h2 lang="en">Bayes with a partition</h2></div>
+  <p class="sec-sub" lang="ko">05번의 분모에 06번을 끼워 넣으면 실전용 공식이 나온다.</p>
+  <p class="sec-sub" lang="en">Drop §06 into the denominator of §05 and you get the form you actually use.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">Bayes' rule (실전형)</span>
+    <div class="eq" style="margin-bottom:0"><i>P</i>(<i>A<sub>i</sub></i> | <i>B</i>) = <span style="display:inline-block;text-align:center;vertical-align:-.7em"><span style="display:block;border-bottom:1px solid currentColor;padding:0 8px 3px"><i>P</i>(<i>B</i> | <i>A<sub>i</sub></i>) <i>P</i>(<i>A<sub>i</sub></i>)</span><span style="display:block;padding-top:3px">∑<sub><i>j</i>=1</sub><sup><i>n</i></sup> <i>P</i>(<i>B</i> | <i>A<sub>j</sub></i>) <i>P</i>(<i>A<sub>j</sub></i>)</span></span></div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Bayes' rule, working form</span>
+    <div class="eq" style="margin-bottom:0"><i>P</i>(<i>A<sub>i</sub></i> | <i>B</i>) = <span style="display:inline-block;text-align:center;vertical-align:-.7em"><span style="display:block;border-bottom:1px solid currentColor;padding:0 8px 3px"><i>P</i>(<i>B</i> | <i>A<sub>i</sub></i>) <i>P</i>(<i>A<sub>i</sub></i>)</span><span style="display:block;padding-top:3px">∑<sub><i>j</i>=1</sub><sup><i>n</i></sup> <i>P</i>(<i>B</i> | <i>A<sub>j</sub></i>) <i>P</i>(<i>A<sub>j</sub></i>)</span></span></div>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>분자는 분모의 항 하나다.</strong> 이 구조가 두 가지를 공짜로 알려줘. 첫째, <span class="m">∑<sub><i>i</i></sub> <i>P</i>(<i>A<sub>i</sub></i>|<i>B</i>) = 1</span>이야. 분자들을 다 더하면 분모가 되니까. <strong>HW2 Problem 3(d)가 이걸 확인시키는 문항이고, 계산 검산으로 쓸 수 있어.</strong> 둘째, <span class="m"><i>i</i></span>를 고를 때 분모는 바뀌지 않으니 <em>비교만 할 거면 분모를 계산할 필요가 없어.</em> 11번의 MAP이 이걸 이용해.
+  </div>
+  <div class="callout" lang="en">
+    <strong>The numerator is one term of the denominator.</strong> That structure hands you two things for free. First, <span class="m">∑<sub><i>i</i></sub> <i>P</i>(<i>A<sub>i</sub></i>|<i>B</i>) = 1</span>, because adding all the numerators rebuilds the denominator. <strong>HW2 Problem 3(d) makes you check exactly this, and it doubles as an arithmetic check.</strong> Second, the denominator does not depend on which <span class="m"><i>i</i></span> you pick, so <em>if you only need to compare, you never have to compute it.</em> MAP detection in §11 runs on that observation.</p>
+  </div>
+
+  <div class="ex">
+    <span class="tag" lang="ko">예제 7.1 · HW2 Problem 2·3 유형</span>
+    <span class="tag" lang="en">Example 7.1 · the HW2 Problems 2 and 3 pattern</span>
+    <p lang="ko">채널이 좋음 <span class="m"><i>G</i></span>, 나쁨 <span class="m"><i>B</i></span> 두 상태고 <span class="m"><i>P</i>(<i>G</i>) = 0.7</span>, <span class="m"><i>P</i>(<i>B</i>) = 0.3</span>. 오류 사건 <span class="m"><i>E</i></span>에 대해 <span class="m"><i>P</i>(<i>E</i>|<i>G</i>) = 0.02</span>, <span class="m"><i>P</i>(<i>E</i>|<i>B</i>) = 0.30</span>.<br>
+    (a) <span class="m"><i>P</i>(<i>E</i>)</span>를 구해. (b) 오류가 났을 때 채널이 나빴을 확률 <span class="m"><i>P</i>(<i>B</i>|<i>E</i>)</span>를 구해. (c) <span class="m"><i>P</i>(<i>B</i>)</span>와 <span class="m"><i>P</i>(<i>B</i>|<i>E</i>)</span>를 비교해.</p>
+    <p lang="en">The channel is either good <span class="m"><i>G</i></span> or bad <span class="m"><i>B</i></span>, with <span class="m"><i>P</i>(<i>G</i>) = 0.7</span> and <span class="m"><i>P</i>(<i>B</i>) = 0.3</span>. For the error event <span class="m"><i>E</i></span>, <span class="m"><i>P</i>(<i>E</i>|<i>G</i>) = 0.02</span> and <span class="m"><i>P</i>(<i>E</i>|<i>B</i>) = 0.30</span>.<br>
+    (a) Find <span class="m"><i>P</i>(<i>E</i>)</span>. (b) Given that an error occurred, find <span class="m"><i>P</i>(<i>B</i>|<i>E</i>)</span>. (c) Compare <span class="m"><i>P</i>(<i>B</i>)</span> with <span class="m"><i>P</i>(<i>B</i>|<i>E</i>)</span>.</p>
+    <details>
+      <summary><span lang="ko">풀이</span><span lang="en">Solution</span></summary>
+      <div class="body">
+        <div lang="ko">
+          <p><strong>(a)</strong> <span class="m">{<i>G</i>, <i>B</i>}</span>가 분할이니 전확률 법칙.</p>
+          <div class="eq" style="font-size:15px"><i>P</i>(<i>E</i>) = (0.02)(0.7) + (0.30)(0.3) = 0.014 + 0.090 = <strong>0.104</strong></div>
+          <p><strong>(b)</strong> 분자는 (a)에서 이미 계산한 항 하나야.</p>
+          <div class="eq" style="font-size:15px"><i>P</i>(<i>B</i>|<i>E</i>) = 0.090 / 0.104 ≈ <strong>0.865</strong></div>
+          <p><strong>(c)</strong> <span class="m">0.3 → 0.865</span>. <strong>오류를 하나 관측했을 뿐인데 "채널이 나쁘다"는 믿음이 세 배 가까이 뛰었어.</strong></p>
+          <p style="margin-bottom:0">왜 이렇게 크게 변하냐면, 나쁜 채널이 오류를 낼 확률(0.30)이 좋은 채널(0.02)보다 <em>15배</em>나 크기 때문이야. 관측이 두 가설을 <strong>얼마나 잘 구분하는지</strong>가 믿음이 얼마나 움직이는지를 정해. 이 비율 <span class="m"><i>P</i>(<i>E</i>|<i>B</i>)/<i>P</i>(<i>E</i>|<i>G</i>)</span>가 likelihood ratio고, 08번과 11번의 핵심이야.</p>
+        </div>
+        <div lang="en">
+          <p><strong>(a)</strong> <span class="m">{<i>G</i>, <i>B</i>}</span> is a partition, so use total probability.</p>
+          <div class="eq" style="font-size:15px"><i>P</i>(<i>E</i>) = (0.02)(0.7) + (0.30)(0.3) = 0.014 + 0.090 = <strong>0.104</strong></div>
+          <p><strong>(b)</strong> The numerator is a term you already computed in (a).</p>
+          <div class="eq" style="font-size:15px"><i>P</i>(<i>B</i>|<i>E</i>) = 0.090 / 0.104 ≈ <strong>0.865</strong></div>
+          <p><strong>(c)</strong> <span class="m">0.3 → 0.865</span>. <strong>One observed error nearly tripled the belief that the channel is bad.</strong></p>
+          <p style="margin-bottom:0">The jump is that large because a bad channel produces an error with probability 0.30 against 0.02 for a good one, a factor of <em>15</em>. How far a belief moves is set by <strong>how well the observation separates the hypotheses</strong>. That ratio, <span class="m"><i>P</i>(<i>E</i>|<i>B</i>)/<i>P</i>(<i>E</i>|<i>G</i>)</span>, is the likelihood ratio, and it is the heart of §08 and §11.</p>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ══ 08 ══ -->
+<section id="s8">
+  <div class="sec-head" data-slide="15-16"><span class="sec-num">08</span><h2 lang="ko">prior · likelihood · posterior</h2><h2 lang="en">Prior, likelihood, posterior</h2></div>
+  <p class="sec-sub" lang="ko">같은 식을 세 이름으로 나눠 부르는 이유.</p>
+  <p class="sec-sub" lang="en">Why one formula gets carved into three named pieces.</p>
+
+  <p lang="ko">Bayes 식의 각 조각에 이름이 붙어 있어. 이름을 외우는 게 목적이 아니라 <strong>어느 것이 어느 것인지 구별하는 게</strong> 목적이야. ML과 MAP의 차이가 정확히 여기서 갈려.</p>
+  <p lang="en">Each piece of the Bayes formula has a name. The point is not to memorise the names but to <strong>tell them apart</strong>, because that is precisely where ML and MAP diverge.</p>
+
+  <figure>
+    <svg viewBox="0 0 700 210" role="img" aria-label="Bayes 식의 각 부분에 prior, likelihood, posterior 이름을 붙인 그림">
+      <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="ko">관측 전의 믿음이 관측 후의 믿음으로</text>
+      <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="en">a belief before becomes a belief after</text>
+
+      <text x="120" y="106" text-anchor="middle" class="svgtxt" style="font-size:19px;fill:var(--blue)">P(Aᵢ)</text>
+      <text x="120" y="132" text-anchor="middle" class="svglab" style="font-size:10px;letter-spacing:.08em;fill:var(--blue)">PRIOR</text>
+      <text x="120" y="154" text-anchor="middle" class="svgtxt" style="font-size:11.5px;fill:var(--ink3)" lang="ko">관측 전의 믿음</text>
+      <text x="120" y="154" text-anchor="middle" class="svgtxt" style="font-size:11.5px;fill:var(--ink3)" lang="en">belief before</text>
+
+      <text x="240" y="106" text-anchor="middle" class="svgtxt" style="font-size:22px;fill:var(--ink3)">×</text>
+
+      <text x="360" y="106" text-anchor="middle" class="svgtxt" style="font-size:19px;fill:var(--pink)">P(B|Aᵢ)</text>
+      <text x="360" y="132" text-anchor="middle" class="svglab" style="font-size:10px;letter-spacing:.08em;fill:var(--pink)">LIKELIHOOD</text>
+      <text x="360" y="154" text-anchor="middle" class="svgtxt" style="font-size:11.5px;fill:var(--ink3)" lang="ko">관측이 각 가설과 얼마나 맞나</text>
+      <text x="360" y="154" text-anchor="middle" class="svgtxt" style="font-size:11.5px;fill:var(--ink3)" lang="en">how well B fits each hypothesis</text>
+
+      <text x="480" y="106" text-anchor="middle" class="svgtxt" style="font-size:22px;fill:var(--ink3)">→</text>
+      <text x="480" y="132" text-anchor="middle" class="svglab" style="font-size:9px;fill:var(--ink3)" lang="ko">정규화</text>
+      <text x="480" y="132" text-anchor="middle" class="svglab" style="font-size:9px;fill:var(--ink3)" lang="en">normalize</text>
+
+      <text x="600" y="106" text-anchor="middle" class="svgtxt" style="font-size:19px;fill:var(--violet)">P(Aᵢ|B)</text>
+      <text x="600" y="132" text-anchor="middle" class="svglab" style="font-size:10px;letter-spacing:.08em;fill:var(--violet)">POSTERIOR</text>
+      <text x="600" y="154" text-anchor="middle" class="svgtxt" style="font-size:11.5px;fill:var(--ink3)" lang="ko">관측 후의 믿음</text>
+      <text x="600" y="154" text-anchor="middle" class="svgtxt" style="font-size:11.5px;fill:var(--ink3)" lang="en">belief after</text>
+
+      <line x1="42" y1="182" x2="658" y2="182" style="stroke:var(--rule);stroke-width:1"/>
+      <text x="350" y="200" text-anchor="middle" class="svgtxt" style="font-size:12px;fill:var(--ink2)" lang="ko">분모 P(B) = Σⱼ P(B|Aⱼ)P(Aⱼ) 는 i에 안 달렸다. 정규화만 한다.</text>
+      <text x="350" y="200" text-anchor="middle" class="svgtxt" style="font-size:12px;fill:var(--ink2)" lang="en">the denominator P(B) = Σⱼ P(B|Aⱼ)P(Aⱼ) does not depend on i. it only normalizes.</text>
+    </svg>
+    <figcaption lang="ko">색이 의미를 고정한다. 파랑이 prior, 분홍이 likelihood, 보라가 둘을 합친 posterior다. 아래 도구에서도 같은 색을 쓴다.</figcaption>
+    <figcaption lang="en">The colors are fixed: blue is the prior, pink the likelihood, violet the posterior that combines them. The interactive tool below uses the same three.</figcaption>
+  </figure>
+
+  <div class="trap" lang="ko">
+    <span class="tag">함정</span>
+    <h4>likelihood는 확률분포가 아니다</h4>
+    <p>슬라이드가 정확하게 정의해. <em>"관측 <span class="m"><i>Y</i> = <i>y</i></span>를 고정하고 <span class="m"><i>P</i>(<i>Y</i>=<i>y</i>|<i>S</i>=<i>s</i>)</span>를 <strong><span class="m"><i>s</i></span>의 함수로</strong> 본 것"</em>이야. 조건 자리인 <span class="m"><i>s</i></span>가 변수라는 게 핵심이야.</p>
+    <p>그래서 <strong><span class="m">∑<sub><i>s</i></sub> <i>P</i>(<i>y</i>|<i>s</i>) = 1</span>이 아니야.</strong> 1이 되는 건 <span class="m"><i>s</i></span>를 고정하고 <span class="m"><i>y</i></span>를 훑을 때야. BSC에서 <span class="m"><i>P</i>(1|0) + <i>P</i>(1|1) = ω + (1−ω) = 1</span>이 되는 건 <em>우연</em>이야. 심볼이 두 개뿐이고 채널이 대칭이라서 그래. <span class="m"><i>N</i> = 3</span>이면 안 그래.</p>
+    <h4>posterior와 likelihood를 바꿔 쓰는 것</h4>
+    <p><span class="m"><i>P</i>(<i>S</i>=<i>s</i>|<i>Y</i>=<i>y</i>)</span>와 <span class="m"><i>P</i>(<i>Y</i>=<i>y</i>|<i>S</i>=<i>s</i>)</span>는 다른 값이야. 전자가 우리가 알고 싶은 것이고 후자가 채널이 주는 것이야. <strong>Bayes는 후자에서 전자로 가는 다리야.</strong> 의료 검사 얘기가 이 혼동의 대표 사례고, HW2 Problem 8이 정확히 그 구조야.</p>
+    <h4>prior가 없으면 MAP을 쓸 수 없다</h4>
+    <p>ML이 존재하는 이유가 이거야. prior를 모르면 posterior를 계산할 방법이 없어서 likelihood만으로 결정해야 해. <strong>ML은 "prior가 균등하다고 가정한 MAP"과 같아.</strong> 균등하면 <span class="m"><i>P</i>(<i>A<sub>i</sub></i>)</span>가 상수라 비교에서 지워지거든.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Traps</span>
+    <h4>A likelihood is not a probability distribution</h4>
+    <p>The slides define it carefully: <em>fix the observation <span class="m"><i>Y</i> = <i>y</i></span> and read <span class="m"><i>P</i>(<i>Y</i>=<i>y</i>|<i>S</i>=<i>s</i>)</span> <strong>as a function of <span class="m"><i>s</i></span></strong></em>. The variable is <span class="m"><i>s</i></span>, which sits in the conditioning slot.</p>
+    <p>So <strong><span class="m">∑<sub><i>s</i></sub> <i>P</i>(<i>y</i>|<i>s</i>) = 1</span> does not hold.</strong> What sums to 1 is sweeping <span class="m"><i>y</i></span> with <span class="m"><i>s</i></span> fixed. On the BSC, <span class="m"><i>P</i>(1|0) + <i>P</i>(1|1) = ω + (1−ω) = 1</span> happens to work out, but that is a <em>coincidence</em> of having two symbols and a symmetric channel. With <span class="m"><i>N</i> = 3</span> it fails.</p>
+    <h4>Swapping posterior and likelihood</h4>
+    <p><span class="m"><i>P</i>(<i>S</i>=<i>s</i>|<i>Y</i>=<i>y</i>)</span> and <span class="m"><i>P</i>(<i>Y</i>=<i>y</i>|<i>S</i>=<i>s</i>)</span> are different numbers. The first is what you want; the second is what the channel gives you. <strong>Bayes is the bridge from the second to the first.</strong> The medical-test story is the classic illustration, and HW2 Problem 8 has exactly that structure.</p>
+    <h4>No prior means no MAP</h4>
+    <p>That is why ML exists at all. Without a prior there is no way to form a posterior, so the decision has to run on the likelihood alone. <strong>ML is the same as MAP under a uniform prior</strong>, because a constant <span class="m"><i>P</i>(<i>A<sub>i</sub></i>)</span> cancels out of the comparison.</p>
+  </div>
+</section>
+
+<!-- ══ 09 ══ -->
+<section id="s9">
+  <div class="sec-head" data-slide="17-20"><span class="sec-num">09</span><h2 lang="ko">검출 문제</h2><h2 lang="en">The detection problem</h2></div>
+  <p class="sec-sub" lang="ko">보낸 심볼을 받은 신호로 되짚는다. 통신의 기본 문제.</p>
+  <p class="sec-sub" lang="en">Recover the transmitted symbol from what arrived. The basic communications problem.</p>
+
+  <p lang="ko">심볼 <span class="m"><i>S</i> ∈ {1, …, <i>N</i>}</span>을 보내면 수신단에서 <span class="m"><i>Y</i> ∈ {1, …, <i>N</i>}</span>을 관측해. 목표는 <span class="m"><i>S</i></span>를 추정하는 것이고, 그 추정값을 <span class="m"><i>Ŝ</i></span>로 써.</p>
+  <p lang="en">A symbol <span class="m"><i>S</i> ∈ {1, …, <i>N</i>}</span> goes in and the receiver observes <span class="m"><i>Y</i> ∈ {1, …, <i>N</i>}</span>. The goal is to estimate <span class="m"><i>S</i></span>, and that estimate is written <span class="m"><i>Ŝ</i></span>.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">세 조각의 역할</span>
+    <table>
+      <tr><th>조각</th><th>누가 주나</th><th>기호</th></tr>
+      <tr><td>prior</td><td>송신원(source)의 통계</td><td><span class="m"><i>P</i>(<i>S</i>=<i>s</i>)</span></td></tr>
+      <tr><td>likelihood</td><td><strong>채널</strong>이 준다</td><td><span class="m"><i>P</i>(<i>Y</i>=<i>y</i>|<i>S</i>=<i>s</i>)</span></td></tr>
+      <tr><td>posterior</td><td>Bayes로 <em>계산</em>한다</td><td><span class="m"><i>P</i>(<i>S</i>=<i>s</i>|<i>Y</i>=<i>y</i>)</span></td></tr>
+    </table>
+    <div class="eq" style="margin-bottom:0;font-size:15px"><i>P</i>(<i>S</i>=<i>s</i>|<i>Y</i>=<i>y</i>) = <i>P</i>(<i>Y</i>=<i>y</i>|<i>S</i>=<i>s</i>)<i>P</i>(<i>S</i>=<i>s</i>) / ∑<sub><i>i</i>=1</sub><sup><i>N</i></sup> <i>P</i>(<i>Y</i>=<i>y</i>|<i>S</i>=<i>i</i>)<i>P</i>(<i>S</i>=<i>i</i>)</div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Who supplies what</span>
+    <table>
+      <tr><th>piece</th><th>where it comes from</th><th>symbol</th></tr>
+      <tr><td>prior</td><td>statistics of the source</td><td><span class="m"><i>P</i>(<i>S</i>=<i>s</i>)</span></td></tr>
+      <tr><td>likelihood</td><td>the <strong>channel</strong> gives it to you</td><td><span class="m"><i>P</i>(<i>Y</i>=<i>y</i>|<i>S</i>=<i>s</i>)</span></td></tr>
+      <tr><td>posterior</td><td><em>computed</em> via Bayes</td><td><span class="m"><i>P</i>(<i>S</i>=<i>s</i>|<i>Y</i>=<i>y</i>)</span></td></tr>
+    </table>
+    <div class="eq" style="margin-bottom:0;font-size:15px"><i>P</i>(<i>S</i>=<i>s</i>|<i>Y</i>=<i>y</i>) = <i>P</i>(<i>Y</i>=<i>y</i>|<i>S</i>=<i>s</i>)<i>P</i>(<i>S</i>=<i>s</i>) / ∑<sub><i>i</i>=1</sub><sup><i>N</i></sup> <i>P</i>(<i>Y</i>=<i>y</i>|<i>S</i>=<i>i</i>)<i>P</i>(<i>S</i>=<i>i</i>)</div>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>분모가 바로 06번의 전확률 법칙이야.</strong> <span class="m">{<i>S</i>=1, …, <i>S</i>=<i>N</i>}</span>이 분할이거든. 심볼 하나는 반드시 보내지고(덮음), 두 개를 동시에 보내지는 않아(서로소). Module 1에서 배운 분할이 통신 시스템의 송신원 모델로 그대로 나타나.
+  </div>
+  <div class="callout" lang="en">
+    <strong>That denominator is the law of total probability from §06</strong>, because <span class="m">{<i>S</i>=1, …, <i>S</i>=<i>N</i>}</span> is a partition: exactly one symbol is sent (coverage) and never two at once (disjointness). The partition from Module 1 shows up directly as the source model of a communication system.
+  </div>
+</section>
+
+<!-- ══ 10 ══ -->
+<section id="s10">
+  <div class="sec-head" data-slide="21"><span class="sec-num">10</span><h2 lang="ko">ML 검출</h2><h2 lang="en">ML detection</h2></div>
+  <p class="sec-sub" lang="ko">prior를 모를 때. likelihood가 제일 큰 심볼을 고른다.</p>
+  <p class="sec-sub" lang="en">When the prior is unknown: pick the symbol with the largest likelihood.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">Maximum Likelihood</span>
+    <div class="eq"><i>ŝ</i><sub>ML</sub> = arg max<sub><i>s</i></sub> <i>P</i>(<i>Y</i>=<i>y</i> | <i>S</i>=<i>s</i>)</div>
+    <p style="margin-bottom:0"><strong>ML은 prior를 무시한다.</strong> 몰라서 무시하는 거지 없다고 보는 게 아니야. "이 관측을 가장 잘 설명하는 심볼은 무엇인가"에만 답해.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Maximum Likelihood</span>
+    <div class="eq"><i>ŝ</i><sub>ML</sub> = arg max<sub><i>s</i></sub> <i>P</i>(<i>Y</i>=<i>y</i> | <i>S</i>=<i>s</i>)</div>
+    <p style="margin-bottom:0"><strong>ML ignores the prior</strong>, because it does not have one, not because it claims none exists. It answers only "which symbol best explains this observation?"</p>
+  </div>
+
+  <details class="nota" open>
+    <summary><span lang="ko">기호 뜯어보기 · arg max</span><span lang="en">Unpacking the notation · arg max</span></summary>
+    <div class="body">
+      <div lang="ko">
+        <table class="parts">
+          <tr><td><span class="m">max<sub><i>s</i></sub> <i>f</i>(<i>s</i>)</span></td><td><span class="m"><i>f</i></span>가 도달하는 <strong>가장 큰 값</strong>. 결과가 <em>값</em>이야.</td></tr>
+          <tr><td><span class="m">arg max<sub><i>s</i></sub> <i>f</i>(<i>s</i>)</span></td><td>그 최댓값을 <strong>만드는 <span class="m"><i>s</i></span></strong>. 결과가 <em>위치</em>야. arg는 argument(인자)의 약자.</td></tr>
+        </table>
+        <p><span class="m"><i>f</i>(0) = 0.1</span>, <span class="m"><i>f</i>(1) = 0.9</span>라면 <span class="m">max = 0.9</span>이고 <span class="m">arg max = 1</span>이야. <strong>검출기가 원하는 건 확률값이 아니라 어느 심볼인지</strong>니까 arg max를 써.</p>
+        <p style="margin-bottom:0">동점이면 arg max가 하나로 안 정해져. 그때는 아무거나 골라도 오류 확률이 같아서 상관없어.</p>
+      </div>
+      <div lang="en">
+        <table class="parts">
+          <tr><td><span class="m">max<sub><i>s</i></sub> <i>f</i>(<i>s</i>)</span></td><td>the <strong>largest value</strong> <span class="m"><i>f</i></span> reaches. It returns a <em>value</em>.</td></tr>
+          <tr><td><span class="m">arg max<sub><i>s</i></sub> <i>f</i>(<i>s</i>)</span></td><td>the <span class="m"><i>s</i></span> that <strong>produces</strong> that maximum. It returns a <em>location</em>. "arg" is short for argument.</td></tr>
+        </table>
+        <p>With <span class="m"><i>f</i>(0) = 0.1</span> and <span class="m"><i>f</i>(1) = 0.9</span>, <span class="m">max = 0.9</span> while <span class="m">arg max = 1</span>. <strong>A detector wants to know which symbol, not what probability</strong>, so arg max is the right operator.</p>
+        <p style="margin-bottom:0">On a tie the arg max is not unique. It does not matter: either choice gives the same error probability.</p>
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ══ 11 ══ -->
+<section id="s11">
+  <div class="sec-head" data-slide="22-23"><span class="sec-num">11</span><h2 lang="ko">MAP 검출</h2><h2 lang="en">MAP detection</h2></div>
+  <p class="sec-sub" lang="ko">prior를 알 때. posterior가 제일 큰 심볼을 고른다.</p>
+  <p class="sec-sub" lang="en">When you do have a prior: pick the symbol with the largest posterior.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">Maximum A Posteriori</span>
+    <div class="eq"><i>ŝ</i><sub>MAP</sub> = arg max<sub><i>s</i></sub> <i>P</i>(<i>S</i>=<i>s</i> | <i>Y</i>=<i>y</i>)</div>
+    <p>그런데 posterior를 실제로 계산할 필요가 없어. Bayes에서 <strong>분모가 <span class="m"><i>s</i></span>에 안 달렸으니까</strong> 비교에서 지워져.</p>
+    <div class="eq" style="margin-bottom:0"><i>ŝ</i><sub>MAP</sub> = arg max<sub><i>s</i></sub> <i>P</i>(<i>Y</i>=<i>y</i> | <i>S</i>=<i>s</i>) <i>P</i>(<i>S</i>=<i>s</i>)</div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Maximum A Posteriori</span>
+    <div class="eq"><i>ŝ</i><sub>MAP</sub> = arg max<sub><i>s</i></sub> <i>P</i>(<i>S</i>=<i>s</i> | <i>Y</i>=<i>y</i>)</div>
+    <p>You never actually have to compute the posterior. In Bayes the <strong>denominator does not depend on <span class="m"><i>s</i></span></strong>, so it drops out of any comparison.</p>
+    <div class="eq" style="margin-bottom:0"><i>ŝ</i><sub>MAP</sub> = arg max<sub><i>s</i></sub> <i>P</i>(<i>Y</i>=<i>y</i> | <i>S</i>=<i>s</i>) <i>P</i>(<i>S</i>=<i>s</i>)</div>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>두 식을 나란히 놓으면 차이가 한눈에 보여.</strong><br><br>
+    <span class="m">ML: &nbsp; arg max <i>P</i>(<i>y</i>|<i>s</i>)</span><br>
+    <span class="m">MAP: arg max <i>P</i>(<i>y</i>|<i>s</i>) · <i>P</i>(<i>s</i>)</span><br><br>
+    <strong>MAP은 ML에 prior를 곱한 것뿐이야.</strong> 그래서 prior가 균등하면 <span class="m"><i>P</i>(<i>s</i>)</span>가 상수라 둘이 같은 결정을 내려. prior가 치우쳐 있을수록 갈라져. 이게 12번 예제와 아래 도구의 전부야.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Put the two side by side and the difference is one factor.</strong><br><br>
+    <span class="m">ML: &nbsp; arg max <i>P</i>(<i>y</i>|<i>s</i>)</span><br>
+    <span class="m">MAP: arg max <i>P</i>(<i>y</i>|<i>s</i>) · <i>P</i>(<i>s</i>)</span><br><br>
+    <strong>MAP is ML multiplied by the prior.</strong> Under a uniform prior <span class="m"><i>P</i>(<i>s</i>)</span> is a constant and the two always agree. The more skewed the prior, the more they part ways. That is the whole content of §12 and of the tool below.
+  </div>
+</section>
+
+<!-- ══ 12 ══ -->
+<section id="s12">
+  <div class="sec-head" data-slide="24-27"><span class="sec-num">12</span><h2 lang="ko">BSC 예제</h2><h2 lang="en">The BSC example</h2></div>
+  <p class="sec-sub" lang="ko">이진 대칭 채널. 슬라이드가 끝까지 끌고 가는 예제.</p>
+  <p class="sec-sub" lang="en">The binary symmetric channel, the example the slides carry to the end.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">설정</span>
+    <p>송신원: <span class="m"><i>P</i>(<i>S</i>=0) = 0.9</span>, <span class="m"><i>P</i>(<i>S</i>=1) = 0.1</span>. 채널: 뒤집힐 확률이 <span class="m"><i>ω</i></span>이고 <span class="m"><i>ω</i> ≤ ½</span>.</p>
+    <table>
+      <tr><th></th><th><span class="m"><i>Y</i>=0</span></th><th><span class="m"><i>Y</i>=1</span></th></tr>
+      <tr><td><span class="m"><i>S</i>=0</span></td><td><span class="m">1 − <i>ω</i></span></td><td><span class="m"><i>ω</i></span></td></tr>
+      <tr><td><span class="m"><i>S</i>=1</span></td><td><span class="m"><i>ω</i></span></td><td><span class="m">1 − <i>ω</i></span></td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>대칭(symmetric)이라는 말이 이 표가 좌우 대칭이라는 뜻이야.</strong> 0을 1로 뒤집을 확률과 1을 0으로 뒤집을 확률이 같아.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Setup</span>
+    <p>Source: <span class="m"><i>P</i>(<i>S</i>=0) = 0.9</span>, <span class="m"><i>P</i>(<i>S</i>=1) = 0.1</span>. Channel: each bit flips with probability <span class="m"><i>ω</i></span>, where <span class="m"><i>ω</i> ≤ ½</span>.</p>
+    <table>
+      <tr><th></th><th><span class="m"><i>Y</i>=0</span></th><th><span class="m"><i>Y</i>=1</span></th></tr>
+      <tr><td><span class="m"><i>S</i>=0</span></td><td><span class="m">1 − <i>ω</i></span></td><td><span class="m"><i>ω</i></span></td></tr>
+      <tr><td><span class="m"><i>S</i>=1</span></td><td><span class="m"><i>ω</i></span></td><td><span class="m">1 − <i>ω</i></span></td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>"Symmetric" means exactly that this table is symmetric:</strong> flipping a 0 into a 1 is as likely as flipping a 1 into a 0.</p>
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">ML의 답</span>
+    <p><span class="m"><i>Y</i>=1</span>을 봤다면 likelihood는 <span class="m"><i>P</i>(1|0) = <i>ω</i></span>와 <span class="m"><i>P</i>(1|1) = 1−<i>ω</i></span>야. <span class="m"><i>ω</i> ≤ ½</span>이니 <span class="m">1−<i>ω</i> ≥ <i>ω</i></span>이고, 따라서 <span class="m"><i>Ŝ</i><sub>ML</sub>(1) = 1</span>. 마찬가지로 <span class="m"><i>Ŝ</i><sub>ML</sub>(0) = 0</span>.</p>
+    <div class="eq" style="margin-bottom:0"><i>Ŝ</i><sub>ML</sub>(<i>Y</i>) = <i>Y</i></div>
+    <p style="margin-bottom:0" lang="ko">즉 <strong>받은 대로 믿는다.</strong> prior를 안 쓰니 송신원이 0을 훨씬 자주 보낸다는 사실을 활용하지 못해.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">What ML decides</span>
+    <p>Observe <span class="m"><i>Y</i>=1</span> and the likelihoods are <span class="m"><i>P</i>(1|0) = <i>ω</i></span> against <span class="m"><i>P</i>(1|1) = 1−<i>ω</i></span>. Since <span class="m"><i>ω</i> ≤ ½</span> we have <span class="m">1−<i>ω</i> ≥ <i>ω</i></span>, so <span class="m"><i>Ŝ</i><sub>ML</sub>(1) = 1</span>, and symmetrically <span class="m"><i>Ŝ</i><sub>ML</sub>(0) = 0</span>.</p>
+    <div class="eq" style="margin-bottom:0"><i>Ŝ</i><sub>ML</sub>(<i>Y</i>) = <i>Y</i></div>
+    <p style="margin-bottom:0"><strong>Believe whatever arrived.</strong> Without the prior it cannot exploit the fact that the source sends 0 far more often.</p>
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">MAP의 답</span>
+    <p><span class="m"><i>Y</i>=1</span>을 봤을 때 비교할 두 값은 likelihood × prior야.</p>
+    <div class="eq" style="font-size:15px"><i>S</i>=0 쪽: 0.9<i>ω</i> &nbsp;&nbsp;&nbsp; <i>S</i>=1 쪽: 0.1(1−<i>ω</i>)</div>
+    <p><span class="m">0.9<i>ω</i> ≥ 0.1(1−<i>ω</i>)</span>를 풀면 <span class="m"><i>ω</i> ≥ 0.1</span>이야. 그래서</p>
+    <div class="eq" style="font-size:15px">0 ≤ <i>ω</i> ≤ 0.1 &nbsp;⟹&nbsp; <i>Ŝ</i><sub>MAP</sub>(<i>Y</i>) = <i>Y</i> &nbsp;&nbsp;·&nbsp;&nbsp; 0.1 &lt; <i>ω</i> ≤ 0.5 &nbsp;⟹&nbsp; <i>Ŝ</i><sub>MAP</sub>(<i>Y</i>) = 0</div>
+    <p style="margin-bottom:0"><strong>채널이 충분히 나빠지면 MAP은 수신 신호를 아예 무시하고 항상 0이라고 답해.</strong> 0.9라는 prior가 잡음보다 더 믿을 만해지는 지점이 <span class="m"><i>ω</i> = 0.1</span>이야.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">What MAP decides</span>
+    <p>Observing <span class="m"><i>Y</i>=1</span>, the two quantities to compare are likelihood times prior.</p>
+    <div class="eq" style="font-size:15px">for <i>S</i>=0: 0.9<i>ω</i> &nbsp;&nbsp;&nbsp; for <i>S</i>=1: 0.1(1−<i>ω</i>)</div>
+    <p>Solving <span class="m">0.9<i>ω</i> ≥ 0.1(1−<i>ω</i>)</span> gives <span class="m"><i>ω</i> ≥ 0.1</span>. Hence</p>
+    <div class="eq" style="font-size:15px">0 ≤ <i>ω</i> ≤ 0.1 &nbsp;⟹&nbsp; <i>Ŝ</i><sub>MAP</sub>(<i>Y</i>) = <i>Y</i> &nbsp;&nbsp;·&nbsp;&nbsp; 0.1 &lt; <i>ω</i> ≤ 0.5 &nbsp;⟹&nbsp; <i>Ŝ</i><sub>MAP</sub>(<i>Y</i>) = 0</div>
+    <p style="margin-bottom:0"><strong>Once the channel is bad enough, MAP throws the observation away and answers 0 every time.</strong> The crossing point <span class="m"><i>ω</i> = 0.1</span> is where the 0.9 prior becomes more trustworthy than the noisy bit.</p>
+  </div>
+</section>
+
+<!-- ══ 13 ══ -->
+<section id="s13">
+  <div class="sec-head" data-slide="28-30"><span class="sec-num">13</span><h2 lang="ko">오류 확률</h2><h2 lang="en">Probability of error</h2></div>
+  <p class="sec-sub" lang="ko">MAP이 ML보다 나쁠 수 없다. 그게 이 모듈의 결론이다.</p>
+  <p class="sec-sub" lang="en">MAP can never do worse than ML. That is the module's conclusion.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">정의와 계산</span>
+    <p><span class="m"><i>P<sub>e</sub></i> = <i>P</i>(<i>Ŝ</i> ≠ <i>S</i>)</span>. ML은 <span class="m"><i>Ŝ</i> = <i>Y</i></span>이므로 오류는 곧 <span class="m"><i>Y</i> ≠ <i>S</i></span>, 즉 비트가 뒤집힌 경우야.</p>
+    <div class="eq" style="font-size:15px"><i>P<sub>e</sub></i><sup>ML</sup> = <i>P</i>(<i>Y</i>≠<i>S</i>|<i>S</i>=0)<i>P</i>(<i>S</i>=0) + <i>P</i>(<i>Y</i>≠<i>S</i>|<i>S</i>=1)<i>P</i>(<i>S</i>=1) = <i>ω</i>(0.9) + <i>ω</i>(0.1) = <i>ω</i></div>
+    <p><span class="m"><i>ω</i> &gt; 0.1</span>일 때 MAP은 항상 0이라고 답하니 <span class="m"><i>S</i>=1</span>일 때만 틀려. 그래서 <span class="m"><i>P<sub>e</sub></i><sup>MAP</sup> = <i>P</i>(<i>S</i>=1) = 0.1</span>로 <strong>고정</strong>돼.</p>
+    <div class="eq" style="margin-bottom:0;font-size:15px"><i>P<sub>e</sub></i><sup>MAP</sup> = <i>ω</i> (<i>ω</i> ≤ 0.1) &nbsp;&nbsp;·&nbsp;&nbsp; 0.1 (0.1 &lt; <i>ω</i> ≤ 0.5)</div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Definition and computation</span>
+    <p><span class="m"><i>P<sub>e</sub></i> = <i>P</i>(<i>Ŝ</i> ≠ <i>S</i>)</span>. For ML, <span class="m"><i>Ŝ</i> = <i>Y</i></span>, so an error is precisely <span class="m"><i>Y</i> ≠ <i>S</i></span>: the bit flipped.</p>
+    <div class="eq" style="font-size:15px"><i>P<sub>e</sub></i><sup>ML</sup> = <i>P</i>(<i>Y</i>≠<i>S</i>|<i>S</i>=0)<i>P</i>(<i>S</i>=0) + <i>P</i>(<i>Y</i>≠<i>S</i>|<i>S</i>=1)<i>P</i>(<i>S</i>=1) = <i>ω</i>(0.9) + <i>ω</i>(0.1) = <i>ω</i></div>
+    <p>When <span class="m"><i>ω</i> &gt; 0.1</span> MAP always answers 0, so it is wrong exactly when <span class="m"><i>S</i>=1</span>. That <strong>pins</strong> <span class="m"><i>P<sub>e</sub></i><sup>MAP</sup> = <i>P</i>(<i>S</i>=1) = 0.1</span>.</p>
+    <div class="eq" style="margin-bottom:0;font-size:15px"><i>P<sub>e</sub></i><sup>MAP</sup> = <i>ω</i> (<i>ω</i> ≤ 0.1) &nbsp;&nbsp;·&nbsp;&nbsp; 0.1 (0.1 &lt; <i>ω</i> ≤ 0.5)</div>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>슬라이드의 마지막 문장: <span class="m"><i>P<sub>e</sub></i><sup>MAP</sup> ≤ <i>P<sub>e</sub></i><sup>ML</sup></span>이고 <span class="m">0.1 &lt; <i>ω</i> &lt; 0.5</span>에서는 부등호가 엄격하다.</strong> prior 정보가 검출 성능을 개선한다는 뜻이야.<br><br>
+    이건 이 예제만의 우연이 아니야. <strong>MAP은 오류 확률을 최소화하는 검출기</strong>이고, 그래서 어떤 검출기도 MAP보다 낮은 <span class="m"><i>P<sub>e</sub></i></span>를 낼 수 없어. ML은 prior를 안 쓰는 검출기 중 하나일 뿐이라 MAP보다 잘할 수가 없어.
+  </div>
+  <div class="callout" lang="en">
+    <strong>The closing line of the deck: <span class="m"><i>P<sub>e</sub></i><sup>MAP</sup> ≤ <i>P<sub>e</sub></i><sup>ML</sup></span>, with strict inequality for <span class="m">0.1 &lt; <i>ω</i> &lt; 0.5</span>.</strong> Prior information buys detection performance.<br><br>
+    This is not a quirk of the example. <strong>MAP is the detector that minimises the error probability</strong>, so no detector can beat it. ML is just one detector that happens not to use the prior, and it therefore cannot come out ahead.
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">함정</span>
+    <h4>"MAP이 항상 더 낫다"를 "항상 더 좋은 결정을 한다"로 읽지 말 것</h4>
+    <p>MAP이 이기는 건 <strong>평균적으로</strong>야. 개별 시행에서는 MAP이 틀리고 ML이 맞을 수 있어. <span class="m"><i>ω</i> = 0.3</span>에서 실제로 <span class="m"><i>S</i>=1</span>을 보냈고 <span class="m"><i>Y</i>=1</span>로 잘 도착했다면, ML은 1이라고 맞히고 MAP은 0이라고 틀려. 그래도 <em>장기적으로는</em> MAP이 이겨.</p>
+    <h4>ML의 <span class="m"><i>P<sub>e</sub></i></span>가 prior에 안 달린 건 대칭 때문이다</h4>
+    <p>위 계산에서 <span class="m"><i>ω</i>(0.9) + <i>ω</i>(0.1) = <i>ω</i></span>가 된 건 두 조건부 오류 확률이 <em>둘 다</em> <span class="m"><i>ω</i></span>였기 때문이야. 채널이 비대칭이면 (<span class="m"><i>P</i>(1|0) = <i>ω</i><sub>0</sub> ≠ <i>ω</i><sub>1</sub> = <i>P</i>(0|1)</span>) ML의 오류 확률도 prior에 달려. <strong>BSC에서만 이렇게 깔끔해.</strong></p>
+    <h4>MAP이 관측을 무시한다고 해서 고장난 게 아니다</h4>
+    <p><span class="m"><i>ω</i> &gt; 0.1</span>에서 MAP이 <span class="m"><i>Y</i></span>를 안 보는 게 이상해 보이지만, 그게 <em>최적</em>이야. 채널이 그만큼 시끄러우면 수신 비트가 담은 정보보다 prior가 담은 정보가 더 많거든. <strong>이게 왜 반복부호가 필요한지를 설명해.</strong> 한 번 보내서는 정보가 모자라니 여러 번 보내는 거야. HW2 Problem 7이 그 얘기고, Module 4에서 다룰 내용이야.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Traps</span>
+    <h4>"MAP is always better" does not mean "MAP always decides correctly"</h4>
+    <p>MAP wins <strong>on average</strong>. On a single trial ML can be right where MAP is wrong. At <span class="m"><i>ω</i> = 0.3</span>, if <span class="m"><i>S</i>=1</span> was genuinely sent and arrived cleanly as <span class="m"><i>Y</i>=1</span>, ML answers 1 and is right while MAP answers 0 and is wrong. Over many trials MAP still comes out ahead.</p>
+    <h4>ML's <span class="m"><i>P<sub>e</sub></i></span> being prior-free is a symmetry artifact</h4>
+    <p>The cancellation <span class="m"><i>ω</i>(0.9) + <i>ω</i>(0.1) = <i>ω</i></span> worked because <em>both</em> conditional error probabilities equalled <span class="m"><i>ω</i></span>. On an asymmetric channel, where <span class="m"><i>P</i>(1|0) = <i>ω</i><sub>0</sub> ≠ <i>ω</i><sub>1</sub> = <i>P</i>(0|1)</span>, ML's error probability does depend on the prior. <strong>Only the BSC is this tidy.</strong></p>
+    <h4>MAP discarding the observation is not a malfunction</h4>
+    <p>It looks wrong for MAP to stop reading <span class="m"><i>Y</i></span> once <span class="m"><i>ω</i> &gt; 0.1</span>, but it is <em>optimal</em>. At that noise level the prior carries more information than the received bit does. <strong>This is exactly why repetition coding exists:</strong> one transmission does not carry enough, so you send several. HW2 Problem 7 is that story, and Module 4 covers it.</p>
+  </div>
+</section>
+
+<!-- ══ 14 ══ -->
+<section id="s14">
+  <div class="sec-head"><span class="sec-num">14</span><h2 lang="ko">직접 만져보기</h2><h2 lang="en">Try it yourself</h2></div>
+  <p class="sec-sub" lang="ko">ML과 MAP이 갈라지는 지점을 슬라이더로 찾아봐.</p>
+  <p class="sec-sub" lang="en">Use the sliders to find where ML and MAP part ways.</p>
+
+  <div class="play">
+    <div style="display:flex;gap:26px;flex-wrap:wrap;margin-bottom:18px">
+      <label style="flex:1;min-width:210px;font-size:13px;color:var(--ink2)">
+        <span class="pl-lab" data-ko="채널 오류율 ω" data-en="crossover ω"></span>
+        <b id="d3-we" style="font-family:var(--mono);color:var(--ink)">0.05</b>
+        <input id="d3-w" type="range" min="0" max="0.5" step="0.005" value="0.05" style="width:100%;margin-top:6px">
+      </label>
+      <label style="flex:1;min-width:210px;font-size:13px;color:var(--ink2)">
+        <span class="pl-lab" data-ko="prior P(S=0)" data-en="prior P(S=0)"></span>
+        <b id="d3-pe" style="font-family:var(--mono);color:var(--ink)">0.90</b>
+        <input id="d3-p" type="range" min="0.01" max="0.99" step="0.01" value="0.9" style="width:100%;margin-top:6px">
+      </label>
+    </div>
+
+    <table style="margin:0 0 16px">
+      <tr>
+        <th></th>
+        <th><span class="pl-lab" data-ko="Y=1 을 봤을 때" data-en="having seen Y=1"></span></th>
+        <th><span class="pl-lab" data-ko="Y=0 을 봤을 때" data-en="having seen Y=0"></span></th>
+      </tr>
+      <tr>
+        <td style="color:var(--pink)"><span class="pl-lab" data-ko="likelihood 비교" data-en="likelihood"></span></td>
+        <td id="d3-l1" class="m"></td><td id="d3-l0" class="m"></td>
+      </tr>
+      <tr>
+        <td style="color:var(--violet)"><span class="pl-lab" data-ko="likelihood × prior" data-en="likelihood × prior"></span></td>
+        <td id="d3-j1" class="m"></td><td id="d3-j0" class="m"></td>
+      </tr>
+      <tr>
+        <td><b>ML</b></td>
+        <td id="d3-m1" style="font-family:var(--mono)"></td><td id="d3-m0" style="font-family:var(--mono)"></td>
+      </tr>
+      <tr>
+        <td><b>MAP</b></td>
+        <td id="d3-a1" style="font-family:var(--mono)"></td><td id="d3-a0" style="font-family:var(--mono)"></td>
+      </tr>
+    </table>
+
+    <div id="d3-msg" style="font-size:13.5px;line-height:1.65;color:var(--ink2);border-top:1px solid var(--rule);padding-top:14px"></div>
+
+    <div style="display:flex;gap:22px;flex-wrap:wrap;margin-top:14px;font-family:var(--mono);font-size:12px">
+      <span>P<sub>e</sub><sup>ML</sup> = <b id="d3-eml" style="color:var(--ink)"></b></span>
+      <span>P<sub>e</sub><sup>MAP</sup> = <b id="d3-emap" style="color:var(--green)"></b></span>
+    </div>
+
+    <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="d3-pre" data-w="0.05" data-p="0.9"><span class="pl-lab" data-ko="슬라이드 예제 (ω=0.05)" data-en="slide example (ω=0.05)"></span></button>
+      <button class="d3-pre" data-w="0.3" data-p="0.9"><span class="pl-lab" data-ko="갈라지는 구간 (ω=0.3)" data-en="where they split (ω=0.3)"></span></button>
+      <button class="d3-pre" data-w="0.3" data-p="0.5"><span class="pl-lab" data-ko="prior 균등 (0.5)" data-en="uniform prior (0.5)"></span></button>
+    </div>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>세 가지를 직접 확인해봐.</strong> ① <span class="m"><i>ω</i></span>를 0.05에서 천천히 올리면 <strong>0.1을 넘는 순간</strong> MAP의 <span class="m"><i>Y</i>=1</span> 답이 1에서 0으로 바뀐다. ② prior를 0.5로 맞추면 <span class="m"><i>ω</i></span>를 아무리 올려도 ML과 MAP이 절대 갈라지지 않는다. ③ <span class="m"><i>P<sub>e</sub></i><sup>MAP</sup></span>이 <span class="m"><i>P<sub>e</sub></i><sup>ML</sup></span>보다 커지는 조합은 <strong>없다.</strong>
+  </div>
+  <div class="callout" lang="en">
+    <strong>Three things to see for yourself.</strong> ① Raise <span class="m"><i>ω</i></span> slowly from 0.05 and MAP's answer for <span class="m"><i>Y</i>=1</span> flips from 1 to 0 <strong>the instant it crosses 0.1</strong>. ② Set the prior to 0.5 and ML and MAP never disagree, no matter how bad the channel gets. ③ There is <strong>no</strong> setting where <span class="m"><i>P<sub>e</sub></i><sup>MAP</sup></span> exceeds <span class="m"><i>P<sub>e</sub></i><sup>ML</sup></span>.
+  </div>
+</section>
+
+<!-- ══ 99 ══ -->
+<section id="s99">
+  <div class="sec-head"><span class="sec-num">99</span><h2 lang="ko">정리 &amp; 다음 모듈</h2><h2 lang="en">Recap &amp; what's next</h2></div>
+
+  <div class="def" lang="ko">
+    <span class="tag">한 장 요약</span>
+    <table>
+      <tr><th>이름</th><th>식</th><th>언제 쓰나</th></tr>
+      <tr><td>조건부 확률</td><td><span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = <i>P</i>(<i>A</i>∩<i>B</i>)/<i>P</i>(<i>B</i>)</span></td><td>정보가 들어왔을 때</td></tr>
+      <tr><td>곱셈 규칙</td><td><span class="m"><i>P</i>(<i>A</i>∩<i>B</i>) = <i>P</i>(<i>A</i>|<i>B</i>)<i>P</i>(<i>B</i>)</span></td><td>교집합 확률이 필요할 때</td></tr>
+      <tr><td>전확률 법칙</td><td><span class="m"><i>P</i>(<i>B</i>) = ∑<i>P</i>(<i>B</i>|<i>A<sub>i</sub></i>)<i>P</i>(<i>A<sub>i</sub></i>)</span></td><td>분할이 있을 때. Bayes의 분모</td></tr>
+      <tr><td>Bayes</td><td><span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = <i>P</i>(<i>B</i>|<i>A</i>)<i>P</i>(<i>A</i>)/<i>P</i>(<i>B</i>)</span></td><td>조건을 뒤집을 때</td></tr>
+      <tr><td>ML</td><td><span class="m">arg max <i>P</i>(<i>y</i>|<i>s</i>)</span></td><td>prior를 모를 때</td></tr>
+      <tr><td>MAP</td><td><span class="m">arg max <i>P</i>(<i>y</i>|<i>s</i>)<i>P</i>(<i>s</i>)</span></td><td>prior를 알 때. 오류 최소</td></tr>
+    </table>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">One-page recap</span>
+    <table>
+      <tr><th>name</th><th>formula</th><th>when to reach for it</th></tr>
+      <tr><td>conditional probability</td><td><span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = <i>P</i>(<i>A</i>∩<i>B</i>)/<i>P</i>(<i>B</i>)</span></td><td>information arrived</td></tr>
+      <tr><td>multiplication rule</td><td><span class="m"><i>P</i>(<i>A</i>∩<i>B</i>) = <i>P</i>(<i>A</i>|<i>B</i>)<i>P</i>(<i>B</i>)</span></td><td>you need an intersection</td></tr>
+      <tr><td>total probability</td><td><span class="m"><i>P</i>(<i>B</i>) = ∑<i>P</i>(<i>B</i>|<i>A<sub>i</sub></i>)<i>P</i>(<i>A<sub>i</sub></i>)</span></td><td>a partition exists. Bayes' denominator</td></tr>
+      <tr><td>Bayes</td><td><span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = <i>P</i>(<i>B</i>|<i>A</i>)<i>P</i>(<i>A</i>)/<i>P</i>(<i>B</i>)</span></td><td>flipping the conditioning</td></tr>
+      <tr><td>ML</td><td><span class="m">arg max <i>P</i>(<i>y</i>|<i>s</i>)</span></td><td>no prior available</td></tr>
+      <tr><td>MAP</td><td><span class="m">arg max <i>P</i>(<i>y</i>|<i>s</i>)<i>P</i>(<i>s</i>)</span></td><td>prior available. minimises error</td></tr>
+    </table>
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">HW2 대응표</span>
+    <table>
+      <tr><th>문제</th><th>이 노트</th></tr>
+      <tr><td>P1 조건부 확률</td><td><a href="#s2">02 정의</a>, 예제 2.1</td></tr>
+      <tr><td>P2 전확률 법칙</td><td><a href="#s6">06 전확률 법칙</a></td></tr>
+      <tr><td>P3 Bayes</td><td><a href="#s7">07 분할과 합친 Bayes</a>, 예제 7.1</td></tr>
+      <tr><td>P4 ML·MAP</td><td><a href="#s10">10</a>, <a href="#s11">11</a>, <a href="#s14">14 도구</a></td></tr>
+      <tr><td>P5–P7 독립·이항</td><td>Module 4</td></tr>
+      <tr><td>P8 희귀 사건 검출</td><td><a href="#s7">07</a> + <a href="#s11">11</a></td></tr>
+    </table>
+    <p style="margin-bottom:0"><a href="HW2-conditional-probability-and-independence.html">HW2 공략 페이지</a>에 문제 번호순으로 정리해뒀어.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">HW2 map</span>
+    <table>
+      <tr><th>problem</th><th>where in these notes</th></tr>
+      <tr><td>P1 conditional probability</td><td><a href="#s2">02 the definition</a>, Example 2.1</td></tr>
+      <tr><td>P2 total probability</td><td><a href="#s6">06 law of total probability</a></td></tr>
+      <tr><td>P3 Bayes</td><td><a href="#s7">07 Bayes with a partition</a>, Example 7.1</td></tr>
+      <tr><td>P4 ML and MAP</td><td><a href="#s10">10</a>, <a href="#s11">11</a>, <a href="#s14">the §14 tool</a></td></tr>
+      <tr><td>P5–P7 independence, binomial</td><td>Module 4</td></tr>
+      <tr><td>P8 rare-event detection</td><td><a href="#s7">07</a> plus <a href="#s11">11</a></td></tr>
+    </table>
+    <p style="margin-bottom:0">The <a href="HW2-conditional-probability-and-independence.html">HW2 guide</a> lays this out by problem number.</p>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>다음은 Module 4: 독립과 반복 시행.</strong> 이 모듈에서 <span class="m"><i>P</i>(<i>A</i>|<i>B</i>) ≠ <i>P</i>(<i>A</i>)</span>인 경우를 다뤘다면, 다음은 <em>같아지는</em> 경우야. 그리고 독립이 여러 개로 늘어나면 pairwise와 mutual이 갈라지는데, 그 차이가 HW2 Problem 5의 전부야. 마지막으로 같은 실험을 반복하면 Bernoulli 시행과 이항분포가 나오고, 13번에서 예고한 <strong>반복부호</strong>가 거기서 답을 얻어.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Next up, Module 4: independence and repeated trials.</strong> This module handled the case <span class="m"><i>P</i>(<i>A</i>|<i>B</i>) ≠ <i>P</i>(<i>A</i>)</span>; the next one handles when they are <em>equal</em>. Extend independence past two events and pairwise separates from mutual, which is the whole of HW2 Problem 5. Repeat one experiment many times and you get Bernoulli trials and the binomial distribution, where the <strong>repetition coding</strong> foreshadowed in §13 finally gets its answer.
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span lang="ko">EEE 554 Probability and Random Processes · Module 3<br>
+  강의: Nicolò Michelusi · School of Electrical, Computer and Energy Engineering, Arizona State University<br>
+  교재: Bruce Hajek, <em>Random Processes for Engineers</em> (Cambridge University Press, 2015) §1.2<br>
+  이 노트 본문은 수강생이 강의 슬라이드를 재구성하고 보충해 만든 개인 학습 자료이며, 공식 강의 자료가 아닙니다.<br>
+  함께 실린 강의 슬라이드의 저작권은 Nicolò Michelusi 교수와 Arizona State University에 있습니다.</span><span lang="en">EEE 554 Probability and Random Processes · Module 3<br>
+  Course: Nicolò Michelusi · School of Electrical, Computer and Energy Engineering, Arizona State University<br>
+  Textbook: Bruce Hajek, <em>Random Processes for Engineers</em> (Cambridge University Press, 2015) §1.2<br>
+  These notes were written by a student who reorganised and expanded the lecture slides. They are not official course material.<br>
+  Copyright in the accompanying lecture slides belongs to Professor Nicolò Michelusi and Arizona State University.</span>
+</footer>
+
+</div>
+<button class="lang-btn" type="button">English</button>
+<button class="theme-btn" type="button">☾ 다크</button>
+
+<script>
+// BSC 에서 ML 과 MAP 이 갈라지는 지점을 직접 찾게 하는 도구.
+// 결과를 보여주는 게 아니라 슬라이더를 움직여 임계점을 발견하게 하는 게 목적이다.
+(function () {
+  var W = document.getElementById('d3-w'), P = document.getElementById('d3-p');
+  if (!W || !P) return;
+  var $ = function (id) { return document.getElementById(id); };
+  var L = function (ko, en) { return document.documentElement.dataset.lang === 'en' ? en : ko; };
+  var f2 = function (x) { return x.toFixed(3); };
+
+  function paint() {
+    var w = +W.value, p0 = +P.value, p1 = 1 - p0;
+    $('d3-we').textContent = w.toFixed(3);
+    $('d3-pe').textContent = p0.toFixed(2);
+
+    // likelihood: P(Y=y | S=s)
+    var l1_0 = w,     l1_1 = 1 - w;   // Y=1
+    var l0_0 = 1 - w, l0_1 = w;       // Y=0
+    // likelihood x prior
+    var j1_0 = l1_0 * p0, j1_1 = l1_1 * p1;
+    var j0_0 = l0_0 * p0, j0_1 = l0_1 * p1;
+
+    // 동점이면 관례대로 0 을 고른다. 오류 확률은 어느 쪽이든 같다.
+    var ml1 = l1_1 > l1_0 ? 1 : 0, ml0 = l0_1 > l0_0 ? 1 : 0;
+    var ap1 = j1_1 > j1_0 ? 1 : 0, ap0 = j0_1 > j0_0 ? 1 : 0;
+
+    var mark = function (a, b) {
+      return '<span class="' + (a >= b ? 'win' : 'lose') + '">' + f2(a) + '</span>' +
+             ' <span style="color:var(--ink3)">vs</span> ' +
+             '<span class="' + (b > a ? 'win' : 'lose') + '">' + f2(b) + '</span>';
+    };
+    $('d3-l1').innerHTML = mark(l1_0, l1_1);
+    $('d3-l0').innerHTML = mark(l0_0, l0_1);
+    $('d3-j1').innerHTML = mark(j1_0, j1_1);
+    $('d3-j0').innerHTML = mark(j0_0, j0_1);
+    $('d3-m1').textContent = 'S\u0302 = ' + ml1;
+    $('d3-m0').textContent = 'S\u0302 = ' + ml0;
+    $('d3-a1').textContent = 'S\u0302 = ' + ap1;
+    $('d3-a0').textContent = 'S\u0302 = ' + ap0;
+
+    // Pe. MAP 은 각 관측에서 큰 쪽을 고르므로 1 - (고른 값들의 합).
+    var eML = w;
+    var eMAP = 1 - (Math.max(j1_0, j1_1) + Math.max(j0_0, j0_1));
+    $('d3-eml').textContent = eML.toFixed(4);
+    $('d3-emap').textContent = eMAP.toFixed(4);
+
+    var same = (ml1 === ap1) && (ml0 === ap0);
+    var msg;
+    if (same) {
+      msg = L('<strong>지금은 ML과 MAP이 같은 결정을 내린다.</strong> prior가 likelihood의 차이를 뒤집을 만큼 크지 않아서다. ' +
+              'prior를 0.5에 맞추면 ω를 아무리 올려도 이 상태가 유지된다.',
+              '<strong>ML and MAP agree here.</strong> The prior is not lopsided enough to overturn the likelihood gap. ' +
+              'Set the prior to 0.5 and this stays true no matter how large ω gets.');
+    } else {
+      msg = L('<strong>갈라졌다.</strong> MAP은 관측을 무시하고 prior가 가리키는 쪽을 택했다. ' +
+              '채널이 시끄러워서 수신 비트보다 prior가 더 믿을 만해진 상태다. 고장이 아니라 최적이다.',
+              '<strong>They have split.</strong> MAP has stopped trusting the observation and gone with the prior. ' +
+              'The channel is noisy enough that the prior carries more information than the received bit. That is optimal, not broken.');
+    }
+    if (eMAP > eML + 1e-12) {
+      msg += L('<br><br><strong style="color:var(--amber)">이럴 리 없다.</strong> 계산을 확인할 것.',
+               '<br><br><strong style="color:var(--amber)">This should be impossible.</strong> Check the arithmetic.');
+    } else {
+      msg += L('<br><br>P<sub>e</sub><sup>MAP</sup> \u2264 P<sub>e</sub><sup>ML</sup> 은 어떤 조합에서도 깨지지 않는다.',
+               '<br><br>P<sub>e</sub><sup>MAP</sup> \u2264 P<sub>e</sub><sup>ML</sup> holds for every setting you can dial in.');
+    }
+    $('d3-msg').innerHTML = msg;
+
+    document.querySelectorAll('.pl-lab').forEach(function (el) {
+      el.textContent = L(el.dataset.ko, el.dataset.en);
+    });
+  }
+
+  W.addEventListener('input', paint);
+  P.addEventListener('input', paint);
+  document.querySelectorAll('.d3-pre').forEach(function (b) {
+    b.addEventListener('click', function () {
+      W.value = b.dataset.w; P.value = b.dataset.p; paint();
+    });
+  });
+  window.addEventListener('langchange', paint);
+  paint();
+})();
+</script>
+<script>
+// 큰 제목이 화면에서 사라지면 목차 위 미니 헤더를 띄운다.
+(function () {
+  var title = document.querySelector('header.top h1.title');
+  var mini = document.querySelector('nav.toc .mini-head');
+  if (!title || !mini || !window.IntersectionObserver) return;
+  new IntersectionObserver(function (es) {
+    mini.classList.toggle('on', !es[0].isIntersecting);
+  }, { threshold: 0 }).observe(title);
+})();
+</script>
+<script>
+// 테마 토글. 기본은 OS 설정을 따르고, 누르면 그 반대로 고정한다.
+// 저장하지 않으므로 페이지를 옮기면 다시 OS 설정을 따른다.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.theme-btn');
+  if (!btn) return;
+  var osDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  function current() {
+    return root.dataset.theme || (osDark && osDark.matches ? 'dark' : 'light');
+  }
+  function paint() {
+    var dark = current() === 'dark';
+    btn.textContent = dark ? '☀ 라이트' : '☾ 다크';
+    btn.setAttribute('aria-label', dark ? '라이트 모드로' : '다크 모드로');
+  }
+  btn.addEventListener('click', function () {
+    root.dataset.theme = current() === 'dark' ? 'light' : 'dark';
+    paint();
+  });
+  if (osDark && osDark.addEventListener) osDark.addEventListener('change', paint);
+  paint();
+})();
+</script>
+<script>
+// 언어 토글. 기본은 한국어. 저장하지 않으므로 페이지를 옮기면 한국어로 돌아간다.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.lang-btn');
+  if (!btn) return;
+  function paint() {
+    var en = root.dataset.lang === 'en';
+    btn.textContent = en ? '한국어' : 'English';
+    btn.setAttribute('aria-label', en ? '한국어로 보기' : 'View in English');
+    root.lang = en ? 'en' : 'ko';
+  }
+  btn.addEventListener('click', function () {
+    root.dataset.lang = root.dataset.lang === 'en' ? 'ko' : 'en';
+    paint();
+    window.dispatchEvent(new Event('langchange'));
+  });
+  paint();
+})();
+</script>
+<script src="reader.js" type="module"></script>
+</body>
+</html>
