@@ -1738,9 +1738,10 @@ html[data-lang="en"] [lang="ko"]{display:none}
 <!-- ══ 09 ══ -->
 <section id="s9">
   <div class="sec-head" data-slide="40"><span class="sec-num">09</span><h2>Partition</h2></div>
-  <p class="sec-sub">이 모듈의 결승선. 앞으로 계속 쓰게 될 개념.</p>
+  <p class="sec-sub" lang="ko">이 모듈의 결승선. 앞으로 계속 쓰게 될 개념.</p>
+  <p class="sec-sub" lang="en">The finish line of this module, and a concept you will keep using.</p>
 
-  <div class="def">
+  <div class="def" lang="ko">
     <span class="tag">정의 — 두 조건</span>
     <p>집합족 <span class="m">{<i>A<sub>i</sub></i> : <i>i</i> ∈ <i>I</i>}</span>가 <span class="m"><i>Ω</i></span>의 <strong>분할(partition)</strong>이라는 건 다음 두 가지를 <em>동시에</em> 만족한다는 뜻:</p>
     <div class="eq" style="margin:14px 0 6px">
@@ -1750,8 +1751,19 @@ html[data-lang="en"] [lang="ko"]{display:none}
       ② ⋃<sub><i>i</i>∈<i>I</i></sub> <i>A<sub>i</sub></i> = <i>Ω</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family:var(--sans);font-size:13px;color:var(--ink3)">빈틈이 없다</span>
     </div>
   </div>
+  <div class="def" lang="en">
+    <span class="tag">Definition — two conditions</span>
+    <p>A family <span class="m">{<i>A<sub>i</sub></i> : <i>i</i> ∈ <i>I</i>}</span> is a <strong>partition</strong> of <span class="m"><i>Ω</i></span> when it satisfies both of these <em>at the same time</em>:</p>
+    <div class="eq" style="margin:14px 0 6px">
+      ① <i>A<sub>i</sub></i> ∩ <i>A<sub>j</sub></i> = ∅ &nbsp; (<i>i</i> ≠ <i>j</i>) <span style="font-family:var(--sans);font-size:13px;color:var(--ink3)">no overlap</span>
+    </div>
+    <div class="eq" style="margin:6px 0 0">
+      ② ⋃<sub><i>i</i>∈<i>I</i></sub> <i>A<sub>i</sub></i> = <i>Ω</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family:var(--sans);font-size:13px;color:var(--ink3)">no gaps</span>
+    </div>
+  </div>
 
-  <p>한 마디로 <strong>"Ω를 겹침도 빈틈도 없이 조각낸 것"</strong>이야. 결과 <span class="m"><i>ω</i></span>가 무엇이든, 정확히 하나의 조각에만 들어가.</p>
+  <p lang="ko">한 마디로 <strong>"Ω를 겹침도 빈틈도 없이 조각낸 것"</strong>이야. 결과 <span class="m"><i>ω</i></span>가 무엇이든, 정확히 하나의 조각에만 들어가.</p>
+  <p lang="en">In one phrase, <strong>Ω cut into pieces with no overlaps and no gaps</strong>. Whatever outcome <span class="m"><i>ω</i></span> turns up, it lands in exactly one piece.</p>
 
   <figure>
   <div class="grid4">
@@ -1766,7 +1778,8 @@ html[data-lang="en"] [lang="ko"]{display:none}
         <text x="70" y="86" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--blue)">A₃</text>
         <text x="107" y="86" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--blue)">A₄</text>
       </svg>
-      <div class="cap" style="color:var(--green)">✓ 분할<br>겹침 X · 빈틈 X</div>
+      <div class="cap" style="color:var(--green)" lang="ko">✓ 분할<br>겹침 X · 빈틈 X</div>
+      <div class="cap" style="color:var(--green)" lang="en">✓ a partition<br>no overlap · no gaps</div>
     </div>
     <div class="mini">
       <svg viewBox="0 0 130 110" aria-label="겹치는 경우">
@@ -1774,18 +1787,22 @@ html[data-lang="en"] [lang="ko"]{display:none}
         <circle cx="50" cy="55" r="34" fill="rgba(var(--blue-rgb),.2)" stroke="var(--blue)" stroke-width="1.3"/>
         <circle cx="82" cy="55" r="34" fill="rgba(var(--pink-rgb),.2)" stroke="var(--pink)" stroke-width="1.3"/>
         <path d="M 66 27 A 34 34 0 0 1 66 83 A 34 34 0 0 1 66 27 Z" fill="rgba(var(--amber-rgb),.5)"/>
-        <text x="66" y="102" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:var(--amber)">겹침</text>
+        <text x="66" y="102" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:var(--amber)" lang="ko">겹침</text>
+        <text x="66" y="102" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:var(--amber)" lang="en">overlap</text>
       </svg>
-      <div class="cap" style="color:var(--amber)">✗ 조건 ① 위반<br>겹치는 부분이 있음</div>
+      <div class="cap" style="color:var(--amber)" lang="ko">✗ 조건 ① 위반<br>겹치는 부분이 있음</div>
+      <div class="cap" style="color:var(--amber)" lang="en">✗ breaks condition ①<br>the pieces overlap</div>
     </div>
     <div class="mini">
       <svg viewBox="0 0 130 110" aria-label="빈틈이 있는 경우">
         <rect x="4" y="4" width="122" height="102" rx="6" fill="var(--paper)" stroke="var(--rule)"/>
         <circle cx="42" cy="55" r="28" fill="rgba(var(--blue-rgb),.2)" stroke="var(--blue)" stroke-width="1.3"/>
         <circle cx="92" cy="55" r="26" fill="rgba(var(--pink-rgb),.2)" stroke="var(--pink)" stroke-width="1.3"/>
-        <text x="66" y="102" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:var(--amber)">Ω 를 못 덮음</text>
+        <text x="66" y="102" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:var(--amber)" lang="ko">Ω 를 못 덮음</text>
+        <text x="66" y="102" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:var(--amber)" lang="en">Ω not covered</text>
       </svg>
-      <div class="cap" style="color:var(--amber)">✗ 조건 ② 위반<br>안 덮인 영역이 남음</div>
+      <div class="cap" style="color:var(--amber)" lang="ko">✗ 조건 ② 위반<br>안 덮인 영역이 남음</div>
+      <div class="cap" style="color:var(--amber)" lang="en">✗ breaks condition ②<br>part of Ω is left out</div>
     </div>
     <div class="mini">
       <svg viewBox="0 0 130 110" aria-label="가장 단순한 분할">
@@ -1794,13 +1811,15 @@ html[data-lang="en"] [lang="ko"]{display:none}
         <text x="60" y="60" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:var(--blue)">A</text>
         <text x="112" y="24" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--pink)">Aᶜ</text>
       </svg>
-      <div class="cap" style="color:var(--green)">✓ 가장 작은 분할<br>{A, Aᶜ}</div>
+      <div class="cap" style="color:var(--green)" lang="ko">✓ 가장 작은 분할<br>{A, Aᶜ}</div>
+      <div class="cap" style="color:var(--green)" lang="en">✓ the smallest partition<br>{A, Aᶜ}</div>
     </div>
   </div>
-  <figcaption>맨 오른쪽이 중요해. 어떤 사건 <span class="m"><i>A</i></span>든, <span class="m">{<i>A</i>, <i>A</i><sup>c</sup></span>}는 항상 <span class="m"><i>Ω</i></span>의 분할이야. 이게 Module 3에서 <span class="m"><i>P</i>(<i>B</i>) = <i>P</i>(<i>B</i>∩<i>A</i>) + <i>P</i>(<i>B</i>∩<i>A</i><sup>c</sup>)</span> 형태로 계속 등장해.</figcaption>
+  <figcaption lang="ko">맨 오른쪽이 중요해. 어떤 사건 <span class="m"><i>A</i></span>든, <span class="m">{<i>A</i>, <i>A</i><sup>c</sup></span>}는 항상 <span class="m"><i>Ω</i></span>의 분할이야. 이게 Module 3에서 <span class="m"><i>P</i>(<i>B</i>) = <i>P</i>(<i>B</i>∩<i>A</i>) + <i>P</i>(<i>B</i>∩<i>A</i><sup>c</sup>)</span> 형태로 계속 등장해.</figcaption>
+  <figcaption lang="en">The rightmost one is the one that matters. For any event <span class="m"><i>A</i></span> whatsoever, <span class="m">{<i>A</i>, <i>A</i><sup>c</sup></span>} is a partition of <span class="m"><i>Ω</i></span>. It reappears throughout Module 3 in the form <span class="m"><i>P</i>(<i>B</i>) = <i>P</i>(<i>B</i>∩<i>A</i>) + <i>P</i>(<i>B</i>∩<i>A</i><sup>c</sup>)</span>.</figcaption>
   </figure>
 
-  <div class="ex">
+  <div class="ex" lang="ko">
     <span class="tag">예제 9.1 — HW1 Problem 3 유형</span>
     <p>패킷을 두 번 연속 전송한다. 각 전송은 성공(S) 또는 실패(F).</p>
     <ol>
@@ -1822,8 +1841,30 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <p><strong>(e) 왜 분할이 유용한가</strong> — 문제에 서술형으로 나오는 부분인데, 답은 이거야. 분할이 있으면 복잡한 사건의 확률을 조각별로 나눠 더할 수 있어. 조각들이 서로소니까 겹쳐서 두 번 세는 일이 없고, 전체를 덮으니까 빠뜨리는 것도 없거든. <span class="m"><i>P</i>(<i>B</i>) = Σ<sub><i>i</i></sub> <i>P</i>(<i>B</i> ∩ <i>A<sub>i</sub></i>)</span> 라는 law of total probability가 정확히 이걸 하는 거야.</p>
     </div></details>
   </div>
+  <div class="ex" lang="en">
+    <span class="tag">Example 9.1 — the HW1 Problem 3 pattern</span>
+    <p>You transmit a packet twice in a row. Each transmission either succeeds (S) or fails (F).</p>
+    <ol>
+      <li>Build the sample space <span class="m"><i>Ω</i></span>.</li>
+      <li>Write <span class="m"><i>A</i></span> = {exactly one success} as a subset of <span class="m"><i>Ω</i></span>.</li>
+      <li>Write <span class="m"><i>B</i></span> = {at least one success}.</li>
+      <li>Define <span class="m"><i>A</i><sub>0</sub></span>, <span class="m"><i>A</i><sub>1</sub></span>, <span class="m"><i>A</i><sub>2</sub></span> by the number of successes being 0, 1, 2 and show these form a partition.</li>
+    </ol>
+    <details><summary>Solution</summary><div class="body">
+      <p><strong>1.</strong> <span class="m"><i>Ω</i> = {SS, SF, FS, FF}</span>, four outcomes. <strong>SF and FS have to stay distinct.</strong> First succeeds then fails is a different outcome from the reverse.</p>
+      <p><strong>2.</strong> <span class="m"><i>A</i> = {SF, FS}</span></p>
+      <p><strong>3.</strong> <span class="m"><i>B</i> = {SS, SF, FS}</span>. The fast route to "at least one" is <span class="m">{FF}<sup>c</sup></span>. Build the habit of reaching for the complement.</p>
+      <p><strong>4.</strong> <span class="m"><i>A</i><sub>0</sub> = {FF}</span>, <span class="m"><i>A</i><sub>1</sub> = {SF, FS}</span>, <span class="m"><i>A</i><sub>2</sub> = {SS}</span>. Check both conditions:</p>
+      <ul>
+        <li>① pairwise disjoint: <span class="m"><i>A</i><sub>0</sub>∩<i>A</i><sub>1</sub> = ∅</span>, <span class="m"><i>A</i><sub>0</sub>∩<i>A</i><sub>2</sub> = ∅</span>, <span class="m"><i>A</i><sub>1</sub>∩<i>A</i><sub>2</sub> = ∅</span>. <strong>All three pairs, not just one.</strong></li>
+        <li>② covering: <span class="m"><i>A</i><sub>0</sub>∪<i>A</i><sub>1</sub>∪<i>A</i><sub>2</sub> = {FF, SF, FS, SS} = <i>Ω</i></span> ✓</li>
+      </ul>
+      <p>There is a cleaner argument available: "each outcome has exactly one success count, and that count is 0, 1 or 2." That single sentence implies both conditions at once. <strong>In general, any function that assigns one value to each outcome automatically partitions Ω by its value.</strong> That idea is what later becomes the definition of a random variable.</p>
+      <p><strong>(e) Why partitions are useful</strong> — the problem asks for this in prose, and the answer is: with a partition in hand you can split a complicated event's probability into pieces and add them up. The pieces are disjoint so nothing gets counted twice, and they cover everything so nothing is missed. The law of total probability, <span class="m"><i>P</i>(<i>B</i>) = Σ<sub><i>i</i></sub> <i>P</i>(<i>B</i> ∩ <i>A<sub>i</sub></i>)</span>, is exactly this move.</p>
+    </div></details>
+  </div>
 
-  <div class="trap">
+  <div class="trap" lang="ko">
     <span class="tag">함정 · 시험 단골</span>
 
     <h4>서로소인데 분할이 아닌 경우</h4>
@@ -1843,15 +1884,37 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <h4>∅ 은 보통 분할의 조각에 넣지 않는다</h4>
     <p><span class="m">∅</span>을 조각으로 끼워 넣어도 두 조건은 기술적으로 만족돼(<span class="m">∅ ∩ <i>A</i> = ∅</span>이고 합집합도 안 변하니까). 하지만 의미가 없어서 대부분의 교재는 각 조각이 비어있지 않다고 가정해. 시험에서 "이게 분할인가?"를 물으면 이 문제로 트집 잡지는 않을 거야. 다만 정의를 쓸 때는 짚고 넘어가면 좋아.</p>
   </div>
+  <div class="trap" lang="en">
+    <span class="tag">Trap · shows up on exams constantly</span>
+
+    <h4>Disjoint but not a partition</h4>
+    <p>In <span class="m"><i>Ω</i> = {1,…,6}</span>, the family <span class="m">{{1}, {2}}</span> is disjoint but is not a partition, since 3, 4, 5, 6 are uncovered. <strong>Checking only condition ① and moving on is the most common mistake here.</strong></p>
+
+    <h4>Covering but not a partition</h4>
+    <p><span class="m">{{1,2,3}, {3,4,5,6}}</span> covers all of <span class="m"><i>Ω</i></span>, but 3 sits in both pieces, so it is not a partition. In probability terms you would count 3 twice.</p>
+
+    <h4>Pairwise disjoint is not "the total intersection is empty"</h4>
+    <p><strong>This is the real trap.</strong> Take <span class="m"><i>A</i>={1,2}, <i>B</i>={2,3}, <i>C</i>={3,1}</span>.</p>
+    <ul>
+      <li><span class="m"><i>A</i>∩<i>B</i>∩<i>C</i> = ∅</span> ← no element is common to all three</li>
+      <li>and yet <span class="m"><i>A</i>∩<i>B</i> = {2} ≠ ∅</span> ← <strong>not pairwise disjoint!</strong></li>
+    </ul>
+    <p>Condition ① demands <strong>pairwise</strong> disjointness, meaning <em>every pair</em> must be disjoint. Checking whether the total intersection is empty is not the same test. With <span class="m"><i>n</i></span> sets you have <span class="m"><i>n</i>(<i>n</i>−1)/2</span> pairs to check.</p>
+
+    <h4>∅ is normally not allowed as a piece</h4>
+    <p>Throwing <span class="m">∅</span> in as an extra piece technically satisfies both conditions, since <span class="m">∅ ∩ <i>A</i> = ∅</span> and the union does not change. It just carries no meaning, so most texts assume every piece is nonempty. An exam asking "is this a partition?" is unlikely to hinge on this, but it is worth stating when you write the definition out.</p>
+  </div>
 </section>
 
 <!-- ══ 10 ══ -->
 <section id="s10">
-  <div class="sec-head"><span class="sec-num">10</span><h2>정리 &amp; 다음 모듈</h2></div>
-  <p class="sec-sub">이 모듈에서 반드시 가져가야 할 것.</p>
+  <div class="sec-head"><span class="sec-num">10</span><h2 lang="ko">정리 &amp; 다음 모듈</h2><h2 lang="en">Recap &amp; next module</h2></div>
+  <p class="sec-sub" lang="ko">이 모듈에서 반드시 가져가야 할 것.</p>
+  <p class="sec-sub" lang="en">What you have to walk away from this module with.</p>
 
-  <h3>한 장 요약</h3>
-  <table>
+  <h3 lang="ko">한 장 요약</h3>
+  <h3 lang="en">One-page summary</h3>
+  <table lang="ko">
     <tr><th>개념</th><th>한 줄 정의</th><th>어디서 다시 나오나</th></tr>
     <tr><td><strong>Sample space Ω</strong></td><td>가능한 모든 결과의 집합</td><td>모든 문제의 첫 줄</td></tr>
     <tr><td><strong>Event</strong></td><td>Ω의 부분집합 = 질문 하나</td><td>확률이 붙는 대상</td></tr>
@@ -1862,9 +1925,21 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <tr><td><strong>Index set</strong></td><td>집합족에 번호 붙이기</td><td>무한 연산, random process</td></tr>
     <tr><td><strong>Partition</strong></td><td>겹침 X + 빈틈 X 로 Ω 조각내기</td><td>law of total probability, Bayes</td></tr>
   </table>
+  <table lang="en">
+    <tr><th>concept</th><th>one-line definition</th><th>where it returns</th></tr>
+    <tr><td><strong>Sample space Ω</strong></td><td>the set of every possible outcome</td><td>the first line of every problem</td></tr>
+    <tr><td><strong>Event</strong></td><td>a subset of Ω, that is, one question</td><td>the thing probability attaches to</td></tr>
+    <tr><td><strong>∩ ∪ ᶜ</strong></td><td>AND · OR · NOT</td><td>combining events, proving identities</td></tr>
+    <tr><td><strong>De Morgan</strong></td><td>push ᶜ inside and the operation flips</td><td>converting "at least one" ↔ "none"</td></tr>
+    <tr><td><strong>Countable</strong></td><td>can be numbered and fully counted</td><td>σ-algebra, countable additivity</td></tr>
+    <tr><td><strong>Power set 2<sup>Ω</sup></strong></td><td>every subset, that is, every question</td><td>the starting point for σ-algebra, count 2ⁿ</td></tr>
+    <tr><td><strong>Index set</strong></td><td>attaching labels to a family of sets</td><td>infinite operations, random processes</td></tr>
+    <tr><td><strong>Partition</strong></td><td>slicing Ω with no overlap and no gaps</td><td>law of total probability, Bayes</td></tr>
+  </table>
 
-  <h3>HW1 대응표</h3>
-  <table>
+  <h3 lang="ko">HW1 대응표</h3>
+  <h3 lang="en">HW1 map</h3>
+  <table lang="ko">
     <tr><th>문제</th><th>내용</th><th>필요한 섹션</th></tr>
     <tr><td>Problem 1</td><td>Ω={1..8}에서 집합 연산 6개 계산</td><td>04 (예제 4.1이 같은 문제)</td></tr>
     <tr><td>Problem 2</td><td>De Morgan · 분배법칙 · <span class="m"><i>A</i>\<i>B</i>=<i>A</i>∩<i>B</i><sup>c</sup></span> 증명</td><td>05 (증명 템플릿 포함)</td></tr>
@@ -1872,10 +1947,20 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <tr><td>Problem 4</td><td>σ-algebra</td><td>07이 배경, 본론은 <strong>Module 2</strong></td></tr>
     <tr><td>Problem 5–8</td><td>확률 공리와 그 귀결</td><td><strong>Module 2</strong></td></tr>
   </table>
-  <p style="font-size:14px;color:var(--ink2)">Problem 1, 2, 3은 <strong>지금 바로 풀 수 있어.</strong> 마감이 8월 30일 일요일 자정이니까 이 세 개부터 끝내놓고 Module 2 진도를 기다리는 게 좋아.</p>
+  <table lang="en">
+    <tr><th>problem</th><th>what it asks</th><th>section you need</th></tr>
+    <tr><td>Problem 1</td><td>six set operations on Ω={1..8}</td><td>04 (Example 4.1 is the same problem)</td></tr>
+    <tr><td>Problem 2</td><td>prove De Morgan, distributivity, <span class="m"><i>A</i>\<i>B</i>=<i>A</i>∩<i>B</i><sup>c</sup></span></td><td>05 (includes the proof template)</td></tr>
+    <tr><td>Problem 3</td><td>packet transmission sample space &amp; partition</td><td>09 (Example 9.1 is the same problem)</td></tr>
+    <tr><td>Problem 4</td><td>σ-algebra</td><td>07 is the background, the real content is <strong>Module 2</strong></td></tr>
+    <tr><td>Problem 5–8</td><td>the probability axioms and what follows from them</td><td><strong>Module 2</strong></td></tr>
+  </table>
+  <p style="font-size:14px;color:var(--ink2)" lang="ko">Problem 1, 2, 3은 <strong>지금 바로 풀 수 있어.</strong> 마감이 8월 30일 일요일 자정이니까 이 세 개부터 끝내놓고 Module 2 진도를 기다리는 게 좋아.</p>
+  <p style="font-size:14px;color:var(--ink2)" lang="en">Problems 1, 2 and 3 are <strong>solvable right now.</strong> The deadline is midnight on Sunday August 30, so clear those three first and wait for Module 2 to cover the rest.</p>
 
-  <h3>다음 모듈 예고</h3>
-  <div class="callout">
+  <h3 lang="ko">다음 모듈 예고</h3>
+  <h3 lang="en">Coming up next</h3>
+  <div class="callout" lang="ko">
     <strong>Module 2 — Probability Space</strong>에서는 이 모듈에서 만든 집합 위에 드디어 숫자를 얹어. 핵심은 삼중항 <span class="m">(<i>Ω</i>, ℱ, <i>P</i>)</span>야.
     <ul style="margin-top:10px;margin-bottom:0">
       <li><span class="m"><i>Ω</i></span> — 이번 모듈에서 배운 표본공간</li>
@@ -1883,7 +1968,16 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <li><span class="m"><i>P</i></span> — 확률 측도. <span class="m">ℱ</span>의 각 사건에 <span class="m">[0,1]</span>의 숫자를 붙이는 함수</li>
     </ul>
   </div>
-  <p>미리 던져두는 질문 하나: <strong>왜 <span class="m">2<sup><i>Ω</i></sup></span>를 그냥 쓰지 않고 σ-algebra라는 걸 따로 정의할까?</strong> 답의 절반은 이미 06번 함정 마지막 항목에 있어. Module 2 노트에서 나머지 절반을 채울게.</p>
+  <div class="callout" lang="en">
+    <strong>Module 2 — Probability Space</strong> finally puts numbers on the sets you built here. The centrepiece is the triple <span class="m">(<i>Ω</i>, ℱ, <i>P</i>)</span>.
+    <ul style="margin-top:10px;margin-bottom:0">
+      <li><span class="m"><i>Ω</i></span> — the sample space from this module</li>
+      <li><span class="m">ℱ</span> — the σ-algebra, the collection of events you are allowed to assign probability to. <strong>It exists because of the uncountability problem in section 06</strong></li>
+      <li><span class="m"><i>P</i></span> — the probability measure, the function attaching a number in <span class="m">[0,1]</span> to each event in <span class="m">ℱ</span></li>
+    </ul>
+  </div>
+  <p lang="ko">미리 던져두는 질문 하나: <strong>왜 <span class="m">2<sup><i>Ω</i></sup></span>를 그냥 쓰지 않고 σ-algebra라는 걸 따로 정의할까?</strong> 답의 절반은 이미 06번 함정 마지막 항목에 있어. Module 2 노트에서 나머지 절반을 채울게.</p>
+  <p lang="en">One question to carry with you: <strong>why define a σ-algebra at all instead of just using <span class="m">2<sup><i>Ω</i></sup></span>?</strong> Half the answer is already sitting in the last trap of section 06. The Module 2 note fills in the other half.</p>
 </section>
 
 <footer>
