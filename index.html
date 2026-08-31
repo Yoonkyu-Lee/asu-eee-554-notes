@@ -132,6 +132,9 @@ h1{font-size:clamp(32px,6vw,54px);line-height:1.05;letter-spacing:-.03em;font-we
 .hw .d{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--amber);letter-spacing:-.02em;line-height:1}
 .hw .txt{font-size:14.5px;color:var(--amber-deep);line-height:1.55;flex:1;min-width:200px}
 .hw .txt b{color:var(--amber)}
+a.hw{text-decoration:none;transition:border-color .15s,background .15s}
+a.hw:hover{border-color:var(--amber);background:rgba(var(--amber-rgb),.14)}
+.hw .hwgo{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:var(--amber);white-space:nowrap;font-weight:600}
 
 /* sections */
 h2{font-size:13px;font-family:var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);font-weight:500;margin:64px 0 18px;padding-bottom:12px;border-bottom:1px solid var(--rule)}
@@ -231,17 +234,19 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
     <span class="chip">Korean &amp; English</span>
   </div>
 
-  <div class="hw" id="hwbox">
+  <a class="hw" id="hwbox" href="HW1-sets-and-probability-spaces.html">
     <div class="d" id="hwd">HW1</div>
     <div class="txt" lang="ko">
-      <b>Homework 1 — Sets and Probability Spaces</b> · 마감 8월 30일 (일) 자정<br>
-      Problem 1 · 2 · 3 은 Module 1, Problem 4–8 은 Module 2 노트로 커버된다. 전 범위 준비 완료.
+      <b>Homework 1 · Sets and Probability Spaces</b> · 마감 8월 30일 (일) 자정<br>
+      문제마다 뭘 알아야 풀리는지, 첫 수를 어디에 두는지, 뭘 빠뜨리기 쉬운지. Problem 1·2·3은 Module 1, 4–8은 Module 2로 커버된다.
     </div>
     <div class="txt" lang="en">
-      <b>Homework 1 — Sets and Probability Spaces</b> · due midnight, Sunday August 30<br>
-      Problems 1 · 2 · 3 are covered by the Module 1 notes and 4–8 by Module 2. The whole set is ready.
+      <b>Homework 1 · Sets and Probability Spaces</b> · due midnight, Sunday August 30<br>
+      What each problem needs, where to put your first move, and what people leave out. Problems 1·2·3 are covered by Module 1, and 4–8 by Module 2.
     </div>
-  </div>
+    <span class="hwgo" lang="ko">공략 보기 →</span>
+    <span class="hwgo" lang="en">Open the guide →</span>
+  </a>
 </header>
 
 <h2 lang="ko">모듈</h2>

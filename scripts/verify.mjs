@@ -9,7 +9,7 @@
 
 import { chromium } from 'playwright';
 import { createServer } from 'node:http';
-import { createReadStream, readFileSync, mkdirSync, existsSync, statSync } from 'node:fs';
+import { createReadStream, readFileSync, readdirSync, mkdirSync, existsSync, statSync } from 'node:fs';
 import { resolve, basename, extname, join, relative, sep } from 'node:path';
 
 const target = process.argv[2];
@@ -298,6 +298,48 @@ for (const el of figs) {
   }
 }
 
+// ── 본문 링크가 다크모드에서 읽히는지 ──────────────────────────────
+// 링크에 규칙을 안 주면 브라우저 기본 남색이 나온다. 라이트에서는 그럭저럭
+// 읽히지만 다크에서는 배경에 묻는다. 노트에는 본문 링크가 없어서 드러나지
+// 않던 결함이고, 공략 페이지처럼 링크가 본체인 문서에서 바로 터진다.
+const linkContrast = [];
+for (const theme of ['light', 'dark']) {
+  await page.evaluate(t => { document.documentElement.dataset.theme = t; }, theme);
+  await page.waitForTimeout(120);
+  const bad = await page.evaluate((t) => {
+    const lum = (c) => {
+      const [r, g, b] = c.map(v => {
+        const x = v / 255;
+        return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    const parse = (s) => (s.match(/[\d.]+/g) || []).slice(0, 3).map(Number);
+    const bgOf = (el) => {
+      for (let n = el; n; n = n.parentElement) {
+        const c = getComputedStyle(n).backgroundColor;
+        const a = (c.match(/[\d.]+/g) || [])[3];
+        if (c && c !== 'transparent' && a !== '0') return parse(c);
+      }
+      return parse(getComputedStyle(document.body).backgroundColor || 'rgb(255,255,255)');
+    };
+    const out = [];
+    for (const a of document.querySelectorAll('main a, .toc a')) {
+      if (getComputedStyle(a).display === 'none') continue;
+      const fg = parse(getComputedStyle(a).color);
+      const bg = bgOf(a);
+      const l1 = lum(fg), l2 = lum(bg);
+      const ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+      if (ratio < 3)
+        out.push(t + ': ' + ratio.toFixed(2) + ':1  "' +
+          (a.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 34) + '"');
+    }
+    return [...new Set(out)];
+  }, theme);
+  linkContrast.push(...bad);
+}
+await page.evaluate(() => { delete document.documentElement.dataset.theme; });
+
 await browser.close();
 await site.close();
 
@@ -343,6 +385,15 @@ if (litColors.length) {
   litColors.slice(0, 12).forEach(e => line("  · " + e));
   line("  디자인 토큰을 쓸 것: var(--blue), rgba(var(--blue-rgb),.16) 형태.");
 } else line("[OK] 하드코딩된 색 없음 (전부 디자인 토큰)");
+if (linkContrast.length) {
+  fail = 1;
+  line('\n[FAIL] 배경에 묻는 링크 ' + linkContrast.length + '건 (대비 3:1 미만)');
+  linkContrast.slice(0, 12).forEach(x => line('  · ' + x));
+  line('  링크에 색 규칙이 없으면 브라우저 기본 남색이 나와 다크모드에서 안 읽힌다.');
+  line('  main a{color:var(--blue)} 같은 토큰 규칙을 줄 것.');
+} else {
+  line('[OK] 링크 대비 충분 (라이트/다크 양쪽)');
+}
 
 if (reader.skipped) {
   line('[--] 슬라이드 리더: data-slide 앵커가 없어 건너뜀');
@@ -410,6 +461,79 @@ if (shotCount > 0) {
   line('도형 겹침(테두리가 글자를 관통하는 것)과 색 대비는 자동 검사가 못 잡는다.\n');
 } else {
   line('도해 스크린샷: 없음 (figure / .play 요소가 없는 파일)\n');
+}
+
+
+// ── 다른 페이지를 가리키는 링크가 실제로 존재하는지 ────────────────
+// 공략 페이지처럼 링크가 본체인 문서는 앵커 하나가 깨지면 근거를 잘못 가리킨다.
+// 어긋난 슬라이드 앵커가 해로운 것과 같은 이유로 실패로 잡는다.
+{
+  const src = readFileSync(abs, 'utf8');
+  const dir = resolve(abs, '..');
+  const idCache = new Map();
+  const idsOf = (f) => {
+    if (!idCache.has(f)) {
+      const p = resolve(dir, f);
+      idCache.set(f, existsSync(p)
+        ? new Set([...readFileSync(p, 'utf8').matchAll(/id="([^"]+)"/g)].map(m => m[1]))
+        : null);
+    }
+    return idCache.get(f);
+  };
+  const broken = [];
+  const seen = new Set();
+  for (const m of src.matchAll(/href="([^":#]+\.html)(?:#([^"]+))?"/g)) {
+    const [, file, id] = m;
+    const key = file + (id ? '#' + id : '');
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const ids = idsOf(file);
+    if (ids === null) broken.push(key + '   대상 파일이 없다');
+    else if (id && !ids.has(id)) broken.push(key + '   그 id가 대상 파일에 없다');
+  }
+  if (broken.length) {
+    fail = 1;
+    line('\n[FAIL] 다른 페이지를 가리키는 링크 ' + broken.length + '개가 깨져 있다');
+    broken.forEach(b => line('  · ' + b));
+    line('  링크가 근거를 잘못 가리키면 없느니만 못하다. 대상 id를 확인할 것.');
+  } else if (seen.size) {
+    line('[OK] 페이지 간 링크 ' + seen.size + '개 전부 대상 존재');
+  }
+}
+
+// ── HW 공략 페이지와 노트의 문제 번호가 어긋나지 않는지 ─────────────
+// HW 매핑이 노트와 공략 페이지 양쪽에 있다. 한쪽만 고치면 조용히 갈라진다.
+{
+  const dir = resolve(abs, '..');
+  const all = readdirSync(dir);
+  for (const g of all.filter(f => /^HW\d+-.*\.html$/.test(f))) {
+    const hw = g.match(/^HW(\d+)/)[1];
+    const gsrc = readFileSync(resolve(dir, g), 'utf8');
+    // 공략 페이지가 다루는 문제 번호. <span class="sec-num">P5</span>
+    const covered = new Set([...gsrc.matchAll(/class="sec-num">P(\d+)</g)].map(m => +m[1]));
+    // 노트가 언급하는 문제 번호. "HW1 Problem 5", "HW1 Problems 4–8", "HW1 4(b)"
+    const cited = new Set();
+    for (const f of all.filter(x => /^L\d+-.*\.html$/.test(x))) {
+      const t = readFileSync(resolve(dir, f), 'utf8');
+      const re = new RegExp('HW' + hw + '\\s*(?:Problems?\\s*)?(\\d+)(?:\\s*[–-]\\s*(\\d+))?', 'g');
+      for (const m of t.matchAll(re)) {
+        const a = +m[1], b = m[2] ? +m[2] : a;
+        if (b < a || b - a > 12) continue;   // 범위가 아닌 숫자가 섞이는 것 방지
+        for (let k = a; k <= b; k++) cited.add(k);
+      }
+    }
+    const missing = [...cited].filter(n => !covered.has(n)).sort((a, b) => a - b);
+    const extra = [...covered].filter(n => !cited.has(n)).sort((a, b) => a - b);
+    if (missing.length || extra.length) {
+      fail = 1;
+      line('\n[FAIL] ' + g + ' 와 노트의 HW' + hw + ' 문제 번호가 어긋난다');
+      if (missing.length) line('  노트는 언급하는데 공략에 없는 문제: ' + missing.join(', '));
+      if (extra.length) line('  공략에는 있는데 노트가 안 짚는 문제: ' + extra.join(', '));
+      line('  한쪽만 고치면 이렇게 갈라진다. 양쪽을 맞출 것.');
+    } else if (covered.size) {
+      line('[OK] ' + g + ' 의 문제 ' + covered.size + '개가 노트 언급과 일치');
+    }
+  }
 }
 
 process.exit(fail ? 1 : 0);

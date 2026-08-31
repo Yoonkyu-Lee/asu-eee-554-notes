@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="ko" data-lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EEE 554 · Homework 1 공략</title>
+<style>
+:root{
+  color-scheme:light dark;
+
+  /* 색 성분. rgba(var(--blue-rgb),.16) 형태로 농도 변형을 만든다. */
+  --ink-rgb:20,22,26;
+  --blue-rgb:18,80,196;
+  --pink-rgb:217,20,122;
+  --violet-rgb:107,47,168;
+  --green-rgb:0,132,95;
+  --amber-rgb:178,106,0;
+  --sel-rgb:75,29,140;
+
+  --paper:#FAFAF8;
+  --card:#FFFFFF;
+  --ink:rgb(var(--ink-rgb));
+  --ink2:#565D66;
+  --ink3:#8A9099;
+  --rule:#E2E1DB;
+  --blue:rgb(var(--blue-rgb));
+  --pink:rgb(var(--pink-rgb));
+  --violet:rgb(var(--violet-rgb));
+  --green:rgb(var(--green-rgb));
+  --amber:rgb(var(--amber-rgb));
+  --amber-bg:#FDF6E9;
+  --red:#C02626;
+  --sel:rgb(var(--sel-rgb));
+
+  /* 보조 표면과 진한 변형 */
+  --amber-line:#F0E2C4;
+  --code-bg:#F0EFEA;
+  --chip:#F1F0EB;
+  --sel-soft:#F6F2FB;
+  --pink-deep:#8B0D4E;
+  --green-deep:#005A42;
+  --amber-deep:#7A4A00;
+  --violet-deep:#3B1E70;
+  --brown:#A3532B;
+  --teal:#0E7490;
+  --shadow:rgba(var(--ink-rgb),.06);
+
+  --mono:ui-monospace,"Cascadia Mono","Cascadia Code",Consolas,"SFMono-Regular",monospace;
+  --sans:"Pretendard","Pretendard Variable",-apple-system,"Segoe UI Variable Text","Segoe UI","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --serif:"Cambria Math","STIX Two Math","Latin Modern Math",Cambria,"Times New Roman",serif;
+}
+
+/* 다크 팔레트. 의미 고정 색상(A=blue, B=pink, 교집합=violet, 함정=amber)은
+   그대로 두고 밝기만 어두운 배경에 맞게 올린다. */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 120px;display:grid;grid-template-columns:210px minmax(0,1fr);gap:56px}
+@media(max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);gap:0;padding:0 18px 80px}}
+
+header.top{grid-column:1/-1;padding:64px 0 40px;border-bottom:1px solid var(--rule);margin-bottom:48px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+h1.title{font-size:clamp(30px,5vw,50px);line-height:1.1;letter-spacing:-.025em;font-weight:800;margin:14px 0 6px}
+.subtitle{font-size:17px;color:var(--ink2);margin:0}
+.meta{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--mono);font-size:11px;letter-spacing:.05em;padding:5px 11px;border:1px solid var(--rule);border-radius:999px;color:var(--ink2);background:var(--card)}
+.chip.hot{border-color:var(--amber);color:var(--amber);background:var(--amber-bg)}
+.backlink{display:inline-block;margin-top:20px;font-family:var(--mono);font-size:11.5px;color:var(--blue);text-decoration:none;letter-spacing:.04em}
+.backlink:hover{text-decoration:underline}
+
+nav.toc{position:sticky;top:24px;align-self:start;font-size:13.5px;line-height:1.5}
+nav.toc .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:14px}
+nav.toc a{display:flex;gap:9px;padding:5px 0;color:var(--ink2);text-decoration:none;border-left:2px solid transparent;padding-left:11px;margin-left:-13px}
+nav.toc a:hover{color:var(--ink);border-left-color:var(--blue)}
+nav.toc a .n{font-family:var(--mono);font-size:11px;color:var(--ink3);padding-top:2px;min-width:14px}
+@media(max-width:900px){nav.toc{position:static;margin-bottom:44px;padding-bottom:28px;border-bottom:1px solid var(--rule)}}
+/* ── 상단 미니 헤더 ─────────────────────── */
+/* 큰 제목이 화면 밖으로 나가면 목차 위에 작게 나타나 계속 남는다.
+   목차가 이미 sticky라 그 안에 넣으면 따로 고정 장치가 필요 없다.
+   모바일에서는 목차가 static이라 의미가 없으므로 숨긴다. */
+.mini-head{max-height:0;opacity:0;visibility:hidden;overflow:hidden;margin-bottom:0;
+  transition:max-height .22s ease,opacity .18s ease,margin-bottom .22s ease,visibility .18s}
+.mini-head.on{max-height:150px;opacity:1;visibility:visible;margin-bottom:22px}
+nav.toc .mini-head a.back{display:inline-block;margin:0 0 12px;padding:0;border-left:none;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--blue);text-decoration:none}
+nav.toc .mini-head a.back:hover{text-decoration:underline;color:var(--blue);border-left-color:transparent}
+.mini-head .mod{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:3px}
+.mini-head .name{font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--ink);line-height:1.3}
+.mini-head .rule{height:1px;background:var(--rule);margin-top:16px}
+@media(max-width:900px){.mini-head{display:none}}
+
+section{margin-bottom:76px;scroll-margin-top:20px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+.sec-num{font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:.1em;padding-top:4px}
+h2{font-size:clamp(22px,3vw,29px);letter-spacing:-.02em;font-weight:750;margin:0;line-height:1.25}
+.sec-sub{color:var(--ink2);font-size:15px;margin:0 0 30px 0}
+h3{font-size:17.5px;font-weight:700;letter-spacing:-.01em;margin:38px 0 12px}
+h4{font-size:15px;font-weight:700;margin:26px 0 8px;color:var(--ink)}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 16px;padding-left:22px}
+li{margin-bottom:7px}
+code{font-family:var(--mono);font-size:.87em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+
+.m{font-family:var(--serif);font-style:normal;font-size:1.07em;white-space:nowrap}
+@media(max-width:900px){.m{white-space:normal}}
+.m i{font-style:italic}
+.eq{font-family:var(--serif);font-size:19px;text-align:center;margin:22px 0;line-height:1.9}
+.eq i{font-style:italic}
+.eq .note{font-family:var(--sans);font-size:13px;color:var(--ink3);display:block;margin-top:4px}
+.cA{color:var(--blue);font-weight:600}
+.cB{color:var(--pink);font-weight:600}
+.cC{color:var(--green);font-weight:600}
+
+.def{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--ink);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.def .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:7px}
+.def p:last-child,.def ol:last-child,.def ul:last-child{margin-bottom:0}
+
+.trap{background:var(--amber-bg);border:1px solid var(--amber-line);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.trap .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:7px;font-weight:600}
+.trap p:last-child,.trap ul:last-child{margin-bottom:0}
+.trap h4{margin-top:18px;font-size:14.5px}
+.trap h4:first-of-type{margin-top:0}
+
+.ex{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:18px 22px;margin:20px 0}
+.ex .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:7px;font-weight:600}
+.ex p:last-child,.ex ul:last-child,.ex ol:last-child{margin-bottom:0}
+details{margin-top:12px;border-top:1px dashed var(--rule);padding-top:12px}
+details summary{cursor:pointer;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--blue);list-style:none;user-select:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"▸ ";display:inline-block}
+details[open] summary::before{content:"▾ "}
+details .body{margin-top:12px}
+details .body p:last-child,details .body ol:last-child{margin-bottom:0}
+
+.callout{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:16px 0;margin:26px 0;font-size:15px;color:var(--ink2)}
+.callout strong{color:var(--ink)}
+
+/* ── 슬라이드 출처 표시 ─────────────────── */
+/* data-slide 값에서 라벨을 직접 만든다. 라벨과 앵커가 어긋날 수 없다.
+   리더가 꺼져 있어도, 모바일이어도 "이 대목이 슬라이드 몇 쪽인지"는 보여야 한다. */
+.sec-head[data-slide],h3[data-slide]{display:flex;align-items:baseline;gap:14px}
+.sec-head[data-slide]>h2,h3[data-slide]{min-width:0}
+.sec-head[data-slide]::before,h3[data-slide]::before{
+  content:"";order:1;flex:1 1 auto;min-width:16px;height:1px;
+  background:var(--rule);align-self:center;opacity:.75}
+.sec-head[data-slide]::after,h3[data-slide]::after{
+  content:"슬라이드 " attr(data-slide) "쪽";order:2;flex:none;
+  font-family:var(--mono);font-size:10px;letter-spacing:.05em;
+  color:var(--ink3);white-space:nowrap;align-self:center}
+@media(max-width:900px){
+  .sec-head[data-slide]::before,h3[data-slide]::before{min-width:10px}
+  .sec-head[data-slide]::after,h3[data-slide]::after{font-size:9.5px}
+}
+
+figure{margin:28px 0;background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:22px}
+figure svg{display:block;width:100%;height:auto;max-width:100%}
+figcaption{font-size:13px;color:var(--ink2);margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:720px){.grid2,.grid3{grid-template-columns:1fr}}
+.mini{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px}
+.mini .cap{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--ink2);text-align:center;margin-top:8px;line-height:1.4}
+.mini svg{display:block;width:100%;height:auto}
+.svgtxt{font-family:var(--serif);font-size:15px;fill:var(--ink)}
+.svgtxt.it{font-style:italic}
+.svglab{font-family:var(--mono);font-size:11px;fill:var(--ink2)}
+.svgnum{font-family:var(--mono);font-size:13px;font-weight:600}
+
+/* sigma-algebra checker */
+.play{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:22px;margin:28px 0}
+.plab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin:20px 0 9px}
+.plab:first-child{margin-top:0}
+.subsets{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+@media(max-width:560px){.subsets{grid-template-columns:repeat(2,1fr)}}
+.sub{font-family:var(--serif);font-size:15px;padding:9px 6px;text-align:center;background:var(--paper);border:1px solid var(--rule);border-radius:6px;cursor:pointer;user-select:none;transition:.12s;position:relative}
+.sub:hover{border-color:var(--sel)}
+.sub.on{background:var(--sel);border-color:var(--sel);color:var(--card);font-weight:600}
+.sub.need{background:var(--amber-bg);border-color:var(--amber);border-style:dashed;color:var(--amber)}
+.verdict{margin-top:18px;border-radius:8px;padding:15px 18px;font-size:14.5px;line-height:1.65}
+.verdict.ok{background:rgba(var(--green-rgb),.08);border:1px solid rgba(var(--green-rgb),.3);color:var(--green-deep)}
+.verdict.bad{background:var(--amber-bg);border:1px solid var(--amber-line);color:var(--amber-deep)}
+.verdict .hd{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:8px}
+.verdict ul{margin:8px 0 0;padding-left:20px}
+.verdict li{margin-bottom:5px;font-size:14px}
+.verdict .m{font-size:1em}
+.presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.presets button{font-family:var(--sans);font-size:12.5px;padding:7px 12px;background:var(--paper);border:1px solid var(--rule);border-radius:6px;color:var(--ink2);cursor:pointer;transition:.13s}
+.presets button:hover{border-color:var(--sel);color:var(--sel);background:var(--sel-soft)}
+.presets button.act{border-color:var(--green);color:var(--green);background:rgba(var(--green-rgb),.06);font-weight:600}
+.hintline{font-size:13px;color:var(--ink2);margin-top:16px;line-height:1.6;border-top:1px solid var(--rule);padding-top:13px}
+
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14.5px}
+@media(max-width:900px){table{display:block;max-width:100%;overflow-x:auto}}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);font-weight:500}
+
+footer{grid-column:1/-1;border-top:1px solid var(--rule);padding-top:28px;margin-top:20px;font-size:13.5px;color:var(--ink3);line-height:1.7}
+footer a{color:var(--blue)}
+/* 공략 페이지는 본문이 링크 덩어리다. 규칙이 없으면 브라우저 기본 남색이 나와서
+   다크모드에서 거의 안 읽힌다. 반드시 토큰으로 고정한다. */
+main a{color:var(--blue);text-decoration:none;border-bottom:1px solid rgba(var(--blue-rgb),.4)}
+main a:hover{border-bottom-color:var(--blue);background:rgba(var(--blue-rgb),.09)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ── 테마 토글 ──────────────────────────── */
+/* 기본은 OS 설정(prefers-color-scheme)을 따른다. 이 버튼은 그걸 덮어쓴다. */
+.theme-btn{position:fixed;left:16px;bottom:16px;z-index:70;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 6px var(--shadow);transition:.13s}
+.theme-btn:hover{border-color:var(--sel);color:var(--sel)}
+@media(max-width:900px){.theme-btn{left:10px;bottom:10px;font-size:10.5px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.theme-btn{transition:none}}
+
+/* ── 언어 전환 ──────────────────────────── */
+/* 한 파일에 한국어와 영어를 나란히 두고 보이는 쪽만 남긴다.
+   도해·앵커·CSS·리더를 공유하므로 두 언어의 구조가 어긋날 수 없다.
+   lang 속성을 쓰는 건 스크린리더와 하이픈 처리도 같이 얻기 위해서다. */
+/* 언어 표시는 어떤 규칙보다 우선해야 한다. 목차나 도해 쪽 선택자가
+   더 구체적이어서 display를 되살리는 일이 실제로 있었다. */
+html[data-lang="ko"] [lang="en"]{display:none!important}
+html[data-lang="en"] [lang="ko"]{display:none!important}
+.lang-btn{position:fixed;left:16px;bottom:56px;z-index:70;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 6px var(--shadow);transition:.13s}
+.lang-btn:hover{border-color:var(--blue);color:var(--blue)}
+@media(max-width:900px){.lang-btn{left:10px;bottom:46px;font-size:10.5px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.lang-btn{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="eyebrow">EEE 554 · Probability and Random Processes · Michelusi</div>
+  <h1 class="title">Homework 1<br>Sets &amp; Probability Spaces</h1>
+  <p class="subtitle" lang="ko">문제를 풀려면 뭘 알아야 하는지, 첫 수를 어디에 두는지.</p>
+  <p class="subtitle" lang="en">What you need to know for each problem, and where to put your first move.</p>
+  <div class="meta" lang="ko">
+    <span class="chip hot">마감 8월 30일 (일) 자정</span>
+    <span class="chip">문제 8개 + Reflection</span>
+    <span class="chip">P1–3 Module 1 · P4–8 Module 2</span>
+  </div>
+  <div class="meta" lang="en">
+    <span class="chip hot">due midnight, Sunday August 30</span>
+    <span class="chip">8 problems + reflection</span>
+    <span class="chip">P1–3 Module 1 · P4–8 Module 2</span>
+  </div>
+  <a class="backlink" href="index.html" lang="ko">← 모듈 목록으로</a>
+  <a class="backlink" href="index.html" lang="en">← All modules</a>
+</header>
+
+<nav class="toc">
+  <div class="mini-head">
+    <a class="back" href="index.html" lang="ko">← 모듈 목록</a>
+    <a class="back" href="index.html" lang="en">← All modules</a>
+    <div class="mod">Homework 1</div>
+    <div class="name">Sets &amp; Probability Spaces</div>
+    <div class="rule"></div>
+  </div>
+  <div class="lab" lang="ko">문제</div>
+  <div class="lab" lang="en">Problems</div>
+  <a href="#p0"><span class="n">00</span><span lang="ko">먼저 읽을 것</span><span lang="en">Read first</span></a>
+  <a href="#p1"><span class="n">P1</span><span lang="ko">집합과 사건</span><span lang="en">Sets and events</span></a>
+  <a href="#p2"><span class="n">P2</span><span lang="ko">집합 항등식 증명</span><span lang="en">Set identities</span></a>
+  <a href="#p3"><span class="n">P3</span><span lang="ko">표본공간과 분할</span><span lang="en">Sample spaces, partitions</span></a>
+  <a href="#p4"><span class="n">P4</span><span>σ-algebra</span></a>
+  <a href="#p5"><span class="n">P5</span><span lang="ko">공리와 그 귀결</span><span lang="en">Axioms and consequences</span></a>
+  <a href="#p6"><span class="n">P6</span><span lang="ko">이산 확률 공간</span><span lang="en">A discrete space</span></a>
+  <a href="#p7"><span class="n">P7</span><span lang="ko">무한 공간과 연속성</span><span lang="en">Infinite space, continuity</span></a>
+  <a href="#p8"><span class="n">P8</span><span lang="ko">노트 없이 10분</span><span lang="en">10 minutes, no notes</span></a>
+  <a href="#p9"><span class="n">99</span><span lang="ko">복습 체크리스트</span><span lang="en">Review checklist</span></a>
+</nav>
+
+<main>
+
+<!-- ══ 00 ══ -->
+<section id="p0">
+  <div class="sec-head"><span class="sec-num">00</span><h2 lang="ko">먼저 읽을 것</h2><h2 lang="en">Read first</h2></div>
+  <p class="sec-sub" lang="ko">이 페이지가 뭐고, 뭘 안 하는지.</p>
+  <p class="sec-sub" lang="en">What this page is, and what it deliberately is not.</p>
+
+  <p lang="ko">이 페이지는 <strong>답이 아니라 진입점</strong>이야. 문제마다 "무슨 개념이 필요한가 → 노트 어디를 보면 되는가 → 첫 수를 어디에 두는가 → 뭘 빠뜨리기 쉬운가"를 적어놨어. 계산 결과는 안 적었어. 그건 직접 해야 손에 남거든.</p>
+  <p lang="en">This page is <strong>an entry point, not an answer key</strong>. For each problem it lays out which concept you need, where in the notes to find it, where to put your first move, and what people leave out. Final numbers are not here. Those only stick if you produce them yourself.</p>
+
+  <div class="callout" lang="ko">
+    <strong>과제 채점 방식을 먼저 알아두면 부담이 줄어.</strong> 문제지 첫 장에 이렇게 적혀 있어:
+    <em>"Homework is evaluated primarily based on honest effort and engagement rather than correctness. An incorrect solution that demonstrates a genuine attempt will not be penalized simply for being incorrect."</em><br><br>
+    즉 <strong>정답보다 시도와 추론 과정으로 평가해.</strong> 막히면 막힌 지점을 적어두는 것도 답안의 일부야. 그리고 <em>"You may use course materials and other learning resources"</em>라고 명시돼 있으니 이 노트를 보면서 푸는 건 허용된 방식이야. 딱 하나, Problem 8만 예외야.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Knowing how this is graded takes the pressure off.</strong> The first page of the assignment says:
+    <em>"Homework is evaluated primarily based on honest effort and engagement rather than correctness. An incorrect solution that demonstrates a genuine attempt will not be penalized simply for being incorrect."</em><br><br>
+    So <strong>you are assessed on the attempt and the reasoning, not the answer.</strong> If you get stuck, writing down exactly where you got stuck is itself part of the submission. It also states <em>"You may use course materials and other learning resources"</em>, so working through these notes is an allowed method. Problem 8 is the single exception.
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">먼저 확인</span>
+    <h4>Problem 8은 노트를 덮고 풀어야 한다</h4>
+    <p>문제지에 <em>"Try solving it without consulting your notes or previous solutions. Give yourself approximately 10 minutes."</em>라고 명시돼 있어. 이 문제의 목적은 "혼자 할 수 있는가"를 스스로 재보는 거야. 그래서 <strong>이 페이지의 P8 항목은 접어뒀어.</strong> 먼저 풀고, 그다음에 펼쳐서 확인해.</p>
+    <h4>제출물에 Reflection이 포함된다</h4>
+    <p>마지막 장에 5문항짜리 회고가 있어. 쉬웠던 것, 어려웠던 것, 아직 확신 없는 것, 고친 실수, 걸린 시간. <strong>문제만 풀고 이걸 빼먹으면 제출이 안 끝난 거야.</strong> 풀면서 메모해두면 나중에 몰아 쓰는 것보다 훨씬 정확해.</p>
+  </div>
+</section>
+
+<!-- ══ P1 ══ -->
+<section id="p1">
+  <div class="sec-head"><span class="sec-num">P1</span><h2 lang="ko">집합과 사건</h2><h2 lang="en">Sets and events</h2></div>
+  <p class="sec-sub" lang="ko"><span class="m"><i>Ω</i> = {1,…,8}</span>에서 여섯 개 사건을 명시적으로 구하기. (a)–(f)</p>
+  <p class="sec-sub" lang="en">Six events written out explicitly on <span class="m"><i>Ω</i> = {1,…,8}</span>. Parts (a)–(f).</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>∩ ∪ ᶜ 의 정의</td><td><a href="L01-set-theory.html#s4">Module 1 · 04 집합 연산</a></td></tr>
+    <tr><td>차집합이 <span class="m"><i>A</i> ∩ <i>B</i><sup>c</sup></span>라는 것</td><td>같은 섹션의 네 번째 도해</td></tr>
+    <tr><td><strong>같은 설정의 풀이</strong></td><td><a href="L01-set-theory.html#s4">Module 1 · 예제 4.1</a>: Ω, A, B, C가 문제와 동일</td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>the definitions of ∩ ∪ ᶜ</td><td><a href="L01-set-theory.html#s4">Module 1 · 04 Set operations</a></td></tr>
+    <tr><td>that set difference is <span class="m"><i>A</i> ∩ <i>B</i><sup>c</sup></span></td><td>the fourth diagram in that section</td></tr>
+    <tr><td><strong>a worked version of this exact setup</strong></td><td><a href="L01-set-theory.html#s4">Module 1 · Example 4.1</a>, where Ω, A, B, C match the problem</td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p><strong>8열짜리 소속 표를 그린다.</strong> 가로에 원소 1–8, 세로에 A, B, C를 놓고 O/· 로 채워. 그러고 나면 여섯 문항이 전부 <em>열을 읽는 작업</em>으로 바뀌어서 실수가 거의 안 나. 예제 4.1의 풀이가 이 표부터 시작해.</p>
+    <p style="margin-bottom:0">ECE 385 배경이 있으면 이건 <strong>진리표</strong>고, 각 행은 8비트 마스크야. <code>A = 11110000</code> 식으로 두면 ∪는 OR, ∩는 AND, ᶜ는 NOT이 돼.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p><strong>Draw an eight-column membership table.</strong> Elements 1–8 across the top, A, B, C down the side, filled with O and ·. After that all six parts become <em>reading off a column</em>, and slips almost disappear. The solution to Example 4.1 starts with exactly this table.</p>
+    <p style="margin-bottom:0">With an ECE 385 background: this is a <strong>truth table</strong> and each row is an 8-bit mask. Write <code>A = 11110000</code> and ∪ becomes OR, ∩ becomes AND, ᶜ becomes NOT.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>Ω가 8까지다</h4>
+    <p>주사위를 하도 봐서 6에서 멈추는 실수가 나와. <span class="m"><i>A</i><sup>c</sup></span>와 <span class="m">(<i>A</i>∪<i>B</i>)<sup>c</sup></span>가 그 순간 전부 틀려. <strong>여집합을 쓰기 전에 Ω를 소리 내어 확인해.</strong> 자세한 건 <a href="L01-set-theory.html#s2">Module 1 · 02번 함정</a>에 있어.</p>
+    <h4>검산은 De Morgan으로</h4>
+    <p>(e) <span class="m">(<i>A</i>∪<i>B</i>)<sup>c</sup></span>를 구한 뒤 <span class="m"><i>A</i><sup>c</sup> ∩ <i>B</i><sup>c</sup></span>로 다시 계산해서 맞춰봐. 두 방법이 같은 답을 내면 거의 확실해.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>Ω goes to 8</h4>
+    <p>Die reflex makes people stop at 6, and the moment that happens <span class="m"><i>A</i><sup>c</sup></span> and <span class="m">(<i>A</i>∪<i>B</i>)<sup>c</sup></span> are both wrong. <strong>Say Ω out loud before taking any complement.</strong> The full version is in <a href="L01-set-theory.html#s2">Module 1 · the §02 traps</a>.</p>
+    <h4>Check with De Morgan</h4>
+    <p>After computing (e) <span class="m">(<i>A</i>∪<i>B</i>)<sup>c</sup></span>, recompute it as <span class="m"><i>A</i><sup>c</sup> ∩ <i>B</i><sup>c</sup></span>. Two routes agreeing is close to proof.</p>
+  </div>
+</section>
+
+<!-- ══ P2 ══ -->
+<section id="p2">
+  <div class="sec-head"><span class="sec-num">P2</span><h2 lang="ko">집합 항등식 증명</h2><h2 lang="en">Proving set identities</h2></div>
+  <p class="sec-sub" lang="ko">De Morgan · 분배법칙 · <span class="m"><i>A</i>\<i>B</i> = <i>A</i>∩<i>B</i><sup>c</sup></span>. 원소 단위 논증 지정.</p>
+  <p class="sec-sub" lang="en">De Morgan, the distributive law, and <span class="m"><i>A</i>\<i>B</i> = <i>A</i>∩<i>B</i><sup>c</sup></span>, with an element-wise argument required.</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>세 항등식의 내용</td><td><a href="L01-set-theory.html#s5">Module 1 · 05 집합 대수</a> 표</td></tr>
+    <tr><td><strong>증명 템플릿</strong></td><td><a href="L01-set-theory.html#s5">같은 섹션 함정 마지막 항목</a>: 문장 골격이 그대로 적혀 있음</td></tr>
+    <tr><td>그림으로 먼저 확인하기</td><td>같은 섹션의 두 도해 (분배법칙, De Morgan)</td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>the three identities themselves</td><td>the table in <a href="L01-set-theory.html#s5">Module 1 · 05 Algebra of sets</a></td></tr>
+    <tr><td><strong>a proof template</strong></td><td><a href="L01-set-theory.html#s5">the last trap in that section</a>, which spells out the sentence skeleton</td></tr>
+    <tr><td>checking it visually first</td><td>the two diagrams in that section</td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p><span class="m"><i>x</i> ∈ <i>Ω</i></span>를 하나 잡고 <span class="m"><i>x</i> ∈ LHS ⟺ <i>x</i> ∈ RHS</span>를 보인다. 한 방향씩 쓰거나, 모든 단계가 동치면 한 줄기로 쓰고 "각 단계가 ⟺"라고 밝혀도 돼.</p>
+    <p style="margin-bottom:0">순서 추천: <strong>(c) → (a) → (b)</strong>. (c)가 제일 짧아서 형식에 손이 익어. (b) 분배법칙이 조각이 제일 많아서 마지막이 편해.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p>Take an <span class="m"><i>x</i> ∈ <i>Ω</i></span> and show <span class="m"><i>x</i> ∈ LHS ⟺ <i>x</i> ∈ RHS</span>. Either do one direction at a time, or run a single chain and state that every step is an equivalence.</p>
+    <p style="margin-bottom:0">Suggested order: <strong>(c) → (a) → (b)</strong>. Part (c) is shortest, so it gets your hand used to the format, and (b) has the most pieces so it is easier last.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>벤 다이어그램은 증명이 아니다</h4>
+    <p>문제지에 <em>"use an element-wise argument"</em>라고 <strong>명시</strong>돼 있어. 그림만 그려서 내면 요구를 안 지킨 거야. 그림은 검산에 쓰고, 답안은 원소를 잡고 시작해.</p>
+    <h4>⟸ 방향을 빼먹는 것</h4>
+    <p>집합이 같다는 건 양쪽 포함을 다 보여야 해. 한 방향만 쓰면 <span class="m">⊆</span>만 증명한 거야. 각 단계가 동치라면 그렇게 <em>적어야</em> 한 방향으로 끝낼 수 있어.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>A Venn diagram is not a proof</h4>
+    <p>The assignment <strong>explicitly</strong> says <em>"use an element-wise argument"</em>. Handing in a drawing does not meet the requirement. Use pictures to check, then write the proof starting from an element.</p>
+    <h4>Dropping the ⟸ direction</h4>
+    <p>Set equality needs both inclusions. One direction alone proves only <span class="m">⊆</span>. If every step really is an equivalence, you have to <em>say so</em> to be allowed to finish in one direction.</p>
+  </div>
+</section>
+
+<!-- ══ P3 ══ -->
+<section id="p3">
+  <div class="sec-head"><span class="sec-num">P3</span><h2 lang="ko">표본공간과 분할</h2><h2 lang="en">Sample spaces and partitions</h2></div>
+  <p class="sec-sub" lang="ko">패킷 2회 전송. 표본공간 구성 → 사건 두 개 → 분할 증명 → 서술형.</p>
+  <p class="sec-sub" lang="en">Two packet transmissions: build Ω, write two events, prove a partition, then answer in prose.</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>분할의 두 조건</td><td><a href="L01-set-theory.html#s9">Module 1 · 09 Partition</a></td></tr>
+    <tr><td><strong>같은 문제의 풀이</strong></td><td><a href="L01-set-theory.html#s9">같은 섹션 예제 9.1</a>: 문항 구성까지 동일</td></tr>
+    <tr><td>SF와 FS를 구별하는 이유</td><td><a href="L01-set-theory.html#s3">Module 1 · 03번 함정</a> (순서쌍)</td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>the two conditions for a partition</td><td><a href="L01-set-theory.html#s9">Module 1 · 09 Partition</a></td></tr>
+    <tr><td><strong>the same problem worked out</strong></td><td><a href="L01-set-theory.html#s9">Example 9.1 in that section</a>, matching part for part</td></tr>
+    <tr><td>why SF and FS must stay distinct</td><td><a href="L01-set-theory.html#s3">Module 1 · the §03 traps</a> on ordered pairs</td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p><span class="m"><i>Ω</i> = {SS, SF, FS, FF}</span>를 먼저 적는다. 원소 4개. 나머지 문항은 전부 이 네 개 중에서 고르는 작업이야.</p>
+    <p style="margin-bottom:0">(c) "적어도 한 번"은 여집합으로 가는 게 빨라. <span class="m"><i>B</i> = {FF}<sup>c</sup></span>. 원소 수가 적어서 직접 세도 되지만, 이 습관은 나중에 원소가 많아지면 크게 갚아줘.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p>Write <span class="m"><i>Ω</i> = {SS, SF, FS, FF}</span> first. Four outcomes. Every remaining part is just choosing among those four.</p>
+    <p style="margin-bottom:0">For (c), "at least one" is faster through the complement: <span class="m"><i>B</i> = {FF}<sup>c</sup></span>. With four outcomes you could count directly, but the habit pays off heavily once the counts grow.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>(d)에서 조건 ①만 확인하고 끝내는 것</h4>
+    <p>분할은 <strong>서로소</strong>와 <strong>덮음</strong> 둘 다야. 그리고 서로소는 <em>모든 쌍</em>을 봐야 해. 조각이 3개면 확인할 쌍이 3개야. 왜 전체 교집합만 보면 안 되는지는 <a href="L01-set-theory.html#s9">Module 1 · 09번 함정</a>에 반례로 나와 있어.</p>
+    <h4>(e)는 계산이 아니라 서술이다</h4>
+    <p><em>"Explain in words"</em>야. 채점자가 보고 싶은 건 "겹치지 않으니 두 번 세지 않고, 다 덮으니 빠뜨리지 않는다"는 두 문장이야. 이게 Module 3의 전확률 법칙으로 이어진다는 걸 덧붙이면 더 좋고.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>Checking only condition ① in part (d)</h4>
+    <p>A partition needs <strong>disjointness</strong> and <strong>covering</strong>, both. And disjointness means <em>every pair</em>: three pieces gives three pairs. Why the total intersection is not the right test is shown with a counterexample in <a href="L01-set-theory.html#s9">Module 1 · the §09 traps</a>.</p>
+    <h4>Part (e) is prose, not arithmetic</h4>
+    <p>It says <em>"Explain in words"</em>. What is wanted is two sentences: nothing overlaps so nothing is counted twice, and everything is covered so nothing is missed. Mentioning that this becomes the law of total probability in Module 3 is a bonus.</p>
+  </div>
+</section>
+
+<!-- ══ P4 ══ -->
+<section id="p4">
+  <div class="sec-head"><span class="sec-num">P4</span><h2>σ-algebra</h2></div>
+  <p class="sec-sub" lang="ko">검증 (a) · 반례 찾기 (b) · 생성 (c) · 멱집합 (d)</p>
+  <p class="sec-sub" lang="en">Verify (a), find the failure (b), generate (c), count the power set (d).</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>세 조건의 정의</td><td><a href="L02-probability-space.html#s3">Module 2 · 03 σ-algebra</a></td></tr>
+    <tr><td><strong>클릭해서 직접 검사</strong></td><td><a href="L02-probability-space.html#s4">Module 2 · 04 직접 검증해보기</a>: (a)와 (b)가 프리셋에 들어 있음</td></tr>
+    <tr><td>(c) 생성된 σ-algebra</td><td><a href="L02-probability-space.html#s5">Module 2 · 05 생성된 σ-algebra</a> 예제 5.2</td></tr>
+    <tr><td>(d) 멱집합 개수</td><td><a href="L01-set-theory.html#s7">Module 1 · 07 Power Set</a></td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>the three defining conditions</td><td><a href="L02-probability-space.html#s3">Module 2 · 03 σ-algebra</a></td></tr>
+    <tr><td><strong>a tool to check it by clicking</strong></td><td><a href="L02-probability-space.html#s4">Module 2 · 04 Check it yourself</a>, where (a) and (b) are both presets</td></tr>
+    <tr><td>(c) generated σ-algebra</td><td>Example 5.2 in <a href="L02-probability-space.html#s5">Module 2 · 05</a></td></tr>
+    <tr><td>(d) counting the power set</td><td><a href="L01-set-theory.html#s7">Module 1 · 07 Power Set</a></td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p><a href="L02-probability-space.html#s4">04번 도구</a>를 열고 프리셋 <strong>"예제 4.1"</strong>과 <strong>"HW1 4(b)의 𝒢"</strong>를 눌러봐. (a)와 (b)가 그대로 들어 있어서, 어떤 집합이 왜 빠졌는지 화면에 뜬 걸 보고 나면 손으로 쓰는 건 옮겨 적는 일이 돼.</p>
+    <p style="margin-bottom:0">(c)는 <strong>σ(·) 로 닫기</strong> 버튼으로 결과를 미리 확인할 수 있어. 다만 <em>왜</em> 그 집합들이 필요한지는 직접 써야 해.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p>Open <a href="L02-probability-space.html#s4">the §04 tool</a> and press the presets <strong>"Example 4.1"</strong> and <strong>"𝒢 from HW1 4(b)"</strong>. Parts (a) and (b) are both loaded there, and once you have seen on screen which set is missing and why, writing it out is transcription.</p>
+    <p style="margin-bottom:0">For (c) the <strong>close under σ(·)</strong> button shows you the answer in advance. You still have to write <em>why</em> each set is forced in.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>(a)에서 세 조건을 다 훑으라고 명시돼 있다</h4>
+    <p>문제지가 <em>∅ ∈ ℱ · 여집합 닫힘 · 가산 합집합 닫힘</em> 세 개를 항목으로 나열해뒀어. 하나만 확인하고 "σ-algebra다"라고 쓰면 요구를 안 지킨 거야.</p>
+    <h4>(b)는 반례를 구체적으로 써야 한다</h4>
+    <p>"닫혀 있지 않다"로 끝내면 부족해. <span class="m">{1} ∪ {2} = {1,2}</span>인데 <span class="m">{1,2} ∉ 𝒢</span>라고 <strong>계산을 보여야</strong> 완결돼.</p>
+    <h4>(c)의 "smallest"를 빼먹는 것</h4>
+    <p><span class="m">2<sup><i>Ω</i></sup></span>도 <span class="m"><i>A</i></span>를 포함해. 필요 최소한만 넣어야 답이 하나로 정해져.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>Part (a) explicitly asks for all three conditions</h4>
+    <p>The assignment itemises them: <em>∅ ∈ ℱ, closed under complements, closed under countable unions</em>. Checking one and declaring it a σ-algebra does not meet the requirement.</p>
+    <h4>Part (b) needs a concrete counterexample</h4>
+    <p>"It is not closed" is incomplete. You have to <strong>show the computation</strong>: <span class="m">{1} ∪ {2} = {1,2}</span> and <span class="m">{1,2} ∉ 𝒢</span>.</p>
+    <h4>Forgetting "smallest" in part (c)</h4>
+    <p><span class="m">2<sup><i>Ω</i></sup></span> also contains <span class="m"><i>A</i></span>. Only including what is forced pins the answer down to one.</p>
+  </div>
+</section>
+
+<!-- ══ P5 ══ -->
+<section id="p5">
+  <div class="sec-head"><span class="sec-num">P5</span><h2 lang="ko">공리와 그 귀결</h2><h2 lang="en">Axioms and their consequences</h2></div>
+  <p class="sec-sub" lang="ko">네 가지 성질을 공리에서 유도. 이 과제에서 제일 무거운 문제.</p>
+  <p class="sec-sub" lang="en">Derive four properties from the axioms. The heaviest problem on this assignment.</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>Kolmogorov 세 공리</td><td><a href="L02-probability-space.html#s6">Module 2 · 06 Kolmogorov의 공리</a></td></tr>
+    <tr><td><strong>네 증명 전부</strong></td><td><a href="L02-probability-space.html#s7">Module 2 · 07 예제 7.1</a>: (a)–(d)가 문제와 1:1</td></tr>
+    <tr><td>분해에 쓰는 항등식</td><td><a href="L01-set-theory.html#s5">Module 1 · 05 예제 5.1(b)</a></td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>Kolmogorov's three axioms</td><td><a href="L02-probability-space.html#s6">Module 2 · 06 Kolmogorov's axioms</a></td></tr>
+    <tr><td><strong>all four proofs</strong></td><td><a href="L02-probability-space.html#s7">Module 2 · Example 7.1</a>, matching (a)–(d) one to one</td></tr>
+    <tr><td>the identity used in the decomposition</td><td><a href="L01-set-theory.html#s5">Module 1 · Example 5.1(b)</a></td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수: 네 문항 공통</span>
+    <p><strong>"서로소 조각으로 쪼개고 공리 ③을 적용한다."</strong> 이 한 문장이 네 증명 전부야. 공리 ③은 서로소일 때만 쓸 수 있으니, 창의성은 전부 <em>어떻게 쪼갤까</em>에 들어가.</p>
+    <ul style="margin-bottom:0">
+      <li>(a) <span class="m"><i>A<sub>i</sub></i></span>를 전부 <span class="m">∅</span>으로 두고 ③</li>
+      <li>(b) <span class="m"><i>Ω</i> = <i>A</i> ∪ <i>A</i><sup>c</sup></span>, Module 1의 <span class="m">{<i>A</i>, <i>A</i><sup>c</sup>}</span> 분할</li>
+      <li>(c) <span class="m"><i>B</i> = <i>A</i> ∪ (<i>B</i>\<i>A</i>)</span></li>
+      <li>(d) <span class="m"><i>A</i>∪<i>B</i></span>를 <strong>세 조각</strong>으로</li>
+    </ul>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move: the same for all four</span>
+    <p><strong>"Split into disjoint pieces, then apply axiom ③."</strong> That one sentence is all four proofs. Axiom ③ only works on disjoint sets, so every bit of creativity goes into <em>how you split</em>.</p>
+    <ul style="margin-bottom:0">
+      <li>(a) set every <span class="m"><i>A<sub>i</sub></i></span> to <span class="m">∅</span> and apply ③</li>
+      <li>(b) <span class="m"><i>Ω</i> = <i>A</i> ∪ <i>A</i><sup>c</sup></span>, the <span class="m">{<i>A</i>, <i>A</i><sup>c</sup>}</span> partition from Module 1</li>
+      <li>(c) <span class="m"><i>B</i> = <i>A</i> ∪ (<i>B</i>\<i>A</i>)</span></li>
+      <li>(d) break <span class="m"><i>A</i>∪<i>B</i></span> into <strong>three pieces</strong></li>
+    </ul>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">채점 포인트</span>
+    <h4>공식을 인용하면 점수가 안 나온다</h4>
+    <p>문제지에 <em>"do not simply quote the formulas. Explain how they follow from the probability axioms and appropriate set decompositions"</em>라고 적혀 있어. <strong>"적절한 집합 분해"를 명시적으로 쓰는 게 채점 대상이야.</strong> 각 줄에서 어느 공리를 썼는지 괄호로 달아두면 확실해.</p>
+    <h4>(a)에서 "0이니까 0"이라고 쓰는 것</h4>
+    <p><span class="m"><i>P</i>(∅) = <i>p</i></span>로 두고 <span class="m"><i>p</i> = <i>p</i> + <i>p</i> + ⋯</span>가 되니 <span class="m"><i>p</i> &gt; 0</span>이면 발산한다는 <strong>논증</strong>이 있어야 해. 결론만 쓰면 유도가 아니야.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Where the marks are</span>
+    <h4>Quoting the formulas earns nothing</h4>
+    <p>The assignment says <em>"do not simply quote the formulas. Explain how they follow from the probability axioms and appropriate set decompositions"</em>. <strong>Naming the decomposition explicitly is the thing being marked.</strong> Tagging each line with the axiom you used makes it unambiguous.</p>
+    <h4>Writing "it is 0 because it is 0" in part (a)</h4>
+    <p>You need the <strong>argument</strong>: set <span class="m"><i>P</i>(∅) = <i>p</i></span>, note that ③ forces <span class="m"><i>p</i> = <i>p</i> + <i>p</i> + ⋯</span>, and that any <span class="m"><i>p</i> &gt; 0</span> diverges. A bare conclusion is not a derivation.</p>
+  </div>
+</section>
+
+<!-- ══ P6 ══ -->
+<section id="p6">
+  <div class="sec-head"><span class="sec-num">P6</span><h2 lang="ko">이산 확률 공간</h2><h2 lang="en">A discrete probability space</h2></div>
+  <p class="sec-sub" lang="ko"><span class="m"><i>Ω</i> = {1,…,5}</span>, <span class="m"><i>P</i>({<i>k</i>}) = <i>ck</i></span>. 순수 계산 문제.</p>
+  <p class="sec-sub" lang="en"><span class="m"><i>Ω</i> = {1,…,5}</span> with <span class="m"><i>P</i>({<i>k</i>}) = <i>ck</i></span>. Pure computation.</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>정규화로 상수 구하기</td><td><a href="L02-probability-space.html#s7">Module 2 · 07 예제 7.2</a>: <strong>절차가 동일, 숫자만 다름</strong></td></tr>
+    <tr><td>포함배제</td><td>같은 섹션 상단 표</td></tr>
+    <tr><td>여집합 규칙</td><td>같은 표의 두 번째 줄</td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>finding the constant by normalisation</td><td><a href="L02-probability-space.html#s7">Module 2 · Example 7.2</a>: <strong>same procedure, different numbers</strong></td></tr>
+    <tr><td>inclusion-exclusion</td><td>the table at the top of that section</td></tr>
+    <tr><td>the complement rule</td><td>the second row of that table</td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p>공리 ②가 <span class="m"><i>P</i>(<i>Ω</i>) = 1</span>이니 낱개를 전부 더해서 <span class="m"><i>c</i></span>를 푼다. <span class="m"><i>c</i>(1+2+3+4+5) = 1</span>. 여기서 <span class="m"><i>c</i></span>가 나오면 나머지는 전부 덧셈이야.</p>
+    <p style="margin-bottom:0"><strong>분수를 끝까지 분모 통일해서 들고 가.</strong> 소수로 바꾸면 (d)의 검산에서 반올림 때문에 안 맞아 보일 수 있어.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p>Axiom ② gives <span class="m"><i>P</i>(<i>Ω</i>) = 1</span>, so sum the singletons and solve for <span class="m"><i>c</i></span>: <span class="m"><i>c</i>(1+2+3+4+5) = 1</span>. Once you have <span class="m"><i>c</i></span>, everything else is addition.</p>
+    <p style="margin-bottom:0"><strong>Carry fractions over a common denominator all the way through.</strong> Switching to decimals can make the check in (d) look wrong through rounding alone.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>(e)의 "두 가지 방법"이 뭔지</h4>
+    <p>하나는 <span class="m"><i>A</i><sup>c</sup></span>의 원소를 직접 더하는 것, 다른 하나는 <span class="m">1 − <i>P</i>(<i>A</i>)</span>야. <strong>둘 다 계산해서 나란히 보여야</strong> 문제가 요구하는 걸 한 거야.</p>
+    <h4>노트 예제와 숫자가 다르다</h4>
+    <p>예제 7.2는 <span class="m"><i>Ω</i> = {1,…,4}</span>에 <span class="m"><i>ck</i><sup>2</sup></span>이고 과제는 <span class="m">{1,…,5}</span>에 <span class="m"><i>ck</i></span>야. <strong>일부러 다르게 뒀어.</strong> 절차만 가져가고 숫자는 직접 계산해.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>What the "two different ways" in (e) are</h4>
+    <p>One is summing the elements of <span class="m"><i>A</i><sup>c</sup></span> directly, the other is <span class="m">1 − <i>P</i>(<i>A</i>)</span>. <strong>Both have to be computed and shown side by side</strong> for the part to be answered.</p>
+    <h4>The numbers differ from the note's example</h4>
+    <p>Example 7.2 uses <span class="m"><i>Ω</i> = {1,…,4}</span> with <span class="m"><i>ck</i><sup>2</sup></span>; the assignment uses <span class="m">{1,…,5}</span> with <span class="m"><i>ck</i></span>. <strong>That mismatch is deliberate.</strong> Take the procedure and run the arithmetic yourself.</p>
+  </div>
+</section>
+
+<!-- ══ P7 ══ -->
+<section id="p7">
+  <div class="sec-head"><span class="sec-num">P7</span><h2 lang="ko">무한 표본공간과 연속성</h2><h2 lang="en">Infinite sample spaces and continuity</h2></div>
+  <p class="sec-sub" lang="ko"><span class="m"><i>Ω</i> = {1,2,3,…}</span>, <span class="m"><i>P</i>({<i>n</i>}) = 1/2<sup><i>n</i></sup></span>. Module 1과 2가 합쳐지는 문제.</p>
+  <p class="sec-sub" lang="en"><span class="m"><i>Ω</i> = {1,2,3,…}</span> with <span class="m"><i>P</i>({<i>n</i>}) = 1/2<sup><i>n</i></sup></span>. Where Modules 1 and 2 meet.</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>연속성 정리</td><td><a href="L02-probability-space.html#s12">Module 2 · 12 확률의 연속성</a></td></tr>
+    <tr><td><strong>같은 유형의 풀이</strong></td><td>같은 섹션 예제 12.1: <strong>숫자만 다른 같은 유형</strong>. 노트는 문항이 5개라 과제의 (e)와 (f)가 노트 (e) 하나에 합쳐져 있어</td></tr>
+    <tr><td>(e)의 집합 계산</td><td><a href="L01-set-theory.html#s8">Module 1 · 08 예제 8.1(3)</a>: <span class="m">⋂{<i>n</i>,<i>n</i>+1,…} = ∅</span></td></tr>
+    <tr><td>가산 가법성이 필요한 이유</td><td><a href="L02-probability-space.html#s6">Module 2 · 06번 함정</a></td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>the continuity theorem</td><td><a href="L02-probability-space.html#s12">Module 2 · 12 Continuity of probability</a></td></tr>
+    <tr><td><strong>the same type worked out</strong></td><td>Example 12.1 in that section: <strong>the same type with different numbers</strong>. It has five parts, so its (e) covers both (e) and (f) here</td></tr>
+    <tr><td>the set computation in (e)</td><td><a href="L01-set-theory.html#s8">Module 1 · Example 8.1(3)</a>, <span class="m">⋂{<i>n</i>,<i>n</i>+1,…} = ∅</span></td></tr>
+    <tr><td>why countable additivity is needed</td><td><a href="L02-probability-space.html#s6">Module 2 · the §06 traps</a></td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p>등비급수 공식 <span class="m">∑<sub><i>n</i>≥1</sub> <i>r</i><sup><i>n</i></sup> = <i>r</i>/(1−<i>r</i>)</span>를 위에 적어두고 시작해. (a) (c) (d) 세 문항이 전부 이 공식의 변형이야. (c)는 <span class="m"><i>r</i> = 1/4</span>, (d)는 꼬리 합.</p>
+    <p style="margin-bottom:0">(d)의 검산: <span class="m"><i>A</i><sub>1</sub> = <i>Ω</i></span>이니 <span class="m"><i>P</i>(<i>A</i><sub>1</sub>) = 1</span>이 나와야 해. 안 나오면 지수를 틀린 거야.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p>Write the geometric series <span class="m">∑<sub><i>n</i>≥1</sub> <i>r</i><sup><i>n</i></sup> = <i>r</i>/(1−<i>r</i>)</span> at the top of the page before anything else. Parts (a), (c) and (d) are all variations on it: (c) uses <span class="m"><i>r</i> = 1/4</span>, (d) is a tail sum.</p>
+    <p style="margin-bottom:0">Check (d) against <span class="m"><i>A</i><sub>1</sub> = <i>Ω</i></span>, which must give <span class="m"><i>P</i>(<i>A</i><sub>1</sub>) = 1</span>. If it does not, an exponent is off.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>(f)가 이 문제의 목적이다</h4>
+    <p>(a)–(e)는 준비 운동이고, <strong>(f)에서 <span class="m">lim <i>P</i>(<i>A<sub>n</sub></i>)</span>와 <span class="m"><i>P</i>(⋂<i>A<sub>n</sub></i>)</span>가 같다는 걸 확인하는 게 핵심</strong>이야. 두 값을 나란히 쓰고 "따라서 연속성 정리와 일치한다"라고 맺어야 문제가 끝나.</p>
+    <h4>(e)에서 "0으로 수렴하니까 ∅"이라고 쓰는 것</h4>
+    <p>방향이 반대야. <span class="m">⋂<i>A<sub>n</sub></i> = ∅</span>은 <strong>집합 계산으로</strong> 보여야 해. 어떤 <span class="m"><i>k</i></span>를 잡아도 <span class="m"><i>k</i> ∉ <i>A</i><sub><i>k</i>+1</sub></span>이라는 논증이야. 확률은 그다음이야.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>Part (f) is the point of the problem</h4>
+    <p>Parts (a) through (e) are the warm-up. <strong>The core is confirming in (f) that <span class="m">lim <i>P</i>(<i>A<sub>n</sub></i>)</span> and <span class="m"><i>P</i>(⋂<i>A<sub>n</sub></i>)</span> agree.</strong> Write the two values side by side and close with "consistent with continuity of probability".</p>
+    <h4>Arguing in (e) that it is ∅ because the limit is 0</h4>
+    <p>That runs backwards. <span class="m">⋂<i>A<sub>n</sub></i> = ∅</span> has to be shown <strong>as a set computation</strong>: whatever <span class="m"><i>k</i></span> you pick, <span class="m"><i>k</i> ∉ <i>A</i><sub><i>k</i>+1</sub></span>. The probability comes afterwards.</p>
+  </div>
+</section>
+
+<!-- ══ P8 ══ -->
+<section id="p8">
+  <div class="sec-head"><span class="sec-num">P8</span><h2 lang="ko">노트 없이 10분</h2><h2 lang="en">Ten minutes, no notes</h2></div>
+  <p class="sec-sub" lang="ko">시험 조건에서 혼자 할 수 있는지 스스로 재보는 문제.</p>
+  <p class="sec-sub" lang="en">A self-check on whether you can do this alone under exam conditions.</p>
+
+  <div class="trap" lang="ko">
+    <span class="tag">이 문제만은 먼저 풀어라</span>
+    <p>문제지에 이렇게 적혀 있어: <em>"The purpose of this exercise is to assess whether you can perform basic operations independently under exam-like conditions. Try solving it without consulting your notes or previous solutions. Give yourself approximately 10 minutes."</em></p>
+    <p style="margin-bottom:0"><strong>이 페이지의 다른 항목과 달리, 아래 안내는 접어뒀어.</strong> 먼저 노트를 덮고 10분 재고 풀어. 그러고 나서 펼쳐. 미리 보면 이 문제가 재려던 걸 못 재게 돼.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Attempt this one before reading anything</span>
+    <p>The assignment states: <em>"The purpose of this exercise is to assess whether you can perform basic operations independently under exam-like conditions. Try solving it without consulting your notes or previous solutions. Give yourself approximately 10 minutes."</em></p>
+    <p style="margin-bottom:0"><strong>Unlike everything else on this page, the guidance below is collapsed.</strong> Close the notes, put ten minutes on a timer, and go. Open it afterwards. Reading first destroys the only thing this problem measures.</p>
+  </div>
+
+  <div class="ex">
+    <span class="tag" lang="ko">먼저 푼 다음에 펼칠 것</span>
+    <span class="tag" lang="en">Open only after attempting</span>
+    <details>
+      <summary lang="ko">풀고 나서 확인하기</summary>
+      <summary lang="en">Check after attempting</summary>
+      <div class="body">
+        <p lang="ko">네 문항이 각각 다른 것을 재고 있어. 어디서 막혔는지가 곧 어디를 다시 봐야 하는지야.</p>
+        <p lang="en">The four parts each measure a different thing. Wherever you stalled is exactly what to revisit.</p>
+        <table lang="ko">
+          <tr><th>문항</th><th>재는 것</th><th>막혔다면</th></tr>
+          <tr><td>(a)</td><td>정규화 공리</td><td><a href="L02-probability-space.html#s6">Module 2 · 06</a></td></tr>
+          <tr><td>(b)</td><td>포함배제 (겹치는 사건)</td><td><a href="L02-probability-space.html#s7">Module 2 · 07</a></td></tr>
+          <tr><td>(c)</td><td>생성된 σ-algebra</td><td><a href="L02-probability-space.html#s5">Module 2 · 05</a></td></tr>
+          <tr><td>(d)</td><td>공리 세 줄을 외우고 있는가</td><td><a href="L02-probability-space.html#s6">Module 2 · 06</a></td></tr>
+        </table>
+        <table lang="en">
+          <tr><th>part</th><th>what it measures</th><th>if you stalled</th></tr>
+          <tr><td>(a)</td><td>the normalization axiom</td><td><a href="L02-probability-space.html#s6">Module 2 · 06</a></td></tr>
+          <tr><td>(b)</td><td>inclusion-exclusion on overlapping events</td><td><a href="L02-probability-space.html#s7">Module 2 · 07</a></td></tr>
+          <tr><td>(c)</td><td>generated σ-algebra</td><td><a href="L02-probability-space.html#s5">Module 2 · 05</a></td></tr>
+          <tr><td>(d)</td><td>whether the three axioms are in your head</td><td><a href="L02-probability-space.html#s6">Module 2 · 06</a></td></tr>
+        </table>
+        <p lang="ko"><strong>(b)에서 그냥 더했다면</strong> 그게 이 과제에서 제일 흔한 실수야. <span class="m"><i>A</i></span>와 <span class="m"><i>B</i></span>가 겹치는지 먼저 봐. <strong>(d)를 못 썼다면</strong> 그건 지식이 아니라 암기 문제라 30초면 메워져.</p>
+        <p lang="en"><strong>If you simply added in (b)</strong>, that is the single most common error on this assignment. Check whether <span class="m"><i>A</i></span> and <span class="m"><i>B</i></span> overlap first. <strong>If (d) would not come out</strong>, that is recall rather than understanding and takes thirty seconds to fix.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ══ 99 ══ -->
+<section id="p9">
+  <div class="sec-head"><span class="sec-num">99</span><h2 lang="ko">복습 체크리스트와 회고</h2><h2 lang="en">Review checklist and reflection</h2></div>
+  <p class="sec-sub" lang="ko">문제지 첫 장의 목록. 다 풀고 나서 스스로 점검할 것.</p>
+  <p class="sec-sub" lang="en">The list from the first page of the assignment. Use it as a self-check when you are done.</p>
+
+  <div class="callout" lang="ko">
+    <strong>과제를 마치면 이 12가지가 편해야 한다</strong> (문제지 <em>Topics to Review</em>):<br><br>
+    sample space와 event · 합집합, 교집합, 여집합, 차집합 · 집합 항등식 · partition ·
+    가산과 비가산 · 멱집합 · σ-algebra · 확률 공리 · 공리에서 유도되는 성질 ·
+    이산 확률 공간 · 가산 가법성 · 확률의 연속성<br><br>
+    막히는 항목이 있으면 위 문제별 표에서 해당 링크를 다시 열어봐. 12개 전부 이 노트 안에 있어.
+  </div>
+  <div class="callout" lang="en">
+    <strong>By the end you should be comfortable with these twelve</strong> (the assignment's <em>Topics to Review</em>):<br><br>
+    sample spaces and events · unions, intersections, complements, set differences · set identities · partitions ·
+    countable and uncountable sets · power sets · σ-algebras · the probability axioms · properties derived from them ·
+    discrete probability spaces · countable additivity · continuity of probability<br><br>
+    If any of them feels shaky, reopen the matching link in the per-problem tables above. All twelve are covered in these notes.
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">Reflection: 제출물의 일부</span>
+    <p>마지막 장에 회고 5문항이 있어. <strong>풀면서 메모해두면 나중에 몰아 쓰는 것보다 훨씬 정확해.</strong></p>
+    <ol style="margin-bottom:0">
+      <li>가장 쉬웠던 문제나 개념은? 왜?</li>
+      <li>가장 어려웠던 것은? 구체적으로 뭐가 어려웠나?</li>
+      <li>아직 답이 맞는지 확신 없는 문제가 있나? 어디가 불확실한가?</li>
+      <li>스스로 알아채고 고친 실수가 있나? 거기서 뭘 배웠나?</li>
+      <li>총 몇 시간쯤 걸렸나?</li>
+    </ol>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Reflection: part of the submission</span>
+    <p>The last page has five reflection questions. <strong>Jotting notes as you work is far more accurate than reconstructing them at the end.</strong></p>
+    <ol style="margin-bottom:0">
+      <li>Which problem or concept was easiest, and why?</li>
+      <li>Which was hardest, and what specifically made it hard?</li>
+      <li>Is there a problem you are still unsure about? Where exactly?</li>
+      <li>Did you catch and correct a mistake? What did you learn from it?</li>
+      <li>Roughly how long did the whole thing take?</li>
+    </ol>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>3번 문항을 진지하게 쓰는 게 제일 남는다.</strong> "확신 없는 곳"을 적어두면 다음 강의나 office hour에서 정확히 뭘 물어볼지가 정해져. 채점이 정답 위주가 아니라 시도 위주니까, 불확실한 걸 솔직히 적는 게 감점 요인도 아니야.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Question 3 is the one worth taking seriously.</strong> Writing down where you are unsure decides exactly what to ask in the next lecture or at office hours. Since grading rewards the attempt rather than the answer, being honest about the uncertainty costs you nothing.
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span lang="ko">EEE 554 Probability and Random Processes · Homework 1 공략<br>
+  강의: Nicolò Michelusi, Arizona State University · Fall 2026<br>
+  이 페이지는 수강생이 만든 개인 학습 자료이며, 공식 강의 자료나 해답이 아닙니다.<br>
+  과제 문제의 원문은 싣지 않았습니다. 저작권은 Nicolò Michelusi 교수와 Arizona State University에 있습니다.</span><span lang="en">EEE 554 Probability and Random Processes · Homework 1 study guide<br>
+  Course: Nicolò Michelusi, Arizona State University · Fall 2026<br>
+  This page is personal study material written by a student. It is neither official course material nor a solution set.<br>
+  The problem statements themselves are not reproduced here. Copyright belongs to Professor Nicolò Michelusi and Arizona State University.</span>
+</footer>
+
+</div>
+<button class="lang-btn" type="button">English</button>
+<button class="theme-btn" type="button">☾ 다크</button>
+
+<script>
+// 큰 제목이 화면에서 사라지면 목차 위 미니 헤더를 띄운다.
+(function () {
+  var title = document.querySelector('header.top h1.title');
+  var mini = document.querySelector('nav.toc .mini-head');
+  if (!title || !mini || !window.IntersectionObserver) return;
+  new IntersectionObserver(function (es) {
+    mini.classList.toggle('on', !es[0].isIntersecting);
+  }, { threshold: 0 }).observe(title);
+})();
+</script>
+<script>
+// 테마 토글. 기본은 OS 설정을 따르고, 누르면 그 반대로 고정한다.
+// 저장하지 않으므로 페이지를 옮기면 다시 OS 설정을 따른다.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.theme-btn');
+  if (!btn) return;
+  var osDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  function current() {
+    return root.dataset.theme || (osDark && osDark.matches ? 'dark' : 'light');
+  }
+  function paint() {
+    var dark = current() === 'dark';
+    btn.textContent = dark ? '☀ 라이트' : '☾ 다크';
+    btn.setAttribute('aria-label', dark ? '라이트 모드로' : '다크 모드로');
+  }
+  btn.addEventListener('click', function () {
+    root.dataset.theme = current() === 'dark' ? 'light' : 'dark';
+    paint();
+  });
+  if (osDark && osDark.addEventListener) osDark.addEventListener('change', paint);
+  paint();
+})();
+</script>
+<script>
+// 언어 토글. 기본은 한국어. 저장하지 않으므로 페이지를 옮기면 한국어로 돌아간다.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.lang-btn');
+  if (!btn) return;
+  function paint() {
+    var en = root.dataset.lang === 'en';
+    btn.textContent = en ? '한국어' : 'English';
+    btn.setAttribute('aria-label', en ? '한국어로 보기' : 'View in English');
+    root.lang = en ? 'en' : 'ko';
+  }
+  btn.addEventListener('click', function () {
+    root.dataset.lang = root.dataset.lang === 'en' ? 'ko' : 'en';
+    paint();
+    window.dispatchEvent(new Event('langchange'));
+  });
+  paint();
+})();
+</script>
+</body>
+</html>
