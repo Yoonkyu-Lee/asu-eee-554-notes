@@ -1090,10 +1090,19 @@ html[data-lang="en"] [lang="ko"]{display:none}
 
 <!-- ══ 07 ══ -->
 <section id="s7">
-  <div class="sec-head" data-slide="21-24"><span class="sec-num">07</span><h2>공리에서 나오는 성질들</h2></div>
-  <p class="sec-sub">외울 게 아니라 세 공리에서 유도해야 하는 것들. HW1 Problem 5가 통째로 이거야.</p>
+  <div class="sec-head" data-slide="21-24"><span class="sec-num">07</span><h2 lang="ko">공리에서 나오는 성질들</h2><h2 lang="en">What follows from the axioms</h2></div>
+  <p class="sec-sub" lang="ko">외울 게 아니라 세 공리에서 유도해야 하는 것들. HW1 Problem 5가 통째로 이거야.</p>
+  <p class="sec-sub" lang="en">Not things to memorise, things to derive from the three axioms. HW1 Problem 5 is entirely this.</p>
 
-  <table>
+  <table lang="en">
+    <tr><th>property</th><th>meaning</th></tr>
+    <tr><td><span class="m"><i>P</i>(∅) = 0</span></td><td>an impossible event has probability 0</td></tr>
+    <tr><td><span class="m"><i>P</i>(<i>A</i><sup>c</sup>) = 1 − <i>P</i>(<i>A</i>)</span></td><td>the complement rule</td></tr>
+    <tr><td><span class="m"><i>A</i> ⊆ <i>B</i> ⟹ <i>P</i>(<i>A</i>) ≤ <i>P</i>(<i>B</i>)</span></td><td>monotonicity</td></tr>
+    <tr><td><span class="m"><i>P</i>(<i>A</i>∪<i>B</i>) = <i>P</i>(<i>A</i>) + <i>P</i>(<i>B</i>) − <i>P</i>(<i>A</i>∩<i>B</i>)</span></td><td>inclusion-exclusion, two sets</td></tr>
+    <tr><td colspan="2"><span class="m"><i>P</i>(<i>A</i>∪<i>B</i>∪<i>C</i>) = <i>P</i>(<i>A</i>)+<i>P</i>(<i>B</i>)+<i>P</i>(<i>C</i>) − <i>P</i>(<i>A</i>∩<i>B</i>) − <i>P</i>(<i>A</i>∩<i>C</i>) − <i>P</i>(<i>B</i>∩<i>C</i>) + <i>P</i>(<i>A</i>∩<i>B</i>∩<i>C</i>)</span><br><span style="font-size:13px;color:var(--ink3)">inclusion-exclusion, three sets: the signs alternate +, −, +</span></td></tr>
+  </table>
+  <table lang="ko">
     <tr><th>성질</th><th>내용</th></tr>
     <tr><td><span class="m"><i>P</i>(∅) = 0</span></td><td>불가능한 사건의 확률은 0</td></tr>
     <tr><td><span class="m"><i>P</i>(<i>A</i><sup>c</sup>) = 1 − <i>P</i>(<i>A</i>)</span></td><td>여집합 규칙</td></tr>
@@ -1102,13 +1111,15 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <tr><td colspan="2"><span class="m"><i>P</i>(<i>A</i>∪<i>B</i>∪<i>C</i>) = <i>P</i>(<i>A</i>)+<i>P</i>(<i>B</i>)+<i>P</i>(<i>C</i>) − <i>P</i>(<i>A</i>∩<i>B</i>) − <i>P</i>(<i>A</i>∩<i>C</i>) − <i>P</i>(<i>B</i>∩<i>C</i>) + <i>P</i>(<i>A</i>∩<i>B</i>∩<i>C</i>)</span><br><span style="font-size:13px;color:var(--ink3)">포함배제 (3개) — 부호가 +, −, + 로 번갈아간다</span></td></tr>
   </table>
 
-  <h3>포함배제를 그림으로</h3>
+  <h3 lang="ko">포함배제를 그림으로</h3>
+  <h3 lang="en">Inclusion-exclusion as a picture</h3>
   <figure>
   <svg viewBox="0 0 700 230" role="img" aria-label="포함배제 원리의 시각적 설명">
     <defs>
       <clipPath id="ie1"><circle cx="100" cy="110" r="46"/></clipPath>
     </defs>
-    <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em">겹친 부분을 두 번 세었으니 한 번 빼준다</text>
+    <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="ko">겹친 부분을 두 번 세었으니 한 번 빼준다</text>
+    <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="en">the overlap got counted twice, so subtract it once</text>
 
     <!-- step 1 -->
     <g transform="translate(0,0)">
@@ -1143,10 +1154,11 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <text x="128" y="192" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:var(--violet)">P(A∪B)</text>
     </g>
   </svg>
-  <figcaption>이걸 공리로 증명하려면 <span class="m"><i>A</i>∪<i>B</i></span>를 <strong>서로소 조각으로 분해</strong>해야 해. 공리 ③은 서로소일 때만 쓸 수 있으니까. 아래 풀이를 봐.</figcaption>
+  <figcaption lang="ko">이걸 공리로 증명하려면 <span class="m"><i>A</i>∪<i>B</i></span>를 <strong>서로소 조각으로 분해</strong>해야 해. 공리 ③은 서로소일 때만 쓸 수 있으니까. 아래 풀이를 봐.</figcaption>
+  <figcaption lang="en">To prove this from the axioms you have to <strong>break <span class="m"><i>A</i>∪<i>B</i></span> into disjoint pieces</strong>, because axiom ③ only applies to disjoint sets. The worked solution below does exactly that.</figcaption>
   </figure>
 
-  <div class="ex">
+  <div class="ex" lang="ko">
     <span class="tag">예제 7.1 — HW1 Problem 5 유형 (증명)</span>
     <p>공리에서 출발해서 <span class="m"><i>P</i>(∅) = 0</span>, <span class="m"><i>P</i>(<i>A</i><sup>c</sup>) = 1 − <i>P</i>(<i>A</i>)</span>, 단조성, 포함배제를 각각 유도해라.</p>
     <details><summary>풀이 — 네 개 모두</summary><div class="body">
@@ -1175,8 +1187,37 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <p><strong>전체를 관통하는 수법 하나:</strong> 네 증명 모두 <strong>"서로소 조각으로 쪼개고 공리 ③을 쓴다"</strong>야. 공리 ③은 서로소일 때만 쓸 수 있으니까, 증명의 모든 창의성은 <em>어떻게 쪼갤까</em>에 들어가. HW1 Problem 5에 <em>"do not simply quote the formulas. Explain how they follow from the probability axioms and appropriate set decompositions"</em>라고 쓰여 있는 게 바로 이 얘기야. <strong>"적절한 집합 분해"를 명시하는 게 채점 포인트야.</strong></p>
     </div></details>
   </div>
+  <div class="ex" lang="en">
+    <span class="tag">Example 7.1 — the HW1 Problem 5 pattern (proofs)</span>
+    <p>Starting from the axioms, derive <span class="m"><i>P</i>(∅) = 0</span>, <span class="m"><i>P</i>(<i>A</i><sup>c</sup>) = 1 − <i>P</i>(<i>A</i>)</span>, monotonicity, and inclusion-exclusion.</p>
+    <details><summary>Solution — all four</summary><div class="body">
+      <p><strong>(a) <span class="m"><i>P</i>(∅) = 0</span></strong></p>
+      <p>Set <span class="m"><i>A</i><sub>1</sub> = <i>A</i><sub>2</sub> = ⋯ = ∅</span>. Since <span class="m">∅ ∩ ∅ = ∅</span>, the pairwise disjoint condition holds. Axiom ③ gives:</p>
+      <div class="eq" style="text-align:left;font-size:16px"><i>P</i>(∅) = <i>P</i>(⋃<sub><i>i</i></sub> ∅) = ∑<sub><i>i</i>=1</sub><sup>∞</sup> <i>P</i>(∅)</div>
+      <p>Write <span class="m"><i>P</i>(∅) = <i>p</i></span>, so <span class="m"><i>p</i> = <i>p</i> + <i>p</i> + ⋯</span>. If <span class="m"><i>p</i> &gt; 0</span> the right side diverges and leaves <span class="m">[0,1]</span>. Axiom ① forces <span class="m"><i>p</i> ≥ 0</span>, so <span class="m"><i>p</i> = 0</span>. ∎</p>
 
-  <div class="ex">
+      <p><strong>(b) <span class="m"><i>P</i>(<i>A</i><sup>c</sup>) = 1 − <i>P</i>(<i>A</i>)</span></strong></p>
+      <p><span class="m"><i>A</i></span> and <span class="m"><i>A</i><sup>c</sup></span> are disjoint and their union is <span class="m"><i>Ω</i></span>. That is the <span class="m">{<i>A</i>, <i>A</i><sup>c</sup>}</span> partition from Module 1. Axiom ③ (finite version) with ②:</p>
+      <div class="eq" style="text-align:left;font-size:16px">1 = <i>P</i>(<i>Ω</i>) = <i>P</i>(<i>A</i> ∪ <i>A</i><sup>c</sup>) = <i>P</i>(<i>A</i>) + <i>P</i>(<i>A</i><sup>c</sup>)</div>
+      <p>Rearrange and you are done. ∎</p>
+
+      <p><strong>(c) <span class="m"><i>A</i> ⊆ <i>B</i> ⟹ <i>P</i>(<i>A</i>) ≤ <i>P</i>(<i>B</i>)</span></strong></p>
+      <p><strong>The move is to split <span class="m"><i>B</i></span> into disjoint pieces.</strong> Since <span class="m"><i>A</i> ⊆ <i>B</i></span>,</p>
+      <div class="eq" style="text-align:left;font-size:16px"><i>B</i> = <i>A</i> ∪ (<i>B</i> \ <i>A</i>), &nbsp;&nbsp; <i>A</i> ∩ (<i>B</i> \ <i>A</i>) = ∅</div>
+      <p>Axiom ③ gives <span class="m"><i>P</i>(<i>B</i>) = <i>P</i>(<i>A</i>) + <i>P</i>(<i>B</i>\<i>A</i>)</span>, and axiom ① gives <span class="m"><i>P</i>(<i>B</i>\<i>A</i>) ≥ 0</span>, hence <span class="m"><i>P</i>(<i>B</i>) ≥ <i>P</i>(<i>A</i>)</span>. ∎</p>
+
+      <p><strong>(d) <span class="m"><i>P</i>(<i>A</i>∪<i>B</i>) = <i>P</i>(<i>A</i>) + <i>P</i>(<i>B</i>) − <i>P</i>(<i>A</i>∩<i>B</i>)</span></strong></p>
+      <p>Same trick. Break <span class="m"><i>A</i>∪<i>B</i></span> into <strong>three disjoint pieces</strong>:</p>
+      <div class="eq" style="text-align:left;font-size:16px"><i>A</i> ∪ <i>B</i> = (<i>A</i> ∩ <i>B</i><sup>c</sup>) ∪ (<i>A</i> ∩ <i>B</i>) ∪ (<i>A</i><sup>c</sup> ∩ <i>B</i>)</div>
+      <p>Axiom ③ gives <span class="m"><i>P</i>(<i>A</i>∪<i>B</i>) = <i>P</i>(<i>A</i>∩<i>B</i><sup>c</sup>) + <i>P</i>(<i>A</i>∩<i>B</i>) + <i>P</i>(<i>A</i><sup>c</sup>∩<i>B</i>)</span>.</p>
+      <p>Separately, <span class="m"><i>A</i> = (<i>A</i>∩<i>B</i><sup>c</sup>) ∪ (<i>A</i>∩<i>B</i>)</span> is also a disjoint split, so <span class="m"><i>P</i>(<i>A</i>∩<i>B</i><sup>c</sup>) = <i>P</i>(<i>A</i>) − <i>P</i>(<i>A</i>∩<i>B</i>)</span>. That is the decomposition from Example 5.1(b) in Module 1. Likewise <span class="m"><i>P</i>(<i>A</i><sup>c</sup>∩<i>B</i>) = <i>P</i>(<i>B</i>) − <i>P</i>(<i>A</i>∩<i>B</i>)</span>. Substituting:</p>
+      <div class="eq" style="text-align:left;font-size:16px"><i>P</i>(<i>A</i>∪<i>B</i>) = [<i>P</i>(<i>A</i>) − <i>P</i>(<i>A</i>∩<i>B</i>)] + <i>P</i>(<i>A</i>∩<i>B</i>) + [<i>P</i>(<i>B</i>) − <i>P</i>(<i>A</i>∩<i>B</i>)]</div>
+      <p>Collect terms and you have the formula. ∎</p>
+      <p><strong>The one move behind all four:</strong> every proof is <strong>"split into disjoint pieces, then apply axiom ③"</strong>. Axiom ③ only works on disjoint sets, so all the creativity lives in <em>how you split</em>. HW1 Problem 5 saying <em>"do not simply quote the formulas. Explain how they follow from the probability axioms and appropriate set decompositions"</em> is asking for precisely this. <strong>Naming the decomposition is what earns the marks.</strong></p>
+    </div></details>
+  </div>
+
+  <div class="ex" lang="ko">
     <span class="tag">예제 7.2 — 이산 확률 공간 계산 (HW1 Problem 6 유형)</span>
     <p><span class="m"><i>Ω</i> = {1,2,3,4}</span>이고 <span class="m"><i>P</i>({<i>k</i>}) = <i>ck</i><sup>2</sup></span>, <span class="m"><i>k</i> = 1,…,4</span>. (a) <span class="m"><i>c</i></span>를 구하고, (b) <span class="m"><i>A</i> = {1,2}</span>, <span class="m"><i>B</i> = {2,3}</span>에 대해 <span class="m"><i>P</i>(<i>A</i>), <i>P</i>(<i>B</i>), <i>P</i>(<i>A</i>∩<i>B</i>), <i>P</i>(<i>A</i>∪<i>B</i>)</span>를 구하고 (c) 포함배제로 검산해라.</p>
     <details><summary>풀이</summary><div class="body">
@@ -1188,8 +1229,20 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <p><strong>주의:</strong> HW1 Problem 6은 <span class="m"><i>Ω</i> = {1,…,5}</span>, <span class="m"><i>P</i>({<i>k</i>}) = <i>ck</i></span>로 조금 달라. 위 풀이의 <em>절차</em>만 가져가고 숫자는 직접 계산해봐.</p>
     </div></details>
   </div>
+  <div class="ex" lang="en">
+    <span class="tag">Example 7.2 — computing in a discrete space (the HW1 Problem 6 pattern)</span>
+    <p>Let <span class="m"><i>Ω</i> = {1,2,3,4}</span> with <span class="m"><i>P</i>({<i>k</i>}) = <i>ck</i><sup>2</sup></span> for <span class="m"><i>k</i> = 1,…,4</span>. (a) Find <span class="m"><i>c</i></span>. (b) For <span class="m"><i>A</i> = {1,2}</span> and <span class="m"><i>B</i> = {2,3}</span>, compute <span class="m"><i>P</i>(<i>A</i>), <i>P</i>(<i>B</i>), <i>P</i>(<i>A</i>∩<i>B</i>), <i>P</i>(<i>A</i>∪<i>B</i>)</span>. (c) Check with inclusion-exclusion.</p>
+    <details><summary>Solution</summary><div class="body">
+      <p><strong>(a)</strong> Axiom ② says <span class="m"><i>P</i>(<i>Ω</i>) = 1</span>. The singletons are disjoint, so axiom ③ lets you simply add:</p>
+      <div class="eq" style="text-align:left;font-size:16px"><i>c</i>(1 + 4 + 9 + 16) = 30<i>c</i> = 1 &nbsp;⟹&nbsp; <i>c</i> = 1/30</div>
+      <p><strong>(b)</strong> <span class="m"><i>P</i>(<i>A</i>) = (1+4)/30 = 1/6</span>, <span class="m"><i>P</i>(<i>B</i>) = (4+9)/30 = 13/30</span>. Since <span class="m"><i>A</i>∩<i>B</i> = {2}</span>, <span class="m"><i>P</i>(<i>A</i>∩<i>B</i>) = 4/30 = 2/15</span>. Since <span class="m"><i>A</i>∪<i>B</i> = {1,2,3}</span>, <span class="m"><i>P</i>(<i>A</i>∪<i>B</i>) = (1+4+9)/30 = 7/15</span>.</p>
+      <p><strong>(c)</strong> <span class="m">1/6 + 13/30 − 2/15 = 5/30 + 13/30 − 4/30 = 14/30 = 7/15</span> ✓</p>
+      <p><strong>Two routes to the complement:</strong> counting directly, <span class="m"><i>P</i>(<i>A</i><sup>c</sup>) = (9+16)/30 = 5/6</span>. By the complement rule, <span class="m">1 − 1/6 = 5/6</span>. They agree ✓. HW1 Problem 6(e) asks you to confirm exactly this.</p>
+      <p><strong>Note:</strong> HW1 Problem 6 uses <span class="m"><i>Ω</i> = {1,…,5}</span> with <span class="m"><i>P</i>({<i>k</i>}) = <i>ck</i></span>, slightly different. Take the <em>procedure</em> from above and run the arithmetic yourself.</p>
+    </div></details>
+  </div>
 
-  <div class="trap">
+  <div class="trap" lang="ko">
     <span class="tag">함정</span>
     <h4>P(A∪B) = P(A) + P(B) 라고 쓰는 것</h4>
     <p>서로소일 때만 맞아. <strong>문제에 "disjoint" 또는 "mutually exclusive"라는 말이 없으면 반드시 포함배제를 써라.</strong> 시험에서 제일 많이 깎이는 지점이야.</p>
@@ -1200,6 +1253,18 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <p><span class="m"><i>P</i>(<i>A</i>) ≤ <i>P</i>(<i>B</i>)</span>라고 해서 <span class="m"><i>A</i> ⊆ <i>B</i></span>인 건 아니야. 주사위에서 <span class="m"><i>A</i> = {1}</span>, <span class="m"><i>B</i> = {2,3}</span>이면 <span class="m">1/6 ≤ 1/3</span>이지만 포함관계는 없어.</p>
     <h4>3개짜리 포함배제의 부호</h4>
     <p>단항은 +, 쌍은 −, 삼항은 +. <span class="m"><i>n</i></span>개로 일반화하면 <span class="m">(−1)<sup><i>k</i>+1</sup></span> 패턴이야. 3개짜리에서 마지막 <span class="m">+<i>P</i>(<i>A</i>∩<i>B</i>∩<i>C</i>)</span>를 빼먹는 실수가 흔해. 세 원 벤 다이어그램을 그려서 가운데 조각이 몇 번 세어졌는지 따라가보면 확실해져 (3번 더하고 3번 빼서 0이 되니까 1번 다시 더해야 함).</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Trap</span>
+    <h4>Writing P(A∪B) = P(A) + P(B)</h4>
+    <p>True only when they are disjoint. <strong>If the problem does not say "disjoint" or "mutually exclusive", use inclusion-exclusion.</strong> This is where the most exam marks get lost.</p>
+    <h4>P(A) = 0 does not mean A = ∅</h4>
+    <p>Usually true in a discrete space, and <strong>flatly false in a continuous one.</strong> Under a uniform distribution on <span class="m"><i>Ω</i> = [0,1]</span>, <span class="m"><i>P</i>({0.5}) = 0</span> while <span class="m">{0.5} ≠ ∅</span>. "Probability zero" is not "impossible", it is "almost surely does not happen". Section 10 revisits this.</p>
+    <p>Symmetrically, <span class="m"><i>P</i>(<i>A</i>) = 1</span> does not force <span class="m"><i>A</i> = <i>Ω</i></span>.</p>
+    <h4>Monotonicity does not run backwards</h4>
+    <p><span class="m"><i>P</i>(<i>A</i>) ≤ <i>P</i>(<i>B</i>)</span> does not give <span class="m"><i>A</i> ⊆ <i>B</i></span>. On a die, <span class="m"><i>A</i> = {1}</span> and <span class="m"><i>B</i> = {2,3}</span> satisfy <span class="m">1/6 ≤ 1/3</span> with no containment at all.</p>
+    <h4>The signs in three-set inclusion-exclusion</h4>
+    <p>Singles get +, pairs get −, the triple gets +. Generalised to <span class="m"><i>n</i></span> sets it is the <span class="m">(−1)<sup><i>k</i>+1</sup></span> pattern. Dropping the final <span class="m">+<i>P</i>(<i>A</i>∩<i>B</i>∩<i>C</i>)</span> is a common slip. Draw the three-circle diagram and track how many times the centre piece is counted: added three times, subtracted three times, leaving zero, so it has to be added back once.</p>
   </div>
 </section>
 
