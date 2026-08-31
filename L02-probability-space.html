@@ -1434,12 +1434,14 @@ html[data-lang="en"] [lang="ko"]{display:none}
 
 <!-- ══ 10 ══ -->
 <section id="s10">
-  <div class="sec-head" data-slide="30-31"><span class="sec-num">10</span><h2>PMF와 PDF</h2></div>
-  <p class="sec-sub">실무에서 P를 실제로 어떻게 지정하는가.</p>
+  <div class="sec-head" data-slide="30-31"><span class="sec-num">10</span><h2 lang="ko">PMF와 PDF</h2><h2 lang="en">PMF and PDF</h2></div>
+  <p class="sec-sub" lang="ko">실무에서 P를 실제로 어떻게 지정하는가.</p>
+  <p class="sec-sub" lang="en">How you actually specify P in practice.</p>
 
-  <p>공리는 "확률이 되기 위한 자격"만 말해줄 뿐, 구체적인 <span class="m"><i>P</i></span>를 어떻게 만드는지는 안 알려줘. 실무에서는 이렇게 해.</p>
+  <p lang="ko">공리는 "확률이 되기 위한 자격"만 말해줄 뿐, 구체적인 <span class="m"><i>P</i></span>를 어떻게 만드는지는 안 알려줘. 실무에서는 이렇게 해.</p>
+  <p lang="en">The axioms only say what qualifies as a probability. They say nothing about how to build a specific <span class="m"><i>P</i></span>. In practice you do it like this.</p>
 
-  <div class="grid2">
+  <div class="grid2" lang="ko">
     <div class="mini" style="padding:18px 20px">
       <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--blue);margin-bottom:10px">이산 — PMF</div>
       <div class="eq" style="font-size:16px;margin:10px 0"><i>p</i>(<i>ω</i>) ≥ 0, &nbsp; ∑<sub><i>ω</i>∈<i>Ω</i></sub> <i>p</i>(<i>ω</i>) = 1</div>
@@ -1453,11 +1455,26 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <p style="font-size:14px;color:var(--ink2);margin:10px 0 0">각 점에 <strong>밀도(density)</strong>를 얹고, 사건의 확률은 그 구간의 <strong>넓이</strong>다.</p>
     </div>
   </div>
+  <div class="grid2" lang="en">
+    <div class="mini" style="padding:18px 20px">
+      <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--blue);margin-bottom:10px">DISCRETE — PMF</div>
+      <div class="eq" style="font-size:16px;margin:10px 0"><i>p</i>(<i>ω</i>) ≥ 0, &nbsp; ∑<sub><i>ω</i>∈<i>Ω</i></sub> <i>p</i>(<i>ω</i>) = 1</div>
+      <div class="eq" style="font-size:16px;margin:10px 0"><i>P</i>(<i>A</i>) = ∑<sub><i>ω</i>∈<i>A</i></sub> <i>p</i>(<i>ω</i>)</div>
+      <p style="font-size:14px;color:var(--ink2);margin:10px 0 0">Put a lump of <strong>mass</strong> on each outcome. The probability of an event is the <strong>sum</strong> of the lumps inside it.</p>
+    </div>
+    <div class="mini" style="padding:18px 20px">
+      <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--pink);margin-bottom:10px">CONTINUOUS — PDF</div>
+      <div class="eq" style="font-size:16px;margin:10px 0"><i>f</i>(<i>x</i>) ≥ 0, &nbsp; ∫<sub>ℝ</sub> <i>f</i>(<i>x</i>) d<i>x</i> = 1</div>
+      <div class="eq" style="font-size:16px;margin:10px 0"><i>P</i>(<i>A</i>) = ∫<sub><i>A</i></sub> <i>f</i>(<i>x</i>) d<i>x</i></div>
+      <p style="font-size:14px;color:var(--ink2);margin:10px 0 0">Put a <strong>density</strong> at each point. The probability of an event is the <strong>area</strong> over that region.</p>
+    </div>
+  </div>
 
   <figure>
   <svg viewBox="0 0 700 250" role="img" aria-label="PMF와 PDF의 비교">
     <!-- PMF -->
-    <text x="30" y="26" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:var(--blue)">PMF — 막대의 합</text>
+    <text x="30" y="26" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:var(--blue)" lang="ko">PMF — 막대의 합</text>
+    <text x="30" y="26" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:var(--blue)" lang="en">PMF — sum of bars</text>
     <line x1="40" y1="180" x2="310" y2="180" stroke="var(--ink3)" stroke-width="1.2"/>
     <line x1="40" y1="180" x2="40" y2="52" stroke="var(--ink3)" stroke-width="1.2"/>
     <g fill="rgba(var(--blue-rgb),.3)" stroke="var(--blue)" stroke-width="1.3">
@@ -1481,10 +1498,12 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <text x="271" y="196" text-anchor="middle">6</text>
     </g>
     <text x="171" y="222" text-anchor="middle" class="svgtxt" style="font-size:13.5px;fill:var(--sel)">P({3,4}) = p(3) + p(4)</text>
-    <text x="171" y="242" text-anchor="middle" class="svglab" style="font-size:10px">막대 두 개를 더한다</text>
+    <text x="171" y="242" text-anchor="middle" class="svglab" style="font-size:10px" lang="ko">막대 두 개를 더한다</text>
+    <text x="171" y="242" text-anchor="middle" class="svglab" style="font-size:10px" lang="en">add the two bars</text>
 
     <!-- PDF -->
-    <text x="390" y="26" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:var(--pink)">PDF — 곡선 아래 넓이</text>
+    <text x="390" y="26" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:var(--pink)" lang="ko">PDF — 곡선 아래 넓이</text>
+    <text x="390" y="26" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:var(--pink)" lang="en">PDF — area under the curve</text>
     <line x1="400" y1="180" x2="670" y2="180" stroke="var(--ink3)" stroke-width="1.2"/>
     <line x1="400" y1="180" x2="400" y2="52" stroke="var(--ink3)" stroke-width="1.2"/>
     <path id="bell" d="M 406 178 C 460 176, 480 92, 520 88 C 560 84, 578 168, 664 178" fill="none" stroke="var(--pink)" stroke-width="1.8"/>
@@ -1494,14 +1513,16 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <text x="490" y="202" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--sel)">a</text>
     <text x="545" y="202" text-anchor="middle" class="svgtxt it" style="font-size:12px;fill:var(--sel)">b</text>
     <text x="535" y="222" text-anchor="middle" class="svgtxt" style="font-size:13.5px;fill:var(--sel)">P((a,b)) = ∫ₐᵇ f(x) dx</text>
-    <text x="535" y="242" text-anchor="middle" class="svglab" style="font-size:10px">구간의 넓이를 잰다</text>
+    <text x="535" y="242" text-anchor="middle" class="svglab" style="font-size:10px" lang="ko">구간의 넓이를 잰다</text>
+    <text x="535" y="242" text-anchor="middle" class="svglab" style="font-size:10px" lang="en">measure the area over the interval</text>
 
     <line x1="350" y1="40" x2="350" y2="230" stroke="var(--rule)"/>
   </svg>
-  <figcaption>구조가 완전히 평행해. 합 ↔ 적분, 막대 높이 ↔ 곡선 높이. 다만 <strong>오른쪽에서는 한 점의 폭이 0이라 넓이도 0</strong>이야. 그래서 연속 공간에서 <span class="m"><i>P</i>({<i>x</i>}) = 0</span>이 돼.</figcaption>
+  <figcaption lang="ko">구조가 완전히 평행해. 합 ↔ 적분, 막대 높이 ↔ 곡선 높이. 다만 <strong>오른쪽에서는 한 점의 폭이 0이라 넓이도 0</strong>이야. 그래서 연속 공간에서 <span class="m"><i>P</i>({<i>x</i>}) = 0</span>이 돼.</figcaption>
+  <figcaption lang="en">The two sides are structurally identical: sum ↔ integral, bar height ↔ curve height. The one difference is that <strong>on the right a single point has zero width, so it has zero area</strong>. That is why <span class="m"><i>P</i>({<i>x</i>}) = 0</span> in a continuous space.</figcaption>
   </figure>
 
-  <div class="trap">
+  <div class="trap" lang="ko">
     <span class="tag">함정 · pdf에서 제일 많이 틀리는 것</span>
     <h4>f(x)는 확률이 아니다. 1보다 클 수 있다</h4>
     <p><strong>이게 가장 흔한 오해야.</strong> <span class="m"><i>f</i>(<i>x</i>)</span>는 <em>밀도</em>지 확률이 아니야. 예를 들어 <span class="m">[0, 0.1]</span> 위의 균등분포는 <span class="m"><i>f</i>(<i>x</i>) = 10</span>이야. 10이지만 아무 문제 없어. 왜냐면 확률은 <span class="m"><i>f</i></span>의 <strong>값</strong>이 아니라 <strong>넓이</strong>거든. <span class="m">10 × 0.1 = 1</span> ✓</p>
@@ -1511,6 +1532,17 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <p>그리고 07번 함정에서 말한 것처럼, <span class="m"><i>P</i>({0.5}) = 0</span>인데도 0.5가 나올 <em>가능성</em>은 있어. "확률 0 = 불가능"이 아니야.</p>
     <h4>이산 PMF는 가산일 때만 쓸 수 있다</h4>
     <p><span class="m">∑<sub><i>ω</i>∈<i>Ω</i></sub></span>라는 표기 자체가 <span class="m"><i>Ω</i></span>가 가산이어야 의미가 있어. 비가산 개를 더하는 건 정의가 안 돼. <strong>Module 1의 가산성이 여기서 또 결정적으로 작동해.</strong></p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Trap · the most misunderstood thing about pdfs</span>
+    <h4>f(x) is not a probability, and it can exceed 1</h4>
+    <p><strong>This is the classic misconception.</strong> <span class="m"><i>f</i>(<i>x</i>)</span> is a <em>density</em>, not a probability. A uniform distribution on <span class="m">[0, 0.1]</span> has <span class="m"><i>f</i>(<i>x</i>) = 10</span>, and there is nothing wrong with that, because probability is the <strong>area</strong> under <span class="m"><i>f</i></span>, not its <strong>value</strong>: <span class="m">10 × 0.1 = 1</span> ✓</p>
+    <p>PMFs are different. There <span class="m"><i>p</i>(<i>ω</i>)</span> really is a probability, so <span class="m">0 ≤ <i>p</i>(<i>ω</i>) ≤ 1</span>. <strong>Do not conflate the two.</strong></p>
+    <h4>In a continuous space P({x}) = 0</h4>
+    <p>Because <span class="m">∫<sub><i>a</i></sub><sup><i>a</i></sup> <i>f</i>(<i>x</i>)d<i>x</i> = 0</span>. A consequence is <span class="m"><i>P</i>((<i>a</i>,<i>b</i>)) = <i>P</i>([<i>a</i>,<i>b</i>])</span>: <strong>in a continuous space open and closed intervals carry the same probability.</strong> Never true in a discrete one.</p>
+    <p>And as §07 noted, <span class="m"><i>P</i>({0.5}) = 0</span> while 0.5 remains a <em>possible</em> outcome. Probability zero is not impossibility.</p>
+    <h4>A discrete PMF only works when Ω is countable</h4>
+    <p>The notation <span class="m">∑<sub><i>ω</i>∈<i>Ω</i></sub></span> only means anything if <span class="m"><i>Ω</i></span> is countable. Summing uncountably many terms is undefined. <strong>Module 1's countability is decisive here once again.</strong></p>
   </div>
 </section>
 
