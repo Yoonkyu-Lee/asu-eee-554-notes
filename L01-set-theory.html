@@ -302,7 +302,7 @@ html[data-lang="en"] [lang="ko"]{display:none}
   <div class="eyebrow">EEE 554 · Probability and Random Processes · Michelusi</div>
   <h1 class="title">Module 1<br>Introduction &amp; Set Theory</h1>
   <p class="subtitle" lang="ko">확률을 배우기 전에, 확률이 쓸 언어부터 깔아두는 단원.</p>
-  <p class="subtitle" lang="en">Before you touch probability, you lay down the language probability is going to speak.</p>
+  <p class="subtitle" lang="en">No probability yet. This is where the vocabulary gets built.</p>
   <div class="meta" lang="ko">
     <span class="chip">슬라이드 40쪽</span>
     <span class="chip hot">HW1 마감 8/30 (일) 자정</span>
@@ -346,25 +346,25 @@ html[data-lang="en"] [lang="ko"]{display:none}
 <section id="s0">
   <div class="sec-head" data-slide="1"><span class="sec-num">00</span><h2 lang="ko">이 모듈이 하는 일</h2><h2 lang="en">What this module does</h2></div>
   <p class="sec-sub" lang="ko">한 줄 요약: <strong>"질문"을 "집합"으로 바꾸는 법을 배운다.</strong></p>
-  <p class="sec-sub" lang="en">In one line: <strong>you learn how to turn a "question" into a "set".</strong></p>
+  <p class="sec-sub" lang="en">The one-line version: <strong>learn to rewrite a question as a set.</strong></p>
 
   <p lang="ko">이 모듈에는 확률이 거의 안 나와. 슬라이드 40장 중 확률 기호 <span class="m">P</span>(·)가 등장하는 건 딱 한 번이야. 그래서 노잼으로 느껴지는 게 정상이야. 목적이 다르거든.</p>
-  <p lang="en">You'll barely see any probability in this module. Out of 40 slides, the symbol <span class="m">P</span>(·) shows up exactly once. So if it feels dry, that's normal. It's doing a different job.</p>
+  <p lang="en">There is almost no probability in this module. Across all 40 slides the symbol <span class="m">P</span>(·) appears exactly once. If that makes it feel like a slow start, it is one, deliberately. This module is doing setup work.</p>
 
   <p lang="ko">확률론이 답하고 싶은 건 "이 일이 일어날 가능성은 얼마인가"인데, 그러려면 먼저 <strong>"이 일"이라는 게 수학적으로 뭔지</strong> 못 박아야 해. 그 정의가 바로 집합이야. 이 모듈은 확률을 계산하는 법이 아니라, 확률이 올라탈 <strong>도로를 까는 단계</strong>야.</p>
-  <p lang="en">What probability theory wants to answer is "how likely is this thing to happen?" But before you can answer that, you have to pin down <strong>what "this thing" even is, mathematically</strong>. That definition is a set. So this module isn't about computing probabilities. It's about <strong>paving the road</strong> that probability will later drive on.</p>
+  <p lang="en">Probability answers one kind of question: how likely is this? But nothing can be computed until <strong>"this" has a precise mathematical form</strong>. Sets are that form. So none of this module is about calculating a probability. It is about <strong>laying the track</strong> that probability will later run on.</p>
 
   <div class="callout" lang="ko">
     <strong>이 모듈에서 새로 나오는 단어들:</strong> sample space, event, power set, countable / uncountable, index set, partition.<br>
     이 중 <strong>countable</strong>과 <strong>partition</strong> 두 개가 나중에 결정적으로 쓰여. countable은 Module 2에서 σ-algebra가 왜 필요한지를 결정하고, partition은 Module 3의 law of total probability와 Bayes 정리가 통째로 그 위에서 돌아가. 나머지는 도구야.
   </div>
   <div class="callout" lang="en">
-    <strong>New vocabulary in this module:</strong> sample space, event, power set, countable / uncountable, index set, partition.<br>
-    Two of these carry real weight later. <strong>Countable</strong> is what decides why you need a σ-algebra at all in Module 2, and <strong>partition</strong> is the thing the law of total probability and Bayes' theorem sit on top of in Module 3. The rest are tools.
+    <strong>New vocabulary here:</strong> sample space, event, power set, countable / uncountable, index set, partition.<br>
+    Two of them do real work later. <strong>Countable</strong> is what forces a σ-algebra to exist at all in Module 2, and <strong>partition</strong> is the foundation under both the law of total probability and Bayes' theorem in Module 3. The rest are tools you reach for as needed.
   </div>
 
   <h3 lang="ko">전체 흐름</h3>
-  <h3 lang="en">The whole chain</h3>
+  <h3 lang="en">Where this fits</h3>
   <figure>
   <svg viewBox="0 0 720 130" role="img" aria-label="질문에서 확률로 가는 흐름도 / from a question to a probability">
     <defs>
@@ -402,7 +402,7 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <text x="665" y="79" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--ink2)">P(A) = ½</text>
   </svg>
   <figcaption lang="ko">Module 1은 이 사슬의 첫 번째 화살표만 담당해. 지금 하는 게 답답하게 느껴지면, 아직 두 번째 칸에 머물러 있어서 그런 거야.</figcaption>
-  <figcaption lang="en">Module 1 only owns the first arrow in this chain. If what you're doing right now feels frustrating, it's because you're still parked in the second box.</figcaption>
+  <figcaption lang="en">Module 1 owns the first arrow and nothing else. If the material feels like it is not going anywhere yet, that is because you are still in box two.</figcaption>
   </figure>
 </section>
 
@@ -410,7 +410,7 @@ html[data-lang="en"] [lang="ko"]{display:none}
 <section id="s1">
   <div class="sec-head" data-slide="2-5"><span class="sec-num">01</span><h2>Probability vs Statistics</h2></div>
   <p class="sec-sub" lang="ko">화살표 방향이 반대인 두 학문.</p>
-  <p class="sec-sub" lang="en">Two fields with the arrow pointing opposite ways.</p>
+  <p class="sec-sub" lang="en">Same picture, arrow reversed.</p>
 
   <div class="def" lang="ko">
     <span class="tag">핵심 대비</span>
@@ -419,8 +419,8 @@ html[data-lang="en"] [lang="ko"]{display:none}
   </div>
   <div class="def" lang="en">
     <span class="tag">The contrast</span>
-    <p><strong>Probability</strong>: you start from a <em>mathematical model</em> of uncertainty and analyse how likely the various outcomes are. &nbsp;<span class="m">Model → Data</span></p>
-    <p style="margin-bottom:0"><strong>Statistics</strong>: you start from <em>observed data</em> and infer the probability model underneath it, or its unknown parameters. &nbsp;<span class="m">Data → Model</span></p>
+    <p><strong>Probability</strong>: start from a <em>mathematical model</em> of uncertainty, work out how likely each outcome is. &nbsp;<span class="m">Model → Data</span></p>
+    <p style="margin-bottom:0"><strong>Statistics</strong>: start from <em>observed data</em>, work back to the model underneath it or to its unknown parameters. &nbsp;<span class="m">Data → Model</span></p>
   </div>
 
   <figure>
@@ -447,7 +447,7 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <text x="320" y="30" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink3)" lang="en">same world, opposite directions</text>
   </svg>
   <figcaption lang="ko">같은 주사위를 두고, 위쪽 화살표는 "공정하다면 6이 세 번 연속 나올 확률은?"을 묻고, 아래쪽 화살표는 "이런 데이터가 나왔는데 이 주사위 공정한 거 맞아?"를 묻는다.</figcaption>
-  <figcaption lang="en">Same die, two directions. The top arrow asks "if it's fair, what's the chance of three 6s in a row?" The bottom arrow asks "I got this data, is this die actually fair?"</figcaption>
+  <figcaption lang="en">One die, two directions. Going right: assume it is fair, what are the odds of three 6s in a row? Coming back: here is what I actually rolled, is this die fair?</figcaption>
   </figure>
 
   <div class="ex" lang="ko">
@@ -474,8 +474,8 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <li>You flipped a coin 100 times and got 70 heads. Is this coin fair?</li>
     </ol>
     <details><summary>Solution</summary><div class="body">
-      <p>1 and 3 are probability. The model (loss rate 0.1 / a fair coin) is <em>handed to you first</em>, and you compute how likely the data is. 2 and 4 are statistics: the data comes first and you work back to the model. The tell is simple. <strong>If the sentence opens with "if…", it's probability. If it opens with "I observed…", it's statistics.</strong></p>
-      <p>What's worth noticing is that 3 and 4 run essentially the same computation. Hypothesis testing works by computing "the probability of seeing this data assuming the coin is fair" (that's 3) and throwing away the assumption if that number is too small. So statistics uses probability <em>as a tool</em>.</p>
+      <p>1 and 3 are probability: the model is given up front, a loss rate of 0.1 or a fair coin, and you work out how likely the data is. 2 and 4 are statistics: the data is given and you work back to the model. Quick test: <strong>a question that opens with "if" is probability. One that opens with "I observed" is statistics.</strong></p>
+      <p>Worth noticing: 3 and 4 run almost the same arithmetic. A hypothesis test computes the probability of the observed data under the assumption that the coin is fair, which is exactly question 3, then discards the assumption when that number comes out small enough. Statistics runs on probability <em>as its engine</em>.</p>
     </div></details>
   </div>
 
@@ -488,40 +488,47 @@ html[data-lang="en"] [lang="ko"]{display:none}
   </div>
   <div class="trap" lang="en">
     <span class="tag">Trap</span>
-    <h4>Statistics is not "the advanced version" of probability</h4>
-    <p>They aren't stacked on top of each other. The arrow just runs the other way. This course (554) covers <strong>only the top arrow</strong>. Estimating a model from data never comes up here. So if you're thinking "we never see any real data," you're right. That's what this course is.</p>
-    <h4>Defining probability as frequency gets you stuck</h4>
-    <p>"Flip it enough times and it converges to 1/2, so the probability is 1/2" is intuitive, but you can't use it as a <em>definition</em>. It's circular: "converges" already leans on the notion of probability. That's why Module 2 defines probability not as a frequency but as <strong>a function satisfying three axioms</strong>. Probability in this course is axiomatic from start to finish.</p>
+    <h4>Statistics is not probability, level 2</h4>
+    <p>Neither one sits above the other. The arrow simply runs the other way. This course covers <strong>the top arrow only</strong>. Inferring a model from data never appears. So the feeling that you never see any real data is accurate, and it is the scope, not an oversight.</p>
+    <h4>Frequency is not a usable definition</h4>
+    <p>Flip it enough and it settles near 1/2, so the probability is 1/2. Intuitive, but it cannot serve as the <em>definition</em>, because "settles near" already assumes what probability means. Module 2 steps around this by defining probability as <strong>any function satisfying three axioms</strong>. Nothing in this course rests on frequency.</p>
   </div>
 </section>
 
 <!-- ══ 02 ══ -->
 <section id="s2">
-  <div class="sec-head" data-slide="6-11"><span class="sec-num">02</span><h2>왜 집합인가</h2></div>
-  <p class="sec-sub">질문 → 사건 → 확률. 그리고 AND/OR/NOT ↔ ∩/∪/ᶜ.</p>
+  <div class="sec-head" data-slide="6-11"><span class="sec-num">02</span><h2 lang="ko">왜 집합인가</h2><h2 lang="en">Why sets</h2></div>
+  <p class="sec-sub" lang="ko">질문 → 사건 → 확률. 그리고 AND/OR/NOT ↔ ∩/∪/ᶜ.</p>
+  <p class="sec-sub" lang="en">Question → event → probability. And AND/OR/NOT ↔ ∩/∪/ᶜ.</p>
 
-  <p>공정한 주사위를 굴리는 실험을 생각해. 가능한 결과 전체를 모은 게 <strong>표본공간(sample space)</strong> <span class="m"><i>Ω</i></span>야.</p>
+  <p lang="ko">공정한 주사위를 굴리는 실험을 생각해. 가능한 결과 전체를 모은 게 <strong>표본공간(sample space)</strong> <span class="m"><i>Ω</i></span>야.</p>
+  <p lang="en">Take the experiment of rolling a fair die. Collect every outcome it can produce and you have the <strong>sample space</strong> <span class="m"><i>Ω</i></span>.</p>
   <div class="eq"><i>Ω</i> = {1, 2, 3, 4, 5, 6}</div>
 
-  <p>이제 우리가 던지고 싶은 질문들을 보자. 놀라운 건, <strong>모든 질문이 <span class="m"><i>Ω</i></span>의 부분집합 하나로 정확히 대응된다</strong>는 거야.</p>
+  <p lang="ko">이제 우리가 던지고 싶은 질문들을 보자. 놀라운 건, <strong>모든 질문이 <span class="m"><i>Ω</i></span>의 부분집합 하나로 정확히 대응된다</strong>는 거야.</p>
+  <p lang="en">Now look at the questions you actually want to ask about that roll. Every single one of them lands on <strong>exactly one subset of <span class="m"><i>Ω</i></span></strong>.</p>
 
   <figure>
-  <svg viewBox="0 0 700 250" role="img" aria-label="질문이 부분집합에 대응되는 그림">
+  <svg viewBox="0 0 700 250" role="img" aria-label="질문이 부분집합에 대응되는 그림 / each question maps to a subset">
     <text x="16" y="24" class="svglab" style="font-size:11px;letter-spacing:.12em">SAMPLE SPACE Ω</text>
     <g id="dice">
       <!-- baseline row of 6 outcomes, repeated per question -->
     </g>
     <!-- row template -->
     <g transform="translate(0,0)">
-      <text x="16" y="60" class="svglab" style="font-size:11.5px;fill:var(--ink)">질문</text>
-      <text x="330" y="60" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)">Ω 안에서 고른 원소</text>
-      <text x="640" y="60" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)">사건</text>
+      <text x="16" y="60" class="svglab" style="font-size:11.5px;fill:var(--ink)" lang="ko">질문</text>
+      <text x="16" y="60" class="svglab" style="font-size:11.5px;fill:var(--ink)" lang="en">Question</text>
+      <text x="330" y="60" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)" lang="ko">Ω 안에서 고른 원소</text>
+      <text x="330" y="60" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)" lang="en">outcomes picked out of Ω</text>
+      <text x="640" y="60" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)" lang="ko">사건</text>
+      <text x="640" y="60" text-anchor="middle" class="svglab" style="font-size:11.5px;fill:var(--ink)" lang="en">Event</text>
     </g>
     <line x1="16" y1="70" x2="684" y2="70" stroke="var(--rule)"/>
 
     <!-- rows -->
     <g>
-      <text x="16" y="98" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)">짝수인가?</text>
+      <text x="16" y="98" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)" lang="ko">짝수인가?</text>
+      <text x="16" y="98" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)" lang="en">Is it even?</text>
       <g transform="translate(190,84)">
         <rect x="0" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="15" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">1</text>
         <rect x="38" y="0" width="30" height="22" rx="4" fill="rgba(var(--blue-rgb),.16)" stroke="var(--blue)"/><text x="53" y="16" text-anchor="middle" class="svgnum" fill="var(--blue)">2</text>
@@ -534,7 +541,8 @@ html[data-lang="en"] [lang="ko"]{display:none}
     </g>
 
     <g>
-      <text x="16" y="140" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)">홀수인가?</text>
+      <text x="16" y="140" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)" lang="ko">홀수인가?</text>
+      <text x="16" y="140" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)" lang="en">Is it odd?</text>
       <g transform="translate(190,126)">
         <rect x="0" y="0" width="30" height="22" rx="4" fill="rgba(var(--pink-rgb),.16)" stroke="var(--pink)"/><text x="15" y="16" text-anchor="middle" class="svgnum" fill="var(--pink)">1</text>
         <rect x="38" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="53" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">2</text>
@@ -547,7 +555,8 @@ html[data-lang="en"] [lang="ko"]{display:none}
     </g>
 
     <g>
-      <text x="16" y="182" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)">4보다 큰가?</text>
+      <text x="16" y="182" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)" lang="ko">4보다 큰가?</text>
+      <text x="16" y="182" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)" lang="en">Bigger than 4?</text>
       <g transform="translate(190,168)">
         <rect x="0" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="15" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">1</text>
         <rect x="38" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="53" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">2</text>
@@ -560,7 +569,8 @@ html[data-lang="en"] [lang="ko"]{display:none}
     </g>
 
     <g>
-      <text x="16" y="224" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)">3인가?</text>
+      <text x="16" y="224" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)" lang="ko">3인가?</text>
+      <text x="16" y="224" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)" lang="en">Is it a 3?</text>
       <g transform="translate(190,210)">
         <rect x="0" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="15" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">1</text>
         <rect x="38" y="0" width="30" height="22" rx="4" fill="var(--paper)" stroke="var(--rule)"/><text x="53" y="16" text-anchor="middle" class="svgnum" fill="var(--ink3)">2</text>
@@ -572,34 +582,57 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <text x="640" y="226" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--violet)"><tspan font-style="italic">D</tspan> = {3}</text>
     </g>
   </svg>
-  <figcaption>질문 하나 = 색칠 패턴 하나 = 부분집합 하나. 이 대응이 이 과목 전체의 출발점이야.</figcaption>
+  <figcaption lang="ko">질문 하나 = 색칠 패턴 하나 = 부분집합 하나. 이 대응이 이 과목 전체의 출발점이야.</figcaption>
+  <figcaption lang="en">One question = one colouring pattern = one subset. This correspondence is where the whole course starts.</figcaption>
   </figure>
 
-  <div class="def">
+  <div class="def" lang="ko">
     <span class="tag">정의</span>
     <p><span class="m"><i>Ω</i></span>의 부분집합을 <strong>사건(event)</strong>이라고 부른다. 결과 <span class="m"><i>ω</i></span>가 나왔을 때 <span class="m"><i>ω</i> ∈ <i>A</i></span>이면 "사건 <span class="m"><i>A</i></span>가 일어났다"고 말한다.</p>
   </div>
+  <div class="def" lang="en">
+    <span class="tag">Definition</span>
+    <p>A subset of <span class="m"><i>Ω</i></span> is called an <strong>event</strong>. If the outcome that came up is <span class="m"><i>ω</i></span> and <span class="m"><i>ω</i> ∈ <i>A</i></span>, we say "event <span class="m"><i>A</i></span> occurred".</p>
+  </div>
 
-  <h3 data-slide="8-9">질문을 조합하면 집합 연산이 된다</h3>
-  <p>여기가 진짜 핵심이야. 질문을 말로 조합하면, 집합에서는 연산으로 자동 번역돼.</p>
+  <h3 data-slide="8-9" lang="ko">질문을 조합하면 집합 연산이 된다</h3>
+  <h3 data-slide="8-9" lang="en">Combining questions gives you set operations</h3>
+  <p lang="ko">여기가 진짜 핵심이야. 질문을 말로 조합하면, 집합에서는 연산으로 자동 번역돼.</p>
+  <p lang="en">This is the part that matters. Combine two questions in plain words and the set side translates it into an operation for free.</p>
 
-  <table>
+  <table lang="ko">
     <tr><th>말로 하는 조합</th><th>집합 연산</th><th>주사위 예 (<i>A</i>=짝수, <i>B</i>=3 초과)</th></tr>
     <tr><td>A <strong>그리고</strong> B (AND)</td><td><span class="m"><i>A</i> ∩ <i>B</i></span></td><td><span class="m">{4, 6}</span></td></tr>
     <tr><td>A <strong>또는</strong> B (OR)</td><td><span class="m"><i>A</i> ∪ <i>B</i></span></td><td><span class="m">{2, 4, 5, 6}</span></td></tr>
     <tr><td>A가 <strong>아니다</strong> (NOT)</td><td><span class="m"><i>A</i><sup>c</sup></span></td><td><span class="m">{1, 3, 5}</span></td></tr>
   </table>
+  <table lang="en">
+    <tr><th>said in words</th><th>set operation</th><th>die example (<i>A</i>=even, <i>B</i>=greater than 3)</th></tr>
+    <tr><td>A <strong>and</strong> B</td><td><span class="m"><i>A</i> ∩ <i>B</i></span></td><td><span class="m">{4, 6}</span></td></tr>
+    <tr><td>A <strong>or</strong> B</td><td><span class="m"><i>A</i> ∪ <i>B</i></span></td><td><span class="m">{2, 4, 5, 6}</span></td></tr>
+    <tr><td><strong>not</strong> A</td><td><span class="m"><i>A</i><sup>c</sup></span></td><td><span class="m">{1, 3, 5}</span></td></tr>
+  </table>
 
-  <div class="callout">
+  <div class="callout" lang="ko">
     ECE 385/391 했으면 이건 이미 아는 거야. <strong>Boolean algebra랑 정확히 같은 구조</strong>거든. AND는 <code>&amp;</code>, OR는 <code>|</code>, NOT은 <code>~</code>. 실제로 <span class="m"><i>Ω</i></span>의 원소가 <span class="m"><i>n</i></span>개면, 각 사건은 <span class="m"><i>n</i></span>비트 마스크 하나랑 1:1로 대응돼. 집합 연산 = 비트 연산. 07번 섹션에서 이걸 그림으로 확인할 거야.
   </div>
+  <div class="callout" lang="en">
+    If you have taken ECE 385 or 391, you already know this. It is <strong>the same structure as Boolean algebra</strong>, symbol for symbol. AND is <code>&amp;</code>, OR is <code>|</code>, NOT is <code>~</code>. When <span class="m"><i>Ω</i></span> has <span class="m"><i>n</i></span> elements, every event corresponds one to one with an <span class="m"><i>n</i></span>-bit mask, and set operations are bit operations. Section 07 shows this as a picture.
+  </div>
 
-  <div class="trap">
+  <div class="trap" lang="ko">
     <span class="tag">함정</span>
     <h4>다른 질문이 같은 사건일 수 있다</h4>
     <p>"짝수인가?"와 "2, 4, 6 중 하나인가?"는 <em>말은 다르지만 같은 사건</em>이야. 둘 다 <span class="m">{2,4,6}</span>이거든. 확률은 사건에만 붙지 질문의 표현에는 안 붙어. 그래서 <span class="m"><i>P</i></span>는 "질문의 함수"가 아니라 "집합의 함수"야. 시험에서 말로 길게 서술된 사건이 나오면 <strong>일단 원소를 나열해서 집합으로 바꾸고 시작해.</strong></p>
     <h4>Ω를 안 정하고 시작하면 다 틀린다</h4>
     <p><span class="m"><i>A</i><sup>c</sup></span>는 <span class="m"><i>Ω</i></span>가 뭔지 정해져야만 의미가 있어. <span class="m"><i>A</i></span>={2,4,6}일 때 <span class="m"><i>Ω</i></span>={1,…,6}이면 <span class="m"><i>A</i><sup>c</sup></span>={1,3,5}지만, <span class="m"><i>Ω</i></span>={1,…,8}이면 <span class="m"><i>A</i><sup>c</sup></span>={1,3,5,7,8}이야. <strong>문제를 읽자마자 Ω부터 적어라.</strong> HW1 Problem 1이 <span class="m"><i>Ω</i></span>={1,…,8}로 시작하는 게 우연이 아니야. 주사위 습관 때문에 6까지로 착각하라고 낸 함정이야.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Trap</span>
+    <h4>Two different questions can be the same event</h4>
+    <p>"Is it even?" and "is it one of 2, 4, 6?" are <em>worded differently but are the same event</em>. Both are <span class="m">{2,4,6}</span>. Probability attaches to the event, never to how the question was phrased, which is why <span class="m"><i>P</i></span> is a function of sets and not a function of sentences. When an exam hands you an event buried in a paragraph of words, <strong>list the elements and turn it into a set before you do anything else.</strong></p>
+    <h4>Skip Ω and everything after it is wrong</h4>
+    <p><span class="m"><i>A</i><sup>c</sup></span> means nothing until <span class="m"><i>Ω</i></span> is fixed. With <span class="m"><i>A</i></span>={2,4,6}: if <span class="m"><i>Ω</i></span>={1,…,6} then <span class="m"><i>A</i><sup>c</sup></span>={1,3,5}, but if <span class="m"><i>Ω</i></span>={1,…,8} then <span class="m"><i>A</i><sup>c</sup></span>={1,3,5,7,8}. <strong>Write down Ω the moment you finish reading the problem.</strong> HW1 Problem 1 opening with <span class="m"><i>Ω</i></span>={1,…,8} is not an accident. It is baited for anyone whose die reflex stops at 6.</p>
   </div>
 </section>
 
