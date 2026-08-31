@@ -973,10 +973,11 @@ html[data-lang="en"] [lang="ko"]{display:none}
 
 <!-- ══ 06 ══ -->
 <section id="s6">
-  <div class="sec-head" data-slide="19-20"><span class="sec-num">06</span><h2>Kolmogorov의 공리</h2></div>
-  <p class="sec-sub">세 줄. 이게 확률의 정의 전부다.</p>
+  <div class="sec-head" data-slide="19-20"><span class="sec-num">06</span><h2 lang="ko">Kolmogorov의 공리</h2><h2 lang="en">Kolmogorov's axioms</h2></div>
+  <p class="sec-sub" lang="ko">세 줄. 이게 확률의 정의 전부다.</p>
+  <p class="sec-sub" lang="en">Three lines. That is the entire definition of probability.</p>
 
-  <div class="def">
+  <div class="def" lang="ko">
     <span class="tag">정의 — 확률 측도</span>
     <p>함수 <span class="m"><i>P</i> : ℱ → [0,1]</span>이 <strong>확률 측도(probability measure)</strong>라는 것은:</p>
     <div class="eq" style="margin:18px 0 10px;text-align:left;font-size:17px">
@@ -992,15 +993,35 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <span class="note" style="margin-left:0">가산 가법성 (countable additivity)</span>
     </div>
   </div>
+  <div class="def" lang="en">
+    <span class="tag">Definition — probability measure</span>
+    <p>A function <span class="m"><i>P</i> : ℱ → [0,1]</span> is a <strong>probability measure</strong> when:</p>
+    <div class="eq" style="margin:18px 0 10px;text-align:left;font-size:17px">
+      ① &nbsp; <i>P</i>(<i>A</i>) ≥ 0 &nbsp;&nbsp; for every <i>A</i> ∈ ℱ
+      <span class="note" style="margin-left:0">non-negativity</span>
+    </div>
+    <div class="eq" style="margin:10px 0;text-align:left;font-size:17px">
+      ② &nbsp; <i>P</i>(<i>Ω</i>) = 1
+      <span class="note" style="margin-left:0">normalization</span>
+    </div>
+    <div class="eq" style="margin:10px 0 0;text-align:left;font-size:17px">
+      ③ &nbsp; <i>P</i>( ⋃<sub><i>i</i>=1</sub><sup>∞</sup> <i>A<sub>i</sub></i> ) = ∑<sub><i>i</i>=1</sub><sup>∞</sup> <i>P</i>(<i>A<sub>i</sub></i>) &nbsp;&nbsp; whenever <i>A<sub>i</sub></i> ∩ <i>A<sub>j</sub></i> = ∅ (<i>i</i> ≠ <i>j</i>)
+      <span class="note" style="margin-left:0">countable additivity</span>
+    </div>
+  </div>
 
-  <p>①과 ②는 그냥 눈금 맞추기야. "확률은 음수가 될 수 없고, 전체는 1이다." ③이 진짜 내용이야.</p>
+  <p lang="ko">①과 ②는 그냥 눈금 맞추기야. "확률은 음수가 될 수 없고, 전체는 1이다." ③이 진짜 내용이야.</p>
+  <p lang="en">The first two are just calibration: probability cannot go negative, and the whole thing is 1. ③ is where the content is.</p>
 
-  <h3 data-slide="20">③번을 그림으로</h3>
-  <p>확률을 <strong>면적</strong>이라고 생각하면 제일 편해. <span class="m"><i>Ω</i></span>는 넓이가 1인 판이고, 각 사건은 그 판 위의 영역이야.</p>
+  <h3 data-slide="20" lang="ko">③번을 그림으로</h3>
+  <h3 data-slide="20" lang="en">Axiom ③ as a picture</h3>
+  <p lang="ko">확률을 <strong>면적</strong>이라고 생각하면 제일 편해. <span class="m"><i>Ω</i></span>는 넓이가 1인 판이고, 각 사건은 그 판 위의 영역이야.</p>
+  <p lang="en">The easiest mental model is <strong>area</strong>. <span class="m"><i>Ω</i></span> is a board of area 1, and each event is a region drawn on it.</p>
 
   <figure>
   <svg viewBox="0 0 700 210" role="img" aria-label="서로소 사건의 확률은 더해진다">
-    <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em">서로소일 때만 그냥 더할 수 있다</text>
+    <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="ko">서로소일 때만 그냥 더할 수 있다</text>
+    <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="en">you may simply add only when they are disjoint</text>
 
     <!-- disjoint case -->
     <rect x="30" y="46" width="250" height="120" rx="8" fill="var(--paper)" stroke="var(--rule)"/>
@@ -1011,6 +1032,7 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <text x="42" y="64" class="svgtxt it" style="font-size:12px;fill:var(--ink3)">Ω</text>
     <text x="155" y="188" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--green)">P(A₁ ∪ A₂) = P(A₁) + P(A₂) ✓</text>
 
+
     <!-- overlapping case -->
     <rect x="420" y="46" width="250" height="120" rx="8" fill="var(--paper)" stroke="var(--rule)"/>
     <defs><clipPath id="ov"><circle cx="500" cy="106" r="40"/></clipPath></defs>
@@ -1019,19 +1041,24 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <g clip-path="url(#ov)"><circle cx="570" cy="106" r="40" fill="rgba(var(--amber-rgb),.6)"/></g>
     <text x="470" y="111" text-anchor="middle" class="svgtxt it" style="font-size:14px;fill:var(--blue)">A</text>
     <text x="600" y="111" text-anchor="middle" class="svgtxt it" style="font-size:14px;fill:var(--pink)">B</text>
-    <text x="535" y="164" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:var(--amber)">두 번 세짐</text>
+    <text x="535" y="164" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:var(--amber)" lang="ko">두 번 세짐</text>
+    <text x="535" y="164" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:var(--amber)" lang="en">counted twice</text>
     <text x="545" y="188" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--amber)">P(A ∪ B) ≠ P(A) + P(B) ✗</text>
 
     <text x="350" y="110" text-anchor="middle" class="svglab" style="font-size:20px;fill:var(--rule)">|</text>
   </svg>
-  <figcaption>겹치는 부분을 양쪽에서 한 번씩 세니까 총합이 실제보다 커져. 그래서 ③은 <strong>서로소일 때만</strong> 성립한다고 못 박아둔 거야. 겹칠 때 어떻게 되는지는 07번에서.</figcaption>
+  <figcaption lang="ko">겹치는 부분을 양쪽에서 한 번씩 세니까 총합이 실제보다 커져. 그래서 ③은 <strong>서로소일 때만</strong> 성립한다고 못 박아둔 거야. 겹칠 때 어떻게 되는지는 07번에서.</figcaption>
+  <figcaption lang="en">The overlap gets counted once from each side, so the total comes out larger than reality. That is why ③ is stated to hold <strong>only for disjoint sets</strong>. Section 07 handles what happens when they do overlap.</figcaption>
   </figure>
 
-  <div class="callout">
+  <div class="callout" lang="ko">
     <strong>Module 1의 partition이 여기서 처음 일한다.</strong> 공리 ③이 요구하는 "<span class="m"><i>A<sub>i</sub></i> ∩ <i>A<sub>j</sub></i> = ∅</span>"이 정확히 <em>pairwise disjoint</em> 조건이야. Module 1 09번에서 "pairwise를 확인해야지 전체 교집합만 보면 안 된다"고 했던 함정이 여기서 실전으로 쓰여. 공리를 적용하려는데 사실 pairwise disjoint가 아니면 계산이 통째로 틀려.
   </div>
+  <div class="callout" lang="en">
+    <strong>This is where Module 1's partition first goes to work.</strong> The "<span class="m"><i>A<sub>i</sub></i> ∩ <i>A<sub>j</sub></i> = ∅</span>" that axiom ③ demands is precisely the <em>pairwise disjoint</em> condition. The trap from Module 1 §09, that you must check pairs rather than the total intersection, becomes operational right here. Apply the axiom to a family that is not actually pairwise disjoint and the whole computation is wrong.
+  </div>
 
-  <div class="trap">
+  <div class="trap" lang="ko">
     <span class="tag">함정</span>
 
     <h4>유한 가법성과 가산 가법성은 다르다</h4>
@@ -1044,6 +1071,20 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <h4>P는 ℱ 위에서만 정의된다</h4>
     <p><span class="m"><i>P</i> : ℱ → [0,1]</span>이지 <span class="m"><i>P</i> : 2<sup><i>Ω</i></sup> → [0,1]</span>이 아니야. <span class="m">ℱ</span>에 없는 집합에 대해서는 <span class="m"><i>P</i></span>가 <strong>정의되지 않아.</strong> "확률이 0이다"가 아니라 "확률을 말할 수 없다"야. 이 차이가 09번의 Borel 얘기에서 중요해져.</p>
     <p>그리고 <span class="m"><i>P</i></span>는 <em>원소</em>가 아니라 <em>사건</em>에 확률을 붙여. <span class="m"><i>P</i>({3})</span>이 맞는 표기고 <span class="m"><i>P</i>(3)</span>은 엄밀히는 약식 표기야.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Trap</span>
+
+    <h4>Finite additivity and countable additivity are not the same</h4>
+    <p>③ guarantees the property for <strong>infinitely many</strong> sets, which is far stronger than guaranteeing it for finitely many. Why demand the infinite version? Because <em>continuity of probability</em> in section 12 falls out of it, and because you need it to handle infinite sample spaces such as the <span class="m"><i>Ω</i> = {1,2,3,…}</span> in HW1 Problem 7.</p>
+    <p>Finite additivity comes free from ③ anyway: just set <span class="m"><i>A</i><sub>3</sub> = <i>A</i><sub>4</sub> = ⋯ = ∅</span>.</p>
+
+    <h4>The reason it says "countable" is also here</h4>
+    <p>If ③ demanded uncountable unions too, you would get a contradiction. On <span class="m"><i>Ω</i> = [0,1]</span> each single point has probability 0, so gathering <em>uncountably many</em> points would force <span class="m">0 + 0 + ⋯</span> to equal 1. That is nonsense. <strong>Restricting to countable unions is what keeps the contradiction out.</strong> The ③ in the σ-algebra definition and the ③ here both saying "countable" is no coincidence.</p>
+
+    <h4>P is defined on ℱ, nowhere else</h4>
+    <p>It is <span class="m"><i>P</i> : ℱ → [0,1]</span>, not <span class="m"><i>P</i> : 2<sup><i>Ω</i></sup> → [0,1]</span>. For a set outside <span class="m">ℱ</span>, <span class="m"><i>P</i></span> is simply <strong>not defined</strong>. Not "the probability is zero" but "there is no probability to speak of". That distinction matters once you reach the Borel discussion in section 09.</p>
+    <p>Also, <span class="m"><i>P</i></span> assigns probability to <em>events</em>, not <em>outcomes</em>. <span class="m"><i>P</i>({3})</span> is the correct notation; <span class="m"><i>P</i>(3)</span> is shorthand, strictly speaking.</p>
   </div>
 </section>
 
