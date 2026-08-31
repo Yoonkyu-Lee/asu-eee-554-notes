@@ -176,6 +176,40 @@ body.rdr-resizing { user-select: none; cursor: col-resize; }
   background: var(--code-bg); padding: 1px 5px; border-radius: 4px;
 }
 
+/* 받는 양이 2MB를 넘는다(worker 1.2MB + PDF 1MB). 진행이 안 보이면
+   멈춘 것과 구분이 안 되므로 막대로 보여준다. 총량을 모르는 구간
+   (pdf.js 모듈 로드)에서는 흐르는 막대로 "살아는 있다"만 알린다. */
+#rdr-bar {
+  height: 3px; margin: 14px 0 9px;
+  background: var(--chip); border-radius: 2px; overflow: hidden;
+}
+#rdr-bar > i {
+  display: block; height: 100%; width: 0;
+  background: var(--sel); border-radius: 2px;
+  transition: width .18s linear;
+}
+#rdr-bar.is-indet > i {
+  width: 34%; transition: none;
+  animation: rdr-indet 1.15s ease-in-out infinite;
+}
+@keyframes rdr-indet {
+  0%   { margin-left: -34%; }
+  100% { margin-left: 100%; }
+}
+#rdr-msg .rdr-sub {
+  font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: .04em; color: var(--ink3);
+}
+#rdr-retry {
+  margin-top: 14px;
+  font-family: var(--mono); font-size: 11px;
+  padding: 6px 12px;
+  background: var(--paper); color: var(--ink2);
+  border: 1px solid var(--rule); border-radius: 5px;
+  cursor: pointer; transition: .12s;
+}
+#rdr-retry:hover { border-color: var(--ink3); color: var(--ink); }
+
 /* ── 동기화 기준선 바늘 ──────────────────── */
 /* 노트의 책갈피 선(제목 옆 옅은 선)이 이 바늘을 넘어가면 슬라이드가 넘어간다.
    기준선은 원래 코드 안에만 있어서 왜 지금 넘어갔는지 알 수 없었다.
@@ -243,5 +277,7 @@ body:not(.rdr-on) #rdr-needle { display: none }
   #rdr-head button, #rdr-open,
   #rdr-needle::before, #rdr-needle::after,
   #rdr-pin::before, #rdr-pin::after { transition: none; }
+  #rdr-bar > i { transition: none; }
+  #rdr-bar.is-indet > i { animation: none; width: 100%; opacity: .45; }
   #rdr-needle.is-hit::after, #rdr-pin.is-hit::after { transform: none; }
 }

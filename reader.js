@@ -49,6 +49,8 @@ function boot() {
     window.addEventListener('resize', onResize);
     return;
   }
+  // start 자체가 실패하면(리더 UI조차 못 만든 경우) 그때만 걷어낸다.
+  // PDF 로드 실패는 load() 안에서 재시도 버튼으로 처리한다.
   start().catch(() => teardown());
 }
 
@@ -95,7 +97,12 @@ function buildUI() {
       <button id="rdr-follow" class="on" title="노트를 스크롤하면 슬라이드가 따라온다">따라가기</button>
       <button id="rdr-close" title="리더 닫기">✕</button>
     </div>
-    <div id="rdr-scroll"><div id="rdr-msg">슬라이드를 불러오는 중…</div></div>
+    <div id="rdr-scroll"><div id="rdr-msg">
+      <div class="rdr-line"></div>
+      <div id="rdr-bar" class="is-indet"><i></i></div>
+      <div class="rdr-sub"></div>
+      <button id="rdr-retry" hidden></button>
+    </div></div>
     <div id="rdr-pin" title="슬라이드쪽 기준선. 여기 걸린 쪽이 '현재'다. 다른 구간으로 넘어가면 노트가 따라온다. 드래그해서 옮길 수 있다."></div>`;
   document.body.appendChild(root);
   document.body.classList.add('rdr-on');
@@ -122,7 +129,60 @@ function buildUI() {
     close: root.querySelector('#rdr-close'),
     grab: root.querySelector('#rdr-grab'),
     pin: root.querySelector('#rdr-pin'),
+    line: root.querySelector('#rdr-msg .rdr-line'),
+    bar: root.querySelector('#rdr-bar'),
+    sub: root.querySelector('#rdr-msg .rdr-sub'),
+    retry: root.querySelector('#rdr-retry'),
   };
+}
+
+// 진행이 이만큼 멈춰 있으면 죽은 것으로 본다. 전체 시간이 아니라
+// "마지막 진전 이후" 기준이다. 느린 회선에서 오래 걸리는 것과
+// 아예 멈춘 것을 구분해야 하기 때문이다.
+const STALL_MS = 25000;
+
+const KB = n => (n < 1024 * 1024
+  ? Math.round(n / 1024) + ' KB'
+  : (n / 1024 / 1024).toFixed(1) + ' MB');
+
+function setPhase(text, sub) {
+  if (!ui?.line) return;
+  ui.line.textContent = text;
+  ui.sub.textContent = sub || '';
+}
+
+function setProgress(loaded, total) {
+  if (!ui?.bar) return;
+  if (total > 0) {
+    ui.bar.classList.remove('is-indet');
+    ui.bar.firstElementChild.style.width =
+      Math.min(100, Math.round((loaded / total) * 100)) + '%';
+    setPhase(L('슬라이드를 불러오는 중…', 'Loading slides…'),
+             KB(loaded) + ' / ' + KB(total));
+  } else {
+    ui.bar.classList.add('is-indet');
+    setPhase(L('슬라이드를 불러오는 중…', 'Loading slides…'), loaded ? KB(loaded) : '');
+  }
+}
+
+function showError(why) {
+  if (!ui?.line) return;
+  ui.bar.hidden = true;
+  ui.line.textContent = L('슬라이드를 불러오지 못했어.', 'The slides did not load.');
+  ui.sub.textContent = why || '';
+  ui.retry.textContent = L('다시 불러오기', 'Try again');
+  ui.retry.hidden = false;
+}
+
+// 실패해도 리더를 지우지 않는다. 지워버리면 왜 안 뜨는지 알 수 없고
+// 다시 시도할 방법도 없어진다. 예전에는 그냥 teardown 했다.
+function runStart() {
+  ui.retry.hidden = true;
+  ui.bar.hidden = false;
+  ui.bar.classList.add('is-indet');
+  ui.bar.firstElementChild.style.width = '0';
+  setPhase(L('슬라이드를 불러오는 중…', 'Loading slides…'), '');
+  load().catch(err => showError(String(err?.message || err).slice(0, 120)));
 }
 
 async function start() {
@@ -132,21 +192,69 @@ async function start() {
   await css(new URL('./reader.css', import.meta.url).href);
   ui = buildUI();
   wireChrome();
+  ui.retry.addEventListener('click', runStart);
 
   // file://로 열면 브라우저가 PDF fetch를 막는다. 시도하면 콘솔 에러만 남으므로 아예 안 한다.
   if (location.protocol === 'file:') {
-    ui.msg.innerHTML =
+    ui.bar.hidden = true;
+    ui.line.innerHTML = L(
       '로컬 파일(<code>file://</code>)로 열면 브라우저가 PDF를 못 읽어.<br><br>' +
       '슬라이드를 보려면 간단한 서버로 열어야 해:<br>' +
-      '<code>npx serve .</code> 또는 <code>python -m http.server</code>';
+      '<code>npx serve .</code> 또는 <code>python -m http.server</code>',
+      'Opened as a local file (<code>file://</code>), so the browser will not read the PDF.<br><br>' +
+      'Serve the folder to see the slides:<br>' +
+      '<code>npx serve .</code> or <code>python -m http.server</code>');
     return;
   }
 
-  const pdfjs = await import('./vendor/pdf.js/pdf.min.mjs');
-  pdfjs.GlobalWorkerOptions.workerSrc = new URL('./vendor/pdf.js/pdf.worker.min.mjs', import.meta.url).href;
+  runStart();
+}
 
-  const doc = await pdfjs.getDocument({ url, isEvalSupported: false }).promise;
-  await layout(doc);
+async function load() {
+  const url = pdfUrl();
+  setProgress(0, 0);
+
+  // 진전이 있을 때마다 시계를 되감는다. 느려서 오래 걸리는 것과 멈춘 것을
+  // 총 경과 시간으로는 구분할 수 없다. pdf.js 모듈(1.7MB)을 받는 구간도
+  // 덮어야 하므로 import 전에 건다.
+  let task = null;
+  let timer = null;
+  let stalled = false;
+  const armStall = () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      stalled = true;
+      try { task?.destroy(); } catch {}
+      showError(L('응답이 없어. 연결을 확인하고 다시 눌러줘.',
+                  'No response. Check the connection and try again.'));
+    }, STALL_MS);
+  };
+  armStall();
+
+  try {
+    const pdfjs = await import('./vendor/pdf.js/pdf.min.mjs');
+    if (stalled) return;
+    armStall();
+    pdfjs.GlobalWorkerOptions.workerSrc = new URL('./vendor/pdf.js/pdf.worker.min.mjs', import.meta.url).href;
+
+    task = pdfjs.getDocument({ url, isEvalSupported: false });
+    task.onProgress = ({ loaded, total }) => {
+      if (stalled) return;
+      armStall();
+      setProgress(loaded, total);
+    };
+
+    const doc = await task.promise;
+    // 정체로 판정하고 destroy 한 뒤에 늦게 끝난 경우. 안내 문구를 덮지 않는다.
+    if (stalled) return;
+    await layout(doc);
+  } catch (err) {
+    // 정체 안내가 이미 떠 있으면 destroy 때문에 생긴 거부로 그것을 덮지 않는다.
+    if (stalled) return;
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 // ── 페이지 배치와 렌더 ──────────────────────────────
@@ -257,6 +365,15 @@ function relabel() {
   });
   setFollow(autoFollow);
   ui.openBtn.textContent = L('슬라이드', 'slides');
+  // 로딩 중이거나 실패한 상태로 언어를 바꿀 수 있다.
+  // 성공하면 #rdr-msg 가 통째로 제거되므로 붙어 있을 때만 손댄다.
+  if (!ui.line?.isConnected) return;
+  if (!ui.retry.hidden) {
+    ui.line.textContent = L('슬라이드를 불러오지 못했어.', 'The slides did not load.');
+    ui.retry.textContent = L('다시 불러오기', 'Try again');
+  } else if (ui.line.textContent) {
+    ui.line.textContent = L('슬라이드를 불러오는 중…', 'Loading slides…');
+  }
 }
 window.addEventListener('langchange', relabel);
 
