@@ -1676,23 +1676,33 @@ html[data-lang="en"] [lang="ko"]{display:none}
 
 <!-- ══ 12 ══ -->
 <section id="s12">
-  <div class="sec-head" data-slide="40-41"><span class="sec-num">12</span><h2>확률의 연속성</h2></div>
-  <p class="sec-sub">집합이 극한으로 가면 확률도 따라간다. HW1 Problem 7의 결승선.</p>
+  <div class="sec-head" data-slide="40-41"><span class="sec-num">12</span><h2 lang="ko">확률의 연속성</h2><h2 lang="en">Continuity of probability</h2></div>
+  <p class="sec-sub" lang="ko">집합이 극한으로 가면 확률도 따라간다. HW1 Problem 7의 결승선.</p>
+  <p class="sec-sub" lang="en">When the sets converge, the probabilities follow. The finish line of HW1 Problem 7.</p>
 
-  <div class="def">
+  <div class="def" lang="ko">
     <span class="tag">정리 — Continuity of Probability</span>
     <p><strong>증가하는 경우:</strong> <span class="m"><i>B</i><sub>1</sub> ⊆ <i>B</i><sub>2</sub> ⊆ ⋯</span> 이면</p>
     <div class="eq" style="margin:12px 0"><i>P</i>(<i>B<sub>n</sub></i>) → <i>P</i>( ⋃<sub><i>n</i>=1</sub><sup>∞</sup> <i>B<sub>n</sub></i> )</div>
     <p><strong>감소하는 경우:</strong> <span class="m"><i>B</i><sub>1</sub> ⊇ <i>B</i><sub>2</sub> ⊇ ⋯</span> 이면</p>
     <div class="eq" style="margin:12px 0 0"><i>P</i>(<i>B<sub>n</sub></i>) → <i>P</i>( ⋂<sub><i>n</i>=1</sub><sup>∞</sup> <i>B<sub>n</sub></i> )</div>
   </div>
+  <div class="def" lang="en">
+    <span class="tag">Theorem — continuity of probability</span>
+    <p><strong>Increasing case:</strong> if <span class="m"><i>B</i><sub>1</sub> ⊆ <i>B</i><sub>2</sub> ⊆ ⋯</span> then</p>
+    <div class="eq" style="margin:12px 0"><i>P</i>(<i>B<sub>n</sub></i>) → <i>P</i>( ⋃<sub><i>n</i>=1</sub><sup>∞</sup> <i>B<sub>n</sub></i> )</div>
+    <p><strong>Decreasing case:</strong> if <span class="m"><i>B</i><sub>1</sub> ⊇ <i>B</i><sub>2</sub> ⊇ ⋯</span> then</p>
+    <div class="eq" style="margin:12px 0 0"><i>P</i>(<i>B<sub>n</sub></i>) → <i>P</i>( ⋂<sub><i>n</i>=1</sub><sup>∞</sup> <i>B<sub>n</sub></i> )</div>
+  </div>
 
-  <p>말로 하면 <strong>"극한과 <span class="m"><i>P</i></span>의 순서를 바꿔도 된다"</strong>야. 이게 당연해 보이지만 전혀 당연하지 않아. 가산 가법성(공리 ③)이 있어야 성립하는 정리거든.</p>
+  <p lang="ko">말로 하면 <strong>"극한과 <span class="m"><i>P</i></span>의 순서를 바꿔도 된다"</strong>야. 이게 당연해 보이지만 전혀 당연하지 않아. 가산 가법성(공리 ③)이 있어야 성립하는 정리거든.</p>
+  <p lang="en">In words, <strong>you may exchange the limit and <span class="m"><i>P</i></span></strong>. That looks obvious and is not obvious at all. The theorem only holds because of countable additivity, axiom ③.</p>
 
   <figure>
   <svg viewBox="0 0 700 250" role="img" aria-label="증가하는 집합열과 감소하는 집합열">
     <!-- increasing -->
-    <text x="30" y="24" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:var(--green)">증가 — 점점 커져서 합집합으로</text>
+    <text x="30" y="24" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:var(--green)" lang="ko">증가 — 점점 커져서 합집합으로</text>
+    <text x="30" y="24" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:var(--green)" lang="en">increasing — growing towards the union</text>
     <g>
       <rect x="30" y="40" width="280" height="120" rx="8" fill="var(--paper)" stroke="var(--rule)"/>
       <rect x="46" y="56" width="248" height="88" rx="6" fill="rgba(var(--green-rgb),.06)" stroke="var(--green)" stroke-width="1.2" stroke-dasharray="4 3"/>
@@ -1707,7 +1717,8 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <text x="170" y="186" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--green)">P(Bₙ) ↗ P(⋃Bₙ)</text>
 
     <!-- decreasing -->
-    <text x="390" y="24" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:var(--pink)">감소 — 점점 작아져서 교집합으로</text>
+    <text x="390" y="24" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:var(--pink)" lang="ko">감소 — 점점 작아져서 교집합으로</text>
+    <text x="390" y="24" class="svglab" style="font-size:10.5px;letter-spacing:.1em;fill:var(--pink)" lang="en">decreasing — shrinking towards the intersection</text>
     <g>
       <rect x="390" y="40" width="280" height="120" rx="8" fill="var(--paper)" stroke="var(--rule)"/>
       <rect x="406" y="56" width="248" height="88" rx="6" fill="rgba(var(--pink-rgb),.12)" stroke="var(--pink)" stroke-width="1.1"/>
@@ -1724,12 +1735,16 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <text x="350" y="224" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)">
       오른쪽에서 ⋂Bₙ = ∅ 이면 P(Bₙ) → 0 이 된다. Module 1 08번의 (0, 1/n) 이 바로 그 경우.
     </text>
+    <text x="350" y="224" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="en">
+      On the right, ⋂Bₙ = ∅ forces P(Bₙ) → 0. The (0, 1/n) example from Module 1 §08 is exactly this case.
+    </text>
     <line x1="350" y1="36" x2="350" y2="200" stroke="var(--rule)"/>
   </svg>
-  <figcaption>왼쪽은 <span class="m">⋃</span>로, 오른쪽은 <span class="m">⋂</span>로 수렴해. Module 1 08번에서 "무한 연산은 유한 연산의 단순 연장이 아니다"라고 했는데, 확률은 다행히도 <strong>연속적으로</strong> 따라와준다는 게 이 정리의 내용이야.</figcaption>
+  <figcaption lang="ko">왼쪽은 <span class="m">⋃</span>로, 오른쪽은 <span class="m">⋂</span>로 수렴해. Module 1 08번에서 "무한 연산은 유한 연산의 단순 연장이 아니다"라고 했는데, 확률은 다행히도 <strong>연속적으로</strong> 따라와준다는 게 이 정리의 내용이야.</figcaption>
+  <figcaption lang="en">The left converges to a <span class="m">⋃</span>, the right to a <span class="m">⋂</span>. Module 1 §08 warned that infinite operations are not just finite ones continued. What this theorem says is that probability, fortunately, does follow along <strong>continuously</strong>.</figcaption>
   </figure>
 
-  <div class="ex">
+  <div class="ex" lang="ko">
     <span class="tag">예제 12.1 — HW1 Problem 7 유형</span>
     <p><span class="m"><i>Ω</i> = {1,2,3,…}</span>이고 <span class="m"><i>P</i>({<i>n</i>}) = 2/3<sup><i>n</i></sup></span>이라 하자.</p>
     <ol>
@@ -1752,8 +1767,31 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <p>HW1 Problem 7은 <span class="m"><i>P</i>({<i>n</i>}) = 1/2<sup><i>n</i></sup></span>으로 나와. 같은 절차에 숫자만 다르니까 직접 해봐.</p>
     </div></details>
   </div>
+  <div class="ex" lang="en">
+    <span class="tag">Example 12.1 — the HW1 Problem 7 pattern</span>
+    <p>Let <span class="m"><i>Ω</i> = {1,2,3,…}</span> with <span class="m"><i>P</i>({<i>n</i>}) = 2/3<sup><i>n</i></sup></span>.</p>
+    <ol>
+      <li>Verify this is a valid probability measure.</li>
+      <li>Find <span class="m"><i>P</i>({1,2})</span>.</li>
+      <li>Find the probability the outcome is even.</li>
+      <li>For <span class="m"><i>A<sub>n</sub></i> = {<i>n</i>, <i>n</i>+1, …}</span>, find <span class="m"><i>P</i>(<i>A<sub>n</sub></i>)</span>.</li>
+      <li>Find <span class="m">⋂<sub><i>n</i></sub> <i>A<sub>n</sub></i></span> and compare with <span class="m">lim <i>P</i>(<i>A<sub>n</sub></i>)</span>.</li>
+    </ol>
+    <details><summary>Solution</summary><div class="body">
+      <p><strong>1.</strong> Geometric series: <span class="m">∑<sub><i>n</i>≥1</sub> 2/3<sup><i>n</i></sup> = 2 · (1/3)/(1 − 1/3) = 2 · (1/2) = 1</span> ✓ and every term is positive ✓, so it is valid.</p>
+      <p><strong>2.</strong> <span class="m">2/3 + 2/9 = 8/9</span></p>
+      <p><strong>3.</strong> <span class="m">∑<sub><i>m</i>≥1</sub> 2/3<sup>2<i>m</i></sup> = 2 ∑<sub><i>m</i>≥1</sub> (1/9)<sup><i>m</i></sup> = 2 · (1/9)/(1 − 1/9) = 2/8 = 1/4</span></p>
+      <p><strong>4.</strong> The tail sum: <span class="m"><i>P</i>(<i>A<sub>n</sub></i>) = ∑<sub><i>k</i>≥<i>n</i></sub> 2/3<sup><i>k</i></sup> = 2 · (3<sup>−<i>n</i></sup>)/(1 − 1/3) = 3 · 3<sup>−<i>n</i></sup> = 1/3<sup><i>n</i>−1</sup></span></p>
+      <p>Check: <span class="m"><i>P</i>(<i>A</i><sub>1</sub>) = 1/3<sup>0</sup> = 1</span> ✓, as it must be since <span class="m"><i>A</i><sub>1</sub> = <i>Ω</i></span>.</p>
+      <p><strong>5.</strong> This is a <strong>decreasing</strong> sequence, <span class="m"><i>A</i><sub>1</sub> ⊇ <i>A</i><sub>2</sub> ⊇ ⋯</span>. Whatever natural number <span class="m"><i>k</i></span> you pick, <span class="m"><i>k</i> ∉ <i>A</i><sub><i>k</i>+1</sub></span>, so:</p>
+      <div class="eq" style="text-align:left;font-size:16px">⋂<sub><i>n</i></sub> <i>A<sub>n</sub></i> = ∅ &nbsp;⟹&nbsp; <i>P</i>(⋂<sub><i>n</i></sub> <i>A<sub>n</sub></i>) = <i>P</i>(∅) = 0</div>
+      <p>Meanwhile <span class="m">lim<sub><i>n</i>→∞</sub> <i>P</i>(<i>A<sub>n</sub></i>) = lim 1/3<sup><i>n</i>−1</sup> = 0</span>. <strong>The two agree</strong>, which is the continuity theorem verified. ∎</p>
+      <p><strong>The shape of this problem:</strong> Module 1 §08 Example 8.1(3) already established <span class="m">⋂{<i>n</i>, <i>n</i>+1, …} = ∅</span>. Here you put a probability on top of it and confirm that as the sets shrink to ∅, the probabilities shrink to 0. <strong>Module 1's set computation + Module 2's probability = HW1 Problem 7.</strong></p>
+      <p>HW1 Problem 7 uses <span class="m"><i>P</i>({<i>n</i>}) = 1/2<sup><i>n</i></sup></span>. Same procedure, different numbers, so run it yourself.</p>
+    </div></details>
+  </div>
 
-  <div class="trap">
+  <div class="trap" lang="ko">
     <span class="tag">함정</span>
     <h4>단조(nested)여야 성립한다</h4>
     <p>아무 집합열에나 <span class="m">lim <i>P</i>(<i>B<sub>n</sub></i>) = <i>P</i>(lim <i>B<sub>n</sub></i>)</span>가 성립하는 게 아니야. <strong>증가하거나 감소하는 열</strong>이어야 해. 오르락내리락하는 열은 애초에 <span class="m">lim <i>B<sub>n</sub></i></span>이 잘 정의되지도 않아.</p>
@@ -1761,6 +1799,15 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <p>화살표 방향에 주의해. 정리가 말하는 건 <span class="m"><i>P</i>(<i>B<sub>n</sub></i>) → <i>P</i>(⋂<i>B<sub>n</sub></i>)</span>야. 그러니 <span class="m"><i>P</i>(<i>B<sub>n</sub></i>) → 0</span>이면 <span class="m"><i>P</i>(⋂<i>B<sub>n</sub></i>) = 0</span>이 나오지, <span class="m">⋂<i>B<sub>n</sub></i> = ∅</span>이 나오는 게 아니야. 07번 함정에서 본 "확률 0 ≠ 공집합"이 그대로 적용돼.</p>
     <h4>이 정리는 가산 가법성의 결과다</h4>
     <p>증명 아이디어만 말하면, 증가 수열을 서로소 껍질들 <span class="m"><i>C</i><sub>1</sub> = <i>B</i><sub>1</sub>, <i>C<sub>n</sub></i> = <i>B<sub>n</sub></i> \ <i>B</i><sub><i>n</i>−1</sub></span>로 쪼개고 공리 ③을 적용해. <strong>또 "서로소로 쪼개기"야.</strong> 07번 예제의 네 증명과 완전히 같은 수법이지. 이 과목에서 확률 증명은 사실상 전부 이 한 가지 기술이야.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Trap</span>
+    <h4>It needs a nested sequence</h4>
+    <p><span class="m">lim <i>P</i>(<i>B<sub>n</sub></i>) = <i>P</i>(lim <i>B<sub>n</sub></i>)</span> does not hold for an arbitrary sequence of sets. It has to be <strong>increasing or decreasing</strong>. For a sequence that wanders up and down, <span class="m">lim <i>B<sub>n</sub></i></span> is not even well defined.</p>
+    <h4>P(Bₙ) → 0 does not give ⋂Bₙ = ∅</h4>
+    <p>Watch the direction of the arrow. The theorem states <span class="m"><i>P</i>(<i>B<sub>n</sub></i>) → <i>P</i>(⋂<i>B<sub>n</sub></i>)</span>. So <span class="m"><i>P</i>(<i>B<sub>n</sub></i>) → 0</span> gives you <span class="m"><i>P</i>(⋂<i>B<sub>n</sub></i>) = 0</span>, not <span class="m">⋂<i>B<sub>n</sub></i> = ∅</span>. The "probability zero is not the empty set" point from §07 applies verbatim.</p>
+    <h4>This theorem is a consequence of countable additivity</h4>
+    <p>The idea of the proof: split an increasing sequence into disjoint shells <span class="m"><i>C</i><sub>1</sub> = <i>B</i><sub>1</sub>, <i>C<sub>n</sub></i> = <i>B<sub>n</sub></i> \ <i>B</i><sub><i>n</i>−1</sub></span> and apply axiom ③. <strong>Split into disjoint pieces, again.</strong> Exactly the move behind all four proofs in §07. Essentially every probability proof in this course is that one technique.</p>
   </div>
 </section>
 
