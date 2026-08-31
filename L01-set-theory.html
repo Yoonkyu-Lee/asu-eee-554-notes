@@ -283,8 +283,10 @@ footer a{color:var(--blue)}
 /* 한 파일에 한국어와 영어를 나란히 두고 보이는 쪽만 남긴다.
    도해·앵커·CSS·리더를 공유하므로 두 언어의 구조가 어긋날 수 없다.
    lang 속성을 쓰는 건 스크린리더와 하이픈 처리도 같이 얻기 위해서다. */
-html[data-lang="ko"] [lang="en"]{display:none}
-html[data-lang="en"] [lang="ko"]{display:none}
+/* 언어 표시는 어떤 규칙보다 우선해야 한다. 목차나 도해 쪽 선택자가
+   더 구체적이어서 display를 되살리는 일이 실제로 있었다. */
+html[data-lang="ko"] [lang="en"]{display:none!important}
+html[data-lang="en"] [lang="ko"]{display:none!important}
 .lang-btn{position:fixed;left:16px;bottom:56px;z-index:70;
   font-family:var(--mono);font-size:11px;letter-spacing:.05em;
   padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
@@ -958,7 +960,7 @@ html[data-lang="en"] [lang="ko"]{display:none}
           </g>
         </svg>
         <div class="hintline" style="border:0;padding-top:8px">
-          <span class="m"><i>Ω</i> = {1,…,8}</span>, &nbsp;<span class="cA m"><i>A</i> = {1,2,3,4}</span>, &nbsp;<span class="cB m"><i>B</i> = {3,4,5,6}</span>, &nbsp;<span class="cC m"><i>C</i> = {2,4,6,8}</span> &nbsp;— HW1 Problem 1과 같은 설정이야.
+          <span class="m"><i>Ω</i> = {1,…,8}</span>, &nbsp;<span class="cA m"><i>A</i> = {1,2,3,4}</span>, &nbsp;<span class="cB m"><i>B</i> = {3,4,5,6}</span>, &nbsp;<span class="cC m"><i>C</i> = {2,4,6,8}</span><span lang="ko"> &nbsp;— HW1 Problem 1과 같은 설정이야.</span><span lang="en"> &nbsp;— the same setup as HW1 Problem 1.</span>
         </div>
       </div>
 
@@ -1981,10 +1983,13 @@ html[data-lang="en"] [lang="ko"]{display:none}
 </section>
 
 <footer>
-  EEE 554 Probability and Random Processes · Module 1 개인 학습 노트<br>
+  <span lang="ko">EEE 554 Probability and Random Processes · Module 1 개인 학습 노트<br>
   강의: Nicolò Michelusi, Arizona State University · Fall 2026<br>
   이 노트 본문은 수강생이 강의 슬라이드를 재구성하고 보충해 만든 개인 학습 자료이며, 공식 강의 자료가 아닙니다.<br>
-  함께 실린 강의 슬라이드의 저작권은 Nicolò Michelusi 교수와 Arizona State University에 있습니다.
+  함께 실린 강의 슬라이드의 저작권은 Nicolò Michelusi 교수와 Arizona State University에 있습니다.</span><span lang="en">EEE 554 Probability and Random Processes · Module 1 personal study notes<br>
+  Course: Nicolò Michelusi, Arizona State University · Fall 2026<br>
+  These notes were written by a student who reorganised and expanded the lecture slides. They are not official course material.<br>
+  Copyright in the accompanying lecture slides belongs to Professor Nicolò Michelusi and Arizona State University.</span>
 </footer>
 
 </main>

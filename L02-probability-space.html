@@ -272,8 +272,10 @@ footer a{color:var(--blue)}
 /* 한 파일에 한국어와 영어를 나란히 두고 보이는 쪽만 남긴다.
    도해·앵커·CSS·리더를 공유하므로 두 언어의 구조가 어긋날 수 없다.
    lang 속성을 쓰는 건 스크린리더와 하이픈 처리도 같이 얻기 위해서다. */
-html[data-lang="ko"] [lang="en"]{display:none}
-html[data-lang="en"] [lang="ko"]{display:none}
+/* 언어 표시는 어떤 규칙보다 우선해야 한다. 목차나 도해 쪽 선택자가
+   더 구체적이어서 display를 되살리는 일이 실제로 있었다. */
+html[data-lang="ko"] [lang="en"]{display:none!important}
+html[data-lang="en"] [lang="ko"]{display:none!important}
 .lang-btn{position:fixed;left:16px;bottom:56px;z-index:70;
   font-family:var(--mono);font-size:11px;letter-spacing:.05em;
   padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
@@ -664,7 +666,7 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <text x="640" y="136" text-anchor="middle" class="svglab" style="font-size:9px;fill:var(--green)" lang="en">2ⁿ of them</text>
     </g>
 
-    <text x="350" y="28" text-anchor="middle" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)">
+    <text x="350" y="28" text-anchor="middle" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)" lang="ko">
       Ω 하나에 σ-algebra는 <tspan font-weight="700" fill="var(--ink)">여러 개</tspan> 존재한다. 양 끝 두 개는 언제나 σ-algebra다.
     </text>
     <text x="350" y="28" text-anchor="middle" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)" lang="en">
@@ -878,7 +880,7 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <text x="541" y="122" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--green)" lang="ko">원소 4개 — 더 넣을 것도 뺄 것도 없다</text>
     <text x="541" y="122" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--green)" lang="en">4 elements: nothing to add, nothing to drop</text>
 
-    <text x="350" y="206" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)">
+    <text x="350" y="206" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="ko">
       비자명한 사건 하나가 σ-algebra 원소 <tspan font-weight="700" fill="var(--ink)">4개</tspan>를 만든다. 이 넷은 Module 1의 <tspan font-weight="700" fill="var(--ink)">{A, Aᶜ} 분할</tspan>과 정확히 대응한다.
     </text>
     <text x="350" y="206" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="en">
@@ -1373,7 +1375,8 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <g class="svgtxt" style="font-size:13px;fill:var(--ink2)">
       <text x="332" y="96" text-anchor="middle">[<tspan font-style="italic">a</tspan>, <tspan font-style="italic">b</tspan>] &nbsp; = &nbsp; ⋂ (<tspan font-style="italic">a</tspan>−1/<tspan font-style="italic">n</tspan>, <tspan font-style="italic">b</tspan>+1/<tspan font-style="italic">n</tspan>)</text>
       <text x="332" y="120" text-anchor="middle">{<tspan font-style="italic">a</tspan>} &nbsp; = &nbsp; ⋂ (<tspan font-style="italic">a</tspan>−1/<tspan font-style="italic">n</tspan>, <tspan font-style="italic">a</tspan>+1/<tspan font-style="italic">n</tspan>)</text>
-      <text x="332" y="144" text-anchor="middle">(<tspan font-style="italic">a</tspan>, ∞), &nbsp; ℚ, &nbsp; 유한합집합 …</text>
+      <text x="332" y="144" text-anchor="middle" lang="ko">(<tspan font-style="italic">a</tspan>, ∞), &nbsp; ℚ, &nbsp; 유한합집합 …</text>
+      <text x="332" y="144" text-anchor="middle" lang="en">(<tspan font-style="italic">a</tspan>, ∞), &nbsp; ℚ, &nbsp; finite unions …</text>
     </g>
     <text x="332" y="172" text-anchor="middle" class="svglab" style="font-size:10px" lang="ko">가산 번의 연산으로 도달 가능</text>
     <text x="332" y="172" text-anchor="middle" class="svglab" style="font-size:10px" lang="en">reachable in countably many steps</text>
@@ -1390,7 +1393,7 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <text x="583" y="174" text-anchor="middle" class="svgtxt" style="font-size:12px;fill:var(--amber)" lang="ko">하지만 2^ℝ 는 아님</text>
     <text x="583" y="174" text-anchor="middle" class="svgtxt" style="font-size:12px;fill:var(--amber)" lang="en">but it is not 2^ℝ</text>
 
-    <text x="350" y="224" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)">
+    <text x="350" y="224" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="ko">
       Module 1 08번의 <tspan font-weight="700" fill="var(--ink)">⋂(−1/n, 1/n) = {0}</tspan> 이 여기서 실제로 쓰인다. 열린 구간만으로 한 점을 만들어내는 그 트릭.
     </text>
     <text x="350" y="224" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="en">
@@ -1633,7 +1636,7 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <text x="368" y="190" class="svgtxt" style="font-size:13px;fill:var(--ink3)" lang="ko">⋯ 끝없이 이어진다</text>
     <text x="368" y="190" class="svgtxt" style="font-size:13px;fill:var(--ink3)" lang="en">⋯ and on without end</text>
 
-    <text x="14" y="226" class="svgtxt" style="font-size:13px;fill:var(--ink2)">
+    <text x="14" y="226" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="ko">
       각 수열은 <tspan font-weight="700" fill="var(--ink)">유한</tspan>하고 1로 끝나지만, 길이에 <tspan font-weight="700" fill="var(--ink)">상한이 없다.</tspan> 첫 성공이 얼마든지 늦게 올 수 있다.
     </text>
     <text x="14" y="226" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="en">
@@ -1732,7 +1735,7 @@ html[data-lang="en"] [lang="ko"]{display:none}
     </g>
     <text x="530" y="186" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--pink)">P(Bₙ) ↘ P(⋂Bₙ)</text>
 
-    <text x="350" y="224" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)">
+    <text x="350" y="224" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="ko">
       오른쪽에서 ⋂Bₙ = ∅ 이면 P(Bₙ) → 0 이 된다. Module 1 08번의 (0, 1/n) 이 바로 그 경우.
     </text>
     <text x="350" y="224" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="en">
@@ -1813,11 +1816,24 @@ html[data-lang="en"] [lang="ko"]{display:none}
 
 <!-- ══ 13 ══ -->
 <section id="s13">
-  <div class="sec-head"><span class="sec-num">13</span><h2>정리 &amp; 다음 모듈</h2></div>
-  <p class="sec-sub">이 모듈에서 반드시 가져가야 할 것.</p>
+  <div class="sec-head"><span class="sec-num">13</span><h2 lang="ko">정리 &amp; 다음 모듈</h2><h2 lang="en">Recap &amp; next module</h2></div>
+  <p class="sec-sub" lang="ko">이 모듈에서 반드시 가져가야 할 것.</p>
+  <p class="sec-sub" lang="en">What you have to walk away from this module with.</p>
 
-  <h3>한 장 요약</h3>
-  <table>
+  <h3 lang="ko">한 장 요약</h3>
+  <h3 lang="en">One-page summary</h3>
+  <table lang="en">
+    <tr><th>concept</th><th>one-line definition</th><th>why it exists</th></tr>
+    <tr><td><strong>(Ω, ℱ, P)</strong></td><td>sample space · event space · probability measure</td><td>the complete specification of a probability problem</td></tr>
+    <tr><td><strong>σ-algebra ℱ</strong></td><td>contains Ω, closed under complement and countable union</td><td>because 2<sup>Ω</sup> is unusable on an uncountable Ω</td></tr>
+    <tr><td><strong>σ(𝒜)</strong></td><td>the smallest σ-algebra containing 𝒜</td><td>inflate the events you care about as little as possible</td></tr>
+    <tr><td><strong>Kolmogorov's axioms</strong></td><td>≥0 · P(Ω)=1 · countable additivity</td><td>the definition of probability itself</td></tr>
+    <tr><td><strong>countable additivity</strong></td><td>probabilities of countably many disjoint events add</td><td>infinite sample spaces, the continuity theorem</td></tr>
+    <tr><td><strong>ℬ(ℝ)</strong></td><td>the σ-algebra generated by open intervals</td><td>the workable event collection on a continuous space</td></tr>
+    <tr><td><strong>PMF / PDF</strong></td><td>a sum of masses / an integral of density</td><td>how P actually gets specified</td></tr>
+    <tr><td><strong>continuity</strong></td><td>lim P(Bₙ) = P(lim Bₙ) for monotone sequences</td><td>exchanging limits with probability</td></tr>
+  </table>
+  <table lang="ko">
     <tr><th>개념</th><th>한 줄 정의</th><th>왜 필요한가</th></tr>
     <tr><td><strong>(Ω, ℱ, P)</strong></td><td>표본공간 · 사건공간 · 확률측도</td><td>확률 문제의 완전한 명세</td></tr>
     <tr><td><strong>σ-algebra ℱ</strong></td><td>Ω 포함 + 여집합·가산합집합에 닫힘</td><td>비가산 Ω에서 2<sup>Ω</sup>를 못 쓰기 때문</td></tr>
@@ -1829,14 +1845,20 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <tr><td><strong>연속성</strong></td><td>lim P(Bₙ) = P(lim Bₙ), 단조일 때</td><td>극한과 확률의 교환</td></tr>
   </table>
 
-  <h3>이 모듈을 관통하는 하나의 기술</h3>
-  <div class="callout">
+  <h3 lang="ko">이 모듈을 관통하는 하나의 기술</h3>
+  <h3 lang="en">The one technique running through this module</h3>
+  <div class="callout" lang="ko">
     <strong>"서로소 조각으로 쪼개고 공리 ③을 적용한다."</strong><br>
     07번의 네 증명, 11번의 등비급수, 12번의 연속성 증명이 전부 이거야. 공리 ③은 서로소일 때만 쓸 수 있으니까, 모든 문제가 "어떻게 서로소로 쪼갤까"로 환원돼. 시험에서 증명 문제가 막히면 <strong>일단 서로소 분해를 시도해봐.</strong> 대부분 그게 답이야.
   </div>
+  <div class="callout" lang="en">
+    <strong>"Split into disjoint pieces, then apply axiom ③."</strong><br>
+    The four proofs in §07, the geometric series in §11, the continuity proof in §12: all the same move. Axiom ③ only works on disjoint sets, so every problem reduces to "how do I split this into disjoint pieces". When a proof stalls on an exam, <strong>try a disjoint decomposition first.</strong> It is usually the answer.
+  </div>
 
-  <h3>HW1 대응표</h3>
-  <table>
+  <h3 lang="ko">HW1 대응표</h3>
+  <h3 lang="en">HW1 map</h3>
+  <table lang="ko">
     <tr><th>문제</th><th>내용</th><th>필요한 섹션</th></tr>
     <tr><td>Problem 4</td><td>σ-algebra 검증 · 생성 · 멱집합</td><td>03, 04, 05 (04번 도구로 직접 확인 가능)</td></tr>
     <tr><td>Problem 5</td><td>공리에서 네 가지 성질 유도</td><td>07 (예제 7.1이 같은 문제)</td></tr>
@@ -1844,10 +1866,20 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <tr><td>Problem 7</td><td>무한 표본공간 · 연속성</td><td>12 (예제 12.1이 같은 유형, 숫자만 다름)</td></tr>
     <tr><td>Problem 8</td><td>10분 안에 푸는 종합 문제</td><td>03–07 전부. 노트 안 보고 풀어볼 것</td></tr>
   </table>
-  <p style="font-size:14px;color:var(--ink2)">Problem 6과 7은 노트의 예제와 <strong>절차는 같고 숫자만 달라.</strong> 일부러 그렇게 만들었어. 절차를 보고 숫자는 직접 계산해야 손에 남거든. Problem 8은 <em>"try solving it without consulting your notes"</em>라고 명시돼 있으니 진짜로 노트를 덮고 10분 재고 풀어봐. 그게 이 문제의 목적이야.</p>
+  <table lang="en">
+    <tr><th>problem</th><th>what it asks</th><th>section you need</th></tr>
+    <tr><td>Problem 4</td><td>verify, generate, and count σ-algebras</td><td>03, 04, 05 (check it directly with the §04 tool)</td></tr>
+    <tr><td>Problem 5</td><td>derive four properties from the axioms</td><td>07 (Example 7.1 is the same problem)</td></tr>
+    <tr><td>Problem 6</td><td>computing in a discrete probability space</td><td>07 (Example 7.2, same type with different numbers)</td></tr>
+    <tr><td>Problem 7</td><td>infinite sample space and continuity</td><td>12 (Example 12.1, same type with different numbers)</td></tr>
+    <tr><td>Problem 8</td><td>a ten-minute problem covering everything</td><td>all of 03–07. Attempt it with the notes closed</td></tr>
+  </table>
+  <p style="font-size:14px;color:var(--ink2)" lang="ko">Problem 6과 7은 노트의 예제와 <strong>절차는 같고 숫자만 달라.</strong> 일부러 그렇게 만들었어. 절차를 보고 숫자는 직접 계산해야 손에 남거든. Problem 8은 <em>"try solving it without consulting your notes"</em>라고 명시돼 있으니 진짜로 노트를 덮고 10분 재고 풀어봐. 그게 이 문제의 목적이야.</p>
+  <p style="font-size:14px;color:var(--ink2)" lang="en">Problems 6 and 7 deliberately share the <strong>procedure</strong> of the worked examples while changing the <strong>numbers</strong>. Reading a procedure and then running the arithmetic yourself is what makes it stick. Problem 8 says <em>"try solving it without consulting your notes"</em>, so genuinely close the notes, put ten minutes on a timer, and go. That is the point of the problem.</p>
 
-  <h3>다음 모듈 예고</h3>
-  <div class="callout">
+  <h3 lang="ko">다음 모듈 예고</h3>
+  <h3 lang="en">Coming up next</h3>
+  <div class="callout" lang="ko">
     <strong>Module 3 — Conditional Probability</strong>에서는 "이미 <span class="m"><i>B</i></span>가 일어났다는 걸 안다"는 정보가 확률을 어떻게 바꾸는지 배워. 핵심은 <strong>표본공간을 <span class="m"><i>B</i></span>로 좁히는 것</strong>이야.
     <ul style="margin-top:10px;margin-bottom:0">
       <li><span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = <i>P</i>(<i>A</i>∩<i>B</i>)/<i>P</i>(<i>B</i>)</span> — 조건부 확률</li>
@@ -1856,14 +1888,27 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <li>Bayes 정리</li>
     </ul>
   </div>
-  <p>Module 1 09번에서 "partition은 Module 3에서 통째로 쓰인다"고 했던 게 실현되는 곳이야. 그리고 11번 예제에서 슬쩍 쓴 "독립적인 이진 시행"의 <em>독립</em>이 정확히 뭔지도 거기서 정의돼.</p>
+  <div class="callout" lang="en">
+    <strong>Module 3 — Conditional Probability</strong> covers how knowing that <span class="m"><i>B</i></span> has already happened changes a probability. The central idea is <strong>narrowing the sample space down to <span class="m"><i>B</i></span></strong>.
+    <ul style="margin-top:10px;margin-bottom:0">
+      <li><span class="m"><i>P</i>(<i>A</i>|<i>B</i>) = <i>P</i>(<i>A</i>∩<i>B</i>)/<i>P</i>(<i>B</i>)</span> — conditional probability</li>
+      <li>independence — <span class="m"><i>P</i>(<i>A</i>∩<i>B</i>) = <i>P</i>(<i>A</i>)<i>P</i>(<i>B</i>)</span></li>
+      <li>the law of total probability, where <strong>Module 1's partition</strong> finally takes the lead role</li>
+      <li>Bayes' theorem</li>
+    </ul>
+  </div>
+  <p lang="ko">Module 1 09번에서 "partition은 Module 3에서 통째로 쓰인다"고 했던 게 실현되는 곳이야. 그리고 11번 예제에서 슬쩍 쓴 "독립적인 이진 시행"의 <em>독립</em>이 정확히 뭔지도 거기서 정의돼.</p>
+  <p lang="en">This is where Module 1 §09's promise, that partitions get used wholesale in Module 3, comes due. It is also where <em>independence</em> gets defined properly, the word quietly borrowed in the §11 example when it said "independent binary trials".</p>
 </section>
 
 <footer>
-  EEE 554 Probability and Random Processes · Module 2 개인 학습 노트<br>
+  <span lang="ko">EEE 554 Probability and Random Processes · Module 2 개인 학습 노트<br>
   강의: Nicolò Michelusi, Arizona State University · Fall 2026<br>
   이 노트 본문은 수강생이 강의 슬라이드를 재구성하고 보충해 만든 개인 학습 자료이며, 공식 강의 자료가 아닙니다.<br>
-  함께 실린 강의 슬라이드의 저작권은 Nicolò Michelusi 교수와 Arizona State University에 있습니다.
+  함께 실린 강의 슬라이드의 저작권은 Nicolò Michelusi 교수와 Arizona State University에 있습니다.</span><span lang="en">EEE 554 Probability and Random Processes · Module 2 personal study notes<br>
+  Course: Nicolò Michelusi, Arizona State University · Fall 2026<br>
+  These notes were written by a student who reorganised and expanded the lecture slides. They are not official course material.<br>
+  Copyright in the accompanying lecture slides belongs to Professor Nicolò Michelusi and Arizona State University.</span>
 </footer>
 
 </main>

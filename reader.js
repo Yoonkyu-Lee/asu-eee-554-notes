@@ -101,7 +101,7 @@ function buildUI() {
 
   const openBtn = document.createElement('button');
   openBtn.id = 'rdr-open';
-  openBtn.textContent = '슬라이드';
+  openBtn.textContent = L('슬라이드', 'slides');
   openBtn.hidden = true;
   document.body.appendChild(openBtn);
 
@@ -160,7 +160,9 @@ function anchorTitle(a) {
   const el = a.el;
   if (el.classList?.contains('sec-head')) {
     const num = el.querySelector('.sec-num')?.textContent.trim() || '';
-    const h2 = el.querySelector('h2')?.textContent.trim() || '';
+    // h2가 한국어판과 영어판 두 개일 수 있다. 화면에 보이는 쪽을 쓴다.
+    const hs = [...el.querySelectorAll('h2')];
+    const h2 = (hs.find(h => h.offsetParent !== null) || hs[0])?.textContent.trim() || '';
     return (num ? num + ' ' : '') + h2;
   }
   return el.textContent.trim();
@@ -214,7 +216,7 @@ async function layout(doc) {
     div.style.height = `${Math.round(vp.height)}px`;
     div.dataset.page = String(i);
     div.innerHTML = `<span class="rdr-num">${i}</span>` +
-      (covered.has(i) ? '' : '<span class="rdr-bare">노트에 없음</span>');
+      (covered.has(i) ? '' : '<span class="rdr-bare">' + L('노트에 없음', 'not in notes') + '</span>');
     ui.scroll.appendChild(div);
 
     pages.push({ div, num: i, page, vp, rendered: false, task: null });
@@ -230,8 +232,32 @@ async function layout(doc) {
   pages.forEach(p => renderObserver.observe(p.div));
 
   wireSync(n);
+  relabel();
   syncNoteToPdf(true);
 }
+
+// 언어가 바뀌면 리더가 찍어둔 한국어/영어 라벨을 다시 쓴다.
+// 페이지는 다시 그리지 않는다. 글자만 바꾼다.
+function relabel() {
+  if (!ui) return;
+  // 구간 라벨: 앵커 순서와 마크 순서가 같으므로 짝지어 다시 쓴다.
+  const secAnchors = anchors.filter(a => a.el.classList?.contains('sec-head'));
+  const seen = new Set();
+  const ordered = [];
+  for (const a of secAnchors) { if (seen.has(a.from)) continue; seen.add(a.from); ordered.push(a); }
+  ui.scroll.querySelectorAll('.rdr-mark').forEach((mk, i) => {
+    if (!ordered[i]) return;
+    const t = anchorTitle(ordered[i]);
+    mk.textContent = t;
+    mk.title = L('노트 ' + t + ' 가 여기서 시작한다', t + ' starts here');
+  });
+  ui.scroll.querySelectorAll('.rdr-bare').forEach(b => {
+    b.textContent = L('노트에 없음', 'not in notes');
+  });
+  setFollow(autoFollow);
+  ui.openBtn.textContent = L('슬라이드', 'slides');
+}
+window.addEventListener('langchange', relabel);
 
 function render(p) {
   p.rendered = true;
@@ -328,6 +354,9 @@ function setCurrent(n) {
 // 숨겨진 쪽은 getBoundingClientRect()가 전부 0이라 "화면 맨 위"로 오인되므로
 // 반드시 걸러야 한다. 보이는 것만 위치 기준으로 쓴다.
 const shown = a => a.el.offsetParent !== null;
+
+// 리더 UI도 노트의 언어 설정을 따른다.
+const L = (ko, en) => (document.documentElement.dataset.lang === 'en' ? en : ko);
 
 // 화면 위쪽 기준선에 걸린 마지막 앵커 = 지금 읽고 있는 구간.
 function anchorFromNote() {
@@ -477,7 +506,7 @@ function wireSync() {
 function setFollow(on) {
   autoFollow = on;
   ui.follow.classList.toggle('on', on);
-  ui.follow.textContent = on ? '따라가기' : '따라가기 꺼짐';
+  ui.follow.textContent = on ? L('따라가기', 'follow') : L('따라가기 꺼짐', 'follow off');
 }
 
 // ── 크롬 (버튼, 폭 조절) ────────────────────────────

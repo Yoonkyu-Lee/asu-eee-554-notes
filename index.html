@@ -187,8 +187,10 @@ footer{margin-top:70px;padding-top:26px;border-top:1px solid var(--rule);font-si
 /* 한 파일에 한국어와 영어를 나란히 두고 보이는 쪽만 남긴다.
    도해·앵커·CSS·리더를 공유하므로 두 언어의 구조가 어긋날 수 없다.
    lang 속성을 쓰는 건 스크린리더와 하이픈 처리도 같이 얻기 위해서다. */
-html[data-lang="ko"] [lang="en"]{display:none}
-html[data-lang="en"] [lang="ko"]{display:none}
+/* 언어 표시는 어떤 규칙보다 우선해야 한다. 목차나 도해 쪽 선택자가
+   더 구체적이어서 display를 되살리는 일이 실제로 있었다. */
+html[data-lang="ko"] [lang="en"]{display:none!important}
+html[data-lang="en"] [lang="ko"]{display:none!important}
 .lang-btn{position:fixed;left:16px;bottom:56px;z-index:70;
   font-family:var(--mono);font-size:11px;letter-spacing:.05em;
   padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
@@ -213,32 +215,46 @@ html[data-lang="en"] [lang="ko"]{display:none}
 
   <div class="eyebrow">Arizona State University · Fall 2026 · Nicolò Michelusi</div>
   <h1>Probability and<br>Random Processes</h1>
-  <p class="lede">강의 슬라이드를 한 장씩 뜯어서 다시 쓴 개인 학습 노트. 수식마다 그림을 붙이고, 예제와 반례를 채워넣었다.</p>
+  <p class="lede" lang="ko">강의 슬라이드를 한 장씩 뜯어서 다시 쓴 개인 학습 노트. 수식마다 그림을 붙이고, 예제와 반례를 채워넣었다.</p>
+  <p class="lede" lang="en">Personal study notes rebuilt slide by slide from the lecture deck, with a picture attached to every formula and worked examples and counterexamples filled in.</p>
 
-  <div class="facts">
+  <div class="facts" lang="ko">
     <span class="chip">Module 2 / 3 완료</span>
     <span class="chip">인터랙티브 도구 2종</span>
     <span class="chip">슬라이드 동기화</span>
     <span class="chip">한국어</span>
   </div>
+  <div class="facts" lang="en">
+    <span class="chip">Modules 1–2 done of 3</span>
+    <span class="chip">2 interactive tools</span>
+    <span class="chip">slide sync</span>
+    <span class="chip">Korean &amp; English</span>
+  </div>
 
   <div class="hw" id="hwbox">
     <div class="d" id="hwd">HW1</div>
-    <div class="txt">
+    <div class="txt" lang="ko">
       <b>Homework 1 — Sets and Probability Spaces</b> · 마감 8월 30일 (일) 자정<br>
       Problem 1 · 2 · 3 은 Module 1, Problem 4–8 은 Module 2 노트로 커버된다. 전 범위 준비 완료.
+    </div>
+    <div class="txt" lang="en">
+      <b>Homework 1 — Sets and Probability Spaces</b> · due midnight, Sunday August 30<br>
+      Problems 1 · 2 · 3 are covered by the Module 1 notes and 4–8 by Module 2. The whole set is ready.
     </div>
   </div>
 </header>
 
-<h2>모듈</h2>
+<h2 lang="ko">모듈</h2>
+<h2 lang="en">Modules</h2>
 
 <a class="mod" href="L01-set-theory.html">
   <div class="num">01</div>
   <div>
     <div class="en">Introduction &amp; Set Theory</div>
-    <h3>집합론</h3>
-    <p>확률을 배우기 전에 확률이 쓸 언어부터 깐다. "질문"을 "집합"으로 바꾸는 법. 클릭해서 영역을 고르는 벤 다이어그램으로 De Morgan과 분배법칙을 눈으로 확인할 수 있다.</p>
+    <h3 lang="ko">집합론</h3>
+    <h3 lang="en">Set Theory</h3>
+    <p lang="ko">확률을 배우기 전에 확률이 쓸 언어부터 깐다. "질문"을 "집합"으로 바꾸는 법. 클릭해서 영역을 고르는 벤 다이어그램으로 De Morgan과 분배법칙을 눈으로 확인할 수 있다.</p>
+    <p lang="en">Before any probability, lay down the language probability will use: how to turn a question into a set. A click-to-select Venn diagram lets you see De Morgan and the distributive law for yourself.</p>
     <div class="tags">
       <span class="tag a">sample space</span>
       <span class="tag a">event</span>
@@ -249,15 +265,17 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <span class="tag c">partition</span>
     </div>
   </div>
-  <span class="status done">읽기</span>
+  <span class="status done" lang="ko">읽기</span><span class="status done" lang="en">read</span>
 </a>
 
 <a class="mod" href="L02-probability-space.html">
   <div class="num">02</div>
   <div>
     <div class="en">Probability Space</div>
-    <h3>확률 공간</h3>
-    <p>집합 위에 드디어 숫자를 얹는다. 삼중항 <span class="m">(<i>Ω</i>, ℱ, <i>P</i>)</span>와 Kolmogorov의 세 공리. 부분집합 16개를 클릭해서 σ-algebra 조건을 실시간으로 검사하는 도구가 들어있다.</p>
+    <h3 lang="ko">확률 공간</h3>
+    <h3 lang="en">Probability Space</h3>
+    <p lang="ko">집합 위에 드디어 숫자를 얹는다. 삼중항 <span class="m">(<i>Ω</i>, ℱ, <i>P</i>)</span>와 Kolmogorov의 세 공리. 부분집합 16개를 클릭해서 σ-algebra 조건을 실시간으로 검사하는 도구가 들어있다.</p>
+    <p lang="en">Numbers finally go on top of the sets: the triple <span class="m">(<i>Ω</i>, ℱ, <i>P</i>)</span> and Kolmogorov's three axioms. Includes a tool that checks the σ-algebra conditions live as you click through all 16 subsets.</p>
     <div class="tags">
       <span class="tag a">σ-algebra</span>
       <span class="tag">generated σ(𝒜)</span>
@@ -268,15 +286,17 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <span class="tag c">continuity</span>
     </div>
   </div>
-  <span class="status done">읽기</span>
+  <span class="status done" lang="ko">읽기</span><span class="status done" lang="en">read</span>
 </a>
 
 <div class="mod soon">
   <div class="num">03</div>
   <div>
     <div class="en">Conditional Probability</div>
-    <h3>조건부 확률</h3>
-    <p>"이미 B가 일어났다는 걸 알 때 A의 확률"로 표본공간을 좁히는 법. 독립, 전확률 법칙, 베이즈 정리로 이어진다.</p>
+    <h3 lang="ko">조건부 확률</h3>
+    <h3 lang="en">Conditional Probability</h3>
+    <p lang="ko">"이미 B가 일어났다는 걸 알 때 A의 확률"로 표본공간을 좁히는 법. 독립, 전확률 법칙, 베이즈 정리로 이어진다.</p>
+    <p lang="en">Narrowing the sample space: the probability of A given that B has already happened. Leads into independence, the law of total probability, and Bayes' theorem.</p>
     <div class="tags">
       <span class="tag">conditioning</span>
       <span class="tag">independence</span>
@@ -284,11 +304,12 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <span class="tag">Bayes</span>
     </div>
   </div>
-  <span class="status wait">준비 중</span>
+  <span class="status wait" lang="ko">준비 중</span><span class="status wait" lang="en">coming soon</span>
 </div>
 
-<h2>노트 구조</h2>
-<div class="note">
+<h2 lang="ko">노트 구조</h2>
+<h2 lang="en">How the notes are built</h2>
+<div class="note" lang="ko">
   <p>모든 모듈이 같은 다섯 단계를 반복한다. 슬라이드를 그대로 옮긴 게 아니라, 슬라이드에서 <strong>빠져 있던 것</strong>을 채우는 게 목적이다.</p>
   <ul style="margin-top:12px">
     <li><strong>목차와 요약</strong> — 이 모듈이 무슨 일을 하는지, 어떤 용어가 새로 나오는지, 그게 나중에 어디서 쓰이는지</li>
@@ -298,20 +319,40 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <li><strong>반례와 함정</strong> — 그 개념이 <em>성립하지 않는</em> 경우들. 오해하기 쉬운 지점을 미리 잡아둔다</li>
   </ul>
 </div>
+<div class="note" lang="en">
+  <p>Every module repeats the same five stages. The aim is not to transcribe the slides but to supply <strong>what the slides left out</strong>.</p>
+  <ul style="margin-top:12px">
+    <li><strong>Overview</strong> — what the module does, which terms are new, and where they get used later</li>
+    <li><strong>Definitions</strong> — the slide definitions as they stand. Up to here it stays close to the original</li>
+    <li><strong>Pictures</strong> — visuals attached to definitions that arrive as formulas only: Venn diagrams, correspondences, number lines</li>
+    <li><strong>Examples</strong> — for exam instinct. Solutions are collapsed, so attempt them before you open them</li>
+    <li><strong>Counterexamples and traps</strong> — the cases where the idea <em>fails</em>, catching the easy misreadings in advance</li>
+  </ul>
+</div>
 
-<h2>이 노트 쓰는 법</h2>
-<div class="note">
+<h2 lang="ko">이 노트 쓰는 법</h2>
+<h2 lang="en">How to use these notes</h2>
+<div class="note" lang="ko">
   <p><strong>예제는 접힌 채로 시작한다.</strong> "풀이 보기"를 누르기 전에 종이에 먼저 써봐야 의미가 있다. 이 과목은 시험 위주고, 읽어서 이해한 것과 손으로 풀 수 있는 것 사이의 간격이 꽤 크다.</p>
   <p><strong>함정 섹션이 실제 점수를 지킨다.</strong> 개념 정리는 슬라이드로도 되지만, "pairwise disjoint와 전체 교집합이 공집합인 건 다르다" 같은 건 틀려보기 전에는 안 보인다. 시험 직전에는 함정 섹션만 훑어도 된다.</p>
   <p><strong>그림은 확인 도구지 증명이 아니다.</strong> 벤 다이어그램으로 항등식이 맞는지 볼 수는 있지만, 과제와 시험에서 "prove"라고 하면 원소를 하나 잡고 시작해야 한다.</p>
   <p><strong>오른쪽 슬라이드는 노트를 따라온다.</strong> 각 모듈 노트를 넓은 화면에서 열면 오른쪽에 원본 강의 슬라이드가 붙는다. 노트를 스크롤하면 지금 읽는 대목의 슬라이드로 자동으로 넘어가니, 이 설명이 슬라이드 어디에서 나온 건지 바로 확인할 수 있다. 슬라이드를 직접 넘기면 따라가기가 잠시 멈추고, 노트를 다시 스크롤하면 재개된다. 화면이 좁으면(1100px 미만) 슬라이드는 나타나지 않고 노트만 보인다.</p>
 </div>
+<div class="note" lang="en">
+  <p><strong>Examples start collapsed.</strong> Working one on paper before pressing "Solution" is the whole point. This course is exam-driven, and the gap between understanding something you read and being able to produce it by hand is wide.</p>
+  <p><strong>The trap sections are what protect your marks.</strong> Slides can carry the definitions, but something like "pairwise disjoint is not the same as the total intersection being empty" only becomes visible after you get it wrong once. The night before an exam, skimming only the traps is a reasonable plan.</p>
+  <p><strong>Pictures verify, they do not prove.</strong> A Venn diagram will tell you whether an identity looks right, but when homework or an exam says "prove", you start by grabbing an element.</p>
+  <p><strong>The slides on the right follow the notes.</strong> Open any module note on a wide screen and the original lecture slides dock alongside it. Scrolling the notes moves the deck to whatever you are reading, so you can see immediately where a passage came from. Turning the slides yourself pauses the tracking, and scrolling the notes again resumes it. Below 1100px the slides do not appear and you get the notes alone.</p>
+</div>
 
 <footer>
-  강의: Nicolò Michelusi · School of Electrical, Computer and Energy Engineering, Arizona State University<br>
+  <span lang="ko">강의: Nicolò Michelusi · School of Electrical, Computer and Energy Engineering, Arizona State University<br>
   교재: Steven M. Kay, <em>Intuitive Probability and Random Processes Using MATLAB</em><br>
   이 사이트의 노트 본문은 수강생이 강의 슬라이드를 재구성하고 보충해 만든 개인 학습 자료이며, 공식 강의 자료가 아닙니다.<br>
-  함께 실린 강의 슬라이드의 저작권은 Nicolò Michelusi 교수와 Arizona State University에 있습니다.
+  함께 실린 강의 슬라이드의 저작권은 Nicolò Michelusi 교수와 Arizona State University에 있습니다.</span><span lang="en">Course: Nicolò Michelusi · School of Electrical, Computer and Energy Engineering, Arizona State University<br>
+  Textbook: Steven M. Kay, <em>Intuitive Probability and Random Processes Using MATLAB</em><br>
+  The notes on this site were written by a student who reorganised and expanded the lecture slides. They are not official course material.<br>
+  Copyright in the accompanying lecture slides belongs to Professor Nicolò Michelusi and Arizona State University.</span>
 </footer>
 
 </div>
