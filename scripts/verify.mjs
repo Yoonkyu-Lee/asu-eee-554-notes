@@ -379,6 +379,36 @@ await page.evaluate(() => {
   document.querySelectorAll('details').forEach(d => d.open = true);
 });
 
+// ── 도해 안에서 글자가 다른 것과 겹치는지 ────────────────────────
+// viewBox 밖으로 나가는 것만 잡고 있었다. 안에서 겹치는 건 못 잡았고,
+// 실제로 포함배제 도해의 +, −, = 가 옆 패널 원 안에 그려져 있었다.
+// 좌표는 반드시 getBoundingClientRect 로 잰다. getBBox 는 조상의
+// transform 을 반영하지 않아서 translate 로 배치한 패널들이 전부
+// 같은 자리에 있는 것처럼 나온다.
+const svgHits = await page.evaluate(() => {
+  const textHits = [], shapeHits = [];
+  const vis = e => getComputedStyle(e).display !== 'none';
+  const grp = e => { let n = e.parentElement; while (n && n.tagName !== 'svg') { if (n.tagName === 'g') return n; n = n.parentElement; } return null; };
+  const ov = (a, b) => a.left < b.right - 1 && b.left < a.right - 1 && a.top < b.bottom - 1 && b.top < a.bottom - 1;
+  document.querySelectorAll('figure svg, .play svg, .nota svg').forEach(svg => {
+    const name = (svg.getAttribute('aria-label') || '?').slice(0, 30);
+    const texts = [...svg.querySelectorAll('text')].filter(vis)
+      .map(t => ({ bb: t.getBoundingClientRect(), g: grp(t), txt: (t.textContent || '').trim().slice(0, 16) }))
+      .filter(t => t.bb.width > 0.5);
+    for (let i = 0; i < texts.length; i++) for (let j = i + 1; j < texts.length; j++)
+      if (ov(texts[i].bb, texts[j].bb))
+        textHits.push(name + ': "' + texts[i].txt + '" 와 "' + texts[j].txt + '"');
+    const shapes = [...svg.querySelectorAll('circle,rect,ellipse,path')].filter(vis)
+      .filter(x => { const f = x.getAttribute('fill') || getComputedStyle(x).fill; return f && f !== 'none' && !/rgba\(0, 0, 0, 0\)/.test(f); })
+      .map(x => ({ bb: x.getBoundingClientRect(), g: grp(x), tag: x.tagName }));
+    texts.forEach(t => shapes.forEach(sh => {
+      if (t.g === sh.g) return;              // 같은 그룹이면 그 도형의 라벨이다
+      if (ov(t.bb, sh.bb)) shapeHits.push(name + ': "' + t.txt + '" 가 ' + sh.tag + ' 위에');
+    }));
+  });
+  return { textHits: [...new Set(textHits)], shapeHits: [...new Set(shapeHits)] };
+});
+
 // ── 리더가 켜졌을 때 본문이 읽을 수 있는 폭을 유지하는지 ──────────
 // 리더는 폭을 차지하므로 화면이 좁으면 본문을 그만큼 밀어낸다. 실제로
 // 1100px 에서 본문이 266px 까지 눌린 적이 있다. 모바일 기준(390px)보다
@@ -439,6 +469,13 @@ if (litColors.length) {
   litColors.slice(0, 12).forEach(e => line("  · " + e));
   line("  디자인 토큰을 쓸 것: var(--blue), rgba(var(--blue-rgb),.16) 형태.");
 } else line("[OK] 하드코딩된 색 없음 (전부 디자인 토큰)");
+if (svgHits.textHits.length) {
+  fail = 1;
+  line('\n[FAIL] 도해 안에서 글자끼리 겹침 ' + svgHits.textHits.length + '건');
+  svgHits.textHits.slice(0, 10).forEach(x => line('  · ' + x));
+} else {
+  line('[OK] 도해 글자끼리 겹치지 않음');
+}
 if (narrowMain && narrowMain < 480) {
   fail = 1;
   line('\n[FAIL] 리더가 뜨는 최소 폭(1220px)에서 본문이 ' + narrowMain + 'px 뿐이다');
@@ -518,6 +555,13 @@ if (reader.gaps?.length) {
   line(`\n[WARN] 어떤 앵커에도 안 걸린 슬라이드 ${reader.gaps.length}쪽: ${reader.gaps.join(', ')}`);
   line('  노트가 그 슬라이드를 안 다룬다는 뜻이다. 표지·삽입 페이지면 정상이지만,');
   line('  범위를 짧게 잡아 빠뜨린 것일 수도 있다. 해당 쪽을 열어서 확인할 것.');
+}
+if (svgHits.shapeHits.length) {
+  // 실패로 치지 않는다. 원 안에 그 원의 라벨을 두는 건 정상이다.
+  // 다른 그룹의 도형을 침범한 것만 모으지만 그래도 오탐이 섞인다.
+  line('\n[WARN] 도해에서 글자가 다른 그룹의 도형 위에 있는 곳 ' + svgHits.shapeHits.length + '건');
+  svgHits.shapeHits.slice(0, 8).forEach(x => line('  · ' + x));
+  line('  그 도형의 라벨이면 정상이다. 연산자나 캡션이면 자리가 겹친 것이니 해당 도해를 열어볼 것.');
 }
 if (reader.backward?.length) {
   // 실패로 치지 않는다. 노트를 일부러 슬라이드와 다르게 배열할 수도 있다.

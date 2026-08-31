@@ -1224,43 +1224,42 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
   <h3 lang="en">Inclusion-exclusion as a picture</h3>
   <figure>
   <svg viewBox="0 0 700 230" role="img" aria-label="포함배제 원리의 시각적 설명">
-    <defs>
-      <clipPath id="ie1"><circle cx="100" cy="110" r="46"/></clipPath>
-    </defs>
     <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="ko">겹친 부분을 두 번 세었으니 한 번 빼준다</text>
     <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="en">the overlap got counted twice, so subtract it once</text>
 
-    <!-- step 1 -->
-    <g transform="translate(0,0)">
+    <!-- step 1 : A -->
+    <g transform="translate(-42,0)">
       <circle cx="100" cy="110" r="46" fill="rgba(var(--blue-rgb),.45)" stroke="var(--blue)" stroke-width="1.3"/>
       <circle cx="156" cy="110" r="46" fill="none" stroke="var(--pink)" stroke-width="1.3" stroke-dasharray="3 3"/>
       <text x="128" y="192" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:var(--blue)">P(A)</text>
     </g>
-    <text x="212" y="118" text-anchor="middle" class="svgtxt" style="font-size:20px;fill:var(--ink3)">+</text>
+    <text x="174" y="118" text-anchor="middle" class="svgtxt" style="font-size:20px;fill:var(--ink3)">+</text>
 
-    <!-- step 2 -->
-    <g transform="translate(140,0)">
+    <!-- step 2 : B -->
+    <g transform="translate(134,0)">
       <circle cx="100" cy="110" r="46" fill="none" stroke="var(--blue)" stroke-width="1.3" stroke-dasharray="3 3"/>
       <circle cx="156" cy="110" r="46" fill="rgba(var(--pink-rgb),.45)" stroke="var(--pink)" stroke-width="1.3"/>
       <text x="128" y="192" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:var(--pink)">P(B)</text>
     </g>
-    <text x="392" y="118" text-anchor="middle" class="svgtxt" style="font-size:20px;fill:var(--ink3)">−</text>
+    <text x="350" y="118" text-anchor="middle" class="svgtxt" style="font-size:20px;fill:var(--ink3)">−</text>
 
-    <!-- step 3 -->
-    <g transform="translate(320,0)">
-      <defs><clipPath id="ie2"><circle cx="100" cy="110" r="46"/></clipPath></defs>
+    <!-- step 3 : A∩B, 두 번 세어진 조각 -->
+    <g transform="translate(310,0)">
+      <defs><clipPath id="ie-lens"><circle cx="100" cy="110" r="46"/></clipPath></defs>
       <circle cx="100" cy="110" r="46" fill="none" stroke="var(--blue)" stroke-width="1.3" stroke-dasharray="3 3"/>
       <circle cx="156" cy="110" r="46" fill="none" stroke="var(--pink)" stroke-width="1.3" stroke-dasharray="3 3"/>
-      <g clip-path="url(#ie2)"><circle cx="156" cy="110" r="46" fill="rgba(var(--amber-rgb),.65)"/></g>
-      <text x="128" y="192" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:var(--amber)">P(A∩B)</text>
+      <g clip-path="url(#ie-lens)"><circle cx="156" cy="110" r="46" fill="rgba(var(--violet-rgb),.55)"/></g>
+      <text x="128" y="192" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:var(--violet)">P(A∩B)</text>
     </g>
-    <text x="572" y="118" text-anchor="middle" class="svgtxt" style="font-size:20px;fill:var(--ink3)">=</text>
+    <text x="526" y="118" text-anchor="middle" class="svgtxt" style="font-size:20px;fill:var(--ink3)">=</text>
 
-    <!-- result -->
-    <g transform="translate(490,0)">
-      <circle cx="100" cy="110" r="46" fill="rgba(var(--violet-rgb),.45)" stroke="var(--blue)" stroke-width="1.3"/>
-      <circle cx="156" cy="110" r="46" fill="rgba(var(--violet-rgb),.45)" stroke="var(--pink)" stroke-width="1.3"/>
-      <text x="128" y="192" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:var(--violet)">P(A∪B)</text>
+    <!-- result : A∪B. 보라 조각이 딱 한 번만 남는 게 이 그림의 요점이다 -->
+    <g transform="translate(486,0)">
+      <defs><clipPath id="ie-res"><circle cx="100" cy="110" r="46"/></clipPath></defs>
+      <circle cx="100" cy="110" r="46" fill="rgba(var(--blue-rgb),.4)" stroke="var(--blue)" stroke-width="1.3"/>
+      <circle cx="156" cy="110" r="46" fill="rgba(var(--pink-rgb),.4)" stroke="var(--pink)" stroke-width="1.3"/>
+      <g clip-path="url(#ie-res)"><circle cx="156" cy="110" r="46" fill="rgba(var(--violet-rgb),.55)"/></g>
+      <text x="128" y="192" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:var(--ink)">P(A∪B)</text>
     </g>
   </svg>
   <figcaption lang="ko">이걸 공리로 증명하려면 <span class="m"><i>A</i>∪<i>B</i></span>를 <strong>서로소 조각으로 분해</strong>해야 해. 공리 ③은 서로소일 때만 쓸 수 있으니까. 아래 풀이를 봐.</figcaption>
