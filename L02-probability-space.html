@@ -1270,10 +1270,11 @@ html[data-lang="en"] [lang="ko"]{display:none}
 
 <!-- ══ 08 ══ -->
 <section id="s8">
-  <div class="sec-head" data-slide="25-26"><span class="sec-num">08</span><h2>이산 vs 연속 표본공간</h2></div>
-  <p class="sec-sub">Module 1의 가산/비가산 구분이 실제로 갈라지는 지점.</p>
+  <div class="sec-head" data-slide="25-26"><span class="sec-num">08</span><h2 lang="ko">이산 vs 연속 표본공간</h2><h2 lang="en">Discrete vs continuous sample spaces</h2></div>
+  <p class="sec-sub" lang="ko">Module 1의 가산/비가산 구분이 실제로 갈라지는 지점.</p>
+  <p class="sec-sub" lang="en">Where Module 1's countable/uncountable split actually starts to matter.</p>
 
-  <div class="grid2">
+  <div class="grid2" lang="ko">
     <div class="mini" style="padding:18px 20px">
       <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--blue);margin-bottom:10px">DISCRETE</div>
       <p style="font-size:14px;color:var(--ink2);margin:0 0 10px">유한 또는 <strong>가산</strong>무한. 원소를 하나씩 나열할 수 있다.</p>
@@ -1293,76 +1294,123 @@ html[data-lang="en"] [lang="ko"]{display:none}
       </ul>
     </div>
   </div>
+  <div class="grid2" lang="en">
+    <div class="mini" style="padding:18px 20px">
+      <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--blue);margin-bottom:10px">DISCRETE</div>
+      <p style="font-size:14px;color:var(--ink2);margin:0 0 10px">Finite or <strong>countably</strong> infinite. The elements can be listed one by one.</p>
+      <ul style="font-size:14px;margin:0;color:var(--ink2)">
+        <li><span class="m"><i>Ω</i> = {0, 1}</span> — a coin</li>
+        <li><span class="m"><i>Ω</i> = {1,…,6}</span> — a die</li>
+        <li><span class="m"><i>Ω</i> = {0,1,2,…}</span> — electrons crossing a wire cross-section in one second</li>
+      </ul>
+    </div>
+    <div class="mini" style="padding:18px 20px">
+      <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--pink);margin-bottom:10px">CONTINUOUS</div>
+      <p style="font-size:14px;color:var(--ink2);margin:0 0 10px"><strong>Uncountable.</strong> Listing the elements one by one is impossible.</p>
+      <ul style="font-size:14px;margin:0;color:var(--ink2)">
+        <li><span class="m">[<i>a</i>, <i>b</i>]</span> — the temperature of a room</li>
+        <li><span class="m">ℝ</span> — the voltage in a circuit at an instant</li>
+        <li><span class="m">ℝ<sup><i>n</i></sup></span> — a received signal vector</li>
+      </ul>
+    </div>
+  </div>
 
-  <div class="callout">
+  <div class="callout" lang="ko">
     세 번째 이산 예시(전자 개수)를 눈여겨봐. <strong>무한하지만 이산이야.</strong> Module 1 06번의 "무한 ≠ 비가산"이 여기서 실제로 쓰여. 전자 개수는 0, 1, 2, … 로 번호가 매겨지니까 <em>가산</em>이고, 그래서 이산 취급이 가능해. 반면 전압은 아무리 촘촘히 재도 번호를 못 매겨.
+  </div>
+  <div class="callout" lang="en">
+    Look at the third discrete example, the electron count. <strong>It is infinite and still discrete.</strong> This is Module 1 §06's "infinite is not uncountable" doing real work. Electron counts run 0, 1, 2, … so they are <em>countable</em>, which is what lets you treat them discretely. Voltage, however finely you measure it, admits no such numbering.
   </div>
 </section>
 
 <!-- ══ 09 ══ -->
 <section id="s9">
   <div class="sec-head" data-slide="27-29"><span class="sec-num">09</span><h2>Borel σ-algebra</h2></div>
-  <p class="sec-sub">ℝ에서 쓸 수 있는 실질적인 최대 사건 모음.</p>
+  <p class="sec-sub" lang="ko">ℝ에서 쓸 수 있는 실질적인 최대 사건 모음.</p>
+  <p class="sec-sub" lang="en">The largest event collection you can practically use on ℝ.</p>
 
-  <p>슬라이드 27쪽: <span class="m"><i>Ω</i> = ℝ</span>일 때 <span class="m">2<sup>ℝ</sup></span>는 확률론에 쓰기엔 너무 크다. 대신 <strong>Borel σ-algebra</strong> <span class="m">ℬ(ℝ)</span>를 쓴다.</p>
+  <p lang="ko">슬라이드 27쪽: <span class="m"><i>Ω</i> = ℝ</span>일 때 <span class="m">2<sup>ℝ</sup></span>는 확률론에 쓰기엔 너무 크다. 대신 <strong>Borel σ-algebra</strong> <span class="m">ℬ(ℝ)</span>를 쓴다.</p>
+  <p lang="en">Slide 27: when <span class="m"><i>Ω</i> = ℝ</span>, the power set <span class="m">2<sup>ℝ</sup></span> is too large for probability theory. You use the <strong>Borel σ-algebra</strong> <span class="m">ℬ(ℝ)</span> instead.</p>
 
-  <div class="def">
+  <div class="def" lang="ko">
     <span class="tag">정의</span>
     <p><span class="m">ℬ(ℝ)</span>는 <strong>모든 열린 구간 <span class="m">(<i>a</i>, <i>b</i>)</span>를 포함하는 가장 작은 σ-algebra</strong>다. 즉 <span class="m">ℬ(ℝ) = <i>σ</i>({(<i>a</i>,<i>b</i>) : <i>a</i> &lt; <i>b</i>})</span>.</p>
   </div>
+  <div class="def" lang="en">
+    <span class="tag">Definition</span>
+    <p><span class="m">ℬ(ℝ)</span> is <strong>the smallest σ-algebra containing every open interval <span class="m">(<i>a</i>, <i>b</i>)</span></strong>. That is, <span class="m">ℬ(ℝ) = <i>σ</i>({(<i>a</i>,<i>b</i>) : <i>a</i> &lt; <i>b</i>})</span>.</p>
+  </div>
 
-  <p>05번의 "생성된 σ-algebra"가 여기서 진짜 쓰임새를 얻어. 열린 구간에서 출발해서 여집합과 가산 합집합을 반복 적용하면 나오는 모든 것이 <span class="m">ℬ(ℝ)</span>야.</p>
+  <p lang="ko">05번의 "생성된 σ-algebra"가 여기서 진짜 쓰임새를 얻어. 열린 구간에서 출발해서 여집합과 가산 합집합을 반복 적용하면 나오는 모든 것이 <span class="m">ℬ(ℝ)</span>야.</p>
+  <p lang="en">This is where the generated σ-algebra of section 05 earns its keep. Start from open intervals, apply complements and countable unions over and over, and everything you can reach is <span class="m">ℬ(ℝ)</span>.</p>
 
   <figure>
   <svg viewBox="0 0 700 240" role="img" aria-label="열린 구간에서 보렐 집합을 만들어내는 과정">
     <defs>
       <marker id="a5" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--ink3)"/></marker>
     </defs>
-    <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em">열린 구간에서 출발해서 계속 만들어낸다</text>
+    <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="ko">열린 구간에서 출발해서 계속 만들어낸다</text>
+    <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="en">start from open intervals and keep building</text>
 
     <rect x="24" y="44" width="150" height="150" rx="10" fill="rgba(var(--blue-rgb),.09)" stroke="var(--blue)" stroke-width="1.6"/>
-    <text x="99" y="70" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--blue)">시작 재료</text>
+    <text x="99" y="70" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--blue)" lang="ko">시작 재료</text>
+    <text x="99" y="70" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--blue)" lang="en">raw material</text>
     <line x1="46" y1="98" x2="152" y2="98" stroke="var(--blue)" stroke-width="4"/>
     <circle cx="46" cy="98" r="4" fill="var(--paper)" stroke="var(--blue)" stroke-width="1.6"/>
     <circle cx="152" cy="98" r="4" fill="var(--paper)" stroke="var(--blue)" stroke-width="1.6"/>
     <text x="99" y="124" text-anchor="middle" class="svgtxt" style="font-size:15px;fill:var(--blue)">(<tspan font-style="italic">a</tspan>, <tspan font-style="italic">b</tspan>)</text>
-    <text x="99" y="150" text-anchor="middle" class="svglab" style="font-size:10px">모든 열린 구간</text>
-    <text x="99" y="172" text-anchor="middle" class="svgtxt" style="font-size:11.5px;fill:var(--ink3)">"X가 a와 b 사이인가?"</text>
+    <text x="99" y="150" text-anchor="middle" class="svglab" style="font-size:10px" lang="ko">모든 열린 구간</text>
+    <text x="99" y="150" text-anchor="middle" class="svglab" style="font-size:10px" lang="en">every open interval</text>
+    <text x="99" y="172" text-anchor="middle" class="svgtxt" style="font-size:11.5px;fill:var(--ink3)" lang="ko">"X가 a와 b 사이인가?"</text>
+    <text x="99" y="172" text-anchor="middle" class="svgtxt" style="font-size:11.5px;fill:var(--ink3)" lang="en">"is X between a and b?"</text>
 
     <line x1="182" y1="118" x2="222" y2="118" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#a5)"/>
     <text x="202" y="106" text-anchor="middle" class="svglab" style="font-size:9px">ᶜ, ⋃</text>
 
     <rect x="232" y="44" width="200" height="150" rx="10" fill="var(--paper)" stroke="var(--rule)"/>
-    <text x="332" y="70" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--ink)">반복 적용</text>
+    <text x="332" y="70" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--ink)" lang="ko">반복 적용</text>
+    <text x="332" y="70" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--ink)" lang="en">apply repeatedly</text>
     <g class="svgtxt" style="font-size:13px;fill:var(--ink2)">
       <text x="332" y="96" text-anchor="middle">[<tspan font-style="italic">a</tspan>, <tspan font-style="italic">b</tspan>] &nbsp; = &nbsp; ⋂ (<tspan font-style="italic">a</tspan>−1/<tspan font-style="italic">n</tspan>, <tspan font-style="italic">b</tspan>+1/<tspan font-style="italic">n</tspan>)</text>
       <text x="332" y="120" text-anchor="middle">{<tspan font-style="italic">a</tspan>} &nbsp; = &nbsp; ⋂ (<tspan font-style="italic">a</tspan>−1/<tspan font-style="italic">n</tspan>, <tspan font-style="italic">a</tspan>+1/<tspan font-style="italic">n</tspan>)</text>
       <text x="332" y="144" text-anchor="middle">(<tspan font-style="italic">a</tspan>, ∞), &nbsp; ℚ, &nbsp; 유한합집합 …</text>
     </g>
-    <text x="332" y="172" text-anchor="middle" class="svglab" style="font-size:10px">가산 번의 연산으로 도달 가능</text>
+    <text x="332" y="172" text-anchor="middle" class="svglab" style="font-size:10px" lang="ko">가산 번의 연산으로 도달 가능</text>
+    <text x="332" y="172" text-anchor="middle" class="svglab" style="font-size:10px" lang="en">reachable in countably many steps</text>
 
     <line x1="440" y1="118" x2="480" y2="118" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#a5)"/>
 
     <rect x="490" y="44" width="186" height="150" rx="10" fill="rgba(var(--green-rgb),.08)" stroke="var(--green)" stroke-width="1.6"/>
     <text x="583" y="76" text-anchor="middle" class="svgtxt" style="font-size:19px;fill:var(--green)">ℬ(ℝ)</text>
     <text x="583" y="100" text-anchor="middle" class="svglab" style="font-size:10px;fill:var(--green)">BOREL σ-ALGEBRA</text>
-    <text x="583" y="128" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)">공학에서 다루는</text>
-    <text x="583" y="148" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)">거의 모든 사건 포함</text>
-    <text x="583" y="174" text-anchor="middle" class="svgtxt" style="font-size:12px;fill:var(--amber)">하지만 2^ℝ 는 아님</text>
+    <text x="583" y="128" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)" lang="ko">공학에서 다루는</text>
+    <text x="583" y="128" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)" lang="en">contains essentially every</text>
+    <text x="583" y="148" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)" lang="ko">거의 모든 사건 포함</text>
+    <text x="583" y="148" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)" lang="en">event engineering deals with</text>
+    <text x="583" y="174" text-anchor="middle" class="svgtxt" style="font-size:12px;fill:var(--amber)" lang="ko">하지만 2^ℝ 는 아님</text>
+    <text x="583" y="174" text-anchor="middle" class="svgtxt" style="font-size:12px;fill:var(--amber)" lang="en">but it is not 2^ℝ</text>
 
     <text x="350" y="224" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)">
       Module 1 08번의 <tspan font-weight="700" fill="var(--ink)">⋂(−1/n, 1/n) = {0}</tspan> 이 여기서 실제로 쓰인다. 열린 구간만으로 한 점을 만들어내는 그 트릭.
     </text>
+    <text x="350" y="224" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink2)" lang="en">
+      Module 1 §08's <tspan font-weight="700" fill="var(--ink)">⋂(−1/n, 1/n) = {0}</tspan> gets used for real here: the trick that builds a single point out of open intervals alone.
+    </text>
   </svg>
-  <figcaption>가운데 칸을 보면 Module 1 08번 예제 8.1(2)와 완전히 같은 계산이야. 그때는 "무한 교집합의 신기한 성질"이었는데, 여기서는 "닫힌 구간과 한 점을 Borel 집합으로 만드는 도구"로 쓰여.</figcaption>
+  <figcaption lang="ko">가운데 칸을 보면 Module 1 08번 예제 8.1(2)와 완전히 같은 계산이야. 그때는 "무한 교집합의 신기한 성질"이었는데, 여기서는 "닫힌 구간과 한 점을 Borel 집합으로 만드는 도구"로 쓰여.</figcaption>
+  <figcaption lang="en">The middle box is the same computation as Example 8.1(2) back in Module 1 §08. There it was a curiosity about infinite intersections. Here it is the tool that turns closed intervals and single points into Borel sets.</figcaption>
   </figure>
 
-  <h3 data-slide="28">공학적 해석</h3>
-  <div class="callout">
+  <h3 data-slide="28" lang="ko">공학적 해석</h3>
+  <h3 data-slide="28" lang="en">The engineering reading</h3>
+  <div class="callout" lang="ko">
     슬라이드 28쪽에 명시적으로 적혀 있어. 공학에서 던지는 확률 질문은 거의 항상 <strong>구간 형태</strong>야. "<span class="m"><i>X</i> ∈ (<i>a</i>,<i>b</i>)</span>인가?", "<span class="m"><i>X</i> &gt; <i>a</i></span>인가?", "<span class="m"><i>X</i> ∈ <i>A</i></span>인가 (<span class="m"><i>A</i></span>는 구간들로 만든 집합)". <span class="m">ℬ(ℝ)</span>는 이런 질문을 전부 포함해. <strong>그래서 실무에서는 Borel 밖의 집합을 만날 일이 사실상 없어.</strong>
   </div>
+  <div class="callout" lang="en">
+    Slide 28 states this outright. Probability questions in engineering almost always take <strong>interval form</strong>: is <span class="m"><i>X</i> ∈ (<i>a</i>,<i>b</i>)</span>, is <span class="m"><i>X</i> &gt; <i>a</i></span>, is <span class="m"><i>X</i> ∈ <i>A</i></span> where <span class="m"><i>A</i></span> is built out of intervals. <span class="m">ℬ(ℝ)</span> contains all of them. <strong>In practice you will essentially never meet a set outside Borel.</strong>
+  </div>
 
-  <div class="trap">
+  <div class="trap" lang="ko">
     <span class="tag">함정</span>
     <h4>ℬ(ℝ) ≠ 2^ℝ 이다</h4>
     <p>슬라이드 29쪽 Remark. Borel σ-algebra는 <span class="m">ℝ</span>의 <em>모든</em> 부분집합을 담지 않아. Borel이 아닌 집합이 존재한다는 건 깊은 결과(Vitali set)이고 <strong>선택공리(Axiom of Choice)</strong>에 의존해. 이런 집합은 공학에서 실질적으로 절대 안 나와.</p>
@@ -1371,6 +1419,16 @@ html[data-lang="en"] [lang="ko"]{display:none}
     <p><span class="m">ℬ(ℝ)</span>에는 닫힌 구간, 반열린 구간, 한 점, <span class="m">ℚ</span>, 이들의 가산 합집합/교집합이 다 들어있어. <strong>"생성"이 어디까지 뻗어나가는지를 과소평가하지 마.</strong></p>
     <h4>ℱ에 없는 집합은 확률이 0이 아니라 "정의 안 됨"이다</h4>
     <p>06번 함정에서도 짚었는데 여기서 구체화돼. 비-Borel 집합 <span class="m"><i>V</i></span>에 대해 <span class="m"><i>P</i>(<i>V</i>) = 0</span>이라고 쓰면 틀려. <span class="m"><i>P</i></span>가 <span class="m"><i>V</i></span>에서 <strong>정의되지 않았어.</strong> "값이 0"과 "값이 없음"은 다른 얘기야.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Trap</span>
+    <h4>ℬ(ℝ) is not 2^ℝ</h4>
+    <p>The Remark on slide 29. The Borel σ-algebra does not hold <em>every</em> subset of <span class="m">ℝ</span>. The existence of non-Borel sets is a deep result, the Vitali set, and it leans on the <strong>Axiom of Choice</strong>. Sets like that never show up in engineering practice.</p>
+    <p style="margin-bottom:0">No exam will ask for the proof, but you should have the answer to the conceptual question <em>"why not just use 2^ℝ"</em>. The answer: <strong>because assigning a consistent length to every subset is impossible.</strong></p>
+    <h4>"Generated by open intervals" does not mean only open sets</h4>
+    <p><span class="m">ℬ(ℝ)</span> contains closed intervals, half-open intervals, single points, <span class="m">ℚ</span>, and countable unions and intersections of all of these. <strong>Do not underestimate how far "generated" reaches.</strong></p>
+    <h4>A set outside ℱ has no probability, not probability zero</h4>
+    <p>Section 06 flagged this; here it becomes concrete. For a non-Borel set <span class="m"><i>V</i></span>, writing <span class="m"><i>P</i>(<i>V</i>) = 0</span> is wrong. <span class="m"><i>P</i></span> is simply <strong>not defined</strong> at <span class="m"><i>V</i></span>. "The value is zero" and "there is no value" are different statements.</p>
   </div>
 </section>
 
