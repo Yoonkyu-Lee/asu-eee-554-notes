@@ -528,9 +528,10 @@ html[data-lang="en"] [lang="ko"]{display:none}
 <!-- ══ 03 ══ -->
 <section id="s3">
   <div class="sec-head" data-slide="9-11"><span class="sec-num">03</span><h2>σ-algebra</h2></div>
-  <p class="sec-sub">세 줄짜리 정의. 그런데 세 번째 줄에 함정이 있다.</p>
+  <p class="sec-sub" lang="ko">세 줄짜리 정의. 그런데 세 번째 줄에 함정이 있다.</p>
+  <p class="sec-sub" lang="en">A three-line definition, with a trap sitting in the third line.</p>
 
-  <div class="def">
+  <div class="def" lang="ko">
     <span class="tag">정의</span>
     <p>모음 <span class="m">ℱ ⊆ 2<sup><i>Ω</i></sup></span>가 <strong>σ-algebra</strong>라는 것은 다음 셋을 만족한다는 뜻이다.</p>
     <div class="eq" style="margin:16px 0 8px;text-align:left;font-size:17px">
@@ -546,26 +547,56 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <span class="note" style="margin-left:0"><strong>가산</strong> 합집합에 대해 닫혀 있다</span>
     </div>
   </div>
+  <div class="def" lang="en">
+    <span class="tag">Definition</span>
+    <p>A collection <span class="m">ℱ ⊆ 2<sup><i>Ω</i></sup></span> is a <strong>σ-algebra</strong> when it satisfies all three of these.</p>
+    <div class="eq" style="margin:16px 0 8px;text-align:left;font-size:17px">
+      ① &nbsp; <i>Ω</i> ∈ ℱ
+      <span class="note" style="margin-left:0">the whole space is always in</span>
+    </div>
+    <div class="eq" style="margin:8px 0;text-align:left;font-size:17px">
+      ② &nbsp; <i>A</i> ∈ ℱ &nbsp;⟹&nbsp; <i>A</i><sup>c</sup> ∈ ℱ
+      <span class="note" style="margin-left:0">closed under complement</span>
+    </div>
+    <div class="eq" style="margin:8px 0 0;text-align:left;font-size:17px">
+      ③ &nbsp; <i>A</i><sub>1</sub>, <i>A</i><sub>2</sub>, … ∈ ℱ &nbsp;⟹&nbsp; ⋃<sub><i>i</i>=1</sub><sup>∞</sup> <i>A<sub>i</sub></i> ∈ ℱ
+      <span class="note" style="margin-left:0">closed under <strong>countable</strong> union</span>
+    </div>
+  </div>
 
-  <p>이름의 <strong>σ</strong>가 바로 ③의 "가산 무한까지"를 뜻해. 유한 합집합만 닫혀 있으면 그냥 <em>algebra</em>(또는 field)라고 부르고, 무한 개까지 되면 <em>σ-algebra</em>야.</p>
+  <p lang="ko">이름의 <strong>σ</strong>가 바로 ③의 "가산 무한까지"를 뜻해. 유한 합집합만 닫혀 있으면 그냥 <em>algebra</em>(또는 field)라고 부르고, 무한 개까지 되면 <em>σ-algebra</em>야.</p>
+  <p lang="en">The <strong>σ</strong> in the name is exactly the "countably infinite" part of ③. Closed under finite unions only and it is just an <em>algebra</em>, or a field. Extend that to infinitely many and it becomes a <em>σ-algebra</em>.</p>
 
-  <h3 data-slide="10">공짜로 따라오는 것들</h3>
-  <p>세 조건만 있으면 나머지는 자동으로 따라와. 이게 정의가 짧은 이유야.</p>
+  <h3 data-slide="10" lang="ko">공짜로 따라오는 것들</h3>
+  <h3 data-slide="10" lang="en">What you get for free</h3>
+  <p lang="ko">세 조건만 있으면 나머지는 자동으로 따라와. 이게 정의가 짧은 이유야.</p>
+  <p lang="en">Those three conditions generate everything else on their own. That is why the definition is so short.</p>
 
-  <table>
+  <table lang="ko">
     <tr><th>따라오는 성질</th><th>어떻게 나오나</th></tr>
     <tr><td><span class="m">∅ ∈ ℱ</span></td><td>①에서 <span class="m"><i>Ω</i> ∈ ℱ</span>, ②를 적용하면 <span class="m"><i>Ω</i><sup>c</sup> = ∅ ∈ ℱ</span></td></tr>
     <tr><td><span class="m"><i>A</i> ∩ <i>B</i> ∈ ℱ</span></td><td>De Morgan: <span class="m"><i>A</i> ∩ <i>B</i> = (<i>A</i><sup>c</sup> ∪ <i>B</i><sup>c</sup>)<sup>c</sup></span>. ②와 ③만으로 만들어짐</td></tr>
     <tr><td><span class="m">⋂<sub><i>i</i></sub> <i>A<sub>i</sub></i> ∈ ℱ</span></td><td>같은 논리의 무한 버전. 가산 교집합도 닫혀 있다</td></tr>
     <tr><td><span class="m"><i>A</i> \ <i>B</i> ∈ ℱ</span></td><td><span class="m"><i>A</i> \ <i>B</i> = <i>A</i> ∩ <i>B</i><sup>c</sup></span>. 위 두 개의 조합</td></tr>
   </table>
+  <table lang="en">
+    <tr><th>property</th><th>where it comes from</th></tr>
+    <tr><td><span class="m">∅ ∈ ℱ</span></td><td>① gives <span class="m"><i>Ω</i> ∈ ℱ</span>, then ② gives <span class="m"><i>Ω</i><sup>c</sup> = ∅ ∈ ℱ</span></td></tr>
+    <tr><td><span class="m"><i>A</i> ∩ <i>B</i> ∈ ℱ</span></td><td>De Morgan: <span class="m"><i>A</i> ∩ <i>B</i> = (<i>A</i><sup>c</sup> ∪ <i>B</i><sup>c</sup>)<sup>c</sup></span>, built from ② and ③ alone</td></tr>
+    <tr><td><span class="m">⋂<sub><i>i</i></sub> <i>A<sub>i</sub></i> ∈ ℱ</span></td><td>the infinite version of the same argument: countable intersections are closed too</td></tr>
+    <tr><td><span class="m"><i>A</i> \ <i>B</i> ∈ ℱ</span></td><td><span class="m"><i>A</i> \ <i>B</i> = <i>A</i> ∩ <i>B</i><sup>c</sup></span>, a combination of the two above</td></tr>
+  </table>
 
-  <div class="callout">
+  <div class="callout" lang="ko">
     <strong>Module 1이 여기서 일한다.</strong> "왜 교집합은 정의에 안 넣었지?" 싶으면 De Morgan 때문이야. <span class="m">(<i>A</i><sup>c</sup> ∪ <i>B</i><sup>c</sup>)<sup>c</sup> = <i>A</i> ∩ <i>B</i></span>니까, 여집합과 합집합만 있으면 교집합은 공짜로 나와. 수학에서 정의는 <strong>최소한으로</strong> 쓰는 게 관례라서 중복되는 건 뺀 거야.
   </div>
+  <div class="callout" lang="en">
+    <strong>Module 1 is doing work here.</strong> If you are wondering why intersection is missing from the definition, the answer is De Morgan. Since <span class="m">(<i>A</i><sup>c</sup> ∪ <i>B</i><sup>c</sup>)<sup>c</sup> = <i>A</i> ∩ <i>B</i></span>, complement plus union hands you intersection for free. Mathematical definitions are conventionally kept <strong>minimal</strong>, so anything redundant is left out.
+  </div>
 
-  <h3 data-slide="11">해석: 물어봐도 되는 질문 목록</h3>
-  <div class="def">
+  <h3 data-slide="11" lang="ko">해석: 물어봐도 되는 질문 목록</h3>
+  <h3 data-slide="11" lang="en">Reading it as a list of permitted questions</h3>
+  <div class="def" lang="ko">
     <span class="tag">직관</span>
     <p>σ-algebra는 <strong>우리가 던져도 되는 확률적 질문들의 목록</strong>이다. <span class="m"><i>A</i>, <i>B</i> ∈ ℱ</span>이면:</p>
     <ul style="margin-bottom:0">
@@ -574,21 +605,34 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <li><span class="m"><i>A</i> ∩ <i>B</i> ∈ ℱ</span> — "A <strong>이면서</strong> B인가?"도 된다 (AND)</li>
     </ul>
   </div>
+  <div class="def" lang="en">
+    <span class="tag">Intuition</span>
+    <p>A σ-algebra is <strong>the list of probabilistic questions you are allowed to ask</strong>. If <span class="m"><i>A</i>, <i>B</i> ∈ ℱ</span> then:</p>
+    <ul style="margin-bottom:0">
+      <li><span class="m"><i>A</i><sup>c</sup> ∈ ℱ</span> — you may also ask "is it <strong>not</strong> A?" (NOT)</li>
+      <li><span class="m"><i>A</i> ∪ <i>B</i> ∈ ℱ</span> — and "is it A <strong>or</strong> B?" (OR)</li>
+      <li><span class="m"><i>A</i> ∩ <i>B</i> ∈ ℱ</span> — and "is it A <strong>and</strong> B?" (AND)</li>
+    </ul>
+  </div>
 
-  <p>정보량 관점에서 보면 더 와닿아. <span class="m">ℱ</span>가 크면 세밀한 질문까지 할 수 있고, 작으면 뭉뚱그린 질문만 할 수 있어.</p>
+  <p lang="ko">정보량 관점에서 보면 더 와닿아. <span class="m">ℱ</span>가 크면 세밀한 질문까지 할 수 있고, 작으면 뭉뚱그린 질문만 할 수 있어.</p>
+  <p lang="en">It clicks faster if you think of it as information content. A large <span class="m">ℱ</span> lets you ask fine-grained questions; a small one only lets you ask coarse ones.</p>
 
   <figure>
   <svg viewBox="0 0 700 200" role="img" aria-label="σ-algebra의 크기 스펙트럼">
     <line x1="60" y1="150" x2="640" y2="150" stroke="var(--ink3)" stroke-width="1.4"/>
-    <text x="60" y="176" text-anchor="middle" class="svglab" style="font-size:10.5px">정보 없음</text>
-    <text x="640" y="176" text-anchor="middle" class="svglab" style="font-size:10.5px">완전한 정보</text>
+    <text x="60" y="176" text-anchor="middle" class="svglab" style="font-size:10.5px" lang="ko">정보 없음</text>
+    <text x="60" y="176" text-anchor="middle" class="svglab" style="font-size:10.5px" lang="en">no information</text>
+    <text x="640" y="176" text-anchor="middle" class="svglab" style="font-size:10.5px" lang="ko">완전한 정보</text>
+    <text x="640" y="176" text-anchor="middle" class="svglab" style="font-size:10.5px" lang="en">full information</text>
 
     <g>
       <circle cx="60" cy="150" r="6" fill="var(--ink3)"/>
       <rect x="6" y="52" width="130" height="72" rx="8" fill="var(--paper)" stroke="var(--rule)"/>
       <text x="71" y="76" text-anchor="middle" class="svgtxt" style="font-size:14px">{∅, Ω}</text>
       <text x="71" y="96" text-anchor="middle" class="svglab" style="font-size:9.5px">trivial σ-algebra</text>
-      <text x="71" y="113" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:var(--ink3)">질문 2개</text>
+      <text x="71" y="113" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:var(--ink3)" lang="ko">질문 2개</text>
+      <text x="71" y="113" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:var(--ink3)" lang="en">2 questions</text>
       <line x1="60" y1="124" x2="60" y2="144" stroke="var(--rule)"/>
     </g>
 
@@ -597,7 +641,8 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <rect x="215" y="52" width="150" height="72" rx="8" fill="var(--paper)" stroke="var(--violet)"/>
       <text x="290" y="76" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--violet)">{∅, <tspan font-style="italic">A</tspan>, <tspan font-style="italic">A</tspan><tspan font-size="9" dy="-4">c</tspan><tspan dy="4">, Ω}</tspan></text>
       <text x="290" y="96" text-anchor="middle" class="svglab" style="font-size:9.5px;fill:var(--violet)">σ(A)</text>
-      <text x="290" y="113" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:var(--ink3)">질문 4개</text>
+      <text x="290" y="113" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:var(--ink3)" lang="ko">질문 4개</text>
+      <text x="290" y="113" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:var(--ink3)" lang="en">4 questions</text>
       <line x1="290" y1="124" x2="290" y2="144" stroke="var(--rule)"/>
     </g>
 
@@ -605,25 +650,32 @@ html[data-lang="en"] [lang="ko"]{display:none}
       <circle cx="520" cy="150" r="6" fill="var(--blue)"/>
       <rect x="450" y="52" width="140" height="72" rx="8" fill="var(--paper)" stroke="var(--rule)"/>
       <text x="520" y="76" text-anchor="middle" class="svgtxt" style="font-size:13px">{∅,{1},{2,3},…}</text>
-      <text x="520" y="96" text-anchor="middle" class="svglab" style="font-size:9.5px">중간 크기</text>
-      <text x="520" y="113" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:var(--ink3)">질문 여러 개</text>
+      <text x="520" y="96" text-anchor="middle" class="svglab" style="font-size:9.5px" lang="ko">중간 크기</text>
+      <text x="520" y="96" text-anchor="middle" class="svglab" style="font-size:9.5px" lang="en">something in between</text>
+      <text x="520" y="113" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:var(--ink3)" lang="ko">질문 여러 개</text>
+      <text x="520" y="113" text-anchor="middle" class="svgtxt" style="font-size:11px;fill:var(--ink3)" lang="en">several questions</text>
       <line x1="520" y1="124" x2="520" y2="144" stroke="var(--rule)"/>
     </g>
 
     <g>
       <circle cx="640" cy="150" r="6" fill="var(--green)"/>
       <text x="640" y="120" text-anchor="middle" class="svgtxt" style="font-size:14px;fill:var(--green)">2^Ω</text>
-      <text x="640" y="136" text-anchor="middle" class="svglab" style="font-size:9px;fill:var(--green)">2ⁿ개</text>
+      <text x="640" y="136" text-anchor="middle" class="svglab" style="font-size:9px;fill:var(--green)" lang="ko">2ⁿ개</text>
+      <text x="640" y="136" text-anchor="middle" class="svglab" style="font-size:9px;fill:var(--green)" lang="en">2ⁿ of them</text>
     </g>
 
     <text x="350" y="28" text-anchor="middle" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)">
       Ω 하나에 σ-algebra는 <tspan font-weight="700" fill="var(--ink)">여러 개</tspan> 존재한다. 양 끝 두 개는 언제나 σ-algebra다.
     </text>
+    <text x="350" y="28" text-anchor="middle" class="svgtxt" style="font-size:13.5px;fill:var(--ink2)" lang="en">
+      A single Ω admits <tspan font-weight="700" fill="var(--ink)">many</tspan> σ-algebras. The two at the ends always qualify.
+    </text>
   </svg>
-  <figcaption>왼쪽 끝 <span class="m">{∅, <i>Ω</i>}</span>는 "아무것도 구별 못 하는" 상태고, 오른쪽 끝 <span class="m">2<sup><i>Ω</i></sup></span>는 "다 구별하는" 상태야. <span class="m">ℱ</span>를 고른다는 건 이 스펙트럼 위에서 위치를 정하는 일이야.</figcaption>
+  <figcaption lang="ko">왼쪽 끝 <span class="m">{∅, <i>Ω</i>}</span>는 "아무것도 구별 못 하는" 상태고, 오른쪽 끝 <span class="m">2<sup><i>Ω</i></sup></span>는 "다 구별하는" 상태야. <span class="m">ℱ</span>를 고른다는 건 이 스펙트럼 위에서 위치를 정하는 일이야.</figcaption>
+  <figcaption lang="en">At the left end, <span class="m">{∅, <i>Ω</i>}</span> distinguishes nothing. At the right end, <span class="m">2<sup><i>Ω</i></sup></span> distinguishes everything. Choosing <span class="m">ℱ</span> means picking a position on this spectrum.</figcaption>
   </figure>
 
-  <div class="trap">
+  <div class="trap" lang="ko">
     <span class="tag">함정</span>
 
     <h4>"가산" 합집합이지 "임의의" 합집합이 아니다</h4>
@@ -637,6 +689,21 @@ html[data-lang="en"] [lang="ko"]{display:none}
 
     <h4>"σ-algebra인지 확인하라"는 세 조건을 다 훑으라는 뜻</h4>
     <p>HW1 Problem 4(a)가 정확히 이 형식이야. <em>"verify that ∅ ∈ ℱ; ℱ is closed under complements; ℱ is closed under countable unions"</em> 라고 세 가지를 명시해뒀어. <strong>하나만 확인하고 넘어가면 감점이야.</strong> 특히 합집합은 <em>모든 쌍</em>을 확인해야 해.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Trap</span>
+
+    <h4>It says "countable" union, not "arbitrary" union</h4>
+    <p>Condition ③ only covers families you can <strong>number</strong>, like <span class="m"><i>A</i><sub>1</sub>, <i>A</i><sub>2</sub>, …</span>. An uncountable union such as <span class="m">⋃<sub><i>t</i>∈ℝ</sub> <i>A<sub>t</sub></i></span> carries no guarantee of staying in the σ-algebra. Without that restriction you could union together every singleton <span class="m">{<i>x</i>}</span> in <span class="m">ℝ</span> to build any subset you liked, land back at <span class="m">2<sup>ℝ</sup></span>, and the definition would have bought you nothing.</p>
+
+    <h4>The elements of ℱ are sets, not outcomes</h4>
+    <p>Same level confusion as the §07 trap in Module 1. With <span class="m"><i>Ω</i> = {1,2,3,4}</span>, writing <span class="m">{1,2} ∈ ℱ</span> is right and <span class="m">1 ∈ ℱ</span> is wrong. <span class="m">ℱ</span> is a subset of <span class="m">2<sup><i>Ω</i></sup></span>, so every one of its elements is itself a set.</p>
+
+    <h4>Do not forget Ω ∈ ℱ</h4>
+    <p><span class="m">{∅}</span> on its own is not a σ-algebra, since <span class="m"><i>Ω</i></span> is missing. Nor is <span class="m">{<i>Ω</i>}</span>, since its complement <span class="m">∅</span> is missing. <strong>The smallest σ-algebra is <span class="m">{∅, <i>Ω</i>}</span> and it always has at least two elements</strong>, barring the degenerate case <span class="m"><i>Ω</i> = ∅</span>.</p>
+
+    <h4>"Verify it is a σ-algebra" means walk all three conditions</h4>
+    <p>HW1 Problem 4(a) is written in exactly this shape: <em>"verify that ∅ ∈ ℱ; ℱ is closed under complements; ℱ is closed under countable unions"</em>, all three spelled out. <strong>Checking one and moving on loses marks.</strong> For unions in particular you have to check <em>every pair</em>.</p>
   </div>
 </section>
 
