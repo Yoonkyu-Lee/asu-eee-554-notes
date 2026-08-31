@@ -1095,6 +1095,7 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
     </div>
   </div>
 
+
   <details class="nota" open>
     <summary><span lang="ko">기호 뜯어보기 · 화살표와 ∑, 그리고 <i>i</i> ≠ <i>j</i></span><span lang="en">Unpacking the notation · the arrow, ∑, and <i>i</i> ≠ <i>j</i></span></summary>
     <div class="body">
@@ -1115,6 +1116,45 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
           <tr><td><span class="m"><i>i</i> ≠ <i>j</i></span></td><td>"for any two different indices you care to pick". That is precisely what <strong>pairwise disjoint</strong> means, and it is <em>not</em> the same as the total intersection being <span class="m">∅</span>.</td></tr>
         </table>
         <p>As a sentence, ③ reads: <strong>"for events that never overlap, the probability of their combined event is just the sum of the individual probabilities."</strong> Once they do overlap this formula is off the table, and inclusion-exclusion is what you reach for.</p>
+      </div>
+    </div>
+  </details>
+  <details class="nota" open>
+    <summary><span lang="ko">교재는 다르게 쓴다 · Hajek §1.1</span><span lang="en">The textbook writes it differently · Hajek §1.1</span></summary>
+    <div class="body">
+      <div lang="ko">
+        <p>교재(Hajek, <em>Random Processes for Engineers</em>) §1.1이 같은 내용을 다루는데 <strong>표기와 번호가 다르다.</strong> 교재를 나란히 펴면 바로 걸리는 지점이라 미리 짚어둘게.</p>
+        <table class="parts">
+          <tr><td><span class="m"><i>AB</i></span></td><td>교재는 <span class="m"><i>A</i> ∩ <i>B</i></span>를 <strong>붙여 쓴다.</strong> 곱셈이 아니라 교집합이야. <span class="m"><i>P</i>(<i>AB</i>)</span>, <span class="m"><i>A<sub>i</sub>A<sub>j</sub></i> = ∅</span> 처럼 나와. 포함배제도 교재에서는 <span class="m"><i>P</i>(<i>A</i>∪<i>B</i>) = <i>P</i>(<i>A</i>) + <i>P</i>(<i>B</i>) − <i>P</i>(<i>AB</i>)</span>야.</td></tr>
+          <tr><td><span class="m"><i>A</i> ⊂ <i>B</i></span></td><td>교재는 <span class="m">⊆</span>의 뜻으로 <span class="m">⊂</span>를 써. <strong>진부분집합이 아니야.</strong> "<span class="m"><i>A</i> ⊂ <i>B</i></span>이면 <span class="m"><i>P</i>(<i>A</i>) ≤ <i>P</i>(<i>B</i>)</span>"가 우리가 아는 단조성이야.</td></tr>
+          <tr><td>mutually<br>exclusive</td><td><strong>서로소(pairwise disjoint)</strong>의 교재 용어. "<span class="m"><i>A<sub>i</sub>A<sub>j</sub></i> = ∅ for all <i>i</i> ≠ <i>j</i></span>"로 정의하니 우리가 쓰는 것과 완전히 같아.</td></tr>
+        </table>
+        <p><strong>공리 번호가 어긋나는 게 제일 위험해.</strong> σ-algebra 쪽은 순서가 같은데, 확률 공리 쪽은 ②와 ③이 뒤바뀌어 있어.</p>
+        <table class="parts">
+          <tr><td>&nbsp;</td><td><strong>이 노트 / 슬라이드</strong></td><td><strong>교재</strong></td></tr>
+          <tr><td>비음수성</td><td>①</td><td>P.1</td></tr>
+          <tr><td>정규화 <span class="m"><i>P</i>(<i>Ω</i>) = 1</span></td><td>②</td><td><strong>P.3</strong></td></tr>
+          <tr><td>가산 가법성</td><td>③</td><td><strong>P.2</strong></td></tr>
+        </table>
+        <p>그러니까 <strong>"공리 3"이 서로 다른 것을 가리켜.</strong> 이 노트에서 ③은 가산 가법성이고, 교재의 P.3은 정규화야. σ-algebra의 A.1 · A.2 · A.3은 다행히 ① · ② · ③과 순서가 같아.</p>
+        <p><strong>시험과 숙제는 슬라이드 기준이야.</strong> 번호를 인용할 일이 있으면 슬라이드 번호를 쓰고, 교재를 읽을 때만 머릿속에서 바꿔.</p>
+      </div>
+      <div lang="en">
+        <p>The textbook (Hajek, <em>Random Processes for Engineers</em>) covers this same ground in §1.1, but <strong>the notation and the numbering differ.</strong> You hit this the moment you open the book alongside these notes, so here it is up front.</p>
+        <table class="parts">
+          <tr><td><span class="m"><i>AB</i></span></td><td>The book writes <span class="m"><i>A</i> ∩ <i>B</i></span> as <strong>juxtaposition.</strong> It is an intersection, not a product. You will see <span class="m"><i>P</i>(<i>AB</i>)</span> and <span class="m"><i>A<sub>i</sub>A<sub>j</sub></i> = ∅</span>. Inclusion-exclusion appears there as <span class="m"><i>P</i>(<i>A</i>∪<i>B</i>) = <i>P</i>(<i>A</i>) + <i>P</i>(<i>B</i>) − <i>P</i>(<i>AB</i>)</span>.</td></tr>
+          <tr><td><span class="m"><i>A</i> ⊂ <i>B</i></span></td><td>The book uses <span class="m">⊂</span> where we write <span class="m">⊆</span>. <strong>It does not mean proper subset.</strong> So "if <span class="m"><i>A</i> ⊂ <i>B</i></span> then <span class="m"><i>P</i>(<i>A</i>) ≤ <i>P</i>(<i>B</i>)</span>" is exactly the monotonicity you already know.</td></tr>
+          <tr><td>mutually<br>exclusive</td><td>The book's term for <strong>pairwise disjoint.</strong> It defines it as "<span class="m"><i>A<sub>i</sub>A<sub>j</sub></i> = ∅ for all <i>i</i> ≠ <i>j</i></span>", identical to ours.</td></tr>
+        </table>
+        <p><strong>The numbering mismatch is the dangerous one.</strong> The σ-algebra axioms line up, but the probability axioms have ② and ③ swapped.</p>
+        <table class="parts">
+          <tr><td>&nbsp;</td><td><strong>these notes / slides</strong></td><td><strong>textbook</strong></td></tr>
+          <tr><td>non-negativity</td><td>①</td><td>P.1</td></tr>
+          <tr><td>normalization <span class="m"><i>P</i>(<i>Ω</i>) = 1</span></td><td>②</td><td><strong>P.3</strong></td></tr>
+          <tr><td>countable additivity</td><td>③</td><td><strong>P.2</strong></td></tr>
+        </table>
+        <p>So <strong>"axiom 3" means two different things.</strong> Here ③ is countable additivity; the book's P.3 is normalization. The σ-algebra axioms A.1, A.2, A.3 do match ①, ②, ③.</p>
+        <p><strong>Exams and homework follow the slides.</strong> Cite the slide numbering, and do the translation in your head only while reading the book.</p>
       </div>
     </div>
   </details>

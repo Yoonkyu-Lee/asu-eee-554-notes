@@ -24,9 +24,50 @@ Drive 미러 폴더는 절대 수정하지 않는다. 읽기만 한다.
 **커밋하는 것**: 모듈에 대응되는 강의 슬라이드 PDF만. `slides/`에 사본을 두고 커밋한다.
 사이트에 PDF 리더를 붙여 노트와 슬라이드를 나란히 보기 위한 것이다.
 
-**커밋하지 않는 것**: 교재(Kay, 57MB), `randomprocJuly14.pdf`, 강의계획서, `HW*.pdf`.
-용량 때문이기도 하고, 리더가 필요로 하지 않기 때문이기도 하다.
-HW는 노트를 쓸 때 읽기만 하고 커밋하지 않는다.
+**커밋하지 않는 것**: 교재(`randomprocJuly14.pdf`), Kay 책(57MB), 강의계획서, `HW*.pdf`.
+저작권 때문이고, 용량 때문이기도 하고, 리더가 필요로 하지 않기 때문이기도 하다.
+**커밋하지 않을 뿐 전부 읽는다.** 특히 교재는 내용 검증의 근거다 (아래 참조).
+
+## 교재
+
+강의계획서가 지정한 교재는 **하나**다.
+
+> Hajek, B. (2015). *Random Processes for Engineers*. Cambridge University Press.
+> 저자가 무료 공개한 preprint: `randomprocJuly14.pdf` (448쪽)
+> https://hajek.ece.illinois.edu/Papers/randomprocJuly14.pdf
+
+Drive 폴더에 Kay의 *Intuitive Probability and Random Processes Using MATLAB*도
+있지만 **강의계획서에 언급이 없다.** 교재로 취급하지 않는다.
+(`index.html` footer가 한동안 Kay를 교재로 적어두고 있었다. 공개 사이트에
+사실이 아닌 문구를 둔 것이라 고쳤다.)
+
+### 교재로 내용을 검증한다
+
+슬라이드만 근거로 쓰면 슬라이드의 오타나 생략을 그대로 옮기게 된다.
+**노트를 쓰거나 고칠 때 해당 범위를 교재에서 찾아 대조한다.**
+
+| 노트 | 교재 |
+|---|---|
+| Module 1 집합론, Module 2 확률 공간 | §1.1 The axioms of probability theory (책 1–5쪽) |
+| Module 3 조건부 확률 | §1.2 Independence and conditional probability (책 5–8쪽) |
+| 이후 확률변수, 기댓값 | §1.3–1.11 |
+
+Chapter 1의 제목이 "A **Selective Review** of Basic Probability"인 데서 보이듯,
+**교재는 이 범위를 복습으로 압축해 놨다.** 슬라이드 110장 분량이 책에서는 8쪽이다.
+그래서 Module 1–3에서 교재는 **주 서술이 아니라 대조용**이다. 서술의 깊이와 예제는
+슬라이드를 따르고, 교재로는 다음을 확인한다.
+
+- **정의와 공리가 어긋나지 않는지.** 실제로 σ-algebra 공리는 슬라이드와 교재가
+  A.1/A.2/A.3 = ①/②/③으로 순서까지 같았다.
+- **번호가 어긋나는지.** 확률 공리는 순서가 다르다. 슬라이드 ②가 정규화인데
+  교재는 P.3이 정규화고 P.2가 가법성이다. **"공리 3"이 서로 다른 것을 가리킨다.**
+- **교재가 쓰는 다른 표기.** 교재는 `A ∩ B`를 **`AB`**로 쓰고(`P(AB)`, `AᵢAⱼ = ∅`),
+  `⊆`의 뜻으로 `⊂`를 쓰며, pairwise disjoint를 **mutually exclusive**라고 부른다.
+  노트에 없으면 교재를 폈을 때 읽히지 않으므로 `.nota`로 풀어둔다.
+- **슬라이드에 없는 보강 재료.** 교재의 Example과 Lemma는 슬라이드보다 엄밀하다.
+
+**시험과 숙제는 슬라이드 기준이다.** 교재와 다르면 슬라이드를 따르되,
+다르다는 사실 자체를 노트에 적는다. 조용히 한쪽으로 통일하지 않는다.
 
 ## 파일 명명
 
@@ -562,7 +603,7 @@ package-lock.json
 |---|---|
 | `slides/L{NN}-*.pdf` (강의 슬라이드) | O |
 | `vendor/pdf.js/` | O |
-| 교재 (Kay), `randomprocJuly14.pdf` | X (용량 + 저작권) |
+| 교재 `randomprocJuly14.pdf`, Kay 책 | X (저작권 + 용량). 읽기는 한다 |
 | `HW*.pdf`, 강의계획서 | X |
 | `shots/`, `node_modules/` | X |
 
@@ -577,6 +618,8 @@ package-lock.json
 - 강의 슬라이드의 저작권은 담당 교수(Nicolò Michelusi)와 ASU에 있다는 것
 - 이 사이트는 수강생이 만든 개인 학습 자료이고 공식 강의 자료가 아니라는 것
 - 노트 본문은 슬라이드를 재구성하고 보충한 것이라는 것
+- 교재가 무엇인지. **강의계획서에 적힌 것을 그대로 쓴다.** Drive에 다른 책이
+  같이 있다고 그것을 교재로 적으면 안 된다
 
 ### 판정선 개수는 양쪽이 맞아야 한다
 
