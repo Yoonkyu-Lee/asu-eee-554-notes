@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="ko" data-lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EEE 554 · Module 5 · Random Variables &amp; Distributions</title>
+<style>
+:root{
+  color-scheme:light dark;
+
+  /* 색 성분. rgba(var(--blue-rgb),.16) 형태로 농도 변형을 만든다. */
+  --ink-rgb:20,22,26;
+  --blue-rgb:18,80,196;
+  --pink-rgb:217,20,122;
+  --violet-rgb:107,47,168;
+  --green-rgb:0,132,95;
+  --amber-rgb:178,106,0;
+  --sel-rgb:75,29,140;
+
+  --paper:#FAFAF8;
+  --card:#FFFFFF;
+  --ink:rgb(var(--ink-rgb));
+  --ink2:#565D66;
+  --ink3:#8A9099;
+  --rule:#E2E1DB;
+  --blue:rgb(var(--blue-rgb));
+  --pink:rgb(var(--pink-rgb));
+  --violet:rgb(var(--violet-rgb));
+  --green:rgb(var(--green-rgb));
+  --amber:rgb(var(--amber-rgb));
+  --amber-bg:#FDF6E9;
+  --red:#C02626;
+  --sel:rgb(var(--sel-rgb));
+
+  /* 보조 표면과 진한 변형 */
+  --amber-line:#F0E2C4;
+  --code-bg:#F0EFEA;
+  --chip:#F1F0EB;
+  --sel-soft:#F6F2FB;
+  --pink-deep:#8B0D4E;
+  --green-deep:#005A42;
+  --amber-deep:#7A4A00;
+  --violet-deep:#3B1E70;
+  --brown:#A3532B;
+  --teal:#0E7490;
+  --shadow:rgba(var(--ink-rgb),.06);
+
+  --mono:ui-monospace,"Cascadia Mono","Cascadia Code",Consolas,"SFMono-Regular",monospace;
+  --sans:"Pretendard","Pretendard Variable",-apple-system,"Segoe UI Variable Text","Segoe UI","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --serif:"Cambria Math","STIX Two Math","Latin Modern Math",Cambria,"Times New Roman",serif;
+}
+
+/* 다크 팔레트. 의미 고정 색상(A=blue, B=pink, 교집합=violet, 함정=amber)은
+   그대로 두고 밝기만 어두운 배경에 맞게 올린다. */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 120px;display:grid;grid-template-columns:210px minmax(0,1fr);gap:56px}
+@media(max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);gap:0;padding:0 18px 80px}}
+
+header.top{grid-column:1/-1;padding:64px 0 40px;border-bottom:1px solid var(--rule);margin-bottom:48px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+h1.title{font-size:clamp(30px,5vw,50px);line-height:1.1;letter-spacing:-.025em;font-weight:800;margin:14px 0 6px}
+.subtitle{font-size:17px;color:var(--ink2);margin:0}
+.meta{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--mono);font-size:11px;letter-spacing:.05em;padding:5px 11px;border:1px solid var(--rule);border-radius:999px;color:var(--ink2);background:var(--card)}
+.chip.hot{border-color:var(--amber);color:var(--amber);background:var(--amber-bg)}
+.backlink{display:inline-block;margin-top:20px;font-family:var(--mono);font-size:11.5px;color:var(--blue);text-decoration:none;letter-spacing:.04em}
+.backlink:hover{text-decoration:underline}
+
+nav.toc{position:sticky;top:24px;align-self:start;font-size:13.5px;line-height:1.5}
+nav.toc .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:14px}
+nav.toc a{display:flex;gap:9px;padding:5px 0;color:var(--ink2);text-decoration:none;border-left:2px solid transparent;padding-left:11px;margin-left:-13px}
+nav.toc a:hover{color:var(--ink);border-left-color:var(--blue)}
+nav.toc a .n{font-family:var(--mono);font-size:11px;color:var(--ink3);padding-top:2px;min-width:14px}
+@media(max-width:900px){nav.toc{position:static;margin-bottom:44px;padding-bottom:28px;border-bottom:1px solid var(--rule)}}
+/* ── 상단 미니 헤더 ─────────────────────── */
+/* 큰 제목이 화면 밖으로 나가면 목차 위에 작게 나타나 계속 남는다.
+   목차가 이미 sticky라 그 안에 넣으면 따로 고정 장치가 필요 없다.
+   모바일에서는 목차가 static이라 의미가 없으므로 숨긴다. */
+.mini-head{max-height:0;opacity:0;visibility:hidden;overflow:hidden;margin-bottom:0;
+  transition:max-height .22s ease,opacity .18s ease,margin-bottom .22s ease,visibility .18s}
+.mini-head.on{max-height:150px;opacity:1;visibility:visible;margin-bottom:22px}
+nav.toc .mini-head a.back{display:inline-block;margin:0 0 12px;padding:0;border-left:none;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--blue);text-decoration:none}
+nav.toc .mini-head a.back:hover{text-decoration:underline;color:var(--blue);border-left-color:transparent}
+.mini-head .mod{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:3px}
+.mini-head .name{font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--ink);line-height:1.3}
+.mini-head .rule{height:1px;background:var(--rule);margin-top:16px}
+@media(max-width:900px){.mini-head{display:none}}
+
+section{margin-bottom:76px;scroll-margin-top:20px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+.sec-num{font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:.1em;padding-top:4px}
+h2{font-size:clamp(22px,3vw,29px);letter-spacing:-.02em;font-weight:750;margin:0;line-height:1.25}
+.sec-sub{color:var(--ink2);font-size:15px;margin:0 0 30px 0}
+h3{font-size:17.5px;font-weight:700;letter-spacing:-.01em;margin:38px 0 12px}
+h4{font-size:15px;font-weight:700;margin:26px 0 8px;color:var(--ink)}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 16px;padding-left:22px}
+li{margin-bottom:7px}
+code{font-family:var(--mono);font-size:.87em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+
+.m{font-family:var(--serif);font-style:normal;font-size:1.07em;white-space:nowrap}
+@media(max-width:900px){.m{white-space:normal}}
+.m i{font-style:italic}
+.eq{font-family:var(--serif);font-size:19px;text-align:center;margin:22px 0;line-height:1.9}
+.eq i{font-style:italic}
+.eq .note{font-family:var(--sans);font-size:13px;color:var(--ink3);display:block;margin-top:4px}
+.cA{color:var(--blue);font-weight:600}
+.cB{color:var(--pink);font-weight:600}
+.cC{color:var(--green);font-weight:600}
+
+.def{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--ink);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.def .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:7px}
+.def p:last-child,.def ol:last-child,.def ul:last-child{margin-bottom:0}
+
+.trap{background:var(--amber-bg);border:1px solid var(--amber-line);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.trap .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:7px;font-weight:600}
+.trap p:last-child,.trap ul:last-child{margin-bottom:0}
+.trap h4{margin-top:18px;font-size:14.5px}
+.trap h4:first-of-type{margin-top:0}
+
+.ex{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:18px 22px;margin:20px 0}
+.ex .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:7px;font-weight:600}
+.ex p:last-child,.ex ul:last-child,.ex ol:last-child{margin-bottom:0}
+details{margin-top:12px;border-top:1px dashed var(--rule);padding-top:12px}
+details summary{cursor:pointer;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--blue);list-style:none;user-select:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"▸ ";display:inline-block}
+details[open] summary::before{content:"▾ "}
+details .body{margin-top:12px}
+details .body p:last-child,details .body ol:last-child{margin-bottom:0}
+
+.callout{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:16px 0;margin:26px 0;font-size:15px;color:var(--ink2)}
+.callout strong{color:var(--ink)}
+
+/* ── 슬라이드 출처 표시 ─────────────────── */
+/* data-slide 값에서 라벨을 직접 만든다. 라벨과 앵커가 어긋날 수 없다.
+   리더가 꺼져 있어도, 모바일이어도 "이 대목이 슬라이드 몇 쪽인지"는 보여야 한다. */
+.sec-head[data-slide],h3[data-slide]{display:flex;align-items:baseline;gap:14px}
+.sec-head[data-slide]>h2,h3[data-slide]{min-width:0}
+.sec-head[data-slide]::before,h3[data-slide]::before{
+  content:"";order:1;flex:1 1 auto;min-width:16px;height:1px;
+  background:var(--rule);align-self:center;opacity:.75}
+.sec-head[data-slide]::after,h3[data-slide]::after{
+  content:"슬라이드 " attr(data-slide) "쪽";order:2;flex:none;
+  font-family:var(--mono);font-size:10px;letter-spacing:.05em;
+  color:var(--ink3);white-space:nowrap;align-self:center}
+@media(max-width:900px){
+  .sec-head[data-slide]::before,h3[data-slide]::before{min-width:10px}
+  .sec-head[data-slide]::after,h3[data-slide]::after{font-size:9.5px}
+}
+
+figure{margin:28px 0;background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:22px}
+figure svg{display:block;width:100%;height:auto;max-width:100%}
+figcaption{font-size:13px;color:var(--ink2);margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:720px){.grid2,.grid3{grid-template-columns:1fr}}
+.mini{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px}
+.mini .cap{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--ink2);text-align:center;margin-top:8px;line-height:1.4}
+.mini svg{display:block;width:100%;height:auto}
+.svgtxt{font-family:var(--serif);font-size:15px;fill:var(--ink)}
+.svgtxt.it{font-style:italic}
+.svglab{font-family:var(--mono);font-size:11px;fill:var(--ink2)}
+.svgnum{font-family:var(--mono);font-size:13px;font-weight:600}
+
+/* sigma-algebra checker */
+.play{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:22px;margin:28px 0}
+.plab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin:20px 0 9px}
+.plab:first-child{margin-top:0}
+.subsets{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+@media(max-width:560px){.subsets{grid-template-columns:repeat(2,1fr)}}
+.sub{font-family:var(--serif);font-size:15px;padding:9px 6px;text-align:center;background:var(--paper);border:1px solid var(--rule);border-radius:6px;cursor:pointer;user-select:none;transition:.12s;position:relative}
+.sub:hover{border-color:var(--sel)}
+.sub.on{background:var(--sel);border-color:var(--sel);color:var(--card);font-weight:600}
+.sub.need{background:var(--amber-bg);border-color:var(--amber);border-style:dashed;color:var(--amber)}
+.verdict{margin-top:18px;border-radius:8px;padding:15px 18px;font-size:14.5px;line-height:1.65}
+.verdict.ok{background:rgba(var(--green-rgb),.08);border:1px solid rgba(var(--green-rgb),.3);color:var(--green-deep)}
+.verdict.bad{background:var(--amber-bg);border:1px solid var(--amber-line);color:var(--amber-deep)}
+.verdict .hd{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:8px}
+.verdict ul{margin:8px 0 0;padding-left:20px}
+.verdict li{margin-bottom:5px;font-size:14px}
+.verdict .m{font-size:1em}
+.presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.presets button{font-family:var(--sans);font-size:12.5px;padding:7px 12px;background:var(--paper);border:1px solid var(--rule);border-radius:6px;color:var(--ink2);cursor:pointer;transition:.13s}
+.presets button:hover{border-color:var(--sel);color:var(--sel);background:var(--sel-soft)}
+.presets button.act{border-color:var(--green);color:var(--green);background:rgba(var(--green-rgb),.06);font-weight:600}
+.hintline{font-size:13px;color:var(--ink2);margin-top:16px;line-height:1.6;border-top:1px solid var(--rule);padding-top:13px}
+
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14.5px}
+@media(max-width:900px){table{display:block;max-width:100%;overflow-x:auto}}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);font-weight:500}
+
+footer{grid-column:1/-1;border-top:1px solid var(--rule);padding-top:28px;margin-top:20px;font-size:13.5px;color:var(--ink3);line-height:1.7}
+footer a{color:var(--blue)}
+/* 본문 링크. 규칙이 없으면 브라우저 기본 남색이 나오고 다크모드에서 묻는다. */
+main a{color:var(--blue);text-decoration:none;border-bottom:1px solid rgba(var(--blue-rgb),.4)}
+main a:hover{border-bottom-color:var(--blue);background:rgba(var(--blue-rgb),.09)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ── 테마 토글 ──────────────────────────── */
+/* 기본은 OS 설정(prefers-color-scheme)을 따른다. 이 버튼은 그걸 덮어쓴다. */
+.theme-btn{position:fixed;left:16px;bottom:16px;z-index:70;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 6px var(--shadow);transition:.13s}
+.theme-btn:hover{border-color:var(--sel);color:var(--sel)}
+@media(max-width:900px){.theme-btn{left:10px;bottom:10px;font-size:10.5px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.theme-btn{transition:none}}
+
+/* ── 언어 전환 ──────────────────────────── */
+/* 한 파일에 한국어와 영어를 나란히 두고 보이는 쪽만 남긴다.
+   도해·앵커·CSS·리더를 공유하므로 두 언어의 구조가 어긋날 수 없다.
+   lang 속성을 쓰는 건 스크린리더와 하이픈 처리도 같이 얻기 위해서다. */
+/* 언어 표시는 어떤 규칙보다 우선해야 한다. 목차나 도해 쪽 선택자가
+   더 구체적이어서 display를 되살리는 일이 실제로 있었다. */
+html[data-lang="ko"] [lang="en"]{display:none!important}
+html[data-lang="en"] [lang="ko"]{display:none!important}
+.lang-btn{position:fixed;left:16px;bottom:56px;z-index:70;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 6px var(--shadow);transition:.13s}
+.lang-btn:hover{border-color:var(--blue);color:var(--blue)}
+@media(max-width:900px){.lang-btn{left:10px;bottom:46px;font-size:10.5px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.lang-btn{transition:none}}
+
+/* ── 기호 뜯어보기 ────────────────────────────────────────────────
+   수학 표기 관습을 모르면 정의가 통째로 안 읽힌다. 그 관습만 따로 푼다.
+   기본은 펼쳐둔다(open). 모르는 사람에게 보이지 않으면 의미가 없기 때문이다.
+   대신 접을 수 있다. 알고 나면 매번 지나가야 하는 장애물이 되면 안 된다. */
+.nota{margin:18px 0;border:1px dashed var(--rule);border-radius:8px;background:var(--chip)}
+.nota>summary{cursor:pointer;list-style:none;padding:9px 14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);display:flex;align-items:center;gap:8px;user-select:none}
+.nota>summary::-webkit-details-marker{display:none}
+.nota>summary::before{content:"\25be";font-size:9px;display:inline-block;transition:transform .15s}
+.nota:not([open])>summary::before{transform:rotate(-90deg)}
+.nota>summary:hover{color:var(--ink2)}
+.nota .body{padding:2px 16px 14px;font-size:14px;color:var(--ink2);line-height:1.7}
+.nota .body>*:first-child{margin-top:0}
+.nota .body>*:last-child{margin-bottom:0}
+.nota .parts{width:100%;border-collapse:collapse;margin:12px 0}
+.nota .parts td{padding:6px 12px 6px 0;vertical-align:top;border-bottom:1px solid var(--rule);font-size:13.5px}
+.nota .parts tr:last-child td{border-bottom:0}
+.nota .parts td:first-child{white-space:nowrap;width:1%;color:var(--ink);padding-right:18px}
+.nota figure{margin:14px 0;background:var(--card);border:1px solid var(--rule)}
+.nota .eq{margin:12px 0}
+@media(max-width:900px){.nota .parts td:first-child{white-space:normal}}
+
+/* 인터랙티브 도구 (14번). .play 안에서만 쓴다. */
+.play button{font-family:var(--mono);font-size:11px;padding:6px 11px;background:var(--paper);color:var(--ink2);border:1px solid var(--rule);border-radius:6px;cursor:pointer;transition:.12s}
+.play button:hover{border-color:var(--ink3);color:var(--ink)}
+.play input[type=range]{accent-color:var(--sel)}
+.play table td,.play table th{padding:7px 10px}
+.play .win{color:var(--green);font-weight:700}
+.play .lose{color:var(--ink3)}
+
+/* 슬라이드가 없는 모듈임을 알리는 chip */
+.chip.warn{background:var(--amber-bg);color:var(--amber-deep);border:1px solid var(--amber-line)}
+/* 반복부호 도구의 막대 */
+.d4-row{display:flex;align-items:center;gap:10px;margin:5px 0;font-family:var(--mono);font-size:11.5px}
+.d4-row .k{width:52px;text-align:right;color:var(--ink3)}
+.d4-row .t{flex:1;height:13px;background:var(--chip);border-radius:3px;overflow:hidden}
+.d4-row .t>i{display:block;height:100%;border-radius:3px}
+.d4-row .v{width:74px;color:var(--ink2)}
+
+/* 역변환 샘플링 도구 */
+#d5-svg text{font-family:var(--mono);font-size:10px;fill:var(--ink3)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="eyebrow">EEE 554 · Probability and Random Processes · Michelusi</div>
+  <h1 class="title">Module 5<br>Random Variables &amp; Distributions</h1>
+  <p class="subtitle" lang="ko">결과에 숫자를 붙인다. 그 순간 확률을 계산할 수 있게 된다.</p>
+  <p class="subtitle" lang="en">Attach a number to each outcome, and probability becomes something you can compute with.</p>
+  <div class="meta" lang="ko">
+    <span class="chip">슬라이드 41쪽</span>
+    <span class="chip hot">HW3 Problem 1–4 이 범위</span>
+    <span class="chip">마지막 장이 생성형 AI로 이어진다</span>
+  </div>
+  <div class="meta" lang="en">
+    <span class="chip">41 slides</span>
+    <span class="chip hot">Covers HW3 Problems 1–4</span>
+    <span class="chip">The last slide lands on generative AI</span>
+  </div>
+  <a class="backlink" href="index.html" lang="ko">← 모듈 목록으로</a>
+  <a class="backlink" href="index.html" lang="en">← All modules</a>
+</header>
+
+<nav class="toc">
+  <div class="mini-head">
+    <a class="back" href="index.html" lang="ko">← 모듈 목록</a>
+    <a class="back" href="index.html" lang="en">← All modules</a>
+    <div class="mod">Module 5</div>
+    <div class="name">Random Variables &amp; Distributions</div>
+    <div class="rule"></div>
+  </div>
+  <div class="lab" lang="ko">목차</div>
+  <div class="lab" lang="en">Contents</div>
+  <a href="#s0"><span class="n">00</span><span lang="ko">이 모듈이 하는 일</span><span lang="en">What this module does</span></a>
+  <a href="#s1"><span class="n">01</span><span lang="ko">왜 확률변수인가</span><span lang="en">Why random variables</span></a>
+  <a href="#s2"><span class="n">02</span><span lang="ko">정의: Ω에서 ℝ로</span><span lang="en">Definition: Ω to ℝ</span></a>
+  <a href="#s3"><span class="n">03</span><span lang="ko">역상과 유도된 확률</span><span lang="en">Preimages and the induced measure</span></a>
+  <a href="#s4"><span class="n">04</span><span>CDF</span></a>
+  <a href="#s5"><span class="n">05</span><span lang="ko">이산과 연속</span><span lang="en">Discrete and continuous</span></a>
+  <a href="#s6"><span class="n">06</span><span>PMF</span></a>
+  <a href="#s7"><span class="n">07</span><span>PDF</span></a>
+  <a href="#s8"><span class="n">08</span><span lang="ko">이산 분포 카탈로그</span><span lang="en">Discrete distributions</span></a>
+  <a href="#s9"><span class="n">09</span><span lang="ko">연속 분포 카탈로그</span><span lang="en">Continuous distributions</span></a>
+  <a href="#s10"><span class="n">10</span><span lang="ko">역변환 샘플링</span><span lang="en">Inverse transform sampling</span></a>
+  <a href="#s11"><span class="n">11</span><span lang="ko">생성형 AI와의 연결</span><span lang="en">The generative AI link</span></a>
+  <a href="#s12"><span class="n">12</span><span lang="ko">직접 만져보기</span><span lang="en">Try it yourself</span></a>
+  <a href="#s99"><span class="n">99</span><span lang="ko">정리 &amp; 다음</span><span lang="en">Recap &amp; next</span></a>
+</nav>
+
+<main>
+
+<!-- ══ 00 ══ -->
+<section id="s0">
+  <div class="sec-head"><span class="sec-num">00</span><h2 lang="ko">이 모듈이 하는 일</h2><h2 lang="en">What this module does</h2></div>
+  <p class="sec-sub" lang="ko">한 줄 요약: 사건에 붙이던 확률을 <em>숫자</em>에 붙인다.</p>
+  <p class="sec-sub" lang="en">In one line: probability moves from events onto <em>numbers</em>.</p>
+
+  <p lang="ko">Module 1부터 4까지는 확률을 <strong>사건(집합)</strong>에 붙였어. <span class="m"><i>P</i>({SS, SF})</span>처럼. 그런데 공학에서 실제로 궁금한 건 결과 자체가 아니라 <strong>그 결과에 딸린 숫자</strong>야. 수신 전력이 몇 W인지, 패킷이 몇 ms 지연됐는지, 큐에 몇 개가 쌓였는지.</p>
+  <p lang="en">Modules 1 through 4 attached probability to <strong>events, which are sets</strong>, as in <span class="m"><i>P</i>({SS, SF})</span>. But in engineering the thing you actually want is rarely the outcome itself; it is <strong>a number that comes with the outcome</strong>. How many watts arrived, how many milliseconds the packet took, how many jobs are in the queue.</p>
+
+  <div class="callout" lang="ko">
+    <strong>이 전환이 왜 결정적이냐면, 숫자에는 <em>순서와 연산</em>이 있기 때문이야.</strong> 사건에는 "더한다", "평균낸다", "이것보다 크다"가 없어. <span class="m">{SS, SF}</span>의 평균이란 게 없잖아. 그런데 숫자로 옮기면 <span class="m"><i>P</i>(<i>X</i> ≤ <i>x</i>)</span>, 기댓값, 분산이 전부 말이 돼.<br><br>
+    <strong>그래서 이 모듈 이후로 과목의 성격이 바뀐다.</strong> 지금까지는 집합을 세는 일이었고, 앞으로는 함수와 적분을 다루는 일이야. 교재도 여기서 <a href="#s99">§1.3부터</a> 두꺼워져.
+  </div>
+  <div class="callout" lang="en">
+    <strong>The move matters because numbers come with <em>order and arithmetic</em>.</strong> Events have no notion of adding, averaging, or being greater than something; there is no such thing as the average of <span class="m">{SS, SF}</span>. Push everything onto numbers and <span class="m"><i>P</i>(<i>X</i> ≤ <i>x</i>)</span>, expectation, and variance all start to mean something.<br><br>
+    <strong>The character of the course changes from here on.</strong> Up to now the work was counting sets; from now on it is functions and integrals. The textbook thickens at the same point, from <a href="#s99">§1.3 onward</a>.
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">새로 나오는 단어들</span>
+    <table>
+      <tr><th>용어</th><th>뜻</th><th>어디서 쓰이나</th></tr>
+      <tr><td>random variable <span class="m"><i>X</i></span></td><td><span class="m"><i>Ω</i></span>에서 <span class="m">ℝ</span>로 가는 <strong>함수</strong></td><td>전부의 출발점</td></tr>
+      <tr><td><span class="m"><i>X</i><sup>−1</sup>(<i>A</i>)</span></td><td>역상. <span class="m"><i>X</i></span>가 <span class="m"><i>A</i></span>에 떨어지는 <span class="m"><i>ω</i></span>들</td><td>03번</td></tr>
+      <tr><td><strong>CDF</strong> <span class="m"><i>F<sub>X</sub></i></span></td><td><span class="m"><i>P</i>(<i>X</i> ≤ <i>x</i>)</span>. 이산·연속 <em>둘 다</em> 있다</td><td>HW3 P1, P4</td></tr>
+      <tr><td><strong>PMF</strong> <span class="m"><i>p<sub>X</sub></i></span></td><td><span class="m"><i>P</i>(<i>X</i> = <i>x</i>)</span>. 이산에만 있다</td><td>HW3 P1, P2</td></tr>
+      <tr><td><strong>PDF</strong> <span class="m"><i>f<sub>X</sub></i></span></td><td>적분해야 확률이 된다. 연속에만 있다</td><td>HW3 P3</td></tr>
+      <tr><td><span class="m">~</span></td><td>"이 분포를 따른다"</td><td>08, 09번</td></tr>
+      <tr><td>inverse transform</td><td>균등 난수를 아무 분포로 바꾸는 방법</td><td>10번, 시뮬레이션</td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>제일 조심할 건 CDF와 PMF와 PDF의 관계야.</strong> 셋 다 "분포를 적는 방법"인데 적용 범위가 달라. <strong>CDF는 항상 존재하고, PMF는 이산에만, PDF는 연속에만 있어.</strong> 슬라이드가 이걸 굵게 강조해.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">New vocabulary</span>
+    <table>
+      <tr><th>term</th><th>meaning</th><th>where it lands</th></tr>
+      <tr><td>random variable <span class="m"><i>X</i></span></td><td>a <strong>function</strong> from <span class="m"><i>Ω</i></span> to <span class="m">ℝ</span></td><td>everything starts here</td></tr>
+      <tr><td><span class="m"><i>X</i><sup>−1</sup>(<i>A</i>)</span></td><td>the preimage: the <span class="m"><i>ω</i></span> whose <span class="m"><i>X</i></span> lands in <span class="m"><i>A</i></span></td><td>§03</td></tr>
+      <tr><td><strong>CDF</strong> <span class="m"><i>F<sub>X</sub></i></span></td><td><span class="m"><i>P</i>(<i>X</i> ≤ <i>x</i>)</span>, and it exists for <em>both</em> kinds</td><td>HW3 P1, P4</td></tr>
+      <tr><td><strong>PMF</strong> <span class="m"><i>p<sub>X</sub></i></span></td><td><span class="m"><i>P</i>(<i>X</i> = <i>x</i>)</span>, discrete only</td><td>HW3 P1, P2</td></tr>
+      <tr><td><strong>PDF</strong> <span class="m"><i>f<sub>X</sub></i></span></td><td>integrate it to get a probability, continuous only</td><td>HW3 P3</td></tr>
+      <tr><td><span class="m">~</span></td><td>"is distributed as"</td><td>§08, §09</td></tr>
+      <tr><td>inverse transform</td><td>turning a uniform random number into any distribution</td><td>§10, simulation</td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>The thing to keep straight is how CDF, PMF and PDF relate.</strong> All three describe a distribution, but they do not apply equally: <strong>the CDF always exists, the PMF only for discrete variables, the PDF only for continuous ones.</strong> The slides put that in bold for a reason.</p>
+  </div>
+</section>
+
+<!-- ══ 01 ══ -->
+<section id="s1">
+  <div class="sec-head" data-slide="2-3"><span class="sec-num">01</span><h2 lang="ko">왜 확률변수인가</h2><h2 lang="en">Why random variables</h2></div>
+  <p class="sec-sub" lang="ko">확률 공간은 완전하지만 다루기 불편하다.</p>
+  <p class="sec-sub" lang="en">The probability space is complete but awkward to work with.</p>
+
+  <p lang="ko">슬라이드가 먼저 인정하고 시작해. <span class="m">(<i>Ω</i>, ℱ, <i>P</i>)</span>는 실험의 무작위성을 <strong>완전히</strong> 기술해. 부족한 게 없어. 그런데 <em>"공학에서 우리는 결과 자체에는 거의 관심이 없다"</em>고 이어져.</p>
+  <p lang="en">The slides open by conceding the point. <span class="m">(<i>Ω</i>, ℱ, <i>P</i>)</span> describes the randomness of an experiment <strong>completely</strong>; nothing is missing. And then: <em>"in engineering we are rarely interested in the outcomes themselves."</em></p>
+
+  <div class="callout" lang="ko">
+    <strong>무선 채널 예제가 이걸 잘 보여줘.</strong> 결과 <span class="m"><i>ω</i></span> 하나는 "잡음이 이렇게 실현되고, 페이딩이 저렇게 실현되고, 간섭이 그렇게 실현된 상황" 전체야. 이걸 직접 다루는 건 거의 불가능해.<br><br>
+    그런데 궁금한 건 대개 하나야. <span class="m"><i>X</i>(<i>ω</i>)</span> = 수신 전력, <span class="m"><i>Y</i>(<i>ω</i>)</span> = SNR, <span class="m"><i>Z</i>(<i>ω</i>)</span> = 패킷 지연. 슬라이드 표현대로 <strong><span class="m"><i>P</i>(<i>X</i> &gt; <i>ε</i>)</span>를 구하는 게 <span class="m"><i>ω</i></span>를 직접 다루는 것보다 훨씬 쉬워.</strong>
+  </div>
+  <div class="callout" lang="en">
+    <strong>The wireless example makes this concrete.</strong> A single outcome <span class="m"><i>ω</i></span> is an entire situation: this particular noise realization, that particular fade, that particular interference pattern. Working with it directly is close to hopeless.<br><br>
+    What you want is almost always one number: <span class="m"><i>X</i>(<i>ω</i>)</span> the received power, <span class="m"><i>Y</i>(<i>ω</i>)</span> the SNR, <span class="m"><i>Z</i>(<i>ω</i>)</span> the packet delay. As the slides put it, <strong>computing <span class="m"><i>P</i>(<i>X</i> &gt; <i>ε</i>)</span> can be far easier than reasoning about <span class="m"><i>ω</i></span> itself.</strong>
+  </div>
+</section>
+
+<!-- ══ 02 ══ -->
+<section id="s2">
+  <div class="sec-head" data-slide="4-7"><span class="sec-num">02</span><h2 lang="ko">정의: Ω에서 ℝ로</h2><h2 lang="en">Definition: from Ω to ℝ</h2></div>
+  <p class="sec-sub" lang="ko">확률변수는 변수가 아니라 <strong>함수</strong>다.</p>
+  <p class="sec-sub" lang="en">A random variable is not a variable. It is a <strong>function</strong>.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">정의</span>
+    <p><strong>확률변수</strong>는 모든 결과에 숫자 하나를 대응시키는 함수야.</p>
+    <div class="eq"><i>X</i> : <i>Ω</i> → ℝ, &nbsp;&nbsp; <i>ω</i> ↦ <i>X</i>(<i>ω</i>)</div>
+    <p style="margin-bottom:0"><strong>표기 관습.</strong> 슬라이드가 명시해. 보통 <span class="m"><i>ω</i></span> 의존성을 생략하고 그냥 <span class="m"><i>X</i></span>라고 써. <span class="m"><i>ω</i></span>가 있다는 건 암묵적으로 이해하는 거야.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Definition</span>
+    <p>A <strong>random variable</strong> is a function assigning one number to every outcome.</p>
+    <div class="eq"><i>X</i> : <i>Ω</i> → ℝ, &nbsp;&nbsp; <i>ω</i> ↦ <i>X</i>(<i>ω</i>)</div>
+    <p style="margin-bottom:0"><strong>A notational convention</strong>, stated on the slides: the dependence on <span class="m"><i>ω</i></span> is normally suppressed and one just writes <span class="m"><i>X</i></span>, with <span class="m"><i>ω</i></span> understood.</p>
+  </div>
+
+  <details class="nota" open>
+    <summary><span lang="ko">기호 뜯어보기 · 함수 표기</span><span lang="en">Unpacking the notation · function notation</span></summary>
+    <div class="body">
+      <div lang="ko">
+        <table class="parts">
+          <tr><td><span class="m"><i>X</i> : <i>Ω</i> → ℝ</span></td><td><a href="L02-probability-space.html#s6">Module 2 · 06</a>의 <span class="m"><i>P</i> : ℱ → [0,1]</span>과 같은 표기야. "<span class="m"><i>X</i></span>는 <span class="m"><i>Ω</i></span>의 원소를 받아 실수를 뱉는다".</td></tr>
+          <tr><td><span class="m">↦</span></td><td>화살표 꼬리에 막대가 붙은 것. <strong>원소 하나가 어디로 가는지</strong>를 쓸 때 써. <span class="m">→</span>는 집합끼리, <span class="m">↦</span>는 원소끼리야.</td></tr>
+          <tr><td><span class="m"><i>X</i></span> vs <span class="m"><i>X</i>(<i>ω</i>)</span></td><td>앞은 <strong>함수 자체</strong>, 뒤는 <strong>그 함수가 뱉은 값</strong>. 관습상 둘 다 <span class="m"><i>X</i></span>로 쓰지만 머릿속에서는 구별해야 해.</td></tr>
+          <tr><td>대문자 / 소문자</td><td><strong>이 과목 내내 지켜지는 규칙이야.</strong> 대문자 <span class="m"><i>X</i></span>는 확률변수(함수), 소문자 <span class="m"><i>x</i></span>는 그것이 취할 수 있는 <em>구체적인 값</em>. 그래서 <span class="m"><i>P</i>(<i>X</i> ≤ <i>x</i>)</span>가 말이 되고 <span class="m"><i>P</i>(<i>x</i> ≤ <i>X</i>)</span>는 어색해.</td></tr>
+        </table>
+        <p style="margin-bottom:0"><strong>"random variable"이라는 이름이 나쁘다는 걸 알아두면 편해.</strong> 무작위(random)하지도 않고 변수(variable)도 아니야. <span class="m"><i>ω</i></span>가 정해지면 <span class="m"><i>X</i>(<i>ω</i>)</span>는 완전히 결정되는 <strong>결정론적 함수</strong>야. 무작위성은 전부 <span class="m"><i>ω</i></span>가 어떻게 뽑히느냐에 있어. 10번에서 이 관점이 핵심이 돼.</p>
+      </div>
+      <div lang="en">
+        <table class="parts">
+          <tr><td><span class="m"><i>X</i> : <i>Ω</i> → ℝ</span></td><td>The same notation as <span class="m"><i>P</i> : ℱ → [0,1]</span> in <a href="L02-probability-space.html#s6">Module 2 · 06</a>: "<span class="m"><i>X</i></span> takes an element of <span class="m"><i>Ω</i></span> and returns a real number".</td></tr>
+          <tr><td><span class="m">↦</span></td><td>The arrow with a bar on its tail. It says <strong>where a single element goes</strong>. Use <span class="m">→</span> between sets and <span class="m">↦</span> between elements.</td></tr>
+          <tr><td><span class="m"><i>X</i></span> vs <span class="m"><i>X</i>(<i>ω</i>)</span></td><td>The first is <strong>the function itself</strong>, the second is <strong>the value it returned</strong>. Convention writes both as <span class="m"><i>X</i></span>, but keep them apart mentally.</td></tr>
+          <tr><td>capital / lowercase</td><td><strong>A convention held throughout the course.</strong> Capital <span class="m"><i>X</i></span> is the random variable (the function); lowercase <span class="m"><i>x</i></span> is a <em>particular value</em> it might take. That is why <span class="m"><i>P</i>(<i>X</i> ≤ <i>x</i>)</span> reads naturally and <span class="m"><i>P</i>(<i>x</i> ≤ <i>X</i>)</span> does not.</td></tr>
+        </table>
+        <p style="margin-bottom:0"><strong>It helps to know the name is a bad one.</strong> A random variable is neither random nor a variable. Once <span class="m"><i>ω</i></span> is fixed, <span class="m"><i>X</i>(<i>ω</i>)</span> is fully determined: it is a <strong>deterministic function</strong>. All the randomness sits in how <span class="m"><i>ω</i></span> gets drawn, and §10 turns that observation into the punchline of the module.</p>
+      </div>
+    </div>
+  </details>
+
+  <figure>
+    <svg viewBox="0 0 700 240" role="img" aria-label="표본공간의 결과들이 실수축의 값으로 대응되는 그림">
+      <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="ko">결과 하나에 숫자 하나</text>
+      <text x="14" y="22" class="svglab" style="font-size:11px;letter-spacing:.1em" lang="en">one number per outcome</text>
+
+      <ellipse cx="150" cy="120" rx="104" ry="72" style="fill:rgba(var(--blue-rgb),.16);stroke:var(--blue);stroke-width:1.4"/>
+      <text x="66" y="66" class="svgtxt it" style="font-size:14px;fill:var(--blue)">Ω</text>
+      <text x="118" y="86" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:var(--ink)">ω₁</text>
+      <circle cx="98" cy="82" r="3" style="fill:var(--blue)"/>
+      <text x="118" y="122" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:var(--ink)">ω₂</text>
+      <circle cx="98" cy="118" r="3" style="fill:var(--blue)"/>
+      <text x="118" y="158" text-anchor="middle" class="svgtxt it" style="font-size:13px;fill:var(--ink)">ω₃</text>
+      <circle cx="98" cy="154" r="3" style="fill:var(--blue)"/>
+
+      <path d="M262 84 L436 96" style="stroke:var(--ink3);stroke-width:1;fill:none"/>
+      <path d="M262 120 L436 150" style="stroke:var(--ink3);stroke-width:1;fill:none"/>
+      <path d="M262 156 L436 96" style="stroke:var(--ink3);stroke-width:1;fill:none"/>
+      <text x="340" y="76" text-anchor="middle" class="svgtxt it" style="font-size:16px;fill:var(--violet)">X</text>
+
+      <line x1="440" y1="180" x2="668" y2="180" style="stroke:var(--ink);stroke-width:1.4"/>
+      <text x="662" y="204" text-anchor="middle" class="svgtxt" style="font-size:13px;fill:var(--ink3)">ℝ</text>
+      <circle cx="452" cy="180" r="4" style="fill:var(--pink)"/>
+      <line x1="452" y1="96" x2="452" y2="180" style="stroke:var(--pink);stroke-width:1;stroke-dasharray:3 3"/>
+      <circle cx="452" cy="96" r="4" style="fill:var(--pink)"/>
+      <text x="452" y="204" text-anchor="middle" class="svgtxt" style="font-size:12px;fill:var(--pink)">1.2</text>
+      <circle cx="580" cy="180" r="4" style="fill:var(--pink)"/>
+      <line x1="580" y1="150" x2="580" y2="180" style="stroke:var(--pink);stroke-width:1;stroke-dasharray:3 3"/>
+      <circle cx="580" cy="150" r="4" style="fill:var(--pink)"/>
+      <text x="580" y="204" text-anchor="middle" class="svgtxt" style="font-size:12px;fill:var(--pink)">3.7</text>
+
+      <text x="350" y="228" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)" lang="ko">ω₁ 과 ω₃ 이 같은 값으로 갈 수도 있다. 함수는 단사일 필요가 없다.</text>
+      <text x="350" y="228" text-anchor="middle" class="svgtxt" style="font-size:12.5px;fill:var(--ink2)" lang="en">ω₁ and ω₃ may land on the same value. The function need not be one-to-one.</text>
+    </svg>
+    <figcaption lang="ko">화살표가 <span class="m"><i>X</i></span>다. 왼쪽은 결과의 세계, 오른쪽은 숫자의 세계. <strong>여러 결과가 같은 숫자로 갈 수 있다는 게 중요하다.</strong> 주사위에서 <span class="m"><i>X</i></span> = "짝수면 1, 홀수면 0"이면 결과 세 개가 같은 값으로 간다. 이게 다음 섹션의 역상 얘기로 이어진다.</figcaption>
+    <figcaption lang="en">The arrows are <span class="m"><i>X</i></span>. On the left the world of outcomes, on the right the world of numbers. <strong>Several outcomes mapping to one number is the important part.</strong> Define <span class="m"><i>X</i></span> on a die as 1 for even and 0 for odd and three outcomes collapse onto one value, which is what the next section's preimages are about.</figcaption>
+  </figure>
+
+  <div class="ex">
+    <span class="tag" lang="ko">예제 2.1 · 슬라이드의 주사위</span>
+    <span class="tag" lang="en">Example 2.1 · the die from the slides</span>
+    <p lang="ko">주사위를 굴린다. <span class="m"><i>Ω</i> = {1,2,3,4,5,6}</span>, <span class="m"><i>X</i>(<i>ω</i>) = <i>ω</i></span>. 이때 <span class="m"><i>X</i></span>는 무슨 함수야? 그리고 <span class="m"><i>Y</i>(<i>ω</i>) = (<i>ω</i>가 짝수면 1, 아니면 0)</span>은?</p>
+    <p lang="en">Roll a die: <span class="m"><i>Ω</i> = {1,2,3,4,5,6}</span> with <span class="m"><i>X</i>(<i>ω</i>) = <i>ω</i></span>. What function is <span class="m"><i>X</i></span>? And what about <span class="m"><i>Y</i>(<i>ω</i>) = 1</span> if <span class="m"><i>ω</i></span> is even, 0 otherwise?</p>
+    <details>
+      <summary><span lang="ko">풀이</span><span lang="en">Solution</span></summary>
+      <div class="body">
+        <div lang="ko">
+          <p><span class="m"><i>X</i></span>는 <strong>항등함수</strong>야. 결과가 이미 숫자라서 그대로 쓰면 돼. <span class="m"><i>ω</i> = 4</span>면 <span class="m"><i>X</i> = 4</span>. 슬라이드가 첫 예제로 이걸 드는 이유는 <em>가장 지루한 확률변수</em>여서야. 결과와 값이 구별되지 않아 보이거든.</p>
+          <p><span class="m"><i>Y</i></span>가 더 유익해. 값의 집합이 <span class="m">{0, 1}</span>뿐이야. <span class="m"><i>Y</i>(2) = <i>Y</i>(4) = <i>Y</i>(6) = 1</span>이라 <strong>결과 세 개가 같은 값으로 뭉쳐.</strong></p>
+          <p style="margin-bottom:0"><strong>여기서 정보가 버려진다는 걸 봐.</strong> <span class="m"><i>Y</i> = 1</span>이라는 걸 알아도 2였는지 4였는지 6이었는지는 몰라. <strong>확률변수는 결과를 숫자로 요약하는 장치고, 요약에는 손실이 따라.</strong> 어떤 질문에 답하고 싶으냐에 따라 어떤 <span class="m"><i>X</i></span>를 쓸지가 정해져.</p>
+        </div>
+        <div lang="en">
+          <p><span class="m"><i>X</i></span> is the <strong>identity function</strong>. The outcome is already a number, so nothing has to be done to it: <span class="m"><i>ω</i> = 4</span> gives <span class="m"><i>X</i> = 4</span>. The slides lead with it precisely because it is the <em>most boring</em> random variable, the one where outcome and value look indistinguishable.</p>
+          <p><span class="m"><i>Y</i></span> is the instructive one. Its value set is only <span class="m">{0, 1}</span>, and <span class="m"><i>Y</i>(2) = <i>Y</i>(4) = <i>Y</i>(6) = 1</span>, so <strong>three outcomes collapse onto one value.</strong></p>
+          <p style="margin-bottom:0"><strong>Notice that information is thrown away.</strong> Knowing <span class="m"><i>Y</i> = 1</span> leaves you unable to say whether it was 2, 4, or 6. <strong>A random variable summarises outcomes as numbers, and summarising loses something.</strong> Which <span class="m"><i>X</i></span> you choose is decided by which question you want answered.</p>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ══ 03 ══ -->
+<section id="s3">
+  <div class="sec-head" data-slide="8-9"><span class="sec-num">03</span><h2 lang="ko">역상과 유도된 확률</h2><h2 lang="en">Preimages and the induced measure</h2></div>
+  <p class="sec-sub" lang="ko"><span class="m"><i>P</i></span>는 <span class="m"><i>Ω</i></span>에서만 정의됐는데 어떻게 <span class="m"><i>X</i></span>의 확률을 묻나.</p>
+  <p class="sec-sub" lang="en"><span class="m"><i>P</i></span> lives on <span class="m"><i>Ω</i></span>, so how do we ask for a probability about <span class="m"><i>X</i></span>?</p>
+
+  <p lang="ko"><span class="m"><i>P</i>(<i>X</i> ∈ <i>A</i>)</span>라고 쓰고 싶은데, <a href="L02-probability-space.html#s6">Module 2에서 못박았듯</a> <span class="m"><i>P</i></span>는 <span class="m">ℱ</span> 위에서만 정의돼. <span class="m"><i>A</i></span>는 실수의 집합이지 <span class="m"><i>Ω</i></span>의 부분집합이 아니야. 그래서 슬라이드가 질문을 뒤집어. <strong>"어떤 <span class="m"><i>ω</i></span>가 <span class="m"><i>A</i></span> 안의 값을 만드나?"</strong></p>
+  <p lang="en">We want to write <span class="m"><i>P</i>(<i>X</i> ∈ <i>A</i>)</span>, but as <a href="L02-probability-space.html#s6">Module 2 insisted</a>, <span class="m"><i>P</i></span> is only defined on <span class="m">ℱ</span>, and <span class="m"><i>A</i></span> is a set of reals rather than a subset of <span class="m"><i>Ω</i></span>. So the slides turn the question around: <strong>which <span class="m"><i>ω</i></span> produce values inside <span class="m"><i>A</i></span>?</strong></p>
+
+  <div class="def" lang="ko">
+    <span class="tag">역상과 유도된 측도</span>
+    <div class="eq"><i>X</i><sup>−1</sup>(<i>A</i>) = {<i>ω</i> ∈ <i>Ω</i> : <i>X</i>(<i>ω</i>) ∈ <i>A</i>}</div>
+    <p>이건 <span class="m"><i>Ω</i></span>의 부분집합이니까 <span class="m"><i>P</i></span>를 먹일 수 있어.</p>
+    <div class="eq" style="margin-bottom:0"><i>P<sub>X</sub></i>(<i>A</i>) = <i>P</i>(<i>X</i>(<i>ω</i>) ∈ <i>A</i>) = <i>P</i>(<i>X</i><sup>−1</sup>(<i>A</i>))</div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Preimage and induced measure</span>
+    <div class="eq"><i>X</i><sup>−1</sup>(<i>A</i>) = {<i>ω</i> ∈ <i>Ω</i> : <i>X</i>(<i>ω</i>) ∈ <i>A</i>}</div>
+    <p>That is a subset of <span class="m"><i>Ω</i></span>, so <span class="m"><i>P</i></span> can be applied to it.</p>
+    <div class="eq" style="margin-bottom:0"><i>P<sub>X</sub></i>(<i>A</i>) = <i>P</i>(<i>X</i>(<i>ω</i>) ∈ <i>A</i>) = <i>P</i>(<i>X</i><sup>−1</sup>(<i>A</i>))</div>
+  </div>
+
+  <details class="nota" open>
+    <summary><span lang="ko">기호 뜯어보기 · <i>X</i><sup>−1</sup> 은 역함수가 아니다</span><span lang="en">Unpacking the notation · <i>X</i><sup>−1</sup> is not an inverse function</span></summary>
+    <div class="body">
+      <div lang="ko">
+        <table class="parts">
+          <tr><td><span class="m"><i>X</i><sup>−1</sup>(<i>A</i>)</span></td><td><strong>역상(preimage)</strong>. <span class="m"><i>A</i></span>로 가는 <span class="m"><i>ω</i></span>를 <em>전부 모은 집합</em>이야. 결과가 집합이지 원소가 아니야.</td></tr>
+          <tr><td>역함수가 아닌 이유</td><td><span class="m"><i>X</i></span>가 일대일이 아니어도 <span class="m"><i>X</i><sup>−1</sup>(<i>A</i>)</span>는 항상 정의돼. 02번의 <span class="m"><i>Y</i></span>는 역함수가 없지만 <span class="m"><i>Y</i><sup>−1</sup>({1}) = {2,4,6}</span>은 멀쩡히 존재해.</td></tr>
+          <tr><td>괄호 안</td><td><strong>집합이 들어간다.</strong> <span class="m"><i>X</i><sup>−1</sup>(3)</span>이 아니라 <span class="m"><i>X</i><sup>−1</sup>({3})</span>이 엄밀한 표기야. 실제로는 줄여 쓰는 일이 많아.</td></tr>
+          <tr><td><span class="m"><i>P<sub>X</sub></i></span></td><td>아래첨자 <span class="m"><i>X</i></span>는 "<span class="m"><i>X</i></span>가 유도한"이라는 뜻. <span class="m"><i>P</i></span>는 <span class="m"><i>Ω</i></span> 위의 측도고 <span class="m"><i>P<sub>X</sub></i></span>는 <span class="m">ℝ</span> 위의 측도라 <strong>서로 다른 것</strong>이야. 아래첨자가 그 구별의 전부야.</td></tr>
+        </table>
+        <p style="margin-bottom:0"><span class="m"><i>P</i>(<i>X</i> ≤ <i>x</i>)</span>도 사실 줄임말이야. 풀어 쓰면 <span class="m"><i>P</i>({<i>ω</i> : <i>X</i>(<i>ω</i>) ≤ <i>x</i>})</span>야. 이 과목 내내 이렇게 줄여 쓰니까 <strong>중괄호가 생략됐다는 걸 알고 읽어야 해.</strong></p>
+      </div>
+      <div lang="en">
+        <table class="parts">
+          <tr><td><span class="m"><i>X</i><sup>−1</sup>(<i>A</i>)</span></td><td>The <strong>preimage</strong>: the set of <em>all</em> <span class="m"><i>ω</i></span> that map into <span class="m"><i>A</i></span>. It returns a set, not an element.</td></tr>
+          <tr><td>why it is not an inverse</td><td><span class="m"><i>X</i><sup>−1</sup>(<i>A</i>)</span> is defined whether or not <span class="m"><i>X</i></span> is one-to-one. The <span class="m"><i>Y</i></span> from §02 has no inverse function, yet <span class="m"><i>Y</i><sup>−1</sup>({1}) = {2,4,6}</span> exists perfectly well.</td></tr>
+          <tr><td>what goes in the brackets</td><td><strong>A set.</strong> Strictly it is <span class="m"><i>X</i><sup>−1</sup>({3})</span> rather than <span class="m"><i>X</i><sup>−1</sup>(3)</span>, though the short form is common in practice.</td></tr>
+          <tr><td><span class="m"><i>P<sub>X</sub></i></span></td><td>The subscript reads "induced by <span class="m"><i>X</i></span>". <span class="m"><i>P</i></span> is a measure on <span class="m"><i>Ω</i></span> and <span class="m"><i>P<sub>X</sub></i></span> a measure on <span class="m">ℝ</span>, so they are <strong>different objects</strong>, and the subscript is the only thing marking that.</td></tr>
+        </table>
+        <p style="margin-bottom:0"><span class="m"><i>P</i>(<i>X</i> ≤ <i>x</i>)</span> is itself an abbreviation, for <span class="m"><i>P</i>({<i>ω</i> : <i>X</i>(<i>ω</i>) ≤ <i>x</i>})</span>. The short form is used throughout the course, so <strong>read it knowing the braces have been dropped.</strong></p>
+      </div>
+    </div>
+  </details>
+
+  <div class="callout" lang="ko">
+    <strong>왜 Module 2의 σ-algebra가 여기서 값을 하는지 보여.</strong> <span class="m"><i>P</i>(<i>X</i><sup>−1</sup>(<i>A</i>))</span>를 쓰려면 <span class="m"><i>X</i><sup>−1</sup>(<i>A</i>)</span>가 <span class="m">ℱ</span>에 들어 있어야 해. 아무 함수나 되는 게 아니고, <strong>모든 <span class="m"><i>A</i></span>에 대해 역상이 사건이 되는 함수만 확률변수라고 부를 자격이 있어.</strong> 이 조건을 <em>가측(measurable)</em>이라고 해.<br><br>
+    슬라이드는 이 조건을 명시하지 않고 넘어가. 이 과목에서 다루는 함수는 다 가측이라 실제로 문제가 안 생기거든. 다만 <strong><a href="L02-probability-space.html#s9">Module 2의 Borel σ-algebra</a>가 여기 쓰이려고 있었던 거야.</strong> <span class="m"><i>A</i></span>가 구간이면 <span class="m"><i>X</i><sup>−1</sup>(<i>A</i>)</span>가 사건이라는 걸 보장하는 게 그거야.
+  </div>
+  <div class="callout" lang="en">
+    <strong>This is where Module 2's σ-algebra earns its keep.</strong> Writing <span class="m"><i>P</i>(<i>X</i><sup>−1</sup>(<i>A</i>))</span> requires <span class="m"><i>X</i><sup>−1</sup>(<i>A</i>)</span> to be in <span class="m">ℱ</span>. Not every function qualifies: <strong>only those whose preimages are events for every <span class="m"><i>A</i></span> deserve the name random variable.</strong> That condition is called being <em>measurable</em>.</p>
+    The slides pass over it, and reasonably so, since everything in this course is measurable and nothing goes wrong. Still, <strong><a href="L02-probability-space.html#s9">the Borel σ-algebra from Module 2</a> exists for exactly this moment</strong>: it is what guarantees that <span class="m"><i>X</i><sup>−1</sup>(<i>A</i>)</span> is an event whenever <span class="m"><i>A</i></span> is an interval.
+  </div>
+</section>
+
+<!-- ══ 04 ══ -->
+<section id="s4">
+  <div class="sec-head" data-slide="10-12"><span class="sec-num">04</span><h2>CDF</h2></div>
+  <p class="sec-sub" lang="ko">이산이든 연속이든 <strong>항상</strong> 존재하는 유일한 기술 방법.</p>
+  <p class="sec-sub" lang="en">The one description that <strong>always</strong> exists, discrete or continuous.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">누적분포함수 (CDF)</span>
+    <div class="eq"><i>F<sub>X</sub></i>(<i>x</i>) = <i>P</i>(<i>X</i> ≤ <i>x</i>) = <i>P<sub>X</sub></i>((−∞, <i>x</i>])</div>
+    <p><strong>슬라이드가 굵게 강조하는 것:</strong> PMF(이산)나 PDF(연속)와 달리 <strong>CDF는 연속형과 이산형 <em>둘 다</em>에 대해 정의된다.</strong> 그래서 정의가 하나면 되는 유일한 도구야.</p>
+    <p style="margin-bottom:0"><strong>성질 세 가지</strong>: <span class="m"><i>F<sub>X</sub></i>(−∞) = 0</span>, <span class="m"><i>F<sub>X</sub></i>(+∞) = 1</span>, 그리고 <span class="m"><i>F<sub>X</sub></i></span>는 <strong>비감소</strong>이고 <strong>우연속(right-continuous)</strong>이다.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Cumulative distribution function</span>
+    <div class="eq"><i>F<sub>X</sub></i>(<i>x</i>) = <i>P</i>(<i>X</i> ≤ <i>x</i>) = <i>P<sub>X</sub></i>((−∞, <i>x</i>])</div>
+    <p><strong>The point the slides put in bold:</strong> unlike a PMF (discrete) or PDF (continuous), <strong>the CDF is defined for <em>both</em> kinds of random variable.</strong> It is the only tool here that needs a single definition.</p>
+    <p style="margin-bottom:0"><strong>Three properties</strong>: <span class="m"><i>F<sub>X</sub></i>(−∞) = 0</span>, <span class="m"><i>F<sub>X</sub></i>(+∞) = 1</span>, and <span class="m"><i>F<sub>X</sub></i></span> is <strong>nondecreasing</strong> and <strong>right-continuous</strong>.</p>
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">CDF로 계산하기</span>
+    <div class="eq"><i>P</i>(<i>X</i> &gt; <i>x</i>) = 1 − <i>F<sub>X</sub></i>(<i>x</i>) &nbsp;&nbsp;&nbsp; <i>P</i>(<i>a</i> &lt; <i>X</i> ≤ <i>b</i>) = <i>F<sub>X</sub></i>(<i>b</i>) − <i>F<sub>X</sub></i>(<i>a</i>)</div>
+    <p style="margin-bottom:0">첫 줄은 <a href="L02-probability-space.html#s7">Module 2의 여집합 규칙</a>이고 둘째 줄은 <span class="m">(−∞,<i>b</i>] = (−∞,<i>a</i>] ∪ (<i>a</i>,<i>b</i>]</span>라는 <strong>서로소 분해</strong>야. 새로운 게 하나도 없어. 공리에서 나온 것들을 CDF 언어로 옮긴 것뿐이야.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Computing with the CDF</span>
+    <div class="eq"><i>P</i>(<i>X</i> &gt; <i>x</i>) = 1 − <i>F<sub>X</sub></i>(<i>x</i>) &nbsp;&nbsp;&nbsp; <i>P</i>(<i>a</i> &lt; <i>X</i> ≤ <i>b</i>) = <i>F<sub>X</sub></i>(<i>b</i>) − <i>F<sub>X</sub></i>(<i>a</i>)</div>
+    <p style="margin-bottom:0">The first is <a href="L02-probability-space.html#s7">Module 2's complement rule</a>; the second is the <strong>disjoint decomposition</strong> <span class="m">(−∞,<i>b</i>] = (−∞,<i>a</i>] ∪ (<i>a</i>,<i>b</i>]</span>. Nothing new is happening: these are consequences of the axioms, restated in CDF language.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">함정</span>
+    <h4>부등호의 방향과 등호가 전부 의미를 갖는다</h4>
+    <p><span class="m"><i>F<sub>X</sub></i></span>는 <span class="m">≤</span>로 정의돼. 그래서 <span class="m"><i>P</i>(<i>a</i> &lt; <i>X</i> ≤ <i>b</i>) = <i>F</i>(<i>b</i>) − <i>F</i>(<i>a</i>)</span>는 <strong>왼쪽 끝이 열리고 오른쪽이 닫힌</strong> 구간이야. <span class="m"><i>P</i>(<i>a</i> ≤ <i>X</i> ≤ <i>b</i>)</span>를 원하면 <span class="m"><i>P</i>(<i>X</i>=<i>a</i>)</span>를 따로 더해야 해.</p>
+    <p><strong>연속형이면 <span class="m"><i>P</i>(<i>X</i>=<i>a</i>) = 0</span>이라 이 구별이 사라져.</strong> 그래서 연속 문제만 풀다 보면 습관이 안 들고, 이산 문제에서 그대로 틀려. HW3 P1이 이산이야.</p>
+    <h4>우연속인 것은 정의의 <span class="m">≤</span> 때문이다</h4>
+    <p>이산 CDF는 계단 모양인데, <strong>각 계단에서 위쪽 값을 취해</strong>. <span class="m"><i>X</i></span>가 주사위면 <span class="m"><i>F</i>(3) = 3/6</span>이지 <span class="m">2/6</span>이 아니야. <span class="m"><i>X</i> ≤ 3</span>에 3이 포함되니까. 왼쪽에서 접근하면 <span class="m">2/6</span>이라 <em>좌연속은 아니야.</em></p>
+    <p style="margin-bottom:0">그래서 점프의 크기가 곧 그 점의 확률이야. <span class="m"><i>P</i>(<i>X</i>=<i>a</i>) = <i>F</i>(<i>a</i>) − <i>F</i>(<i>a</i><sup>−</sup>)</span>. 슬라이드 손글씨가 이걸 유도해.</p>
+    <h4><span class="m"><i>F<sub>X</sub></i></span>가 줄어드는 일은 없다</h4>
+    <p>비감소는 <a href="L02-probability-space.html#s7">단조성</a>에서 바로 나와. <span class="m"><i>a</i> ≤ <i>b</i></span>면 <span class="m">(−∞,<i>a</i>] ⊆ (−∞,<i>b</i>]</span>니까. <strong>답이 줄어드는 CDF가 나왔다면 계산이 틀린 거야.</strong> HW3 P4처럼 CDF를 직접 구하는 문제에서 검산으로 쓸 수 있어.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Traps</span>
+    <h4>Every inequality sign and equals sign carries meaning</h4>
+    <p><span class="m"><i>F<sub>X</sub></i></span> is defined with <span class="m">≤</span>, so <span class="m"><i>P</i>(<i>a</i> &lt; <i>X</i> ≤ <i>b</i>) = <i>F</i>(<i>b</i>) − <i>F</i>(<i>a</i>)</span> covers an interval that is <strong>open on the left and closed on the right</strong>. For <span class="m"><i>P</i>(<i>a</i> ≤ <i>X</i> ≤ <i>b</i>)</span> you must add <span class="m"><i>P</i>(<i>X</i>=<i>a</i>)</span> back in.</p>
+    <p><strong>In the continuous case <span class="m"><i>P</i>(<i>X</i>=<i>a</i>) = 0</span> and the distinction evaporates.</strong> Practise only on continuous problems and the habit never forms, then it costs you on a discrete one. HW3 P1 is discrete.</p>
+    <h4>Right-continuity comes from the <span class="m">≤</span> in the definition</h4>
+    <p>A discrete CDF is a staircase that <strong>takes the upper value at each step</strong>. For a die, <span class="m"><i>F</i>(3) = 3/6</span>, not <span class="m">2/6</span>, because <span class="m"><i>X</i> ≤ 3</span> includes 3. Approach from the left and you get <span class="m">2/6</span>, so it is <em>not</em> left-continuous.</p>
+    <p style="margin-bottom:0">Which makes the height of each jump the probability of that point: <span class="m"><i>P</i>(<i>X</i>=<i>a</i>) = <i>F</i>(<i>a</i>) − <i>F</i>(<i>a</i><sup>−</sup>)</span>. The handwriting on the slides derives exactly this.</p>
+    <h4>A CDF never decreases</h4>
+    <p>Nondecreasing follows straight from <a href="L02-probability-space.html#s7">monotonicity</a>, since <span class="m"><i>a</i> ≤ <i>b</i></span> gives <span class="m">(−∞,<i>a</i>] ⊆ (−∞,<i>b</i>]</span>. <strong>If your CDF goes down somewhere, the algebra is wrong.</strong> Use it as a check on problems like HW3 P4 where you derive a CDF by hand.</p>
+  </div>
+</section>
+
+<!-- ══ 05 ══ -->
+<section id="s5">
+  <div class="sec-head" data-slide="13"><span class="sec-num">05</span><h2 lang="ko">이산과 연속</h2><h2 lang="en">Discrete and continuous</h2></div>
+  <p class="sec-sub" lang="ko">값의 집합이 어떻게 생겼느냐로 갈린다.</p>
+  <p class="sec-sub" lang="en">The split is decided by what the set of possible values looks like.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">값의 집합 <span class="m">𝒳 = <i>X</i>(<i>Ω</i>)</span></span>
+    <table style="margin-bottom:0">
+      <tr><th>종류</th><th>예 (슬라이드)</th><th>기술 도구</th></tr>
+      <tr><td>유한</td><td>주사위 눈</td><td>PMF</td></tr>
+      <tr><td>가산 무한</td><td>첫 성공까지의 실패 횟수</td><td>PMF</td></tr>
+      <tr><td>비가산</td><td>회로의 전압값</td><td>PDF</td></tr>
+    </table>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">The value set <span class="m">𝒳 = <i>X</i>(<i>Ω</i>)</span></span>
+    <table style="margin-bottom:0">
+      <tr><th>kind</th><th>example from the slides</th><th>tool</th></tr>
+      <tr><td>finite</td><td>the face of a die</td><td>PMF</td></tr>
+      <tr><td>countably infinite</td><td>failures before the first success</td><td>PMF</td></tr>
+      <tr><td>uncountable</td><td>a voltage in a circuit</td><td>PDF</td></tr>
+    </table>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>Module 1의 가산/비가산 구분이 여기서 값을 한다.</strong> <a href="L01-set-theory.html#s6">Module 1 · 06</a>에서 "왜 셀 수 있는지가 중요한가"를 다뤘는데, <strong>답이 이거야.</strong> 가산이면 하나씩 확률을 붙여서 더할 수 있고(PMF), 비가산이면 그게 불가능해서 적분으로 가야 해(PDF).<br><br>
+    <a href="L02-probability-space.html#s6">Module 2 · 06번 함정</a>에서 든 얘기가 정확히 이거였어. <span class="m">[0,1]</span>에서 각 점의 확률이 0인데 비가산 개를 모으면 1이 되어야 한다는 모순. <strong>그래서 연속형은 점이 아니라 구간에 확률을 붙인다.</strong>
+  </div>
+  <div class="callout" lang="en">
+    <strong>Module 1's countable/uncountable distinction pays off here.</strong> <a href="L01-set-theory.html#s6">Module 1 · 06</a> asked why countability matters, and <strong>this is the answer.</strong> Countable means you can attach a probability to each value and add them up (PMF); uncountable means you cannot, and you have to integrate instead (PDF).<p>
+    It is the same point as the trap in <a href="L02-probability-space.html#s6">Module 2 · 06</a>: on <span class="m">[0,1]</span> each single point has probability 0, yet uncountably many of them would have to sum to 1. <strong>So in the continuous case probability attaches to intervals, not points.</strong>
+  </div>
+</section>
+
+<!-- ══ 06 ══ -->
+<section id="s6">
+  <div class="sec-head" data-slide="14-16"><span class="sec-num">06</span><h2>PMF</h2></div>
+  <p class="sec-sub" lang="ko">이산형: 값마다 확률을 직접 붙인다.</p>
+  <p class="sec-sub" lang="en">Discrete: attach a probability to each value directly.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">확률질량함수</span>
+    <div class="eq"><i>p<sub>X</sub></i>(<i>x</i>) = <i>P</i>(<i>X</i> = <i>x</i>)</div>
+    <p><strong>성질</strong></p>
+    <div class="eq" style="font-size:15px"><i>p<sub>X</sub></i>(<i>x</i>) ≥ 0, &nbsp;&nbsp; ∑<sub><i>x</i></sub> <i>p<sub>X</sub></i>(<i>x</i>) = 1, &nbsp;&nbsp; <i>P</i>(<i>X</i> ∈ <i>A</i>) = ∑<sub><i>x</i> ∈ <i>A</i></sub> <i>p<sub>X</sub></i>(<i>x</i>)</div>
+    <div class="eq" style="margin-bottom:0"><i>F<sub>X</sub></i>(<i>x</i>) = ∑<sub><i>t</i> ≤ <i>x</i></sub> <i>p<sub>X</sub></i>(<i>t</i>)</div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Probability mass function</span>
+    <div class="eq"><i>p<sub>X</sub></i>(<i>x</i>) = <i>P</i>(<i>X</i> = <i>x</i>)</div>
+    <p><strong>Properties</strong></p>
+    <div class="eq" style="font-size:15px"><i>p<sub>X</sub></i>(<i>x</i>) ≥ 0, &nbsp;&nbsp; ∑<sub><i>x</i></sub> <i>p<sub>X</sub></i>(<i>x</i>) = 1, &nbsp;&nbsp; <i>P</i>(<i>X</i> ∈ <i>A</i>) = ∑<sub><i>x</i> ∈ <i>A</i></sub> <i>p<sub>X</sub></i>(<i>x</i>)</div>
+    <div class="eq" style="margin-bottom:0"><i>F<sub>X</sub></i>(<i>x</i>) = ∑<sub><i>t</i> ≤ <i>x</i></sub> <i>p<sub>X</sub></i>(<i>t</i>)</div>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>세 성질이 Kolmogorov 공리 셋과 정확히 대응해.</strong> <span class="m"><i>p<sub>X</sub></i> ≥ 0</span>이 공리 ①, <span class="m">∑<i>p<sub>X</sub></i> = 1</span>이 공리 ②, 그리고 <span class="m"><i>P</i>(<i>X</i>∈<i>A</i>)</span>를 더해서 구하는 게 공리 ③(가산 가법성)이야. <strong>새 이론이 아니라 <a href="L02-probability-space.html#s6">Module 2</a>를 숫자 위에 옮겨 적은 거야.</strong>
+  </div>
+  <div class="callout" lang="en">
+    <strong>The three properties line up exactly with Kolmogorov's three axioms.</strong> <span class="m"><i>p<sub>X</sub></i> ≥ 0</span> is axiom ①, <span class="m">∑<i>p<sub>X</sub></i> = 1</span> is axiom ②, and getting <span class="m"><i>P</i>(<i>X</i>∈<i>A</i>)</span> by summing is axiom ③, countable additivity. <strong>This is not a new theory, it is <a href="L02-probability-space.html#s6">Module 2</a> transcribed onto numbers.</strong>
+  </div>
+
+  <div class="ex">
+    <span class="tag" lang="ko">예제 6.1 · HW3 Problem 1 유형 (숫자를 바꿨다)</span>
+    <span class="tag" lang="en">Example 6.1 · the HW3 Problem 1 pattern, with different numbers</span>
+    <p lang="ko">패킷이 성공할 때까지의 시도 횟수 <span class="m"><i>X</i></span>가 <span class="m"><i>p<sub>X</sub></i>(<i>k</i>) = <i>c</i>(1/3)<sup><i>k</i></sup></span>, <span class="m"><i>k</i> = 1,2,3</span>이고 그 밖에서는 0이야.<br>
+    (a) <span class="m"><i>c</i></span>를 구해. (b) <span class="m"><i>P</i>(<i>X</i> ≥ 2)</span>를 구해. (c) CDF <span class="m"><i>F<sub>X</sub></i>(<i>x</i>)</span>를 써.</p>
+    <p lang="en">The number of attempts until success, <span class="m"><i>X</i></span>, has <span class="m"><i>p<sub>X</sub></i>(<i>k</i>) = <i>c</i>(1/3)<sup><i>k</i></sup></span> for <span class="m"><i>k</i> = 1,2,3</span> and 0 elsewhere.<br>
+    (a) Find <span class="m"><i>c</i></span>. (b) Find <span class="m"><i>P</i>(<i>X</i> ≥ 2)</span>. (c) Write the CDF <span class="m"><i>F<sub>X</sub></i>(<i>x</i>)</span>.</p>
+    <details>
+      <summary><span lang="ko">풀이</span><span lang="en">Solution</span></summary>
+      <div class="body">
+        <div lang="ko">
+          <p><strong>(a)</strong> <span class="m">∑<i>p<sub>X</sub></i> = 1</span>을 쓴다. <span class="m"><i>c</i>(1/3 + 1/9 + 1/27) = <i>c</i>(13/27) = 1</span>이므로 <span class="m"><i>c</i> = 27/13</span>.</p>
+          <p>그러면 <span class="m"><i>p<sub>X</sub></i>(1) = 9/13</span>, <span class="m"><i>p<sub>X</sub></i>(2) = 3/13</span>, <span class="m"><i>p<sub>X</sub></i>(3) = 1/13</span>. <strong>합이 13/13 = 1인지 확인하고 넘어가.</strong></p>
+          <p><strong>(b)</strong> <span class="m"><i>P</i>(<i>X</i> ≥ 2) = 3/13 + 1/13 = 4/13</span>. 여집합으로 <span class="m">1 − 9/13</span>도 같아. 두 방법이 맞으면 안심해도 돼.</p>
+          <p><strong>(c)</strong> CDF는 <strong>계단</strong>이고 실수 전체에서 정의돼야 해. <span class="m"><i>k</i></span>에서만 쓰면 안 돼.</p>
+          <div class="eq" style="font-size:14.5px"><i>F<sub>X</sub></i>(<i>x</i>) = 0 (<i>x</i> &lt; 1), &nbsp; 9/13 (1 ≤ <i>x</i> &lt; 2), &nbsp; 12/13 (2 ≤ <i>x</i> &lt; 3), &nbsp; 1 (<i>x</i> ≥ 3)</div>
+          <p style="margin-bottom:0"><strong>구간의 끝 처리를 봐.</strong> <span class="m">1 ≤ <i>x</i> &lt; 2</span>야. 왼쪽이 닫히고 오른쪽이 열려. <span class="m"><i>F</i></span>가 우연속이라 점프 지점에서 <em>위쪽</em> 값을 갖기 때문이야. <span class="m"><i>F</i>(1) = 9/13</span>이지 0이 아니야.</p>
+        </div>
+        <div lang="en">
+          <p><strong>(a)</strong> Use <span class="m">∑<i>p<sub>X</sub></i> = 1</span>: <span class="m"><i>c</i>(1/3 + 1/9 + 1/27) = <i>c</i>(13/27) = 1</span>, so <span class="m"><i>c</i> = 27/13</span>.</p>
+          <p>That gives <span class="m"><i>p<sub>X</sub></i>(1) = 9/13</span>, <span class="m"><i>p<sub>X</sub></i>(2) = 3/13</span>, <span class="m"><i>p<sub>X</sub></i>(3) = 1/13</span>. <strong>Check they sum to 13/13 before moving on.</strong></p>
+          <p><strong>(b)</strong> <span class="m"><i>P</i>(<i>X</i> ≥ 2) = 3/13 + 1/13 = 4/13</span>, and the complement route <span class="m">1 − 9/13</span> agrees. Two routes matching is reassurance.</p>
+          <p><strong>(c)</strong> The CDF is a <strong>staircase</strong> and has to be defined on all of <span class="m">ℝ</span>, not only at the <span class="m"><i>k</i></span>.</p>
+          <div class="eq" style="font-size:14.5px"><i>F<sub>X</sub></i>(<i>x</i>) = 0 (<i>x</i> &lt; 1), &nbsp; 9/13 (1 ≤ <i>x</i> &lt; 2), &nbsp; 12/13 (2 ≤ <i>x</i> &lt; 3), &nbsp; 1 (<i>x</i> ≥ 3)</div>
+          <p style="margin-bottom:0"><strong>Watch which end of each interval is closed.</strong> It is <span class="m">1 ≤ <i>x</i> &lt; 2</span>: closed on the left, open on the right, because right-continuity makes <span class="m"><i>F</i></span> take the <em>upper</em> value at a jump. So <span class="m"><i>F</i>(1) = 9/13</span>, not 0.</p>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ══ 07 ══ -->
+<section id="s7">
+  <div class="sec-head" data-slide="17-22"><span class="sec-num">07</span><h2>PDF</h2></div>
+  <p class="sec-sub" lang="ko">연속형: 확률이 아니라 <em>밀도</em>다. 적분해야 확률이 된다.</p>
+  <p class="sec-sub" lang="en">Continuous: not a probability but a <em>density</em>. Integrate it to get one.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">확률밀도함수</span>
+    <p>연속 확률변수는 <span class="m"><i>f<sub>X</sub></i>(<i>x</i>) ≥ 0</span>인 함수로 기술돼.</p>
+    <div class="eq"><i>P</i>(<i>X</i> ∈ <i>A</i>) = ∫<sub><i>A</i></sub> <i>f<sub>X</sub></i>(<i>x</i>) d<i>x</i>, &nbsp;&nbsp; ∫<sub>−∞</sub><sup>∞</sup> <i>f<sub>X</sub></i>(<i>x</i>) d<i>x</i> = 1</div>
+    <p>CDF와의 관계는 미적분학의 기본정리 그대로야.</p>
+    <div class="eq" style="margin-bottom:0"><i>F<sub>X</sub></i>(<i>x</i>) = ∫<sub>−∞</sub><sup><i>x</i></sup> <i>f<sub>X</sub></i>(<i>t</i>) d<i>t</i>, &nbsp;&nbsp; <i>f<sub>X</sub></i>(<i>x</i>) = d<i>F<sub>X</sub></i>(<i>x</i>) / d<i>x</i></div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Probability density function</span>
+    <p>A continuous random variable is described by a function <span class="m"><i>f<sub>X</sub></i>(<i>x</i>) ≥ 0</span>.</p>
+    <div class="eq"><i>P</i>(<i>X</i> ∈ <i>A</i>) = ∫<sub><i>A</i></sub> <i>f<sub>X</sub></i>(<i>x</i>) d<i>x</i>, &nbsp;&nbsp; ∫<sub>−∞</sub><sup>∞</sup> <i>f<sub>X</sub></i>(<i>x</i>) d<i>x</i> = 1</div>
+    <p>Its relationship to the CDF is the fundamental theorem of calculus, unchanged.</p>
+    <div class="eq" style="margin-bottom:0"><i>F<sub>X</sub></i>(<i>x</i>) = ∫<sub>−∞</sub><sup><i>x</i></sup> <i>f<sub>X</sub></i>(<i>t</i>) d<i>t</i>, &nbsp;&nbsp; <i>f<sub>X</sub></i>(<i>x</i>) = d<i>F<sub>X</sub></i>(<i>x</i>) / d<i>x</i></div>
+  </div>
+
+  <details class="nota" open>
+    <summary><span lang="ko">기호 뜯어보기 · ∑ 와 ∫ 는 같은 자리</span><span lang="en">Unpacking the notation · ∑ and ∫ occupy the same slot</span></summary>
+    <div class="body">
+      <div lang="ko">
+        <p>PMF의 식과 PDF의 식을 나란히 놓으면 <strong>골격이 완전히 같아.</strong> <span class="m">∑</span>가 <span class="m">∫</span>로, <span class="m"><i>p<sub>X</sub></i></span>가 <span class="m"><i>f<sub>X</sub></i> d<i>x</i></span>로 바뀐 것뿐이야.</p>
+        <table class="parts">
+          <tr><td></td><td><strong>이산 (PMF)</strong></td></tr>
+          <tr><td>전체 합</td><td><span class="m">∑<sub><i>x</i></sub> <i>p<sub>X</sub></i>(<i>x</i>) = 1</span></td></tr>
+          <tr><td>사건의 확률</td><td><span class="m"><i>P</i>(<i>X</i>∈<i>A</i>) = ∑<sub><i>x</i>∈<i>A</i></sub> <i>p<sub>X</sub></i>(<i>x</i>)</span></td></tr>
+          <tr><td>CDF</td><td><span class="m"><i>F</i>(<i>x</i>) = ∑<sub><i>t</i>≤<i>x</i></sub> <i>p<sub>X</sub></i>(<i>t</i>)</span></td></tr>
+          <tr><td></td><td><strong>연속 (PDF)</strong></td></tr>
+          <tr><td>전체 적분</td><td><span class="m">∫<sub>−∞</sub><sup>∞</sup> <i>f<sub>X</sub></i>(<i>x</i>) d<i>x</i> = 1</span></td></tr>
+          <tr><td>사건의 확률</td><td><span class="m"><i>P</i>(<i>X</i>∈<i>A</i>) = ∫<sub><i>A</i></sub> <i>f<sub>X</sub></i>(<i>x</i>) d<i>x</i></span></td></tr>
+          <tr><td>CDF</td><td><span class="m"><i>F</i>(<i>x</i>) = ∫<sub>−∞</sub><sup><i>x</i></sup> <i>f<sub>X</sub></i>(<i>t</i>) d<i>t</i></span></td></tr>
+        </table>
+        <p style="margin-bottom:0"><span class="m">∫</span>는 늘어난 <span class="m">S</span>(sum)에서 온 기호고, <span class="m">d<i>x</i></span>는 "폭이 아주 얇은 조각"이야. <strong><span class="m"><i>f<sub>X</sub></i>(<i>x</i>) d<i>x</i></span>가 통째로 하나의 확률 조각</strong>이라고 읽으면 위 표의 대응이 그대로 보여. <span class="m">∏</span>가 <span class="m">∑</span>의 곱셈판이었듯, <span class="m">∫</span>는 <span class="m">∑</span>의 연속판이야.</p>
+      </div>
+      <div lang="en">
+        <p>Set the PMF equations beside the PDF ones and <strong>the skeleton is identical.</strong> Only <span class="m">∑</span> becomes <span class="m">∫</span> and <span class="m"><i>p<sub>X</sub></i></span> becomes <span class="m"><i>f<sub>X</sub></i> d<i>x</i></span>.</p>
+        <table class="parts">
+          <tr><td></td><td><strong>discrete (PMF)</strong></td></tr>
+          <tr><td>total</td><td><span class="m">∑<sub><i>x</i></sub> <i>p<sub>X</sub></i>(<i>x</i>) = 1</span></td></tr>
+          <tr><td>probability of an event</td><td><span class="m"><i>P</i>(<i>X</i>∈<i>A</i>) = ∑<sub><i>x</i>∈<i>A</i></sub> <i>p<sub>X</sub></i>(<i>x</i>)</span></td></tr>
+          <tr><td>CDF</td><td><span class="m"><i>F</i>(<i>x</i>) = ∑<sub><i>t</i>≤<i>x</i></sub> <i>p<sub>X</sub></i>(<i>t</i>)</span></td></tr>
+          <tr><td></td><td><strong>continuous (PDF)</strong></td></tr>
+          <tr><td>total</td><td><span class="m">∫<sub>−∞</sub><sup>∞</sup> <i>f<sub>X</sub></i>(<i>x</i>) d<i>x</i> = 1</span></td></tr>
+          <tr><td>probability of an event</td><td><span class="m"><i>P</i>(<i>X</i>∈<i>A</i>) = ∫<sub><i>A</i></sub> <i>f<sub>X</sub></i>(<i>x</i>) d<i>x</i></span></td></tr>
+          <tr><td>CDF</td><td><span class="m"><i>F</i>(<i>x</i>) = ∫<sub>−∞</sub><sup><i>x</i></sup> <i>f<sub>X</sub></i>(<i>t</i>) d<i>t</i></span></td></tr>
+        </table>
+        <p style="margin-bottom:0">The <span class="m">∫</span> glyph is an elongated <span class="m">S</span> for sum, and <span class="m">d<i>x</i></span> is "a sliver of width almost nothing". Read <strong><span class="m"><i>f<sub>X</sub></i>(<i>x</i>) d<i>x</i></span> as a single slice of probability</strong> and the correspondence above reads straight off. Just as <span class="m">∏</span> is the multiplicative <span class="m">∑</span>, <span class="m">∫</span> is the continuous one.</p>
+      </div>
+    </div>
+  </details>
+
+  <div class="trap" lang="ko">
+    <span class="tag">함정</span>
+    <h4><span class="m"><i>f<sub>X</sub></i>(<i>x</i>)</span>는 확률이 아니다. 1을 넘어도 된다</h4>
+    <p><span class="m"><i>X</i> ~ <i>U</i>[0, 0.5]</span>면 <span class="m"><i>f<sub>X</sub></i>(<i>x</i>) = 2</span>야. 확률이 2일 수는 없지만 <strong>밀도는 2일 수 있어.</strong> 밀도 × 폭이 확률이니까, 폭이 0.5면 <span class="m">2 × 0.5 = 1</span>로 맞아떨어져. <strong>PMF와 PDF의 결정적 차이가 이거야.</strong> PMF 값은 확률이라 <span class="m">≤ 1</span>이어야 하지만 PDF 값은 아무 제약이 없어(음수만 아니면 돼).</p>
+    <h4><span class="m"><i>P</i>(<i>X</i> = <i>x</i>) = 0</span>이지 불가능한 게 아니다</h4>
+    <p>슬라이드가 이걸 <strong>Important</strong>로 따로 강조해. <em>"This does not mean that the outcome X = x is impossible."</em> <span class="m">[0,1]</span>에서 균등하게 뽑으면 <em>어떤</em> 값이든 나오긴 나와. 그런데 그 특정 값이 나올 확률은 0이야.</p>
+    <p><strong>Module 2에서 "<span class="m">∅</span>이면 확률 0이지만 확률 0이라고 <span class="m">∅</span>은 아니다"라고 했던 게 여기서 실물로 나타나.</strong> 확률 0인 사건이 실제로 일어나는 게 연속형에서는 매일 일어나는 일이야.</p>
+    <h4>연속형에서는 등호가 의미를 잃는다</h4>
+    <p><span class="m"><i>P</i>(<i>a</i> &lt; <i>X</i> &lt; <i>b</i>) = <i>P</i>(<i>a</i> ≤ <i>X</i> ≤ <i>b</i>)</span>야. 끝점의 확률이 0이니까. <strong>편해 보이지만 이산형에서 같은 습관을 쓰면 틀려.</strong> 문제를 받으면 이산인지 연속인지 먼저 확인해.</p>
+    <h4>PDF는 미분 가능할 때만 CDF에서 얻어진다</h4>
+    <p>슬라이드가 <em>"If <span class="m"><i>F<sub>X</sub></i></span> is differentiable"</em>이라는 단서를 달아. 균등분포의 CDF는 <span class="m"><i>x</i>=0</span>과 <span class="m"><i>x</i>=1</span>에서 꺾여서 미분이 안 돼. <strong>그 두 점에서 PDF 값은 정의하기 나름이고, 어떻게 정하든 적분값이 안 바뀌어서 상관없어.</strong> 그래서 교과서마다 <span class="m"><i>f</i>(1) = 1</span>이라 쓰기도 하고 0이라 쓰기도 해.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Traps</span>
+    <h4><span class="m"><i>f<sub>X</sub></i>(<i>x</i>)</span> is not a probability and may exceed 1</h4>
+    <p>For <span class="m"><i>X</i> ~ <i>U</i>[0, 0.5]</span>, <span class="m"><i>f<sub>X</sub></i>(<i>x</i>) = 2</span>. A probability of 2 is impossible, but <strong>a density of 2 is fine</strong>: density times width is probability, and <span class="m">2 × 0.5 = 1</span> works out. <strong>This is the decisive difference from a PMF</strong>, whose values are probabilities and must be <span class="m">≤ 1</span>. A PDF has no upper constraint at all, only non-negativity.</p>
+    <h4><span class="m"><i>P</i>(<i>X</i> = <i>x</i>) = 0</span> does not mean impossible</h4>
+    <p>The slides flag this as <strong>Important</strong>: <em>"This does not mean that the outcome X = x is impossible."</em> Draw uniformly from <span class="m">[0,1]</span> and <em>some</em> value does come out, yet the probability of that particular value was 0.</p>
+    <p><strong>Module 2's line that <span class="m">∅</span> has probability 0 but probability 0 does not imply <span class="m">∅</span> becomes concrete here.</strong> In the continuous world, probability-zero events happen every single time.</p>
+    <h4>The equals sign stops mattering in the continuous case</h4>
+    <p><span class="m"><i>P</i>(<i>a</i> &lt; <i>X</i> &lt; <i>b</i>) = <i>P</i>(<i>a</i> ≤ <i>X</i> ≤ <i>b</i>)</span>, since the endpoints carry no probability. <strong>Convenient, but carrying that habit into a discrete problem gets it wrong.</strong> Check which kind you have before you start.</p>
+    <h4>Differentiating the CDF only works where it is differentiable</h4>
+    <p>The slides hedge with <em>"if <span class="m"><i>F<sub>X</sub></i></span> is differentiable"</em>. The uniform CDF has corners at <span class="m"><i>x</i>=0</span> and <span class="m"><i>x</i>=1</span> where no derivative exists. <strong>At those two points the density is yours to define, and any choice integrates to the same thing</strong>, which is why textbooks variously write <span class="m"><i>f</i>(1) = 1</span> or 0.</p>
+  </div>
+</section>
+
+<!-- ══ 08 ══ -->
+<section id="s8">
+  <div class="sec-head" data-slide="23-28"><span class="sec-num">08</span><h2 lang="ko">이산 분포 카탈로그</h2><h2 lang="en">The discrete distributions</h2></div>
+  <p class="sec-sub" lang="ko">이름이 붙은 것들. 어떤 상황에서 나오는지가 이름보다 중요하다.</p>
+  <p class="sec-sub" lang="en">The named ones. Where each arises matters more than its name.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드의 네 가지</span>
+    <table style="margin-bottom:0">
+      <tr><th>분포</th><th>PMF</th><th>언제 나오나 (슬라이드의 예)</th></tr>
+      <tr><td><span class="m"><i>U</i>{1,…,<i>n</i>}</span></td><td><span class="m">1/<i>n</i></span></td><td>공정한 주사위</td></tr>
+      <tr><td>Bernoulli(<span class="m"><i>p</i></span>)</td><td><span class="m"><i>p</i></span> (<span class="m"><i>x</i>=1</span>), <span class="m">1−<i>p</i></span> (<span class="m"><i>x</i>=0</span>)</td><td>패킷 전송 한 번의 성패</td></tr>
+      <tr><td>Binomial(<span class="m"><i>n</i>,<i>p</i></span>)</td><td><span class="m">(<sup><i>n</i></sup><sub><i>k</i></sub>) <i>p<sup>k</sup></i>(1−<i>p</i>)<sup><i>n</i>−<i>k</i></sup></span></td><td><span class="m"><i>n</i></span>번 중 성공 <strong>횟수</strong></td></tr>
+      <tr><td>Geometric(<span class="m"><i>p</i></span>)</td><td><span class="m">(1−<i>p</i>)<sup><i>k</i>−1</sup> <i>p</i></span></td><td>첫 성공까지의 <strong>시도 횟수</strong></td></tr>
+      <tr><td>Poisson(<span class="m"><i>λ</i></span>)</td><td><span class="m"><i>e</i><sup>−<i>λ</i></sup> <i>λ<sup>k</sup></i> / <i>k</i>!</span></td><td>1초 동안 도착한 패킷 <strong>개수</strong></td></tr>
+    </table>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">The four on the slides</span>
+    <table style="margin-bottom:0">
+      <tr><th>distribution</th><th>PMF</th><th>where it arises (the slides' example)</th></tr>
+      <tr><td><span class="m"><i>U</i>{1,…,<i>n</i>}</span></td><td><span class="m">1/<i>n</i></span></td><td>a fair die</td></tr>
+      <tr><td>Bernoulli(<span class="m"><i>p</i></span>)</td><td><span class="m"><i>p</i></span> at <span class="m"><i>x</i>=1</span>, <span class="m">1−<i>p</i></span> at <span class="m"><i>x</i>=0</span></td><td>one packet transmission succeeding or not</td></tr>
+      <tr><td>Binomial(<span class="m"><i>n</i>,<i>p</i></span>)</td><td><span class="m">(<sup><i>n</i></sup><sub><i>k</i></sub>) <i>p<sup>k</sup></i>(1−<i>p</i>)<sup><i>n</i>−<i>k</i></sup></span></td><td>the <strong>number</strong> of successes out of <span class="m"><i>n</i></span></td></tr>
+      <tr><td>Geometric(<span class="m"><i>p</i></span>)</td><td><span class="m">(1−<i>p</i>)<sup><i>k</i>−1</sup> <i>p</i></span></td><td>the <strong>attempt count</strong> until the first success</td></tr>
+      <tr><td>Poisson(<span class="m"><i>λ</i></span>)</td><td><span class="m"><i>e</i><sup>−<i>λ</i></sup> <i>λ<sup>k</sup></i> / <i>k</i>!</span></td><td>the <strong>number</strong> of packets arriving in one second</td></tr>
+    </table>
+  </div>
+
+  <details class="nota" open>
+    <summary><span lang="ko">기호 뜯어보기 · 물결표 ~</span><span lang="en">Unpacking the notation · the tilde</span></summary>
+    <div class="body">
+      <div lang="ko">
+        <table class="parts">
+          <tr><td><span class="m"><i>X</i> ~ Binomial(<i>n</i>, <i>p</i>)</span></td><td>"<span class="m"><i>X</i></span>는 이 분포를 <strong>따른다</strong>". 등호가 아니야. <span class="m"><i>X</i></span>가 그 분포와 <em>같다</em>는 게 아니라 <em>그 분포를 갖는다</em>는 뜻이야.</td></tr>
+          <tr><td>괄호 안의 것</td><td><strong>모수(parameter)</strong>. 분포를 하나로 특정하는 숫자야. Binomial은 두 개(<span class="m"><i>n</i>, <i>p</i></span>), Geometric은 하나(<span class="m"><i>p</i></span>), Gaussian은 두 개(<span class="m"><i>μ</i>, <i>σ</i><sup>2</sup></span>).</td></tr>
+          <tr><td><span class="m"><i>k</i>!</span></td><td>계승. <span class="m">1×2×⋯×<i>k</i></span>이고 <span class="m">0! = 1</span>이야. Poisson 분모에 있어.</td></tr>
+        </table>
+        <p style="margin-bottom:0"><strong>Binomial과 Geometric을 헷갈리지 마.</strong> 둘 다 "<span class="m"><i>p</i></span>로 성공하는 시행 반복"인데 <em>세는 대상이 달라</em>. Binomial은 <strong>횟수를 고정하고 성공 개수</strong>를 세고, Geometric은 <strong>성공 하나를 고정하고 걸린 시도 수</strong>를 세. 그래서 Binomial의 값은 <span class="m">0…<i>n</i></span>으로 유한하고 Geometric은 <span class="m">1, 2, 3, …</span>으로 <strong>가산 무한</strong>이야.</p>
+      </div>
+      <div lang="en">
+        <table class="parts">
+          <tr><td><span class="m"><i>X</i> ~ Binomial(<i>n</i>, <i>p</i>)</span></td><td>"<span class="m"><i>X</i></span> <strong>is distributed as</strong> this". Not an equals sign: <span class="m"><i>X</i></span> does not <em>equal</em> the distribution, it <em>has</em> it.</td></tr>
+          <tr><td>what is in the brackets</td><td>The <strong>parameters</strong>, the numbers that pin one distribution down. Binomial takes two (<span class="m"><i>n</i>, <i>p</i></span>), Geometric one (<span class="m"><i>p</i></span>), Gaussian two (<span class="m"><i>μ</i>, <i>σ</i><sup>2</sup></span>).</td></tr>
+          <tr><td><span class="m"><i>k</i>!</span></td><td>Factorial, <span class="m">1×2×⋯×<i>k</i></span>, with <span class="m">0! = 1</span>. It sits in the Poisson denominator.</td></tr>
+        </table>
+        <p style="margin-bottom:0"><strong>Keep Binomial and Geometric apart.</strong> Both describe repeated trials with success probability <span class="m"><i>p</i></span>, but they <em>count different things</em>. Binomial <strong>fixes the number of trials and counts successes</strong>; Geometric <strong>fixes one success and counts the trials it took</strong>. So Binomial takes finitely many values <span class="m">0…<i>n</i></span> while Geometric ranges over <span class="m">1, 2, 3, …</span>, <strong>countably infinite</strong>.</p>
+      </div>
+    </div>
+  </details>
+
+  <div class="trap" lang="ko">
+    <span class="tag">함정</span>
+    <h4>Geometric의 정의가 책마다 다르다</h4>
+    <p>슬라이드는 <span class="m"><i>p<sub>X</sub></i>(<i>k</i>) = (1−<i>p</i>)<sup><i>k</i>−1</sup><i>p</i>, <i>k</i> = 1, 2, …</span>로 <strong>시도 횟수</strong>를 세. 그런데 <strong>실패 횟수</strong>를 세는 정의도 흔해. 그러면 <span class="m">(1−<i>p</i>)<sup><i>k</i></sup><i>p</i>, <i>k</i> = 0, 1, …</span>가 돼.</p>
+    <p><strong>시작이 1이냐 0이냐로 구별해.</strong> 이 과목은 슬라이드 정의를 따르고, HW3 Problem 2가 <em>"number of transmission attempts needed until the first success"</em>라고 해서 <strong>시도 횟수</strong> 쪽이야. <a href="#s5">05번</a>에서 슬라이드가 "첫 성공까지의 <em>실패</em> 횟수"를 가산 무한의 예로 든 것과 대비돼. 문제를 읽을 때 어느 쪽인지 확인해.</p>
+    <h4>Poisson의 <span class="m"><i>λ</i></span>는 확률이 아니다</h4>
+    <p><span class="m"><i>λ</i></span>는 <strong>평균 개수</strong>라서 3.7일 수도 20일 수도 있어. 다른 분포의 <span class="m"><i>p</i></span>가 <span class="m">[0,1]</span>에 갇혀 있는 것과 달라. 슬라이드 손글씨가 Poisson을 <span class="m"><i>n</i> → ∞</span>, <span class="m"><i>p</i> → 0</span>, <span class="m"><i>np</i> = <i>λ</i></span> 고정인 Binomial의 극한으로 유도해. <strong>그래서 <span class="m"><i>λ</i></span>가 <span class="m"><i>np</i></span> 자리에 있는 거야.</strong></p>
+    <h4>지원 집합(support)을 빠뜨리면 안 된다</h4>
+    <p>PMF를 쓸 때 <span class="m"><i>k</i> = 1, 2, …</span> 같은 범위를 반드시 같이 써. 범위 없이 식만 쓰면 <span class="m"><i>k</i> = 0</span>이나 음수에서 값이 뭔지 알 수 없어. <strong>슬라이드가 매번 "0, otherwise"를 붙이는 게 그래서야.</strong> HW3 P1의 <span class="m"><i>c</i></span>를 구할 때도 어느 범위에서 더할지가 답을 정해.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Traps</span>
+    <h4>The Geometric distribution is defined two different ways</h4>
+    <p>The slides use <span class="m"><i>p<sub>X</sub></i>(<i>k</i>) = (1−<i>p</i>)<sup><i>k</i>−1</sup><i>p</i>, <i>k</i> = 1, 2, …</span>, counting <strong>attempts</strong>. Counting <strong>failures</strong> is equally common and gives <span class="m">(1−<i>p</i>)<sup><i>k</i></sup><i>p</i>, <i>k</i> = 0, 1, …</span> instead.</p>
+    <p><strong>Tell them apart by whether the support starts at 1 or 0.</strong> This course follows the slides, and HW3 Problem 2 says <em>"number of transmission attempts needed until the first success"</em>, so it is the <strong>attempts</strong> version. Contrast that with <a href="#s5">§05</a>, where the slides cite "failures before the first success" as their countably-infinite example. Read each problem for which one it wants.</p>
+    <h4>The Poisson <span class="m"><i>λ</i></span> is not a probability</h4>
+    <p><span class="m"><i>λ</i></span> is an <strong>average count</strong>, so it can be 3.7 or 20, unlike the <span class="m"><i>p</i></span> of the other distributions which is confined to <span class="m">[0,1]</span>. The handwriting on the slides derives Poisson as a Binomial limit with <span class="m"><i>n</i> → ∞</span>, <span class="m"><i>p</i> → 0</span> and <span class="m"><i>np</i> = <i>λ</i></span> held fixed. <strong>That is why <span class="m"><i>λ</i></span> sits where <span class="m"><i>np</i></span> used to.</strong></p>
+    <h4>Never omit the support</h4>
+    <p>Always write the range, such as <span class="m"><i>k</i> = 1, 2, …</span>, alongside the formula. Without it there is no saying what happens at <span class="m"><i>k</i> = 0</span> or at negative values. <strong>It is why the slides append "0, otherwise" every single time.</strong> In HW3 P1 the range you sum over is what determines <span class="m"><i>c</i></span>.</p>
+  </div>
+</section>
+
+<!-- ══ 09 ══ -->
+<section id="s9">
+  <div class="sec-head" data-slide="29-34"><span class="sec-num">09</span><h2 lang="ko">연속 분포 카탈로그</h2><h2 lang="en">The continuous distributions</h2></div>
+  <p class="sec-sub" lang="ko">뒤의 셋은 무선 통신에서 바로 나온다.</p>
+  <p class="sec-sub" lang="en">The last three come straight out of wireless communications.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드의 다섯 가지</span>
+    <table style="margin-bottom:0">
+      <tr><th>분포</th><th>PDF</th><th>언제 나오나</th></tr>
+      <tr><td><span class="m"><i>U</i>[<i>a</i>,<i>b</i>]</span></td><td><span class="m">1/(<i>b</i>−<i>a</i>)</span></td><td>반송파 위상이 <span class="m">[0, 2π)</span>에 고르게</td></tr>
+      <tr><td><span class="m"><i>N</i>(<i>μ</i>, <i>σ</i><sup>2</sup>)</span></td><td><span class="m">exp(−(<i>x</i>−<i>μ</i>)<sup>2</sup>/2<i>σ</i><sup>2</sup>) / √(2π<i>σ</i><sup>2</sup>)</span></td><td>수신기의 열잡음</td></tr>
+      <tr><td>Exp(<span class="m"><i>λ</i></span>)</td><td><span class="m"><i>λe</i><sup>−<i>λx</i></sup></span>, <span class="m"><i>x</i> ≥ 0</span></td><td>패킷 <strong>도착 간격</strong></td></tr>
+      <tr><td>Rayleigh(<span class="m"><i>σ</i></span>)</td><td><span class="m">(<i>x</i>/<i>σ</i><sup>2</sup>) <i>e</i><sup>−<i>x</i><sup>2</sup>/2<i>σ</i><sup>2</sup></sup></span></td><td>페이딩 채널의 <strong>크기</strong></td></tr>
+      <tr><td>Lognormal</td><td><span class="m">ln <i>X</i> ~ <i>N</i>(<i>μ</i>, <i>σ</i><sup>2</sup>)</span></td><td>대규모 <strong>섀도잉</strong></td></tr>
+    </table>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">The five on the slides</span>
+    <table style="margin-bottom:0">
+      <tr><th>distribution</th><th>PDF</th><th>where it arises</th></tr>
+      <tr><td><span class="m"><i>U</i>[<i>a</i>,<i>b</i>]</span></td><td><span class="m">1/(<i>b</i>−<i>a</i>)</span></td><td>a carrier phase uniform on <span class="m">[0, 2π)</span></td></tr>
+      <tr><td><span class="m"><i>N</i>(<i>μ</i>, <i>σ</i><sup>2</sup>)</span></td><td><span class="m">exp(−(<i>x</i>−<i>μ</i>)<sup>2</sup>/2<i>σ</i><sup>2</sup>) / √(2π<i>σ</i><sup>2</sup>)</span></td><td>thermal noise in a receiver</td></tr>
+      <tr><td>Exp(<span class="m"><i>λ</i></span>)</td><td><span class="m"><i>λe</i><sup>−<i>λx</i></sup></span>, <span class="m"><i>x</i> ≥ 0</span></td><td>time <strong>between</strong> packet arrivals</td></tr>
+      <tr><td>Rayleigh(<span class="m"><i>σ</i></span>)</td><td><span class="m">(<i>x</i>/<i>σ</i><sup>2</sup>) <i>e</i><sup>−<i>x</i><sup>2</sup>/2<i>σ</i><sup>2</sup></sup></span></td><td>the <strong>envelope</strong> of a fading channel</td></tr>
+      <tr><td>Lognormal</td><td><span class="m">ln <i>X</i> ~ <i>N</i>(<i>μ</i>, <i>σ</i><sup>2</sup>)</span></td><td>large-scale <strong>shadow fading</strong></td></tr>
+    </table>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>Poisson과 Exponential이 짝이야.</strong> 슬라이드가 Poisson의 예로 "1초 동안 도착한 패킷 개수"를, Exponential의 예로 "연속된 패킷 도착 사이의 시간"을 들어. <strong>같은 현상을 세는 방향만 바꾼 거야.</strong> 도착이 Poisson 과정이면 개수는 Poisson, 간격은 Exponential이 돼.<br><br>
+    <a href="#s8">08번</a>의 Binomial ↔ Geometric도 같은 관계야. <strong>"고정된 구간에서 몇 개"는 이산이든 연속이든 하나의 분포로, "다음 하나까지 얼마나"는 다른 분포로 간다.</strong> 이 대응을 알아두면 다섯 개를 따로 외우지 않아도 돼.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Poisson and Exponential are a pair.</strong> The slides motivate Poisson with "packets arriving in one second" and Exponential with "time between consecutive arrivals". <strong>Same phenomenon, counted along a different axis.</strong> If arrivals form a Poisson process, the counts are Poisson and the gaps are Exponential.<br><br>
+    Binomial and Geometric in <a href="#s8">§08</a> stand in the same relation. <strong>"How many in a fixed window" gives you one distribution, "how long until the next one" gives you another</strong>, discrete or continuous. Seeing that pairing means not memorising five separate things.
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">함정</span>
+    <h4>Gaussian의 두 번째 모수는 <span class="m"><i>σ</i><sup>2</sup></span>이지 <span class="m"><i>σ</i></span>가 아니다</h4>
+    <p><span class="m"><i>N</i>(0, 4)</span>는 표준편차가 4가 아니라 <strong>2</strong>야. 분산이 4니까. 반면 <strong>Rayleigh는 <span class="m"><i>σ</i></span>로 모수화</strong>돼 있어(<span class="m">Rayleigh(<i>σ</i>)</span>). 슬라이드가 그렇게 써. <strong>같은 글자가 두 분포에서 다른 것을 뜻해.</strong></p>
+    <h4>Exponential과 Rayleigh는 <span class="m"><i>x</i> ≥ 0</span>에서만 산다</h4>
+    <p>정의역 제한을 빼먹고 적분하면 1이 안 나와. <strong>지원 집합은 PDF의 일부야.</strong> 물리적으로도 당연해. 시간 간격과 신호 크기는 음수가 될 수 없거든. Gaussian만 <span class="m">ℝ</span> 전체에 퍼져 있어서, <em>전력이나 시간을 Gaussian으로 모델링하면 음수가 나온다</em>는 게 실제 문제가 돼.</p>
+    <h4>Lognormal은 <span class="m"><i>X</i></span>가 정규가 아니라 <span class="m">ln <i>X</i></span>가 정규다</h4>
+    <p>이름이 헷갈리게 돼 있어. <strong><span class="m"><i>X</i></span> 자체는 정규분포가 아니야.</strong> 로그를 취해야 정규가 돼. 그래서 <span class="m"><i>x</i> &gt; 0</span>에서만 정의되고(로그를 취해야 하니까) PDF에 <span class="m">1/<i>x</i></span>가 붙어. 무선에서 섀도잉을 dB로 재면 정규분포처럼 보이는데, dB가 곧 로그라서 그래.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Traps</span>
+    <h4>The Gaussian's second parameter is <span class="m"><i>σ</i><sup>2</sup></span>, not <span class="m"><i>σ</i></span></h4>
+    <p><span class="m"><i>N</i>(0, 4)</span> has standard deviation <strong>2</strong>, not 4, because 4 is the variance. Meanwhile <strong>Rayleigh is parameterised by <span class="m"><i>σ</i></span> itself</strong>, written <span class="m">Rayleigh(<i>σ</i>)</span> on the slides. <strong>The same letter means different things in the two distributions.</strong></p>
+    <h4>Exponential and Rayleigh live only on <span class="m"><i>x</i> ≥ 0</span></h4>
+    <p>Integrate without the domain restriction and you will not get 1. <strong>The support is part of the PDF.</strong> Physically it has to be: an inter-arrival time and a signal magnitude cannot go negative. The Gaussian is the one spread over all of <span class="m">ℝ</span>, which is why <em>modelling a power or a duration as Gaussian eventually produces negative values</em> and causes real trouble.</p>
+    <h4>Lognormal means <span class="m">ln <i>X</i></span> is normal, not <span class="m"><i>X</i></span></h4>
+    <p>The name invites the wrong reading. <strong><span class="m"><i>X</i></span> itself is not Gaussian</strong>; its logarithm is. Hence it is defined only for <span class="m"><i>x</i> &gt; 0</span>, since you have to take a log, and hence the <span class="m">1/<i>x</i></span> factor in the density. Shadow fading measured in dB looks Gaussian precisely because dB is a logarithm.</p>
+  </div>
+</section>
+
+<!-- ══ 10 ══ -->
+<section id="s10">
+  <div class="sec-head" data-slide="35-40"><span class="sec-num">10</span><h2 lang="ko">역변환 샘플링</h2><h2 lang="en">Inverse transform sampling</h2></div>
+  <p class="sec-sub" lang="ko">이 모듈의 결론. 균등 난수 하나로 아무 분포나 만든다.</p>
+  <p class="sec-sub" lang="en">The module's payoff: one uniform random number becomes any distribution you like.</p>
+
+  <p lang="ko">슬라이드가 <em>"A Final Remark"</em>로 시작해서 끝까지 가는 대목이야. 확률 공간을 <span class="m">([0,1], ℬ([0,1]), 균등)</span> 하나로 고정해놓고, 원하는 CDF <span class="m"><i>F<sub>X</sub></i></span>를 갖는 확률변수를 <strong>만들어내</strong>.</p>
+  <p lang="en">This is the stretch the slides open with <em>"A Final Remark"</em> and carry to the end. Fix a single probability space, <span class="m">([0,1], ℬ([0,1]), uniform)</span>, and <strong>construct</strong> a random variable with whatever CDF <span class="m"><i>F<sub>X</sub></i></span> you want.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">구성과 증명</span>
+    <div class="eq"><i>X</i>(<i>u</i>) = <i>F<sub>X</sub></i><sup>−1</sup>(<i>u</i>), &nbsp;&nbsp; <i>u</i> ∈ [0,1]</div>
+    <p>이게 정말 <span class="m"><i>F<sub>X</sub></i></span>를 CDF로 갖는지 확인하는 게 두 줄이야.</p>
+    <div class="eq" style="margin-bottom:0"><i>P</i>(<i>X</i> ≤ <i>x</i>) = <i>P</i>(<i>F<sub>X</sub></i><sup>−1</sup>(<i>u</i>) ≤ <i>x</i>) = <i>P</i>(<i>u</i> ≤ <i>F<sub>X</sub></i>(<i>x</i>)) = <i>F<sub>X</sub></i>(<i>x</i>)</div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">The construction and its proof</span>
+    <div class="eq"><i>X</i>(<i>u</i>) = <i>F<sub>X</sub></i><sup>−1</sup>(<i>u</i>), &nbsp;&nbsp; <i>u</i> ∈ [0,1]</div>
+    <p>Checking that this really has <span class="m"><i>F<sub>X</sub></i></span> as its CDF takes two lines.</p>
+    <div class="eq" style="margin-bottom:0"><i>P</i>(<i>X</i> ≤ <i>x</i>) = <i>P</i>(<i>F<sub>X</sub></i><sup>−1</sup>(<i>u</i>) ≤ <i>x</i>) = <i>P</i>(<i>u</i> ≤ <i>F<sub>X</sub></i>(<i>x</i>)) = <i>F<sub>X</sub></i>(<i>x</i>)</div>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>마지막 등호가 이 증명의 전부야.</strong> <span class="m"><i>u</i></span>가 <span class="m">[0,1]</span> 위에서 균등이니까 <span class="m"><i>P</i>(<i>u</i> ≤ <i>t</i>) = <i>t</i></span>야. <strong>균등분포의 CDF가 항등함수라는 사실</strong>이 여기서 값을 해. <span class="m"><i>t</i></span> 자리에 <span class="m"><i>F<sub>X</sub></i>(<i>x</i>)</span>를 넣으면 바로 <span class="m"><i>F<sub>X</sub></i>(<i>x</i>)</span>가 나와.<br><br>
+    가운데 등호는 <span class="m"><i>F<sub>X</sub></i></span>가 <a href="#s4">비감소</a>라서 부등호를 유지한 채 양변에 <span class="m"><i>F<sub>X</sub></i></span>를 씌울 수 있다는 것에 기대. <strong>04번의 성질이 여기서 쓰인다.</strong>
+  </div>
+  <div class="callout" lang="en">
+    <strong>The last equality is the whole proof.</strong> Because <span class="m"><i>u</i></span> is uniform on <span class="m">[0,1]</span>, <span class="m"><i>P</i>(<i>u</i> ≤ <i>t</i>) = <i>t</i></span>. <strong>The uniform CDF being the identity function</strong> is what does the work: substitute <span class="m"><i>F<sub>X</sub></i>(<i>x</i>)</span> for <span class="m"><i>t</i></span> and out comes <span class="m"><i>F<sub>X</sub></i>(<i>x</i>)</span>.<br><br>
+    The middle equality leans on <span class="m"><i>F<sub>X</sub></i></span> being <a href="#s4">nondecreasing</a>, which is what lets you apply it to both sides without flipping the inequality. <strong>That property from §04 is being cashed in here.</strong>
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">시뮬레이션 레시피</span>
+    <p>슬라이드가 두 줄로 정리해. MATLAB의 <code>rand</code>가 1단계야.</p>
+    <ol style="margin-bottom:12px">
+      <li><span class="m">[0,1]</span>에서 균등하게 <span class="m"><i>u</i></span>를 뽑는다.</li>
+      <li><span class="m"><i>X</i> = <i>F<sub>X</sub></i><sup>−1</sup>(<i>u</i>)</span>를 계산한다.</li>
+    </ol>
+    <table style="margin-bottom:0">
+      <tr><th>분포</th><th><span class="m"><i>F<sub>X</sub></i>(<i>x</i>)</span></th><th><span class="m"><i>X</i>(<i>u</i>) = <i>F</i><sup>−1</sup>(<i>u</i>)</span></th></tr>
+      <tr><td><span class="m"><i>U</i>[0,1]</span></td><td><span class="m"><i>x</i></span></td><td><span class="m"><i>u</i></span></td></tr>
+      <tr><td>Exp(<span class="m"><i>λ</i></span>)</td><td><span class="m">1 − <i>e</i><sup>−<i>λx</i></sup></span></td><td><span class="m">−(1/<i>λ</i>) ln(1 − <i>u</i>)</span></td></tr>
+      <tr><td>Bernoulli(<span class="m"><i>p</i></span>)</td><td>계단 (0 / <span class="m">1−<i>p</i></span> / 1)</td><td><span class="m">0</span> if <span class="m"><i>u</i> ≤ 1−<i>p</i></span>, else <span class="m">1</span></td></tr>
+    </table>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">The simulation recipe</span>
+    <p>The slides reduce it to two lines. MATLAB's <code>rand</code> is step 1.</p>
+    <ol style="margin-bottom:12px">
+      <li>Draw <span class="m"><i>u</i></span> uniformly from <span class="m">[0,1]</span>.</li>
+      <li>Compute <span class="m"><i>X</i> = <i>F<sub>X</sub></i><sup>−1</sup>(<i>u</i>)</span>.</li>
+    </ol>
+    <table style="margin-bottom:0">
+      <tr><th>distribution</th><th><span class="m"><i>F<sub>X</sub></i>(<i>x</i>)</span></th><th><span class="m"><i>X</i>(<i>u</i>) = <i>F</i><sup>−1</sup>(<i>u</i>)</span></th></tr>
+      <tr><td><span class="m"><i>U</i>[0,1]</span></td><td><span class="m"><i>x</i></span></td><td><span class="m"><i>u</i></span></td></tr>
+      <tr><td>Exp(<span class="m"><i>λ</i></span>)</td><td><span class="m">1 − <i>e</i><sup>−<i>λx</i></sup></span></td><td><span class="m">−(1/<i>λ</i>) ln(1 − <i>u</i>)</span></td></tr>
+      <tr><td>Bernoulli(<span class="m"><i>p</i></span>)</td><td>a staircase (0 / <span class="m">1−<i>p</i></span> / 1)</td><td><span class="m">0</span> if <span class="m"><i>u</i> ≤ 1−<i>p</i></span>, else <span class="m">1</span></td></tr>
+    </table>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>슬라이드의 마지막 해석이 이 모듈에서 제일 중요한 문장이야.</strong> 확률 공간 하나(<span class="m">[0,1]</span> 위의 균등)를 고정해두고, <strong>같은 <span class="m"><i>u</i></span>에 서로 다른 결정론적 함수를 씌워서</strong> 공학에서 쓰는 확률변수 대부분을 만들 수 있어.<br><br>
+    <a href="#s2">02번</a>에서 "확률변수는 사실 결정론적 함수고, 무작위성은 전부 <span class="m"><i>ω</i></span>에 있다"고 했던 게 여기서 결론이 돼. <strong>무작위성의 원천은 하나면 충분하다.</strong> 나머지는 전부 그것을 변형하는 일이야.
+  </div>
+  <div class="callout" lang="en">
+    <strong>The interpretation the slides close on is the most important sentence in the module.</strong> Fix one probability space, the uniform measure on <span class="m">[0,1]</span>, and <strong>apply different deterministic maps to the same <span class="m"><i>u</i></span></strong> to construct most of the random variables engineering needs.<br><br>
+    The remark in <a href="#s2">§02</a> that a random variable is really a deterministic function, with all the randomness sitting in <span class="m"><i>ω</i></span>, arrives at its conclusion here. <strong>One source of randomness is enough.</strong> Everything else is transformation.
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">함정</span>
+    <h4><span class="m"><i>F</i><sup>−1</sup></span>이 진짜 역함수가 아닐 수 있다</h4>
+    <p>Bernoulli의 CDF는 계단이라 <strong>대부분의 값을 건너뛰어.</strong> <span class="m"><i>F</i>(<i>x</i>) = 0.5</span>인 <span class="m"><i>x</i></span>가 없을 수 있어. 그래서 엄밀히는 <em>일반화 역함수</em> <span class="m"><i>F</i><sup>−1</sup>(<i>u</i>) = inf{<i>x</i> : <i>F</i>(<i>x</i>) ≥ <i>u</i>}</span>를 써.</p>
+    <p><strong>슬라이드의 Bernoulli 결과가 정확히 이거야.</strong> <span class="m"><i>u</i> ≤ 1−<i>p</i></span>면 0, 아니면 1. 계단을 왼쪽에서 오른쪽으로 훑다가 처음으로 <span class="m"><i>u</i></span> 이상이 되는 지점을 고르는 거야. <a href="#s3">03번의 <span class="m"><i>X</i><sup>−1</sup></span>도 역함수가 아니었지</a>. <strong>이 과목에서 <span class="m"><sup>−1</sup></span>은 대체로 역함수가 아니야.</strong></p>
+    <h4><span class="m">1 − <i>u</i></span>와 <span class="m"><i>u</i></span>를 바꿔 써도 된다</h4>
+    <p>Exponential의 공식이 <span class="m">−(1/<i>λ</i>)ln(1 − <i>u</i>)</span>인데, <span class="m"><i>u</i></span>가 균등이면 <span class="m">1 − <i>u</i></span>도 균등이라 <span class="m">−(1/<i>λ</i>)ln <i>u</i></span>로 써도 같은 분포가 나와. <strong>구현에서는 후자를 더 많이 써.</strong> 다만 <span class="m"><i>u</i> = 0</span>이 나오면 <span class="m">ln 0</span>이라 발산하니 <span class="m">(0,1]</span>에서 뽑아야 해.</p>
+    <h4>Gaussian은 이 방법으로 못 만든다</h4>
+    <p>정규분포의 CDF에는 <strong>닫힌 형태의 역함수가 없어.</strong> 그래서 실제 라이브러리는 Box-Muller 같은 다른 방법을 써. <strong>역변환은 원리를 보여주는 데 완벽하지만 모든 분포에 실용적이지는 않아.</strong> 슬라이드가 예제로 균등·지수·Bernoulli 셋만 든 것도 그 셋이 역함수가 깔끔해서야.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Traps</span>
+    <h4><span class="m"><i>F</i><sup>−1</sup></span> may not be a genuine inverse</h4>
+    <p>The Bernoulli CDF is a staircase and <strong>skips most values</strong>: there may be no <span class="m"><i>x</i></span> at all with <span class="m"><i>F</i>(<i>x</i>) = 0.5</span>. Strictly one uses the <em>generalised inverse</em> <span class="m"><i>F</i><sup>−1</sup>(<i>u</i>) = inf{<i>x</i> : <i>F</i>(<i>x</i>) ≥ <i>u</i>}</span>.</p>
+    <p><strong>That is exactly what the slides' Bernoulli result encodes:</strong> 0 when <span class="m"><i>u</i> ≤ 1−<i>p</i></span> and 1 otherwise, which is sweeping the staircase left to right and taking the first point where it reaches <span class="m"><i>u</i></span>. <a href="#s3">The <span class="m"><i>X</i><sup>−1</sup></span> in §03 was not an inverse either.</a> <strong>In this course a superscript <span class="m"><sup>−1</sup></span> usually is not one.</strong></p>
+    <h4>You can swap <span class="m">1 − <i>u</i></span> for <span class="m"><i>u</i></span></h4>
+    <p>The Exponential formula is <span class="m">−(1/<i>λ</i>)ln(1 − <i>u</i>)</span>, but if <span class="m"><i>u</i></span> is uniform so is <span class="m">1 − <i>u</i></span>, so <span class="m">−(1/<i>λ</i>)ln <i>u</i></span> gives the same distribution. <strong>Implementations usually prefer the latter</strong>, drawing from <span class="m">(0,1]</span> so that <span class="m">ln 0</span> never comes up.</p>
+    <h4>The Gaussian cannot be built this way</h4>
+    <p>The normal CDF has <strong>no closed-form inverse</strong>, which is why real libraries reach for Box-Muller or similar instead. <strong>Inverse transform is perfect for showing the principle and not universally practical.</strong> The slides pick uniform, exponential and Bernoulli as examples precisely because those three invert cleanly.</p>
+  </div>
+</section>
+
+<!-- ══ 11 ══ -->
+<section id="s11">
+  <div class="sec-head" data-slide="41"><span class="sec-num">11</span><h2 lang="ko">생성형 AI와의 연결</h2><h2 lang="en">The generative AI link</h2></div>
+  <p class="sec-sub" lang="ko">슬라이드의 마지막 장. 같은 원리가 어디까지 가는지.</p>
+  <p class="sec-sub" lang="en">The deck's last slide: how far the same principle travels.</p>
+
+  <div class="callout" lang="ko">
+    <strong>슬라이드가 이 한 줄로 요약해.</strong><br><br>
+    <span class="m">단순한 무작위성 → 변환 → 복잡한 분포</span><br><br>
+    생성 모델은 대개 <strong>가우시안 잡음 같은 단순한 입력</strong>에서 출발해서 그것을 변환해 훨씬 복잡한 분포의 표본을 만들어. 정규화 흐름(normalizing flows), 확산 모델(diffusion), VAE, GAN이 전부 이 구조야. <strong>차이는 변환을 손으로 유도하느냐 데이터로 학습하느냐뿐이야.</strong>
+  </div>
+  <div class="callout" lang="en">
+    <strong>The slide compresses it to one line.</strong><br><br>
+    <span class="m">simple source of randomness → transformation → complex distribution</span><br><br>
+    Generative models start from <strong>a simple input such as Gaussian noise</strong> and transform it into samples from something far more complicated. Normalizing flows, diffusion models, VAEs and GANs all share that shape. <strong>The only difference is whether the transformation is derived by hand or learned from data.</strong>
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">10번과 나란히 놓으면</span>
+    <table style="margin-bottom:0">
+      <tr><th></th><th>역변환 샘플링</th><th>생성 모델</th></tr>
+      <tr><td>무작위성 원천</td><td><span class="m"><i>u</i> ~ <i>U</i>[0,1]</span></td><td><span class="m"><i>z</i> ~ <i>N</i>(0, <i>I</i>)</span></td></tr>
+      <tr><td>변환</td><td><span class="m"><i>F</i><sup>−1</sup></span>, 손으로 유도</td><td>신경망, 데이터로 학습</td></tr>
+      <tr><td>결과</td><td>원하는 1차원 분포</td><td>이미지·음성·텍스트의 분포</td></tr>
+      <tr><td>왜 되나</td><td>CDF가 비감소라서</td><td>변환이 충분히 표현력 있어서</td></tr>
+    </table>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Set side by side with §10</span>
+    <table style="margin-bottom:0">
+      <tr><th></th><th>inverse transform</th><th>generative models</th></tr>
+      <tr><td>source of randomness</td><td><span class="m"><i>u</i> ~ <i>U</i>[0,1]</span></td><td><span class="m"><i>z</i> ~ <i>N</i>(0, <i>I</i>)</span></td></tr>
+      <tr><td>transformation</td><td><span class="m"><i>F</i><sup>−1</sup></span>, derived by hand</td><td>a neural network, learned from data</td></tr>
+      <tr><td>output</td><td>whatever 1-D distribution you wanted</td><td>a distribution over images, audio, text</td></tr>
+      <tr><td>why it works</td><td>the CDF is nondecreasing</td><td>the transformation is expressive enough</td></tr>
+    </table>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>이건 슬라이드에 없는 보충인데, 정규화 흐름은 이 대응이 문자 그대로야.</strong> normalizing flow는 가역인 변환만 쓰도록 설계해서 밀도를 정확히 계산할 수 있게 해. <span class="m"><i>F</i><sup>−1</sup></span>이 가역이어야 했던 것과 같은 이유고, 다차원 버전에서는 야코비 행렬식이 <span class="m">d<i>F</i>/d<i>x</i></span>의 자리를 대신해. <strong><a href="#s7">07번의 <span class="m"><i>f</i> = d<i>F</i>/d<i>x</i></span></a>가 그 원형이야.</strong>
+  </div>
+  <div class="callout" lang="en">
+    <strong>This part is beyond the slides, but for normalizing flows the correspondence is literal.</strong> A normalizing flow is built from invertible transformations precisely so the density can be computed exactly, for the same reason <span class="m"><i>F</i><sup>−1</sup></span> had to be invertible. In the multidimensional version a Jacobian determinant stands where <span class="m">d<i>F</i>/d<i>x</i></span> stood. <strong><a href="#s7">The <span class="m"><i>f</i> = d<i>F</i>/d<i>x</i></span> of §07</a> is the prototype.</strong>
+  </div>
+</section>
+
+<!-- ══ 12 ══ -->
+<section id="s12">
+  <div class="sec-head"><span class="sec-num">12</span><h2 lang="ko">직접 만져보기</h2><h2 lang="en">Try it yourself</h2></div>
+  <p class="sec-sub" lang="ko">균등 난수가 어떻게 다른 분포가 되는지 눈으로 봐.</p>
+  <p class="sec-sub" lang="en">Watch a uniform number turn into another distribution.</p>
+
+  <div class="play">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+      <button class="d5-dist" data-d="unif"><span class="pl-lab" data-ko="균등 U[0,1]" data-en="uniform U[0,1]"></span></button>
+      <button class="d5-dist" data-d="exp"><span class="pl-lab" data-ko="지수 Exp(1)" data-en="exponential Exp(1)"></span></button>
+      <button class="d5-dist" data-d="bern"><span class="pl-lab" data-ko="Bernoulli(0.3)" data-en="Bernoulli(0.3)"></span></button>
+    </div>
+
+    <label style="display:block;font-size:13px;color:var(--ink2);margin-bottom:14px">
+      <span class="pl-lab" data-ko="균등 난수 u" data-en="uniform draw u"></span>
+      <b id="d5-ue" style="font-family:var(--mono);color:var(--ink)">0.500</b>
+      <input id="d5-u" type="range" min="0.001" max="0.999" step="0.001" value="0.5" style="width:100%;margin-top:6px">
+    </label>
+
+    <svg id="d5-svg" viewBox="0 0 660 260" role="img" aria-label="CDF 위에서 균등 난수가 값으로 변환되는 과정과 표본 히스토그램" style="width:100%;background:var(--paper);border:1px solid var(--rule);border-radius:8px"></svg>
+
+    <div id="d5-msg" style="font-size:13.5px;line-height:1.65;color:var(--ink2);border-top:1px solid var(--rule);padding-top:14px;margin-top:14px"></div>
+
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <button id="d5-draw"><span class="pl-lab" data-ko="200개 뽑기" data-en="draw 200"></span></button>
+      <button id="d5-clear"><span class="pl-lab" data-ko="지우기" data-en="clear"></span></button>
+      <span id="d5-cnt" style="font-family:var(--mono);font-size:11.5px;color:var(--ink3)"></span>
+    </div>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>이것들을 확인해봐.</strong> ① <span class="m"><i>u</i></span>를 고르게 움직여도 <strong>지수분포에서는 <span class="m"><i>x</i></span>가 고르게 안 움직여.</strong> CDF가 가파른 곳(0 근처)에서는 <span class="m"><i>u</i></span>가 조금만 변해도 <span class="m"><i>x</i></span>가 조금 변하고, 완만한 곳(꼬리)에서는 크게 튀어. <strong>그래서 표본이 0 근처에 몰려.</strong> ② Bernoulli를 고르면 CDF가 계단이라 <span class="m"><i>x</i></span>가 0과 1만 나와. ③ 200개를 뽑아보면 히스토그램이 PDF 모양을 따라가.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Things to look for.</strong> ① Sweep <span class="m"><i>u</i></span> evenly and <strong>the exponential's <span class="m"><i>x</i></span> does not move evenly.</strong> Where the CDF is steep, near 0, a change in <span class="m"><i>u</i></span> barely moves <span class="m"><i>x</i></span>; out in the flat tail it jumps a long way. <strong>That is why the samples pile up near zero.</strong> ② Switch to Bernoulli and the staircase CDF lets <span class="m"><i>x</i></span> take only 0 and 1. ③ Draw 200 and the histogram grows into the shape of the PDF.
+  </div>
+</section>
+
+<!-- ══ 99 ══ -->
+<section id="s99">
+  <div class="sec-head"><span class="sec-num">99</span><h2 lang="ko">정리 &amp; 다음</h2><h2 lang="en">Recap &amp; next</h2></div>
+
+  <div class="def" lang="ko">
+    <span class="tag">한 장 요약</span>
+    <table>
+      <tr><th>도구</th><th>정의</th><th>있는 곳</th></tr>
+      <tr><td><span class="m"><i>X</i></span></td><td><span class="m"><i>Ω</i> → ℝ</span> 함수</td><td>항상</td></tr>
+      <tr><td>CDF <span class="m"><i>F<sub>X</sub></i></span></td><td><span class="m"><i>P</i>(<i>X</i> ≤ <i>x</i>)</span></td><td><strong>항상</strong>. 비감소, 우연속</td></tr>
+      <tr><td>PMF <span class="m"><i>p<sub>X</sub></i></span></td><td><span class="m"><i>P</i>(<i>X</i> = <i>x</i>)</span></td><td>이산만. 합이 1</td></tr>
+      <tr><td>PDF <span class="m"><i>f<sub>X</sub></i></span></td><td><span class="m">d<i>F</i>/d<i>x</i></span></td><td>연속만. 적분이 1. <strong>1 넘어도 됨</strong></td></tr>
+      <tr><td><span class="m"><i>F</i><sup>−1</sup>(<i>u</i>)</span></td><td>균등 난수를 값으로</td><td>시뮬레이션, 생성 모델</td></tr>
+    </table>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">One-page recap</span>
+    <table>
+      <tr><th>tool</th><th>definition</th><th>when it exists</th></tr>
+      <tr><td><span class="m"><i>X</i></span></td><td>a function <span class="m"><i>Ω</i> → ℝ</span></td><td>always</td></tr>
+      <tr><td>CDF <span class="m"><i>F<sub>X</sub></i></span></td><td><span class="m"><i>P</i>(<i>X</i> ≤ <i>x</i>)</span></td><td><strong>always</strong>. nondecreasing, right-continuous</td></tr>
+      <tr><td>PMF <span class="m"><i>p<sub>X</sub></i></span></td><td><span class="m"><i>P</i>(<i>X</i> = <i>x</i>)</span></td><td>discrete only. sums to 1</td></tr>
+      <tr><td>PDF <span class="m"><i>f<sub>X</sub></i></span></td><td><span class="m">d<i>F</i>/d<i>x</i></span></td><td>continuous only. integrates to 1. <strong>may exceed 1</strong></td></tr>
+      <tr><td><span class="m"><i>F</i><sup>−1</sup>(<i>u</i>)</span></td><td>uniform draw into a value</td><td>simulation, generative models</td></tr>
+    </table>
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">HW3 대응표</span>
+    <table>
+      <tr><th>문제</th><th>이 노트</th></tr>
+      <tr><td>P1 PMF와 CDF</td><td><a href="#s6">06 PMF</a>, 예제 6.1 · <a href="#s4">04 CDF</a></td></tr>
+      <tr><td>P2 Geometric</td><td><a href="#s8">08 이산 분포</a></td></tr>
+      <tr><td>P3 연속 PDF</td><td><a href="#s7">07 PDF</a></td></tr>
+      <tr><td>P4 확률 공간 위의 확률변수</td><td><a href="#s2">02 정의</a>, <a href="#s3">03 역상</a>, <a href="#s4">04 CDF</a></td></tr>
+      <tr><td>P5–P7 조건부 분포, 함수 변환</td><td><strong>아직 슬라이드가 없다</strong></td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>주의: 이 모듈은 HW3의 절반만 커버해.</strong> P5(연속 관측에서의 Bayes), P6·P7(확률변수의 함수)은 다음 모듈 범위야. 마감이 9월 13일이니 슬라이드가 나오면 이어서 정리할게.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">HW3 map</span>
+    <table>
+      <tr><th>problem</th><th>where in these notes</th></tr>
+      <tr><td>P1 PMF and CDF</td><td><a href="#s6">06 PMF</a>, Example 6.1, and <a href="#s4">04 CDF</a></td></tr>
+      <tr><td>P2 Geometric</td><td><a href="#s8">08 discrete distributions</a></td></tr>
+      <tr><td>P3 continuous PDF</td><td><a href="#s7">07 PDF</a></td></tr>
+      <tr><td>P4 a random variable on a probability space</td><td><a href="#s2">02 definition</a>, <a href="#s3">03 preimages</a>, <a href="#s4">04 CDF</a></td></tr>
+      <tr><td>P5–P7 conditional distributions, transformations</td><td><strong>no slides yet</strong></td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>Note that this module covers only half of HW3.</strong> P5 (Bayes with a continuous observation) and P6, P7 (functions of random variables) belong to the next module. It is due September 13, so those go in once the deck appears.</p>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>다음은 확률변수를 <em>변형</em>하는 일이야.</strong> 이 모듈은 <span class="m"><i>X</i></span> 하나의 분포를 기술했어. 다음은 <span class="m"><i>Y</i> = <i>g</i>(<i>X</i>)</span>의 분포를 구하는 것, 그리고 조건부 분포야. HW3 P6의 <span class="m"><i>Y</i> = log<sub>2</sub>(1 + <i>X</i>)</span>가 정확히 그 유형이고, 통신에서 SNR을 스펙트럼 효율로 바꾸는 실제 계산이야.<br><br>
+    재밌는 건 <strong>10번의 역변환이 이미 그 특수한 경우</strong>라는 거야. <span class="m"><i>X</i> = <i>F</i><sup>−1</sup>(<i>u</i>)</span>도 확률변수의 함수거든. 다음 모듈은 그걸 일반화하는 셈이야.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Next comes <em>transforming</em> random variables.</strong> This module described the distribution of a single <span class="m"><i>X</i></span>; next is finding the distribution of <span class="m"><i>Y</i> = <i>g</i>(<i>X</i>)</span>, along with conditional distributions. HW3 P6's <span class="m"><i>Y</i> = log<sub>2</sub>(1 + <i>X</i>)</span> is exactly that, and it is the real calculation that turns an SNR into a spectral efficiency.<br><br>
+    The neat part is that <strong>§10's inverse transform is already a special case</strong>: <span class="m"><i>X</i> = <i>F</i><sup>−1</sup>(<i>u</i>)</span> is a function of a random variable too. The next module generalises it.
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span lang="ko">EEE 554 Probability and Random Processes · Module 5<br>
+  강의: Nicolò Michelusi · School of Electrical, Computer and Energy Engineering, Arizona State University<br>
+  교재: Bruce Hajek, <em>Random Processes for Engineers</em> (Cambridge University Press, 2015) §1.3, §1.6<br>
+  이 노트 본문은 수강생이 강의 슬라이드를 재구성하고 보충해 만든 개인 학습 자료이며, 공식 강의 자료가 아닙니다.<br>
+  함께 실린 강의 슬라이드의 저작권은 Nicolò Michelusi 교수와 Arizona State University에 있습니다.</span><span lang="en">EEE 554 Probability and Random Processes · Module 5<br>
+  Course: Nicolò Michelusi · School of Electrical, Computer and Energy Engineering, Arizona State University<br>
+  Textbook: Bruce Hajek, <em>Random Processes for Engineers</em> (Cambridge University Press, 2015) §1.3 and §1.6<br>
+  These notes were written by a student who reorganised and expanded the lecture slides. They are not official course material.<br>
+  Copyright in the accompanying lecture slides belongs to Professor Nicolò Michelusi and Arizona State University.</span>
+</footer>
+
+</div>
+<button class="lang-btn" type="button">English</button>
+<button class="theme-btn" type="button">☾ 다크</button>
+
+<script>
+// 역변환 샘플링 도구. 균등 난수 u 가 CDF 를 통해 값 x 로 바뀌는 과정을 보여준다.
+// 핵심은 "u 를 고르게 움직여도 x 는 고르게 안 움직인다"를 눈으로 잡게 하는 것.
+(function () {
+  var U = document.getElementById('d5-u'), SVG = document.getElementById('d5-svg');
+  if (!U || !SVG) return;
+  var L = function (ko, en) { return document.documentElement.dataset.lang === 'en' ? en : ko; };
+  var NS = 'http://www.w3.org/2000/svg';
+  var dist = 'exp', samples = [];
+
+  // 좌표계: x 축 0..XMAX 를 화면 60..470 에, u 축 0..1 을 화면 220..40 에
+  var X0 = 60, X1 = 470, Y0 = 220, Y1 = 40;
+  var HX0 = 60, HX1 = 470, HY = 250;
+
+  var D = {
+    unif: { xmax: 1,  F: function (x) { return Math.max(0, Math.min(1, x)); },
+            inv: function (u) { return u; }, disc: false },
+    exp:  { xmax: 4,  F: function (x) { return x <= 0 ? 0 : 1 - Math.exp(-x); },
+            inv: function (u) { return -Math.log(1 - u); }, disc: false },
+    bern: { xmax: 1.4, F: function (x) { return x < 0 ? 0 : (x < 1 ? 0.7 : 1); },
+            inv: function (u) { return u <= 0.7 ? 0 : 1; }, disc: true }
+  };
+
+  var px = function (x) { return X0 + (x / D[dist].xmax) * (X1 - X0); };
+  var py = function (u) { return Y0 + u * (Y1 - Y0); };
+
+  function el(tag, attrs, txt) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (txt != null) e.textContent = txt;
+    return e;
+  }
+
+  function paint() {
+    var u = +U.value, d = D[dist];
+    document.getElementById('d5-ue').textContent = u.toFixed(3);
+    var x = d.inv(u);
+    while (SVG.firstChild) SVG.removeChild(SVG.firstChild);
+
+    // 축
+    SVG.appendChild(el('line', { x1: X0, y1: Y0, x2: X1 + 14, y2: Y0, style: 'stroke:var(--ink);stroke-width:1.2' }));
+    SVG.appendChild(el('line', { x1: X0, y1: Y0, x2: X0, y2: Y1 - 10, style: 'stroke:var(--ink);stroke-width:1.2' }));
+    SVG.appendChild(el('text', { x: X1 + 20, y: Y0 + 4 }, 'x'));
+    SVG.appendChild(el('text', { x: X0 - 26, y: Y1 - 12 }, 'F(x)'));
+    SVG.appendChild(el('text', { x: X0 - 22, y: Y0 + 4 }, '0'));
+    SVG.appendChild(el('text', { x: X0 - 22, y: Y1 + 4 }, '1'));
+
+    // CDF 곡선
+    var pts = [];
+    if (d.disc) {
+      pts = 'M' + px(0) + ' ' + py(0) + ' L' + px(0) + ' ' + py(0.7) +
+            ' L' + px(1) + ' ' + py(0.7) + ' L' + px(1) + ' ' + py(1) +
+            ' L' + px(d.xmax) + ' ' + py(1);
+    } else {
+      var s = '';
+      for (var i = 0; i <= 120; i++) {
+        var xx = (i / 120) * d.xmax;
+        s += (i ? ' L' : 'M') + px(xx) + ' ' + py(d.F(xx));
+      }
+      pts = s;
+    }
+    SVG.appendChild(el('path', { d: pts, style: 'fill:none;stroke:var(--blue);stroke-width:2' }));
+
+    // u 에서 가로로, 그리고 x 에서 세로로
+    SVG.appendChild(el('line', { x1: X0, y1: py(u), x2: px(x), y2: py(u),
+      style: 'stroke:var(--pink);stroke-width:1.4;stroke-dasharray:4 3' }));
+    SVG.appendChild(el('line', { x1: px(x), y1: py(u), x2: px(x), y2: Y0,
+      style: 'stroke:var(--violet);stroke-width:1.4;stroke-dasharray:4 3' }));
+    SVG.appendChild(el('circle', { cx: X0, cy: py(u), r: 4, style: 'fill:var(--pink)' }));
+    SVG.appendChild(el('circle', { cx: px(x), cy: Y0, r: 4, style: 'fill:var(--violet)' }));
+    SVG.appendChild(el('text', { x: X0 + 6, y: py(u) - 6, style: 'fill:var(--pink)' }, 'u = ' + u.toFixed(3)));
+    SVG.appendChild(el('text', { x: px(x) + 6, y: Y0 - 8, style: 'fill:var(--violet)' }, 'x = ' + x.toFixed(3)));
+
+    // 히스토그램
+    if (samples.length) {
+      var NB = d.disc ? 2 : 24, counts = new Array(NB).fill(0);
+      samples.forEach(function (v) {
+        var b = d.disc ? (v < 0.5 ? 0 : 1) : Math.min(NB - 1, Math.floor((v / d.xmax) * NB));
+        counts[b]++;
+      });
+      var mx = Math.max.apply(null, counts) || 1, w = (HX1 - HX0) / NB;
+      for (var b = 0; b < NB; b++) {
+        var h = (counts[b] / mx) * 34;
+        SVG.appendChild(el('rect', {
+          x: HX0 + b * w + 1, y: HY - h, width: Math.max(1, w - 2), height: h,
+          style: 'fill:rgba(var(--green-rgb),.55)'
+        }));
+      }
+      SVG.appendChild(el('text', { x: X1 + 20, y: HY }, 'n = ' + samples.length));
+    }
+
+    // 설명 텍스트
+    var msg;
+    if (dist === 'unif') {
+      msg = L('균등분포는 CDF가 <b>기울기 1인 직선</b>이라 <span class="m">x = u</span>야. ' +
+              '변환이 아무것도 안 하는 경우고, 그래서 표본이 고르게 퍼져.',
+              'For the uniform the CDF is a <b>straight line of slope 1</b>, so <span class="m">x = u</span>. ' +
+              'The transformation does nothing at all, which is why the samples spread evenly.');
+    } else if (dist === 'exp') {
+      var slope = Math.exp(-x);
+      msg = L('지금 <span class="m">x = ' + x.toFixed(3) + '</span> 에서 CDF의 기울기는 <b>' + slope.toFixed(3) + '</b> 야. ' +
+              '기울기가 클수록 <span class="m">u</span>가 조금 변할 때 <span class="m">x</span>가 <b>덜</b> 움직여. ' +
+              '<strong>그래서 CDF가 가파른 구간에 표본이 몰린다.</strong> 슬라이더를 0.99 근처로 밀어보면 꼬리로 크게 튀는 게 보여.',
+              'At <span class="m">x = ' + x.toFixed(3) + '</span> the CDF has slope <b>' + slope.toFixed(3) + '</b>. ' +
+              'The steeper it is, the <b>less</b> <span class="m">x</span> moves for a given change in <span class="m">u</span>. ' +
+              '<strong>So samples accumulate wherever the CDF is steep.</strong> Push the slider toward 0.99 and watch it fly out into the tail.');
+    } else {
+      msg = L('CDF가 계단이라 <span class="m">x</span>가 <b>0 아니면 1</b>만 나와. 사이 값은 CDF가 <em>건너뛰어서</em> 도달할 수 없어. ' +
+              '<span class="m">u ≤ 0.7</span>이면 0, 아니면 1. 이게 <a href="#s10">10번의 일반화 역함수</a>야.',
+              'The staircase CDF lets <span class="m">x</span> be <b>only 0 or 1</b>: everything between is <em>skipped</em> and unreachable. ' +
+              '<span class="m">u ≤ 0.7</span> gives 0, otherwise 1. That is <a href="#s10">the generalised inverse from §10</a>.');
+    }
+    document.getElementById('d5-msg').innerHTML = msg;
+    document.getElementById('d5-cnt').textContent = samples.length ? L('표본 ', 'samples ') + samples.length : '';
+
+    document.querySelectorAll('.pl-lab').forEach(function (e) { e.textContent = L(e.dataset.ko, e.dataset.en); });
+    document.querySelectorAll('.d5-dist').forEach(function (b) {
+      b.style.borderColor = b.dataset.d === dist ? 'var(--sel)' : 'var(--rule)';
+      b.style.color = b.dataset.d === dist ? 'var(--ink)' : 'var(--ink2)';
+    });
+  }
+
+  U.addEventListener('input', paint);
+  document.querySelectorAll('.d5-dist').forEach(function (b) {
+    b.addEventListener('click', function () { dist = b.dataset.d; samples = []; paint(); });
+  });
+  document.getElementById('d5-draw').addEventListener('click', function () {
+    for (var i = 0; i < 200; i++) samples.push(D[dist].inv(Math.random() * 0.998 + 0.001));
+    paint();
+  });
+  document.getElementById('d5-clear').addEventListener('click', function () { samples = []; paint(); });
+  window.addEventListener('langchange', paint);
+  paint();
+})();
+</script>
+<script>
+// 큰 제목이 화면에서 사라지면 목차 위 미니 헤더를 띄운다.
+(function () {
+  var title = document.querySelector('header.top h1.title');
+  var mini = document.querySelector('nav.toc .mini-head');
+  if (!title || !mini || !window.IntersectionObserver) return;
+  new IntersectionObserver(function (es) {
+    mini.classList.toggle('on', !es[0].isIntersecting);
+  }, { threshold: 0 }).observe(title);
+})();
+</script>
+<script>
+// 테마 토글. 기본은 OS 설정을 따르고, 누르면 그 반대로 고정한다.
+// 저장하지 않으므로 페이지를 옮기면 다시 OS 설정을 따른다.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.theme-btn');
+  if (!btn) return;
+  var osDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  function current() {
+    return root.dataset.theme || (osDark && osDark.matches ? 'dark' : 'light');
+  }
+  function paint() {
+    var dark = current() === 'dark';
+    btn.textContent = dark ? '☀ 라이트' : '☾ 다크';
+    btn.setAttribute('aria-label', dark ? '라이트 모드로' : '다크 모드로');
+  }
+  btn.addEventListener('click', function () {
+    root.dataset.theme = current() === 'dark' ? 'light' : 'dark';
+    paint();
+  });
+  if (osDark && osDark.addEventListener) osDark.addEventListener('change', paint);
+  paint();
+})();
+</script>
+<script>
+// 언어 토글. 기본은 한국어. 저장하지 않으므로 페이지를 옮기면 한국어로 돌아간다.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.lang-btn');
+  if (!btn) return;
+  function paint() {
+    var en = root.dataset.lang === 'en';
+    btn.textContent = en ? '한국어' : 'English';
+    btn.setAttribute('aria-label', en ? '한국어로 보기' : 'View in English');
+    root.lang = en ? 'en' : 'ko';
+  }
+  btn.addEventListener('click', function () {
+    root.dataset.lang = root.dataset.lang === 'en' ? 'ko' : 'en';
+    paint();
+    window.dispatchEvent(new Event('langchange'));
+  });
+  paint();
+})();
+</script>
+<script src="reader.js" type="module"></script>
+</body>
+</html>

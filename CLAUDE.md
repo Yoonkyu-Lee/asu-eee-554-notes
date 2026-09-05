@@ -22,7 +22,9 @@ GitHub Pages로 배포된다: https://yoonkyu-lee.github.io/asu-eee-554-notes/
 Drive 미러 폴더는 절대 수정하지 않는다. 읽기만 한다.
 
 **Drive 원본은 학기 중에 갱신된다.** 교수가 손글씨를 더하거나 슬라이드를 끼워 넣는다.
-실제로 `slides/L03-conditional-probability.pdf`가 29쪽짜리 낡은 사본이었는데
+실제로 `slides/L03-conditional-probability.pdf
+slides/L04-independence.pdf
+slides/L05-random-variables.pdf`가 29쪽짜리 낡은 사본이었는데
 Drive 원본은 30쪽으로 늘어 있었다. **노트를 쓰거나 고치기 전에 반드시 다시 복사하고
 쪽수를 대조한다.** 낡은 사본으로 앵커를 달면 전부 한 칸씩 어긋난다.
 
@@ -85,7 +87,8 @@ index.html                          허브 (모듈 목록)
 L01-set-theory.html                 Module 1
 L02-probability-space.html          Module 2
 L03-conditional-probability.html    Module 3
-L04-independence.html               Module 4 (슬라이드 없음, 위 참조)
+L04-independence.html               Module 4
+L05-random-variables.html           Module 5
 L{NN}-{kebab-case-영문주제}.html
 
 HW1-sets-and-probability-spaces.html   HW1 공략 (아래 참조)
@@ -124,6 +127,22 @@ vendor/pdf.js/                      pdf.js 런타임 (아래 참조)
 - footer 교재 줄에도 슬라이드 없이 썼다는 사실을 적는다.
 - **슬라이드가 배포되면 앵커를 달고 순서를 맞추는 작업이 따로 필요하다.**
   그때 이 표시들을 걷어낸다.
+
+**실제로 회수해보니 이랬다.** Module 4를 교재로 먼저 쓰고 나중에 04번 덱과 대조했는데,
+정의·순서·예제는 대체로 맞았지만 **곱 공간(Cartesian product) 5장이 통째로 빠져 있었다.**
+교재 §1.2는 독립을 다루면서 곱 공간을 따로 세우지 않는데 슬라이드는 세우기 때문이다.
+회수할 때 확인할 것:
+
+- 슬라이드에만 있는 절이 있는가. **분량으로 세어본다.** 5장이 빠졌는데도 문장으로는
+  자연스러워서 읽어서는 못 찾았다.
+- 예제의 숫자가 슬라이드와 같은가. 개념 예제는 같게 두고(HW와 같은 설정이면 더욱),
+  계산 예제는 다르게 둔다.
+- 슬라이드가 마지막에 다는 단서. 04번 p27의 "반복의 이득은 오류가 독립일 때만"처럼
+  **가정을 깨는 경고가 끝에 붙는 일이 많고, 그게 좋은 함정 재료다.**
+- 걷어낼 것: `.chip.warn`, 00번 출처 블록, footer 문구. 붙일 것: `data-slide`, `reader.js`.
+- **섹션을 끼워 넣으면 뒤 번호가 밀린다.** `id`, `href="#sN"`, `.sec-num`, 그리고
+  **TOC의 `.n`** 까지 네 곳을 다 고쳐야 한다. TOC는 `.sec-num`이 아니라 `.n`을 쓰므로
+  `.sec-num`만 치환하면 조용히 어긋난다. 다른 파일에서 들어오는 `#sN` 링크도 같이 민다.
 
 ## 언어와 문체
 
@@ -178,6 +197,12 @@ vendor/pdf.js/                      pdf.js 런타임 (아래 참조)
   절차는 같고 **숫자를 바꿔서** 예제로 낸다. 그리고 "HW는 숫자가 다르니 직접 해봐"라고 명시.
 - 문제지에 "노트 보지 말고 풀어라"라고 쓰인 문제는 그 지시를 노트에서 다시 강조한다.
 - 마감일이 있으면 헤더 chip과 정리 섹션에 표시한다.
+- **과제가 슬라이드보다 앞서 나가는 게 기본값이다.** HW2는 03번 덱이 안 다루는 독립까지,
+  HW3는 05번 덱이 안 다루는 조건부 분포와 확률변수의 함수까지 물었다.
+  **공략 페이지와 노트의 HW 대응표에 "아직 슬라이드가 없다"를 명시**하고,
+  덮이지 않은 문제를 숨기지 않는다.
+- 해답(`HW*sol.pdf`)이 올라와도 **커밋하지 않고 공략에 옮기지도 않는다.**
+  문제 원문을 안 싣기로 한 것보다 더 강한 이유다. 공략은 답이 아니라 진입점이다.
 
 ### 공략 페이지 (숙제 → 개념 방향)
 

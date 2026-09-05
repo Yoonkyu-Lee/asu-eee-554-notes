@@ -222,14 +222,14 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
   <p class="lede" lang="en">Personal study notes rebuilt slide by slide from the lecture deck, with a picture attached to every formula and worked examples and counterexamples filled in.</p>
 
   <div class="facts" lang="ko">
-    <span class="chip">Module 4 / 4 완료</span>
-    <span class="chip">인터랙티브 도구 4종</span>
+    <span class="chip">Module 5 / 5 완료</span>
+    <span class="chip">인터랙티브 도구 5종</span>
     <span class="chip">슬라이드 동기화</span>
     <span class="chip">한국어</span>
   </div>
   <div class="facts" lang="en">
-    <span class="chip">Modules 1–4 done</span>
-    <span class="chip">4 interactive tools</span>
+    <span class="chip">Modules 1–5 done</span>
+    <span class="chip">5 interactive tools</span>
     <span class="chip">slide sync</span>
     <span class="chip">Korean &amp; English</span>
   </div>
@@ -322,14 +322,34 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
     <div class="en">Independence</div>
     <h3 lang="ko">독립과 반복 시행</h3>
     <h3 lang="en">Independence &amp; Repeated Trials</h3>
-    <p lang="ko">조건을 걸어도 확률이 안 변하는 경우. 서로소와 정반대라는 것, 셋 이상에서 pairwise와 mutual이 갈라진다는 것. 반복 시행에서 이항분포가 나오고 반복부호로 이어진다. <strong>강의 슬라이드가 아직 배포되지 않아 교재를 근거로 썼다.</strong></p>
-    <p lang="en">The case where conditioning changes nothing: the exact opposite of disjoint, and where pairwise splits from mutual once there are three events. Repeated trials give the binomial distribution and lead into repetition coding. <strong>The lecture deck is not out yet, so this one is written from the textbook.</strong></p>
+    <p lang="ko">조건을 걸어도 확률이 안 변하는 경우. 서로소와 정반대라는 것, 셋 이상에서 pairwise와 mutual이 갈라진다는 것. 반복 실험의 표본공간은 곱집합이 되고, 거기서 Bernoulli와 이항분포와 반복부호가 나온다.</p>
+    <p lang="en">The case where conditioning changes nothing: the exact opposite of disjoint, and where pairwise splits from mutual once there are three events. Repeating an experiment turns the sample space into a Cartesian product, and out of it come Bernoulli trials, the binomial, and repetition coding.</p>
     <div class="tags">
       <span class="tag a">independence</span>
       <span class="tag">pairwise vs mutual</span>
+      <span class="tag">product space</span>
       <span class="tag b">Bernoulli</span>
       <span class="tag c">binomial</span>
       <span class="tag">repetition coding</span>
+    </div>
+  </div>
+  <span class="status done" lang="ko">읽기</span><span class="status done" lang="en">read</span>
+</a>
+
+<a class="mod" href="L05-random-variables.html">
+  <div class="num">05</div>
+  <div>
+    <div class="en">Random Variables</div>
+    <h3 lang="ko">확률변수와 분포</h3>
+    <h3 lang="en">Random Variables &amp; Distributions</h3>
+    <p lang="ko">사건에 붙이던 확률을 숫자에 붙인다. CDF는 언제나 있고 PMF는 이산에만, PDF는 연속에만 있다. 마지막에 균등 난수 하나로 아무 분포나 만드는 역변환이 나오고, 그게 생성형 AI의 원리로 이어진다. 슬라이더로 직접 해볼 수 있다.</p>
+    <p lang="en">Probability moves from events onto numbers. The CDF always exists, the PMF only for discrete variables, the PDF only for continuous ones. It closes on the inverse transform, turning one uniform draw into any distribution you like, and on the line that runs from there to generative AI. There is a slider to try it on.</p>
+    <div class="tags">
+      <span class="tag a">X : Ω → ℝ</span>
+      <span class="tag b">CDF</span>
+      <span class="tag">PMF / PDF</span>
+      <span class="tag c">Gaussian · Poisson · Rayleigh</span>
+      <span class="tag">inverse transform</span>
     </div>
   </div>
   <span class="status done" lang="ko">읽기</span><span class="status done" lang="en">read</span>
