@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="ko" data-lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EEE 554 · HW3 공략 · Random Variables, Conditional Distributions &amp; Functions of RVs</title>
+<style>
+:root{
+  color-scheme:light dark;
+
+  /* 색 성분. rgba(var(--blue-rgb),.16) 형태로 농도 변형을 만든다. */
+  --ink-rgb:20,22,26;
+  --blue-rgb:18,80,196;
+  --pink-rgb:217,20,122;
+  --violet-rgb:107,47,168;
+  --green-rgb:0,132,95;
+  --amber-rgb:178,106,0;
+  --sel-rgb:75,29,140;
+
+  --paper:#FAFAF8;
+  --card:#FFFFFF;
+  --ink:rgb(var(--ink-rgb));
+  --ink2:#565D66;
+  --ink3:#8A9099;
+  --rule:#E2E1DB;
+  --blue:rgb(var(--blue-rgb));
+  --pink:rgb(var(--pink-rgb));
+  --violet:rgb(var(--violet-rgb));
+  --green:rgb(var(--green-rgb));
+  --amber:rgb(var(--amber-rgb));
+  --amber-bg:#FDF6E9;
+  --red:#C02626;
+  --sel:rgb(var(--sel-rgb));
+
+  /* 보조 표면과 진한 변형 */
+  --amber-line:#F0E2C4;
+  --code-bg:#F0EFEA;
+  --chip:#F1F0EB;
+  --sel-soft:#F6F2FB;
+  --pink-deep:#8B0D4E;
+  --green-deep:#005A42;
+  --amber-deep:#7A4A00;
+  --violet-deep:#3B1E70;
+  --brown:#A3532B;
+  --teal:#0E7490;
+  --shadow:rgba(var(--ink-rgb),.06);
+
+  --mono:ui-monospace,"Cascadia Mono","Cascadia Code",Consolas,"SFMono-Regular",monospace;
+  --sans:"Pretendard","Pretendard Variable",-apple-system,"Segoe UI Variable Text","Segoe UI","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --serif:"Cambria Math","STIX Two Math","Latin Modern Math",Cambria,"Times New Roman",serif;
+}
+
+/* 다크 팔레트. 의미 고정 색상(A=blue, B=pink, 교집합=violet, 함정=amber)은
+   그대로 두고 밝기만 어두운 배경에 맞게 올린다. */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 120px;display:grid;grid-template-columns:210px minmax(0,1fr);gap:56px}
+@media(max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);gap:0;padding:0 18px 80px}}
+
+header.top{grid-column:1/-1;padding:64px 0 40px;border-bottom:1px solid var(--rule);margin-bottom:48px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+h1.title{font-size:clamp(30px,5vw,50px);line-height:1.1;letter-spacing:-.025em;font-weight:800;margin:14px 0 6px}
+.subtitle{font-size:17px;color:var(--ink2);margin:0}
+.meta{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--mono);font-size:11px;letter-spacing:.05em;padding:5px 11px;border:1px solid var(--rule);border-radius:999px;color:var(--ink2);background:var(--card)}
+.chip.hot{border-color:var(--amber);color:var(--amber);background:var(--amber-bg)}
+.backlink{display:inline-block;margin-top:20px;font-family:var(--mono);font-size:11.5px;color:var(--blue);text-decoration:none;letter-spacing:.04em}
+.backlink:hover{text-decoration:underline}
+
+nav.toc{position:sticky;top:24px;align-self:start;font-size:13.5px;line-height:1.5}
+nav.toc .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:14px}
+nav.toc a{display:flex;gap:9px;padding:5px 0;color:var(--ink2);text-decoration:none;border-left:2px solid transparent;padding-left:11px;margin-left:-13px}
+nav.toc a:hover{color:var(--ink);border-left-color:var(--blue)}
+nav.toc a .n{font-family:var(--mono);font-size:11px;color:var(--ink3);padding-top:2px;min-width:14px}
+@media(max-width:900px){nav.toc{position:static;margin-bottom:44px;padding-bottom:28px;border-bottom:1px solid var(--rule)}}
+/* ── 상단 미니 헤더 ─────────────────────── */
+/* 큰 제목이 화면 밖으로 나가면 목차 위에 작게 나타나 계속 남는다.
+   목차가 이미 sticky라 그 안에 넣으면 따로 고정 장치가 필요 없다.
+   모바일에서는 목차가 static이라 의미가 없으므로 숨긴다. */
+.mini-head{max-height:0;opacity:0;visibility:hidden;overflow:hidden;margin-bottom:0;
+  transition:max-height .22s ease,opacity .18s ease,margin-bottom .22s ease,visibility .18s}
+.mini-head.on{max-height:150px;opacity:1;visibility:visible;margin-bottom:22px}
+nav.toc .mini-head a.back{display:inline-block;margin:0 0 12px;padding:0;border-left:none;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--blue);text-decoration:none}
+nav.toc .mini-head a.back:hover{text-decoration:underline;color:var(--blue);border-left-color:transparent}
+.mini-head .mod{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:3px}
+.mini-head .name{font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--ink);line-height:1.3}
+.mini-head .rule{height:1px;background:var(--rule);margin-top:16px}
+@media(max-width:900px){.mini-head{display:none}}
+
+section{margin-bottom:76px;scroll-margin-top:20px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+.sec-num{font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:.1em;padding-top:4px}
+h2{font-size:clamp(22px,3vw,29px);letter-spacing:-.02em;font-weight:750;margin:0;line-height:1.25}
+.sec-sub{color:var(--ink2);font-size:15px;margin:0 0 30px 0}
+h3{font-size:17.5px;font-weight:700;letter-spacing:-.01em;margin:38px 0 12px}
+h4{font-size:15px;font-weight:700;margin:26px 0 8px;color:var(--ink)}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 16px;padding-left:22px}
+li{margin-bottom:7px}
+code{font-family:var(--mono);font-size:.87em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+
+.m{font-family:var(--serif);font-style:normal;font-size:1.07em;white-space:nowrap}
+@media(max-width:900px){.m{white-space:normal}}
+.m i{font-style:italic}
+.eq{font-family:var(--serif);font-size:19px;text-align:center;margin:22px 0;line-height:1.9}
+.eq i{font-style:italic}
+.eq .note{font-family:var(--sans);font-size:13px;color:var(--ink3);display:block;margin-top:4px}
+.cA{color:var(--blue);font-weight:600}
+.cB{color:var(--pink);font-weight:600}
+.cC{color:var(--green);font-weight:600}
+
+.def{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--ink);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.def .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:7px}
+.def p:last-child,.def ol:last-child,.def ul:last-child{margin-bottom:0}
+
+.trap{background:var(--amber-bg);border:1px solid var(--amber-line);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.trap .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:7px;font-weight:600}
+.trap p:last-child,.trap ul:last-child{margin-bottom:0}
+.trap h4{margin-top:18px;font-size:14.5px}
+.trap h4:first-of-type{margin-top:0}
+
+.ex{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:18px 22px;margin:20px 0}
+.ex .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:7px;font-weight:600}
+.ex p:last-child,.ex ul:last-child,.ex ol:last-child{margin-bottom:0}
+details{margin-top:12px;border-top:1px dashed var(--rule);padding-top:12px}
+details summary{cursor:pointer;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--blue);list-style:none;user-select:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"▸ ";display:inline-block}
+details[open] summary::before{content:"▾ "}
+details .body{margin-top:12px}
+details .body p:last-child,details .body ol:last-child{margin-bottom:0}
+
+.callout{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:16px 0;margin:26px 0;font-size:15px;color:var(--ink2)}
+.callout strong{color:var(--ink)}
+
+/* ── 슬라이드 출처 표시 ─────────────────── */
+/* data-slide 값에서 라벨을 직접 만든다. 라벨과 앵커가 어긋날 수 없다.
+   리더가 꺼져 있어도, 모바일이어도 "이 대목이 슬라이드 몇 쪽인지"는 보여야 한다. */
+.sec-head[data-slide],h3[data-slide]{display:flex;align-items:baseline;gap:14px}
+.sec-head[data-slide]>h2,h3[data-slide]{min-width:0}
+.sec-head[data-slide]::before,h3[data-slide]::before{
+  content:"";order:1;flex:1 1 auto;min-width:16px;height:1px;
+  background:var(--rule);align-self:center;opacity:.75}
+.sec-head[data-slide]::after,h3[data-slide]::after{
+  content:"슬라이드 " attr(data-slide) "쪽";order:2;flex:none;
+  font-family:var(--mono);font-size:10px;letter-spacing:.05em;
+  color:var(--ink3);white-space:nowrap;align-self:center}
+@media(max-width:900px){
+  .sec-head[data-slide]::before,h3[data-slide]::before{min-width:10px}
+  .sec-head[data-slide]::after,h3[data-slide]::after{font-size:9.5px}
+}
+
+figure{margin:28px 0;background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:22px}
+figure svg{display:block;width:100%;height:auto;max-width:100%}
+figcaption{font-size:13px;color:var(--ink2);margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:720px){.grid2,.grid3{grid-template-columns:1fr}}
+.mini{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px}
+.mini .cap{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--ink2);text-align:center;margin-top:8px;line-height:1.4}
+.mini svg{display:block;width:100%;height:auto}
+.svgtxt{font-family:var(--serif);font-size:15px;fill:var(--ink)}
+.svgtxt.it{font-style:italic}
+.svglab{font-family:var(--mono);font-size:11px;fill:var(--ink2)}
+.svgnum{font-family:var(--mono);font-size:13px;font-weight:600}
+
+/* sigma-algebra checker */
+.play{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:22px;margin:28px 0}
+.plab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin:20px 0 9px}
+.plab:first-child{margin-top:0}
+.subsets{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+@media(max-width:560px){.subsets{grid-template-columns:repeat(2,1fr)}}
+.sub{font-family:var(--serif);font-size:15px;padding:9px 6px;text-align:center;background:var(--paper);border:1px solid var(--rule);border-radius:6px;cursor:pointer;user-select:none;transition:.12s;position:relative}
+.sub:hover{border-color:var(--sel)}
+.sub.on{background:var(--sel);border-color:var(--sel);color:var(--card);font-weight:600}
+.sub.need{background:var(--amber-bg);border-color:var(--amber);border-style:dashed;color:var(--amber)}
+.verdict{margin-top:18px;border-radius:8px;padding:15px 18px;font-size:14.5px;line-height:1.65}
+.verdict.ok{background:rgba(var(--green-rgb),.08);border:1px solid rgba(var(--green-rgb),.3);color:var(--green-deep)}
+.verdict.bad{background:var(--amber-bg);border:1px solid var(--amber-line);color:var(--amber-deep)}
+.verdict .hd{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:8px}
+.verdict ul{margin:8px 0 0;padding-left:20px}
+.verdict li{margin-bottom:5px;font-size:14px}
+.verdict .m{font-size:1em}
+.presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.presets button{font-family:var(--sans);font-size:12.5px;padding:7px 12px;background:var(--paper);border:1px solid var(--rule);border-radius:6px;color:var(--ink2);cursor:pointer;transition:.13s}
+.presets button:hover{border-color:var(--sel);color:var(--sel);background:var(--sel-soft)}
+.presets button.act{border-color:var(--green);color:var(--green);background:rgba(var(--green-rgb),.06);font-weight:600}
+.hintline{font-size:13px;color:var(--ink2);margin-top:16px;line-height:1.6;border-top:1px solid var(--rule);padding-top:13px}
+
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14.5px}
+@media(max-width:900px){table{display:block;max-width:100%;overflow-x:auto}}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);font-weight:500}
+
+footer{grid-column:1/-1;border-top:1px solid var(--rule);padding-top:28px;margin-top:20px;font-size:13.5px;color:var(--ink3);line-height:1.7}
+footer a{color:var(--blue)}
+/* 본문 링크. 규칙이 없으면 브라우저 기본 남색이 나오고 다크모드에서 묻는다. */
+main a{color:var(--blue);text-decoration:none;border-bottom:1px solid rgba(var(--blue-rgb),.4)}
+main a:hover{border-bottom-color:var(--blue);background:rgba(var(--blue-rgb),.09)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ── 테마 토글 ──────────────────────────── */
+/* 기본은 OS 설정(prefers-color-scheme)을 따른다. 이 버튼은 그걸 덮어쓴다. */
+.theme-btn{position:fixed;left:16px;bottom:16px;z-index:70;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 6px var(--shadow);transition:.13s}
+.theme-btn:hover{border-color:var(--sel);color:var(--sel)}
+@media(max-width:900px){.theme-btn{left:10px;bottom:10px;font-size:10.5px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.theme-btn{transition:none}}
+
+/* ── 언어 전환 ──────────────────────────── */
+/* 한 파일에 한국어와 영어를 나란히 두고 보이는 쪽만 남긴다.
+   도해·앵커·CSS·리더를 공유하므로 두 언어의 구조가 어긋날 수 없다.
+   lang 속성을 쓰는 건 스크린리더와 하이픈 처리도 같이 얻기 위해서다. */
+/* 언어 표시는 어떤 규칙보다 우선해야 한다. 목차나 도해 쪽 선택자가
+   더 구체적이어서 display를 되살리는 일이 실제로 있었다. */
+html[data-lang="ko"] [lang="en"]{display:none!important}
+html[data-lang="en"] [lang="ko"]{display:none!important}
+.lang-btn{position:fixed;left:16px;bottom:56px;z-index:70;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 6px var(--shadow);transition:.13s}
+.lang-btn:hover{border-color:var(--blue);color:var(--blue)}
+@media(max-width:900px){.lang-btn{left:10px;bottom:46px;font-size:10.5px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.lang-btn{transition:none}}
+
+/* ── 기호 뜯어보기 ────────────────────────────────────────────────
+   수학 표기 관습을 모르면 정의가 통째로 안 읽힌다. 그 관습만 따로 푼다.
+   기본은 펼쳐둔다(open). 모르는 사람에게 보이지 않으면 의미가 없기 때문이다.
+   대신 접을 수 있다. 알고 나면 매번 지나가야 하는 장애물이 되면 안 된다. */
+.nota{margin:18px 0;border:1px dashed var(--rule);border-radius:8px;background:var(--chip)}
+.nota>summary{cursor:pointer;list-style:none;padding:9px 14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);display:flex;align-items:center;gap:8px;user-select:none}
+.nota>summary::-webkit-details-marker{display:none}
+.nota>summary::before{content:"\25be";font-size:9px;display:inline-block;transition:transform .15s}
+.nota:not([open])>summary::before{transform:rotate(-90deg)}
+.nota>summary:hover{color:var(--ink2)}
+.nota .body{padding:2px 16px 14px;font-size:14px;color:var(--ink2);line-height:1.7}
+.nota .body>*:first-child{margin-top:0}
+.nota .body>*:last-child{margin-bottom:0}
+.nota .parts{width:100%;border-collapse:collapse;margin:12px 0}
+.nota .parts td{padding:6px 12px 6px 0;vertical-align:top;border-bottom:1px solid var(--rule);font-size:13.5px}
+.nota .parts tr:last-child td{border-bottom:0}
+.nota .parts td:first-child{white-space:nowrap;width:1%;color:var(--ink);padding-right:18px}
+.nota figure{margin:14px 0;background:var(--card);border:1px solid var(--rule)}
+.nota .eq{margin:12px 0}
+@media(max-width:900px){.nota .parts td:first-child{white-space:normal}}
+
+/* 인터랙티브 도구 (14번). .play 안에서만 쓴다. */
+.play button{font-family:var(--mono);font-size:11px;padding:6px 11px;background:var(--paper);color:var(--ink2);border:1px solid var(--rule);border-radius:6px;cursor:pointer;transition:.12s}
+.play button:hover{border-color:var(--ink3);color:var(--ink)}
+.play input[type=range]{accent-color:var(--sel)}
+.play table td,.play table th{padding:7px 10px}
+.play .win{color:var(--green);font-weight:700}
+.play .lose{color:var(--ink3)}
+
+
+/* 공략 페이지 전용 */
+/* 마감이 지난 과제임을 표시하는 chip */
+.chip.past{background:var(--chip);color:var(--ink3);border:1px solid var(--rule);text-decoration:line-through}
+</style>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="eyebrow">EEE 554 · Probability and Random Processes · Michelusi</div>
+  <h1 class="title">Homework 3<br>Random Variables, Conditional Distributions &amp; Functions of RVs</h1>
+  <p class="subtitle" lang="ko">문제를 풀려면 뭘 알아야 하는지, 첫 수를 어디에 두는지.</p>
+  <p class="subtitle" lang="en">What you need for each problem, and where to put your first move.</p>
+  <div class="meta" lang="ko">
+    <span class="chip past">마감 9월 13일 (일) 자정</span>
+    <span class="chip">문제 7개 + Reflection</span>
+    <span class="chip">Module 5 · 6 · 7 에 걸침</span>
+  </div>
+  <div class="meta" lang="en">
+    <span class="chip past">due midnight, Sunday September 13</span>
+    <span class="chip">7 problems + reflection</span>
+    <span class="chip">spans Modules 5, 6 and 7</span>
+  </div>
+  <a class="backlink" href="index.html" lang="ko">← 모듈 목록으로</a>
+  <a class="backlink" href="index.html" lang="en">← All modules</a>
+</header>
+
+<nav class="toc">
+  <div class="mini-head">
+    <a class="back" href="index.html" lang="ko">← 모듈 목록</a>
+    <a class="back" href="index.html" lang="en">← All modules</a>
+    <div class="mod">Homework 3</div>
+    <div class="name">Random Variables, Conditional Distributions &amp; Functions of RVs</div>
+    <div class="rule"></div>
+  </div>
+  <div class="lab" lang="ko">문제 목록</div>
+  <div class="lab" lang="en">Problems</div>
+  <a href="#p0"><span class="n">00</span><span lang="ko">먼저 읽을 것</span><span lang="en">Read first</span></a>
+  <a href="#p1"><span class="n">P1</span><span lang="ko">PMF와 CDF</span><span lang="en">PMF and CDF</span></a>
+  <a href="#p2"><span class="n">P2</span><span lang="ko">기하분포</span><span lang="en">The geometric</span></a>
+  <a href="#p3"><span class="n">P3</span><span lang="ko">연속 PDF</span><span lang="en">A continuous PDF</span></a>
+  <a href="#p4"><span class="n">P4</span><span lang="ko">확률 공간 위의 확률변수</span><span lang="en">An RV on a probability space</span></a>
+  <a href="#p5"><span class="n">P5</span><span lang="ko">연속 관측 Bayes</span><span lang="en">Bayes with a continuous observation</span></a>
+  <a href="#p6"><span class="n">P6</span><span lang="ko">확률변수의 함수</span><span lang="en">A function of a random variable</span></a>
+  <a href="#p7"><span class="n">P7</span><span lang="ko">단조 · 비단조 변환</span><span lang="en">Monotonic and non-monotonic</span></a>
+  <a href="#p9"><span class="n">99</span><span lang="ko">체크리스트와 회고</span><span lang="en">Checklist and reflection</span></a>
+</nav>
+
+<main>
+
+<!-- ══ 00 ══ -->
+<section id="p0">
+  <div class="sec-head"><span class="sec-num">00</span><h2 lang="ko">먼저 읽을 것</h2><h2 lang="en">Read first</h2></div>
+  <p class="sec-sub" lang="ko">답이 아니라 진입점이다. 계산 결과는 안 적었다.</p>
+  <p class="sec-sub" lang="en">An entry point, not an answer key. No final numbers here.</p>
+
+  <div class="callout" lang="ko">
+    <strong>채점 방침은 앞의 두 과제와 같아.</strong> <em>"Homework is evaluated primarily based on honest effort and engagement rather than correctness."</em> 정답보다 시도와 추론으로 평가하고, 강의 자료를 봐도 돼. <strong>HW3에는 "노트 보지 말고 풀어라" 문제가 없어.</strong> HW1의 P8 같은 항목이 없으니 일곱 문제 전부 자료를 보면서 풀어도 돼.<br><br>
+    <strong>마감은 9월 13일 일요일 자정이었고 이미 지났어.</strong> 그래서 이 페이지는 제출용이라기보다 <strong>시험 대비용</strong>이야. 과제 철학이 <em>"the problems are therefore representative of the type and level of reasoning that you may encounter on an exam"</em>이라고 밝히고 있으니 그대로 받아들이면 돼.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Grading works as it did on the first two sets:</strong> <em>"Homework is evaluated primarily based on honest effort and engagement rather than correctness."</em> The attempt and the reasoning are what count, and course materials are allowed. <strong>HW3 has no closed-book problem</strong>, unlike HW1's P8, so you may work through all seven with your notes open.<br><br>
+    <strong>It was due at midnight on Sunday September 13, so that date has passed.</strong> This page is therefore aimed at <strong>exam preparation</strong> rather than submission, which is exactly how the assignment presents itself: <em>"the problems are therefore representative of the type and level of reasoning that you may encounter on an exam."</em>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">이번 과제의 구조</span>
+    <h4>세 모듈에 걸쳐 있다</h4>
+    <p>HW1이 Module 1–2, HW2가 Module 3–4였는데 <strong>HW3은 Module 5·6·7 셋에 걸쳐.</strong> 그래서 문제 하나가 여러 모듈을 동시에 요구하는 경우가 많아. 아래 표가 그 지도야.</p>
+    <table>
+      <tr><th>문제</th><th>주로 쓰는 모듈</th><th>같이 필요한 것</th></tr>
+      <tr><td>P1</td><td><a href="L05-random-variables.html">M5</a> PMF · CDF</td><td>(d)(e)는 <a href="L06-conditional-distributions.html#s5">M6 조건부 PMF</a></td></tr>
+      <tr><td>P2</td><td><a href="L05-random-variables.html#s8">M5</a> 기하분포</td><td>(d)(e)는 <a href="L06-conditional-distributions.html#s5">M6 예제 5.2</a></td></tr>
+      <tr><td>P3</td><td><a href="L05-random-variables.html#s7">M5</a> PDF</td><td>(f)는 <a href="L06-conditional-distributions.html#s3">M6 조건부 PDF</a></td></tr>
+      <tr><td>P4</td><td><a href="L05-random-variables.html#s2">M5</a> 확률변수의 정의</td><td>사실은 <a href="L07-functions-of-random-variables.html#s6">M7 단조 변환</a>이다</td></tr>
+      <tr><td>P5</td><td><a href="L06-conditional-distributions.html#s8">M6</a> Bayes</td><td><a href="L06-conditional-distributions.html#s6">M6 전확률</a>이 먼저</td></tr>
+      <tr><td>P6</td><td><a href="L07-functions-of-random-variables.html#s3">M7</a> CDF 방법</td><td><a href="L07-functions-of-random-variables.html#s6">M7 단조 정리</a></td></tr>
+      <tr><td>P7</td><td><a href="L07-functions-of-random-variables.html#s5">M7</a> 아핀 · 비단조</td><td><a href="L07-functions-of-random-variables.html#s8">M7 Jacobian</a></td></tr>
+    </table>
+    <h4>이어지는 문제가 없다</h4>
+    <p>HW2에서는 P2가 P3의 분모를 만들고 P4가 P8로 이어졌는데, <strong>HW3의 일곱 문제는 서로 독립이야.</strong> 하나가 막혀도 나머지는 그대로 풀 수 있으니, 순서대로 붙잡고 있지 말고 막히면 넘어가.</p>
+    <h4>문제 안에서는 앞 항이 뒤 항의 재료다</h4>
+    <p>대신 <strong>한 문제 안에서는 (a)가 (b)의 입력이 되는 경우가 압도적이야.</strong> P1의 <span class="m"><i>c</i></span>, P3의 <span class="m"><i>c</i></span>, P5의 <span class="m"><i>f<sub>X</sub></i></span>, P6의 <span class="m"><i>F<sub>Y</sub></i></span>가 전부 그래. <strong>(a)를 검산하고 넘어가는 게 이 과제에서 가장 값싼 보험이야.</strong></p>
+    <h4>Reflection은 5문항이다</h4>
+    <p style="margin-bottom:0">HW2의 6문항에서 하나 줄었어. 가장 쉬웠던 것, 가장 어려웠던 것, 아직 확신이 없는 것, 알아차린 실수, 소요 시간. 풀면서 메모해두면 나중에 쓰기 쉬워.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">How this set is put together</span>
+    <h4>It spans three modules</h4>
+    <p>HW1 lived in Modules 1 and 2, HW2 in Modules 3 and 4, and <strong>HW3 spreads across Modules 5, 6 and 7.</strong> Several problems want two modules at once. The table is the map.</p>
+    <table>
+      <tr><th>problem</th><th>main module</th><th>also needed</th></tr>
+      <tr><td>P1</td><td><a href="L05-random-variables.html">M5</a> PMF and CDF</td><td>(d) and (e) need <a href="L06-conditional-distributions.html#s5">M6's conditional PMF</a></td></tr>
+      <tr><td>P2</td><td><a href="L05-random-variables.html#s8">M5</a> the geometric</td><td>(d) and (e) need <a href="L06-conditional-distributions.html#s5">M6 Example 5.2</a></td></tr>
+      <tr><td>P3</td><td><a href="L05-random-variables.html#s7">M5</a> PDFs</td><td>(f) needs <a href="L06-conditional-distributions.html#s3">M6's conditional PDF</a></td></tr>
+      <tr><td>P4</td><td><a href="L05-random-variables.html#s2">M5</a> the definition of an RV</td><td>it is really <a href="L07-functions-of-random-variables.html#s6">M7's monotone transform</a></td></tr>
+      <tr><td>P5</td><td><a href="L06-conditional-distributions.html#s8">M6</a> Bayes</td><td><a href="L06-conditional-distributions.html#s6">M6's total probability</a> comes first</td></tr>
+      <tr><td>P6</td><td><a href="L07-functions-of-random-variables.html#s3">M7</a> the CDF method</td><td><a href="L07-functions-of-random-variables.html#s6">M7's monotonic theorem</a></td></tr>
+      <tr><td>P7</td><td><a href="L07-functions-of-random-variables.html#s5">M7</a> affine and non-monotone</td><td><a href="L07-functions-of-random-variables.html#s8">M7's Jacobian</a></td></tr>
+    </table>
+    <h4>No problem feeds another</h4>
+    <p>In HW2, P2 built the denominator for P3 and P4 set up P8. <strong>All seven problems here are independent of each other</strong>, so if one stalls, move on; nothing downstream depends on it.</p>
+    <h4>Within a problem, earlier parts are ingredients</h4>
+    <p>Inside a single problem, though, <strong>part (a) is almost always the input to part (b).</strong> The <span class="m"><i>c</i></span> in P1, the <span class="m"><i>c</i></span> in P3, the <span class="m"><i>f<sub>X</sub></i></span> in P5, the <span class="m"><i>F<sub>Y</sub></i></span> in P6, all of them. <strong>Verifying part (a) before moving on is the cheapest insurance in this set.</strong></p>
+    <h4>The reflection has five questions</h4>
+    <p style="margin-bottom:0">One fewer than HW2: easiest, hardest, still unsure about, a mistake you caught, and time spent. Take notes as you work and it writes itself.</p>
+  </div>
+</section>
+
+<!-- ══ P1 ══ -->
+<section id="p1">
+  <div class="sec-head"><span class="sec-num">P1</span><h2 lang="ko">PMF와 CDF</h2><h2 lang="en">PMF and CDF</h2></div>
+  <p class="sec-sub" lang="ko">패킷 재전송 횟수. 상수 <span class="m"><i>c</i></span>, CDF, 꼬리 확률, 그리고 조건부 PMF 두 가지 (a)–(f)</p>
+  <p class="sec-sub" lang="en">Transmission attempts: the constant <span class="m"><i>c</i></span>, the CDF, tail probabilities and two conditional PMFs, (a) through (f).</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>(a) 정규화로 상수 구하기</td><td><a href="L05-random-variables.html#s6">M5 · 06 PMF</a></td></tr>
+    <tr><td>(b) 이산 CDF는 계단함수</td><td><a href="L05-random-variables.html#s4">M5 · 04 CDF</a></td></tr>
+    <tr><td>(d)(e) <strong>조건부 PMF</strong></td><td><a href="L06-conditional-distributions.html#s5">M6 · 05</a>, 예제 5.1이 같은 유형</td></tr>
+    <tr><td>(f) 왜 바뀌는지 서술</td><td><a href="L06-conditional-distributions.html#s5">M6 · 05 도해</a>: 비율은 보존되고 값만 커진다</td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>(a) finding a constant by normalising</td><td><a href="L05-random-variables.html#s6">M5 · §06 PMF</a></td></tr>
+    <tr><td>(b) a discrete CDF is a staircase</td><td><a href="L05-random-variables.html#s4">M5 · §04 CDF</a></td></tr>
+    <tr><td>(d) and (e) the <strong>conditional PMF</strong></td><td><a href="L06-conditional-distributions.html#s5">M6 · §05</a>; Example 5.1 is the same shape</td></tr>
+    <tr><td>(f) explaining the change in words</td><td><a href="L06-conditional-distributions.html#s5">M6 · the §05 figure</a>: ratios hold, values grow</td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p><strong>네 개의 확률을 표로 먼저 다 채워라.</strong> <span class="m"><i>k</i> = 1, 2, 3, 4</span>에 대해 <span class="m"><i>c</i>(1/2)<sup><i>k</i></sup></span>를 적어놓고 합이 1이 되게 <span class="m"><i>c</i></span>를 맞춰. 유한 등비수열이라 공식도 필요 없이 네 항을 더하면 돼.</p>
+    <p style="margin-bottom:0">표가 완성되면 (b)부터 (e)까지가 전부 <em>칸을 골라 더하는 작업</em>으로 바뀌어. (c)는 두 칸과 나머지 두 칸, (d)는 첫 칸을 버리고 재정규화, (e)는 홀수 칸만 남기고 재정규화야.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p><strong>Write out all four probabilities as a table before anything else.</strong> List <span class="m"><i>c</i>(1/2)<sup><i>k</i></sup></span> for <span class="m"><i>k</i> = 1, 2, 3, 4</span> and fix <span class="m"><i>c</i></span> so they sum to one. It is a four-term geometric sum, so no formula is needed; just add them.</p>
+    <p style="margin-bottom:0">With the table in hand, (b) through (e) all reduce to <em>picking cells and adding</em>: (c) is two cells against the other two, (d) drops the first cell and renormalises, (e) keeps the odd cells and renormalises.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>(b)가 "for all real <span class="m"><i>x</i></span>"라고 못박는다</h4>
+    <p>정수에서의 값만 적으면 요구를 안 지킨 거야. <strong><span class="m"><i>x</i> &lt; 1</span>에서 0이고 <span class="m"><i>x</i> ≥ 4</span>에서 1</strong>인 것까지 포함해서 <em>모든 실수</em>에 대해 정의해야 해. 구간별로 나눠 쓰거나 계단 그림을 그려. <a href="L05-random-variables.html#s4">M5 §04</a>가 이산 CDF의 우연속성도 같이 짚어놨으니 <span class="m">≤</span>가 어디 붙는지 확인해.</p>
+    <h4>(d)의 조건이 <span class="m">{<i>X</i> &gt; 1}</span>이지 <span class="m">{<i>X</i> ≥ 1}</span>이 아니다</h4>
+    <p>"첫 시도 후에 아직 성공하지 못했다"는 건 <span class="m"><i>X</i> = 1</span>이 배제됐다는 뜻이야. <span class="m"><i>X</i> ≥ 1</span>은 전체 사건이라 아무 정보도 안 줘. <strong>이산에서는 등호 하나가 답을 바꾼다</strong>는 걸 <a href="L06-conditional-distributions.html#s4">M6 §04의 함정</a>에서 짚어놨어.</p>
+    <h4>검산 두 가지를 해라</h4>
+    <p>(c)에서 <span class="m"><i>P</i>(<i>X</i> ≤ 2)</span>와 <span class="m"><i>P</i>(<i>X</i> &gt; 2)</span>를 <strong>각각 따로 구해서 합이 1인지</strong> 봐. 그리고 (d)(e)의 조건부 PMF도 합이 1이어야 해. 재정규화를 빠뜨렸으면 여기서 걸려.</p>
+    <h4>(f)는 계산이 아니라 서술이다</h4>
+    <p style="margin-bottom:0">"왜 홀수라는 조건이 확률을 바꾸는가"를 <em>문장으로</em> 써야 해. 핵심은 두 가지야. <strong>짝수 값들의 질량이 0으로 바뀌었고, 그 질량이 살아남은 값들에 비례해서 재분배됐다.</strong> 살아남은 값들 사이의 <strong>비율은 그대로</strong>라는 걸 같이 적으면 좋은 답이 돼.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>(b) insists on "for all real <span class="m"><i>x</i></span>"</h4>
+    <p>Listing the values at the integers does not meet the requirement. You have to define it on <em>every real</em>, including <strong>0 below <span class="m"><i>x</i> = 1</span> and 1 from <span class="m"><i>x</i> = 4</span> upward.</strong> Write it piecewise or draw the staircase. <a href="L05-random-variables.html#s4">M5 §04</a> also covers right continuity, so check which side the <span class="m">≤</span> falls on.</p>
+    <h4>(d) conditions on <span class="m">{<i>X</i> &gt; 1}</span>, not <span class="m">{<i>X</i> ≥ 1}</span></h4>
+    <p>"After the first attempt it has not succeeded" rules out <span class="m"><i>X</i> = 1</span>. The event <span class="m"><i>X</i> ≥ 1</span> is everything and carries no information at all. <strong>In the discrete case one equals sign changes the answer</strong>, which <a href="L06-conditional-distributions.html#s4">M6 §04's trap</a> spells out.</p>
+    <h4>Do two checks</h4>
+    <p>In (c), compute <span class="m"><i>P</i>(<i>X</i> ≤ 2)</span> and <span class="m"><i>P</i>(<i>X</i> &gt; 2)</span> <strong>separately and confirm they sum to 1.</strong> And each conditional PMF in (d) and (e) must sum to 1 as well; a missing renormalisation shows up right there.</p>
+    <h4>(f) is prose, not arithmetic</h4>
+    <p style="margin-bottom:0">Write <em>sentences</em> about why conditioning on oddness moves the probabilities. Two things are going on: <strong>the mass on the even values became zero, and that mass was redistributed proportionally over the values that survived.</strong> Adding that the <strong>ratios among survivors are unchanged</strong> turns it into a good answer.</p>
+  </div>
+</section>
+
+<!-- ══ P2 ══ -->
+<section id="p2">
+  <div class="sec-head"><span class="sec-num">P2</span><h2 lang="ko">기하분포</h2><h2 lang="en">The geometric distribution</h2></div>
+  <p class="sec-sub" lang="ko">첫 성공까지의 시도 횟수. 분포 식별부터 무기억성까지 (a)–(e)</p>
+  <p class="sec-sub" lang="en">Attempts until the first success, from identifying the distribution to memorylessness, (a) through (e).</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>(a)(b) 기하분포의 정의와 PMF</td><td><a href="L05-random-variables.html#s8">M5 · 08 이산 분포</a></td></tr>
+    <tr><td>(c) 꼬리 확률 <span class="m"><i>P</i>(<i>X</i> &gt; <i>k</i>)</span></td><td><a href="L05-random-variables.html#s8">M5 · 08</a> · 유도는 아래 첫 수 참조</td></tr>
+    <tr><td>(d) <strong>조건부 PMF</strong></td><td><a href="L06-conditional-distributions.html#s5">M6 · 예제 5.2</a>: 같은 절차, 숫자만 다름</td></tr>
+    <tr><td>(e) 무기억성의 의미</td><td><a href="L06-conditional-distributions.html#s5">M6 · 예제 5.2</a> · <a href="L08-expectation.html#s8">M8 · 08</a> 연속판</td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>(a) and (b) the geometric and its PMF</td><td><a href="L05-random-variables.html#s8">M5 · §08 discrete distributions</a></td></tr>
+    <tr><td>(c) the tail probability <span class="m"><i>P</i>(<i>X</i> &gt; <i>k</i>)</span></td><td><a href="L05-random-variables.html#s8">M5 · §08</a>, and see the first move below</td></tr>
+    <tr><td>(d) the <strong>conditional PMF</strong></td><td><a href="L06-conditional-distributions.html#s5">M6 · Example 5.2</a>: same procedure, different numbers</td></tr>
+    <tr><td>(e) what memorylessness means</td><td><a href="L06-conditional-distributions.html#s5">M6 · Example 5.2</a> and <a href="L08-expectation.html#s8">M8 · §08</a> for the continuous half</td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p><strong>(c)의 <span class="m"><i>P</i>(<i>X</i> &gt; <i>k</i>)</span>를 급수로 구하려 하지 마라.</strong> 말로 한 줄이면 돼. <em><span class="m"><i>X</i> &gt; <i>k</i></span>라는 건 처음 <span class="m"><i>k</i></span>번이 전부 실패했다는 뜻이다.</em> 시도가 독립이니까 그 확률은 실패 확률의 <span class="m"><i>k</i></span>제곱이야.</p>
+    <p style="margin-bottom:0"><strong>이 한 줄이 나머지 전부를 푼다.</strong> <span class="m"><i>P</i>(<i>X</i> ≤ <i>k</i>)</span>는 여집합이고, (d)의 분모도 (e)의 분자·분모도 전부 이 형태야. <strong>급수를 먼저 쓰기 시작하면 훨씬 오래 걸려.</strong></p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p><strong>Do not attack (c)'s <span class="m"><i>P</i>(<i>X</i> &gt; <i>k</i>)</span> with a series.</strong> One sentence does it: <em><span class="m"><i>X</i> &gt; <i>k</i></span> means the first <span class="m"><i>k</i></span> attempts all failed.</em> The attempts are independent, so that probability is the failure probability raised to the <span class="m"><i>k</i></span>.</p>
+    <p style="margin-bottom:0"><strong>That single line solves the rest.</strong> <span class="m"><i>P</i>(<i>X</i> ≤ <i>k</i>)</span> is its complement, and the denominator in (d) and both parts of (e) are all the same expression. <strong>Starting with the series takes far longer.</strong></p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>기하분포의 인덱스가 0부터인지 1부터인지</h4>
+    <p>두 관습이 다 돌아다녀. <strong>이 문제는 "첫 성공까지 필요한 <em>시도 횟수</em>"라 <span class="m"><i>k</i> = 1</span>부터야.</strong> 0부터 세는 버전(첫 성공 <em>전</em>의 실패 횟수)을 쓰면 평균도 꼬리 확률도 전부 하나씩 어긋나. 교재 §1.6도 <span class="m"><i>i</i> ≥ 1</span> 버전을 써.</p>
+    <h4><span class="m"><i>P</i>(<i>X</i> &gt; <i>k</i>)</span>와 <span class="m"><i>P</i>(<i>X</i> ≥ <i>k</i>)</span>를 섞는다</h4>
+    <p>이산이라 둘이 달라. <span class="m"><i>P</i>(<i>X</i> ≥ <i>k</i>) = <i>P</i>(<i>X</i> &gt; <i>k</i>−1)</span>이야. (e)에서 <span class="m">10</span>과 <span class="m">4</span>를 다루면서 한 칸 밀리면 답이 통째로 달라져. <strong>부등호를 쓸 때마다 "포함인가 배제인가"를 소리 내 확인해.</strong></p>
+    <h4>(d)의 "무엇을 관찰했는가"가 진짜 문제다</h4>
+    <p>조건부 PMF를 계산하는 건 기계적이야. 문제가 원하는 건 그 결과의 <strong>모양</strong>이야. 계산 결과를 <span class="m"><i>k</i></span>에 대한 식으로 정리해놓고 <strong>원래 PMF와 나란히 놓아봐.</strong> 뭐가 같고 뭐가 다른지가 답이야.</p>
+    <h4>(e)는 계산과 서술이 둘 다 필요하다</h4>
+    <p style="margin-bottom:0">숫자만 내고 끝내면 <em>"explain in words the significance"</em>를 안 지킨 거야. (c)의 결과를 쓰면 계산은 두 줄이고, 서술에서는 <strong>이미 지나간 실패가 앞으로에 대해 무엇을 알려주는가</strong>에 답해야 해. <a href="L08-expectation.html#s8">M8 §08</a>의 지수분포 그림이 같은 이야기의 연속판이라 같이 보면 감각이 잡혀.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>Does the geometric start at 0 or at 1?</h4>
+    <p>Both conventions are in circulation. <strong>This problem says "the number of <em>attempts</em> needed until the first success", so it starts at <span class="m"><i>k</i> = 1</span>.</strong> Using the zero-based version, the number of failures <em>before</em> the first success, shifts the mean and every tail probability by one. Hajek §1.6 also uses the <span class="m"><i>i</i> ≥ 1</span> version.</p>
+    <h4>Mixing up <span class="m"><i>P</i>(<i>X</i> &gt; <i>k</i>)</span> and <span class="m"><i>P</i>(<i>X</i> ≥ <i>k</i>)</span></h4>
+    <p>In the discrete world they differ: <span class="m"><i>P</i>(<i>X</i> ≥ <i>k</i>) = <i>P</i>(<i>X</i> &gt; <i>k</i>−1)</span>. One step of drift while juggling <span class="m">10</span> and <span class="m">4</span> in (e) changes the answer entirely. <strong>Every time you write an inequality, say out loud whether the endpoint is in or out.</strong></p>
+    <h4>The real question in (d) is "what do you observe"</h4>
+    <p>Computing the conditional PMF is mechanical. What the problem wants is the <strong>shape</strong> of the result. Tidy it into an expression in <span class="m"><i>k</i></span> and then <strong>set it beside the original PMF.</strong> What matches and what does not is the answer.</p>
+    <h4>(e) wants both a number and an explanation</h4>
+    <p style="margin-bottom:0">Stopping at the number misses the instruction to <em>"explain in words the significance."</em> Using (c) the computation is two lines; the explanation has to address <strong>what the failures already behind you say about what lies ahead.</strong> The exponential figure in <a href="L08-expectation.html#s8">M8 §08</a> is the continuous half of the same story and is worth reading alongside.</p>
+  </div>
+</section>
+
+<!-- ══ P3 ══ -->
+<section id="p3">
+  <div class="sec-head"><span class="sec-num">P3</span><h2 lang="ko">연속 PDF</h2><h2 lang="en">A continuous PDF</h2></div>
+  <p class="sec-sub" lang="ko">선분 위의 간섭원 위치. 상수, CDF, 확률 세 가지, 그리고 조건부 분포 (a)–(f)</p>
+  <p class="sec-sub" lang="en">An interferer's position on a segment: the constant, the CDF, three probabilities and a conditional distribution, (a) through (f).</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>(a) 적분해서 1로 맞추기</td><td><a href="L05-random-variables.html#s7">M5 · 07 PDF</a></td></tr>
+    <tr><td>(b) 연속 CDF는 적분</td><td><a href="L05-random-variables.html#s4">M5 · 04 CDF</a></td></tr>
+    <tr><td>(e) <span class="m"><i>P</i>(<i>X</i> = 1)</span></td><td><a href="L05-random-variables.html#s7">M5 · 07</a>: 연속이면 점의 확률은 0</td></tr>
+    <tr><td>(f) <strong>조건부 CDF와 PDF</strong></td><td><a href="L06-conditional-distributions.html#s3">M6 · 예제 3.1</a> (위쪽 꼬리) · <a href="L06-conditional-distributions.html#s4">M6 · 04</a></td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>(a) integrating to 1</td><td><a href="L05-random-variables.html#s7">M5 · §07 PDF</a></td></tr>
+    <tr><td>(b) a continuous CDF is an integral</td><td><a href="L05-random-variables.html#s4">M5 · §04 CDF</a></td></tr>
+    <tr><td>(e) <span class="m"><i>P</i>(<i>X</i> = 1)</span></td><td><a href="L05-random-variables.html#s7">M5 · §07</a>: a point has probability zero</td></tr>
+    <tr><td>(f) the <strong>conditional CDF and PDF</strong></td><td><a href="L06-conditional-distributions.html#s3">M6 · Example 3.1</a>, the upper tail, and <a href="L06-conditional-distributions.html#s4">M6 · §04</a></td></tr>
+  </table>
+
+  <div class="trap" lang="ko">
+    <span class="tag">시작하기 전에 · 부호를 확인해라</span>
+    <p style="margin-bottom:0"><strong>주어진 괄호 안의 식이 <span class="m">0 &lt; <i>x</i> &lt; 2</span>에서 <em>음수</em>야.</strong> 인수분해해보면 바로 보여. 그런데 밀도는 어디서도 음수가 될 수 없어 (<a href="L05-random-variables.html#s7">M5 §07</a>). <strong>그러니까 <span class="m"><i>c</i></span>의 부호가 이 문제의 첫 번째 관문이야.</strong> 적분값이 얼마인지만 보고 반사적으로 양수를 쓰면 (b)부터 (f)까지 전부 부호가 뒤집힌 채로 흘러가. <strong><span class="m"><i>c</i></span>를 구한 뒤에 <span class="m"><i>f</i>(1)</span>을 계산해서 양수인지 확인하는 데 10초면 돼.</strong></p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Before you start · check the sign</span>
+    <p style="margin-bottom:0"><strong>The bracketed expression you are given is <em>negative</em> on <span class="m">0 &lt; <i>x</i> &lt; 2</span>.</strong> Factor it and you see it immediately. A density, however, can never be negative anywhere (<a href="L05-random-variables.html#s7">M5 §07</a>). <strong>So the sign of <span class="m"><i>c</i></span> is the first gate in this problem.</strong> Reach reflexively for a positive constant because the integral came out to some number and the sign stays flipped through (b) all the way to (f). <strong>Once you have <span class="m"><i>c</i></span>, evaluating <span class="m"><i>f</i>(1)</span> and checking it is positive takes ten seconds.</strong></p>
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p><strong>밀도를 먼저 그려봐.</strong> 다항식이라 모양이 금방 나와. <span class="m">0</span>과 <span class="m">2</span>에서 0이고 가운데가 봉우리인 대칭 곡선이야. <strong>그림이 있으면 (c)와 (d)가 계산 전에 답이 보여.</strong> 대칭이니까.</p>
+    <p style="margin-bottom:0">그 다음은 순서대로야. 적분으로 <span class="m"><i>c</i></span>, 부정적분으로 CDF, CDF에 값을 넣어 (c)(d). <strong>(c)와 (d)를 각각 구한 뒤 합이 1인지 확인하고, 그림의 대칭과 맞는지도 봐.</strong></p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p><strong>Sketch the density first.</strong> It is a polynomial, so the shape comes out at once: zero at <span class="m">0</span> and <span class="m">2</span>, with a hump in between, symmetric. <strong>With the sketch in front of you, (c) and (d) are visible before any computation</strong>, because of that symmetry.</p>
+    <p style="margin-bottom:0">Then it is a straight line: integrate for <span class="m"><i>c</i></span>, antidifferentiate for the CDF, evaluate the CDF for (c) and (d). <strong>Compute (c) and (d) separately, confirm they sum to 1, and check the result against the symmetry in your sketch.</strong></p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>(b)도 "for all real <span class="m"><i>x</i></span>"다</h4>
+    <p>구간이 셋이야. <span class="m"><i>x</i> &lt; 0</span>에서 0, <span class="m">0 ≤ <i>x</i> ≤ 2</span>에서 적분식, <span class="m"><i>x</i> &gt; 2</span>에서 1. <strong>가운데만 쓰고 끝내면 안 돼.</strong> 그리고 <span class="m"><i>F</i>(2) = 1</span>인지 꼭 확인해. 아니면 (a)가 틀린 거야.</p>
+    <h4>(e)는 함정처럼 보이지만 함정이 아니다</h4>
+    <p><span class="m"><i>P</i>(<i>X</i> = 1) = 0</span>이야. 답이 짧다고 불안해할 필요 없어. <strong>다만 "왜 0인지"를 한 줄 붙이는 게 좋아.</strong> 폭이 0인 구간의 적분이니까. 그리고 <span class="m"><i>f</i>(1)</span>이 0이 아니라는 것과 모순되지 않는다는 것도 짚어두면 좋아 (밀도는 확률이 아니니까).</p>
+    <h4>(f)의 조건이 <span class="m"><i>X</i> ≥ 1</span>, 즉 <strong>위쪽</strong> 꼬리다</h4>
+    <p>슬라이드의 예제는 <span class="m"><i>M</i> = {<i>X</i> ≤ <i>a</i>}</span>로 <strong>아래쪽</strong>을 남겨. 방향이 반대야. 분모가 <span class="m"><i>F</i>(<i>a</i>)</span>가 아니라 <span class="m">1 − <i>F</i>(<i>a</i>)</span>가 돼. <a href="L06-conditional-distributions.html#s3">M6 예제 3.1</a>이 그 반대 방향을 풀이까지 해뒀으니 그걸 따라가면 돼.</p>
+    <h4>(f)의 검산</h4>
+    <p style="margin-bottom:0">조건부 CDF는 <span class="m"><i>x</i> = 1</span>에서 0이고 <span class="m"><i>x</i> = 2</span>에서 1이어야 해. 조건부 PDF는 <span class="m">[1, 2]</span> 밖에서 <strong>정확히 0</strong>이고, 그 위에서 적분하면 1이어야 하고. <strong>둘 중 하나라도 안 맞으면 재정규화를 놓친 거야.</strong></p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>(b) also says "for all real <span class="m"><i>x</i></span>"</h4>
+    <p>Three pieces: 0 for <span class="m"><i>x</i> &lt; 0</span>, the integral on <span class="m">0 ≤ <i>x</i> ≤ 2</span>, and 1 for <span class="m"><i>x</i> &gt; 2</span>. <strong>Writing only the middle piece is incomplete.</strong> And confirm <span class="m"><i>F</i>(2) = 1</span>; if it is not, (a) went wrong.</p>
+    <h4>(e) looks like a trick and is not one</h4>
+    <p><span class="m"><i>P</i>(<i>X</i> = 1) = 0</span>. A short answer is fine here. <strong>Add one line saying why</strong>, that it is an integral over an interval of zero width. It is also worth noting this does not contradict <span class="m"><i>f</i>(1)</span> being nonzero, since a density is not a probability.</p>
+    <h4>(f) conditions on <span class="m"><i>X</i> ≥ 1</span>, the <strong>upper</strong> tail</h4>
+    <p>The slides' example keeps the <strong>lower</strong> side, <span class="m"><i>M</i> = {<i>X</i> ≤ <i>a</i>}</span>. This is the other direction, so the denominator is <span class="m">1 − <i>F</i>(<i>a</i>)</span> rather than <span class="m"><i>F</i>(<i>a</i>)</span>. <a href="L06-conditional-distributions.html#s3">M6 Example 3.1</a> works that direction out in full.</p>
+    <h4>How to check (f)</h4>
+    <p style="margin-bottom:0">The conditional CDF has to be 0 at <span class="m"><i>x</i> = 1</span> and 1 at <span class="m"><i>x</i> = 2</span>. The conditional PDF has to be <strong>exactly zero</strong> outside <span class="m">[1, 2]</span> and integrate to 1 over it. <strong>If either fails, a renormalisation went missing.</strong></p>
+  </div>
+</section>
+
+<!-- ══ P4 ══ -->
+<section id="p4">
+  <div class="sec-head"><span class="sec-num">P4</span><h2 lang="ko">확률 공간 위의 확률변수</h2><h2 lang="en">A random variable on a probability space</h2></div>
+  <p class="sec-sub" lang="ko">Borel σ-algebra 위의 균등 측도. 치역, CDF, PDF, 검산, 확률 (a)–(e)</p>
+  <p class="sec-sub" lang="en">The uniform measure on a Borel σ-algebra: range, CDF, PDF, a check, and a probability, (a) through (e).</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>확률변수는 <span class="m"><i>Ω</i></span>에서 <span class="m">ℝ</span>로 가는 함수</td><td><a href="L05-random-variables.html#s2">M5 · 02 정의</a></td></tr>
+    <tr><td>역상으로 확률을 옮기는 것</td><td><a href="L05-random-variables.html#s3">M5 · 03 역상</a></td></tr>
+    <tr><td><span class="m">([0,1], ℬ, <i>P</i>)</span> 라는 공간 자체</td><td><a href="L02-probability-space.html">M2</a>: 단위구간 확률 공간</td></tr>
+    <tr><td><strong>사실 단조 변환 문제다</strong></td><td><a href="L07-functions-of-random-variables.html#s6">M7 · 06 단조 정리</a></td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>a random variable is a function from <span class="m"><i>Ω</i></span> to <span class="m">ℝ</span></td><td><a href="L05-random-variables.html#s2">M5 · §02 the definition</a></td></tr>
+    <tr><td>moving probability through preimages</td><td><a href="L05-random-variables.html#s3">M5 · §03 preimages</a></td></tr>
+    <tr><td>the space <span class="m">([0,1], ℬ, <i>P</i>)</span> itself</td><td><a href="L02-probability-space.html">M2</a>: the unit-interval probability space</td></tr>
+    <tr><td><strong>it is really a monotone transform</strong></td><td><a href="L07-functions-of-random-variables.html#s6">M7 · §06 the monotonic theorem</a></td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p><strong>주어진 함수가 <span class="m">[0, 1]</span>에서 순증가인지 먼저 확인해라.</strong> 미분해보면 한 줄이야. 순증가라면 <span class="m"><i>ω</i></span>를 <span class="m"><i>x</i></span>로 푸는 역함수가 존재하고, <strong>그 순간 (a)와 (b)가 동시에 나와.</strong> 치역은 양 끝점의 상이고, CDF는 <span class="m"><i>P</i>(<i>ω</i> ≤ <i>g</i><sup>−1</sup>(<i>x</i>))</span>인데 <span class="m"><i>ω</i></span>가 균등이라 그 값이 곧 <span class="m"><i>g</i><sup>−1</sup>(<i>x</i>)</span> 자체야.</p>
+    <p style="margin-bottom:0"><strong>이게 이 문제의 전부야.</strong> <span class="m"><i>Ω</i> = [0,1]</span>에 균등 측도를 얹는다는 설정이, <span class="m"><i>P</i>(<i>ω</i> ≤ <i>a</i>) = <i>a</i></span>라는 아주 편한 성질을 준다는 걸 알아채는 것. Borel σ-algebra 이야기는 "모든 구간에 확률을 매길 수 있다"를 보장하려고 있는 거지 계산에 쓰이지는 않아.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p><strong>Check first whether the given function is strictly increasing on <span class="m">[0, 1]</span>.</strong> One derivative settles it. If it is, an inverse solving <span class="m"><i>ω</i></span> in terms of <span class="m"><i>x</i></span> exists, and <strong>(a) and (b) both fall out at once.</strong> The range is the image of the endpoints, and the CDF is <span class="m"><i>P</i>(<i>ω</i> ≤ <i>g</i><sup>−1</sup>(<i>x</i>))</span>, which for a uniform <span class="m"><i>ω</i></span> is just <span class="m"><i>g</i><sup>−1</sup>(<i>x</i>)</span> itself.</p>
+    <p style="margin-bottom:0"><strong>That is the whole problem:</strong> noticing that putting the uniform measure on <span class="m"><i>Ω</i> = [0,1]</span> hands you the very convenient <span class="m"><i>P</i>(<i>ω</i> ≤ <i>a</i>) = <i>a</i></span>. The Borel σ-algebra is there to guarantee that every interval can be assigned a probability; it plays no part in the computation.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>치역이 <span class="m">[0, 1]</span>이 아니다</h4>
+    <p><span class="m"><i>ω</i></span>가 <span class="m">[0,1]</span>을 훑어도 <span class="m"><i>X</i></span>는 훨씬 좁은 구간만 훑어. <strong>(a)를 대충 넘기면 (b)의 구간 분할이 전부 틀어져.</strong> 양 끝점을 실제로 대입해봐.</p>
+    <h4>(b)도 "for all real <span class="m"><i>x</i></span>"다</h4>
+    <p>이 과제에서 세 번째로 나오는 요구야 (P1, P3, P4). <strong>치역 밖에서는 0이거나 1이라는 걸 반드시 적어야 해.</strong> 치역이 <span class="m">[0,1]</span>이 아니니 경계값도 <span class="m">0</span>과 <span class="m">1</span>이 아니야.</p>
+    <h4>(d)는 새 문제가 아니라 검산이다</h4>
+    <p><span class="m">∫<i>f</i> = 1</span>을 확인하라는 건 "(c)가 맞는지 스스로 확인하라"는 뜻이야. <strong>안 맞으면 (c)로 돌아가라는 신호지, (d)를 억지로 맞출 자리가 아니야.</strong> 적분 구간은 (a)에서 구한 치역이어야 하고, 이것도 함께 검증되는 셈이야.</p>
+    <h4>(e)는 CDF에 값 하나 넣는 것이다</h4>
+    <p style="margin-bottom:0">PDF를 다시 적분하지 마. <span class="m"><i>P</i>(<i>X</i> ≤ 1/3)</span>은 정의상 <span class="m"><i>F<sub>X</sub></i>(1/3)</span>이야. <strong>다만 <span class="m">1/3</span>이 치역 안에 있는지 먼저 확인해.</strong> 밖이면 답이 0이나 1이 돼.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>The range is not <span class="m">[0, 1]</span></h4>
+    <p>Even though <span class="m"><i>ω</i></span> sweeps all of <span class="m">[0,1]</span>, <span class="m"><i>X</i></span> sweeps a much narrower interval. <strong>Skim over (a) and every case split in (b) goes wrong.</strong> Substitute the endpoints and see.</p>
+    <h4>(b) also says "for all real <span class="m"><i>x</i></span>"</h4>
+    <p>The third time this set asks for it (P1, P3, P4). <strong>You must state the values outside the range, 0 below and 1 above.</strong> And since the range is not <span class="m">[0,1]</span>, the breakpoints are not at <span class="m">0</span> and <span class="m">1</span> either.</p>
+    <h4>(d) is a check, not a new problem</h4>
+    <p>Verifying <span class="m">∫<i>f</i> = 1</span> means "confirm for yourself that (c) is right". <strong>If it fails, that is a signal to go back to (c), not a place to force the number.</strong> The limits of integration have to be the range from (a), so that gets verified too.</p>
+    <h4>(e) is one evaluation of the CDF</h4>
+    <p style="margin-bottom:0">Do not integrate the PDF again. <span class="m"><i>P</i>(<i>X</i> ≤ 1/3)</span> is <span class="m"><i>F<sub>X</sub></i>(1/3)</span> by definition. <strong>Just check first whether <span class="m">1/3</span> even lies inside the range</strong>; outside it, the answer is 0 or 1.</p>
+  </div>
+</section>
+
+<!-- ══ P5 ══ -->
+<section id="p5">
+  <div class="sec-head"><span class="sec-num">P5</span><h2 lang="ko">연속 관측 Bayes</h2><h2 lang="en">Bayes with a continuous observation</h2></div>
+  <p class="sec-sub" lang="ko">좋은 채널과 나쁜 채널. 밀도 검증, 주변밀도, 사후확률, 그리고 설명 (a)–(f)</p>
+  <p class="sec-sub" lang="en">A good channel and a bad one: validate the densities, marginalise, posteriors, and an explanation, (a) through (f).</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>(a) 유효한 PDF의 조건</td><td><a href="L05-random-variables.html#s7">M5 · 07 PDF</a>: 비음수 + 적분 1</td></tr>
+    <tr><td>(b) 전확률 법칙의 분포 버전</td><td><a href="L06-conditional-distributions.html#s6">M6 · 06</a></td></tr>
+    <tr><td>(c)(d)(e) <strong>연속 관측 Bayes</strong></td><td><a href="L06-conditional-distributions.html#s8">M6 · 08</a>, 예제 8.1이 같은 유형</td></tr>
+    <tr><td>왜 확률 0인 사건으로 조건부가 되나</td><td><a href="L06-conditional-distributions.html#s7">M6 · 07</a> <span class="m"><i>Δ</i></span> 논법</td></tr>
+    <tr><td>(f) 방향을 말로 설명</td><td><a href="L06-conditional-distributions.html#s8">M6 · 08 도구</a>를 직접 움직여보기</td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>(a) what makes a PDF valid</td><td><a href="L05-random-variables.html#s7">M5 · §07 PDF</a>: nonnegative and integrating to 1</td></tr>
+    <tr><td>(b) total probability for distributions</td><td><a href="L06-conditional-distributions.html#s6">M6 · §06</a></td></tr>
+    <tr><td>(c), (d), (e) <strong>Bayes with a continuous observation</strong></td><td><a href="L06-conditional-distributions.html#s8">M6 · §08</a>; Example 8.1 is the same shape</td></tr>
+    <tr><td>why conditioning on a zero-probability event works</td><td><a href="L06-conditional-distributions.html#s7">M6 · §07</a>, the <span class="m"><i>Δ</i></span> argument</td></tr>
+    <tr><td>(f) explaining the direction in words</td><td>play with the tool in <a href="L06-conditional-distributions.html#s8">M6 · §08</a></td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p><strong>(a)를 진짜로 해라.</strong> 건너뛰기 쉬운 항인데, 여기서 두 밀도의 모양을 손에 넣는 게 (f)의 답이 돼. 확인할 건 둘이야. <strong>주어진 구간에서 비음수인가</strong>, 그리고 <strong>그 구간에서 적분하면 1인가.</strong> 둘 다 그림으로도 확인돼. 하나는 직사각형, 하나는 삼각형이야.</p>
+    <p style="margin-bottom:0">그 다음 (b)의 <span class="m"><i>f<sub>X</sub></i>(<i>x</i>)</span>를 구해두면 <strong>(c)부터 (e)까지가 전부 그걸 분모로 쓰는 나눗셈</strong>이 돼. <a href="L06-conditional-distributions.html#s6">M6 §06</a>에서 말한 대로 06번이 분모를 만들고 08번이 그걸 쓰는 구조야.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p><strong>Actually do part (a).</strong> It is easy to skip, and getting the shape of the two densities in your head here is what answers (f). Two things to check: <strong>is it nonnegative on the stated interval</strong>, and <strong>does it integrate to 1 there.</strong> Both are visible from a sketch: one is a rectangle, the other a triangle.</p>
+    <p style="margin-bottom:0">Then compute <span class="m"><i>f<sub>X</sub></i>(<i>x</i>)</span> in (b) and <strong>(c) through (e) all become divisions by it.</strong> As <a href="L06-conditional-distributions.html#s6">M6 §06</a> puts it, §06 builds the denominator and §08 spends it.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>(c)와 (d)를 따로 계산해서 합이 1인지 봐라</h4>
+    <p>(d)를 <span class="m">1 − (c)</span>로 때우는 건 유혹적인데, <strong>따로 구해서 합을 확인하는 게 이 문제에서 유일한 자체 검산이야.</strong> Bayes 식을 두 번 쓰는 데 30초면 돼.</p>
+    <h4>나쁜 채널의 밀도가 <span class="m"><i>x</i></span>에 대해 <em>감소</em>한다</h4>
+    <p><a href="L06-conditional-distributions.html#s8">M6 예제 8.1</a>은 나쁜 채널 밀도가 <em>증가</em>하는 설정이라 <strong>사후확률의 방향이 반대야.</strong> 예제를 그대로 외워서 가져오면 (f)에서 정반대 결론을 쓰게 돼. <strong>절차는 같고 방향은 다르다</strong>를 기억하고, 예제를 참고하되 방향은 이 문제의 숫자로 직접 판단해.</p>
+    <h4><span class="m"><i>P</i>(<i>X</i> = <i>x</i>) = 0</span>인데 왜 조건부가 되는가</h4>
+    <p>문제가 직접 묻지는 않지만 시험에서 물어볼 만한 지점이야. <a href="L06-conditional-distributions.html#s7">M6 §07</a>이 <span class="m"><i>Δ</i></span>-폭 구간으로 접근한 뒤 <span class="m"><i>Δ</i></span>가 <strong>분자와 분모에서 약분된다</strong>는 걸 보여. 한 줄로 답할 수 있게 해두면 좋아.</p>
+    <h4>(f)는 서술이고, 두 가지를 다 짚어야 한다</h4>
+    <p style="margin-bottom:0">하나는 <strong>likelihood의 비교</strong>다. 관측한 값을 어느 쪽이 더 잘 설명하는가. 다른 하나는 <strong>사전확률이 여전히 작용한다</strong>는 것. <span class="m">0.7</span> 대 <span class="m">0.3</span>이 한쪽으로 기울어 있어서, likelihood가 반대 방향이어도 사후확률이 바로 뒤집히지는 않아. <a href="L06-conditional-distributions.html#s8">M6 §08의 도구</a>에서 사전확률 슬라이더를 움직여보면 이 감각이 바로 잡혀.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>Compute (c) and (d) separately and check they sum to 1</h4>
+    <p>Getting (d) as <span class="m">1 − (c)</span> is tempting, but <strong>computing it independently is the only self-check this problem offers.</strong> Applying Bayes a second time costs thirty seconds.</p>
+    <h4>The bad-channel density <em>decreases</em> in <span class="m"><i>x</i></span></h4>
+    <p><a href="L06-conditional-distributions.html#s8">M6's Example 8.1</a> uses a bad-channel density that <em>increases</em>, so <strong>the posterior moves the opposite way there.</strong> Copy the example's conclusion and you write the reverse of the truth in (f). Remember that <strong>the procedure matches and the direction does not</strong>: use the example for method, and decide the direction from this problem's own numbers.</p>
+    <h4>Why conditioning works when <span class="m"><i>P</i>(<i>X</i> = <i>x</i>) = 0</span></h4>
+    <p>The problem does not ask, but an exam might. <a href="L06-conditional-distributions.html#s7">M6 §07</a> approaches through a window of width <span class="m"><i>Δ</i></span> and shows that the <span class="m"><i>Δ</i></span> <strong>cancels between numerator and denominator.</strong> Worth being able to say in one line.</p>
+    <h4>(f) is prose, and it has two halves</h4>
+    <p style="margin-bottom:0">One is <strong>comparing the likelihoods</strong>: which hypothesis explains the value you observed better. The other is that <strong>the prior is still in play.</strong> With <span class="m">0.7</span> against <span class="m">0.3</span> the scale starts tilted, so the posterior does not flip the instant the likelihood does. Dragging the prior slider in <a href="L06-conditional-distributions.html#s8">M6 §08's tool</a> makes this immediate.</p>
+  </div>
+</section>
+
+<!-- ══ P6 ══ -->
+<section id="p6">
+  <div class="sec-head"><span class="sec-num">P6</span><h2 lang="ko">확률변수의 함수</h2><h2 lang="en">A function of a random variable</h2></div>
+  <p class="sec-sub" lang="ko">SNR에서 스펙트럼 효율로. 일반형 두 개, 대입 세 개, 그리고 판정 (a)–(f)</p>
+  <p class="sec-sub" lang="en">From SNR to spectral efficiency: two general results, three substitutions, and a verdict, (a) through (f).</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>(a) CDF 방법</td><td><a href="L07-functions-of-random-variables.html#s3">M7 · 03</a>: <span class="m">{<i>g</i>(<i>X</i>) ≤ <i>y</i>}</span>를 <span class="m">{<i>X</i> ∈ <i>A<sub>y</sub></i>}</span>로</td></tr>
+    <tr><td>(b) 단조 변환 정리</td><td><a href="L07-functions-of-random-variables.html#s6">M7 · 06</a></td></tr>
+    <tr><td>(c)(d) 균등분포의 CDF와 PDF</td><td><a href="L05-random-variables.html#s9">M5 · 09 연속 분포</a></td></tr>
+    <tr><td>(f) 균등이 아닌 이유</td><td><a href="L07-functions-of-random-variables.html#s7">M7 · 07 늘임과 눌림</a></td></tr>
+    <tr><td>모양을 먼저 눈으로</td><td><a href="L07-functions-of-random-variables.html#s11">M7 · 11 도구</a>의 log 프리셋</td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>(a) the CDF method</td><td><a href="L07-functions-of-random-variables.html#s3">M7 · §03</a>: rewrite <span class="m">{<i>g</i>(<i>X</i>) ≤ <i>y</i>}</span> as <span class="m">{<i>X</i> ∈ <i>A<sub>y</sub></i>}</span></td></tr>
+    <tr><td>(b) the monotonic theorem</td><td><a href="L07-functions-of-random-variables.html#s6">M7 · §06</a></td></tr>
+    <tr><td>(c) and (d) the uniform's CDF and PDF</td><td><a href="L05-random-variables.html#s9">M5 · §09 continuous distributions</a></td></tr>
+    <tr><td>(f) why it is not uniform</td><td><a href="L07-functions-of-random-variables.html#s7">M7 · §07 stretching</a></td></tr>
+    <tr><td>seeing the shape first</td><td>the log preset in <a href="L07-functions-of-random-variables.html#s11">M7 · §11's tool</a></td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p><strong>단조성부터 확인해라.</strong> <span class="m"><i>X</i> ≥ 0</span>이라는 조건이 주어져 있고, 그 위에서 이 <span class="m"><i>g</i></span>는 순증가야. <a href="L07-functions-of-random-variables.html#s2">M7 §02</a>가 짚은 대로 <strong>"단조인가"는 지지집합 위에서만 물을 수 있는 질문</strong>이니, 정의역을 먼저 못박고 시작해.</p>
+    <p style="margin-bottom:0">순증가라는 걸 확인했으면 <span class="m"><i>g</i><sup>−1</sup></span>을 명시적으로 쓸 수 있어. 로그의 역함수니까 지수야. <strong>(a)는 그걸 <span class="m"><i>F<sub>X</sub></i></span>에 넣는 것이고, (b)는 연쇄법칙으로 미분하는 것뿐이야.</strong></p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p><strong>Check monotonicity first.</strong> You are given <span class="m"><i>X</i> ≥ 0</span>, and on that domain this <span class="m"><i>g</i></span> is strictly increasing. As <a href="L07-functions-of-random-variables.html#s2">M7 §02</a> insists, <strong>"is it monotone" is a question you can only ask on the support</strong>, so nail the domain down before anything else.</p>
+    <p style="margin-bottom:0">Once it is monotone you can write <span class="m"><i>g</i><sup>−1</sup></span> explicitly, since the inverse of a log is an exponential. <strong>Part (a) is then substituting that into <span class="m"><i>F<sub>X</sub></i></span>, and (b) is one application of the chain rule.</strong></p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>밑이 2인 지수를 미분하면 <span class="m">ln 2</span>가 따라 나온다</h4>
+    <p><strong>(b)에서 가장 흔하게 빠뜨리는 게 이거야.</strong> <span class="m">log<sub>2</sub></span>의 역함수를 미분하면 자연로그가 튀어나와. 빼먹으면 (d)의 밀도가 <span class="m">ln 2</span>배만큼 틀리고, <strong>적분해도 1이 안 나와서 바로 걸려.</strong> (d)를 구한 뒤 반드시 적분 검산을 해.</p>
+    <h4>(a)(b)는 <span class="m"><i>F<sub>X</sub></i></span>, <span class="m"><i>f<sub>X</sub></i></span>로 답해야 한다</h4>
+    <p>문제가 <em>"in terms of the CDF <span class="m"><i>F<sub>X</sub></i></span>"</em>라고 명시해. 여기서 벌써 <span class="m"><i>U</i>[0,1]</span>을 대입해버리면 (c)와 중복이 되고, <strong>일반형을 요구한 항의 점수를 놓쳐.</strong> 균등분포는 (c)에 가서야 등장해.</p>
+    <h4><span class="m"><i>Y</i></span>의 지지집합을 밝혀라</h4>
+    <p><span class="m"><i>X</i> ∈ [0,1]</span>이면 <span class="m"><i>Y</i></span>는 어디에 살까. 양 끝점을 대입해보면 나와. <strong>(d)의 밀도는 그 구간 밖에서 0이라고 명시해야 완전한 답이야.</strong> 그리고 (e)의 <span class="m">0.5</span>가 그 구간 안에 있는지도 확인해.</p>
+    <h4>(f)는 "아니다"로 끝내면 안 된다</h4>
+    <p style="margin-bottom:0"><em>"Justify your answer"</em>가 붙어 있어. 근거는 (d)에서 구한 <span class="m"><i>f<sub>Y</sub></i></span>가 <strong>상수가 아니라는 것</strong>이야. 왜 상수가 아닌지까지 붙이면 더 좋아. <a href="L07-functions-of-random-variables.html#s7">M7 §07</a>의 말로 하면, <span class="m"><i>g</i>′</span>이 자리마다 달라서 어떤 구간은 늘어나고 어떤 구간은 눌리기 때문이야. <strong><a href="L07-functions-of-random-variables.html#s11">M7 §11 도구</a>의 log 프리셋이 그 모양을 그대로 보여줘.</strong></p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>Differentiating a base-2 exponential brings down <span class="m">ln 2</span></h4>
+    <p><strong>This is the single most common omission in (b).</strong> The inverse of a <span class="m">log<sub>2</sub></span> is a power of two, and differentiating it produces a natural log. Drop it and the density in (d) is off by a factor of <span class="m">ln 2</span>, <strong>which shows up immediately because it no longer integrates to 1.</strong> Always integrate (d) as a check.</p>
+    <h4>(a) and (b) must be answered in terms of <span class="m"><i>F<sub>X</sub></i></span> and <span class="m"><i>f<sub>X</sub></i></span></h4>
+    <p>The problem says <em>"in terms of the CDF <span class="m"><i>F<sub>X</sub></i></span>"</em> explicitly. Substituting <span class="m"><i>U</i>[0,1]</span> this early duplicates (c) and <strong>forfeits the parts that asked for the general form.</strong> The uniform enters only at (c).</p>
+    <h4>State the support of <span class="m"><i>Y</i></span></h4>
+    <p>Where does <span class="m"><i>Y</i></span> live when <span class="m"><i>X</i> ∈ [0,1]</span>? Substitute the endpoints and find out. <strong>The density in (d) is only a complete answer once you say it is zero outside that interval</strong>, and while you are there, check whether (e)'s <span class="m">0.5</span> falls inside it.</p>
+    <h4>(f) cannot just say no</h4>
+    <p style="margin-bottom:0">It says <em>"justify your answer."</em> The justification is that the <span class="m"><i>f<sub>Y</sub></i></span> you found in (d) is <strong>not constant.</strong> Saying why it is not constant is better still: in the language of <a href="L07-functions-of-random-variables.html#s7">M7 §07</a>, <span class="m"><i>g</i>′</span> varies with position, so some intervals stretch and others compress. <strong>The log preset in <a href="L07-functions-of-random-variables.html#s11">M7 §11's tool</a> shows exactly that shape.</strong></p>
+  </div>
+</section>
+
+<!-- ══ P7 ══ -->
+<section id="p7">
+  <div class="sec-head"><span class="sec-num">P7</span><h2 lang="ko">단조 · 비단조 변환</h2><h2 lang="en">Monotonic and non-monotonic transformations</h2></div>
+  <p class="sec-sub" lang="ko">아핀 하나, 제곱 하나. 두 갈래가 왜 생기는지까지 (a)–(e)</p>
+  <p class="sec-sub" lang="en">One affine map and one square, ending with why two branches appear, (a) through (e).</p>
+
+  <table lang="ko">
+    <tr><th>필요한 것</th><th>어디를 보면 되나</th></tr>
+    <tr><td>(a) 아핀 변환</td><td><a href="L07-functions-of-random-variables.html#s4">M7 · 04</a>, 예제 4.1</td></tr>
+    <tr><td>(b)(c) <span class="m"><i>Z</i> = <i>X</i><sup>2</sup></span></td><td><a href="L07-functions-of-random-variables.html#s5">M7 · 05</a>, 예제 5.1 (숫자가 다르다)</td></tr>
+    <tr><td>(d) 왜 두 값이 기여하나</td><td><a href="L07-functions-of-random-variables.html#s8">M7 · 08 Jacobian 도해</a> · <a href="L07-functions-of-random-variables.html#s9">M7 · 09 이산판</a></td></tr>
+    <tr><td>(e) CDF에 값 넣기</td><td>(b)의 결과를 그대로 쓴다</td></tr>
+  </table>
+  <table lang="en">
+    <tr><th>what you need</th><th>where to look</th></tr>
+    <tr><td>(a) the affine transform</td><td><a href="L07-functions-of-random-variables.html#s4">M7 · §04</a> and Example 4.1</td></tr>
+    <tr><td>(b) and (c) <span class="m"><i>Z</i> = <i>X</i><sup>2</sup></span></td><td><a href="L07-functions-of-random-variables.html#s5">M7 · §05</a> and Example 5.1, with different numbers</td></tr>
+    <tr><td>(d) why two values contribute</td><td><a href="L07-functions-of-random-variables.html#s8">M7 · §08's Jacobian figure</a> and <a href="L07-functions-of-random-variables.html#s9">M7 · §09 the discrete version</a></td></tr>
+    <tr><td>(e) evaluating a CDF</td><td>just reuse (b)</td></tr>
+  </table>
+
+  <div class="def" lang="ko">
+    <span class="tag">첫 수</span>
+    <p><strong>(a)와 (b)는 서로 다른 <span class="m"><i>X</i></span>를 쓴다.</strong> 문제를 다시 읽어. (a)는 <span class="m"><i>U</i>[0,1]</span>이고 (b)부터는 <span class="m"><i>U</i>[−1,1]</span>이야. <strong>(a)의 <span class="m"><i>X</i></span>를 (b)로 끌고 가면 전부 틀려.</strong> 두 문제라고 생각하고 종이를 나눠 써.</p>
+    <p style="margin-bottom:0">(b)는 지지집합이 <strong>원점에 대해 대칭</strong>이라는 게 최대의 선물이야. <a href="L07-functions-of-random-variables.html#s5">M7 예제 5.1</a>은 일부러 비대칭으로 만들어서 구간이 둘로 갈라졌는데, <strong>이 문제는 대칭이라 그 분기가 통째로 사라져.</strong> 예제를 읽었으면 "왜 여기서는 경우를 안 나눠도 되는가"를 스스로 설명할 수 있어야 해.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">First move</span>
+    <p><strong>(a) and (b) use different <span class="m"><i>X</i></span>.</strong> Read it again: (a) is <span class="m"><i>U</i>[0,1]</span>, and from (b) on it is <span class="m"><i>U</i>[−1,1]</span>. <strong>Carrying (a)'s <span class="m"><i>X</i></span> into (b) makes everything wrong.</strong> Treat them as two problems and split the page.</p>
+    <p style="margin-bottom:0">In (b), the support being <strong>symmetric about the origin</strong> is the gift. <a href="L07-functions-of-random-variables.html#s5">M7's Example 5.1</a> deliberately uses an asymmetric support, which forces a case split; <strong>the symmetry here removes that split entirely.</strong> If you have read the example you should be able to explain to yourself why no cases are needed here.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">빠뜨리기 쉬운 것</span>
+    <h4>(a)에서 지지집합을 같이 물었다</h4>
+    <p><em>"Find the support of <span class="m"><i>Y</i></span> and its PDF"</em>야. 밀도 식만 쓰고 끝내면 절반이야. <strong>아핀 변환은 구간을 옮기고 늘인다</strong>는 걸 <a href="L07-functions-of-random-variables.html#s4">M7 §04</a>가 도해로 보여줘. 양 끝점을 대입해서 새 구간을 밝혀.</p>
+    <h4><span class="m"><i>P</i>(<i>X</i><sup>2</sup> ≤ <i>z</i>) = <i>P</i>(<i>X</i> ≤ √<i>z</i>)</span>라고 쓰면 틀린다</h4>
+    <p><strong>이 과제에서 제일 비싼 한 줄이야.</strong> 제곱근을 씌우면 갈래가 둘 나와. <a href="L07-functions-of-random-variables.html#s5">M7 §05</a>의 포물선 그림을 보면 수평선이 곡선을 <strong>두 점에서</strong> 만나는 게 보여. 그 두 점 사이가 <span class="m"><i>A<sub>z</sub></i></span>야.</p>
+    <h4><span class="m"><i>z</i></span>의 범위를 밝혀라</h4>
+    <p><span class="m"><i>X</i> ∈ [−1, 1]</span>이면 <span class="m"><i>Z</i></span>는 어디까지 갈까. <strong>(b)의 CDF는 <span class="m"><i>z</i> &lt; 0</span>, 중간, <span class="m"><i>z</i></span>가 상한을 넘을 때 세 구간으로 나눠 써야 해.</strong> 가운데 구간만 쓰면 P1·P3·P4와 같은 실수를 네 번째로 반복하는 거야.</p>
+    <h4>(c)의 밀도가 <span class="m"><i>z</i> = 0</span>에서 발산한다</h4>
+    <p>계산이 틀린 게 아니야. <a href="L07-functions-of-random-variables.html#s5">M7 §05의 함정</a>과 <a href="L08-expectation.html#s11">M8 §11</a>이 짚은 대로, <strong>밀도는 적분만 유한하면 무한대가 되어도 괜찮아.</strong> 그래도 불안하면 <span class="m">∫<i>f<sub>Z</sub></i></span>가 1인지 확인해. 이게 (c)의 검산이야.</p>
+    <h4>(d)는 계산이 아니라 서술이다</h4>
+    <p style="margin-bottom:0"><em>"Explain why two values of <span class="m"><i>X</i></span> contribute"</em>. <strong>답은 <span class="m"><i>g</i></span>가 일대일이 아니라는 것</strong>이고, 두 갈래가 겹치지 않는 사건이라 확률이 <em>더해진다</em>는 것까지 말해야 완성이야. <a href="L07-functions-of-random-variables.html#s9">M7 §09의 이산 예제</a>가 이걸 분수 없이 보여줘서, 말로 옮기기에 제일 편한 그림이야.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Easy to miss</span>
+    <h4>(a) also asks for the support</h4>
+    <p>It says <em>"find the support of <span class="m"><i>Y</i></span> and its PDF."</em> The density alone is half an answer. <strong>An affine map shifts and stretches the interval</strong>, as <a href="L07-functions-of-random-variables.html#s4">M7 §04's figure</a> shows. Substitute the endpoints and state the new interval.</p>
+    <h4>Writing <span class="m"><i>P</i>(<i>X</i><sup>2</sup> ≤ <i>z</i>) = <i>P</i>(<i>X</i> ≤ √<i>z</i>)</span> is wrong</h4>
+    <p><strong>The most expensive single line in this set.</strong> Taking a square root produces two branches. In <a href="L07-functions-of-random-variables.html#s5">M7 §05's</a> parabola figure you can see the level line meeting the curve at <strong>two points</strong>, and <span class="m"><i>A<sub>z</sub></i></span> is the stretch between them.</p>
+    <h4>State the range of <span class="m"><i>z</i></span></h4>
+    <p>With <span class="m"><i>X</i> ∈ [−1, 1]</span>, how far does <span class="m"><i>Z</i></span> reach? <strong>The CDF in (b) needs three pieces: <span class="m"><i>z</i> &lt; 0</span>, the middle, and <span class="m"><i>z</i></span> above the upper limit.</strong> Writing only the middle piece repeats, for the fourth time, the same omission as in P1, P3 and P4.</p>
+    <h4>The density in (c) blows up at <span class="m"><i>z</i> = 0</span></h4>
+    <p>Nothing went wrong. As <a href="L07-functions-of-random-variables.html#s5">M7 §05's trap</a> and <a href="L08-expectation.html#s11">M8 §11</a> both note, <strong>a density may be unbounded as long as it integrates to something finite.</strong> If it still feels off, check that <span class="m">∫<i>f<sub>Z</sub></i></span> equals 1; that is the verification for (c).</p>
+    <h4>(d) is prose, not arithmetic</h4>
+    <p style="margin-bottom:0"><em>"Explain why two values of <span class="m"><i>X</i></span> contribute."</em> <strong>The answer is that <span class="m"><i>g</i></span> is not one-to-one</strong>, and it is only complete once you add that the two branches are disjoint events, so their probabilities <em>add</em>. <a href="L07-functions-of-random-variables.html#s9">M7 §09's discrete example</a> shows this without a single fraction, which makes it the easiest picture to put into words.</p>
+  </div>
+</section>
+
+<!-- ══ 99 ══ -->
+<section id="p9">
+  <div class="sec-head"><span class="sec-num">99</span><h2 lang="ko">체크리스트와 회고</h2><h2 lang="en">Checklist and reflection</h2></div>
+
+  <div class="def" lang="ko">
+    <span class="tag">과제가 지정한 복습 목록</span>
+    <p>문제지의 <em>Topics to Review</em>가 열 항목이야. 다 풀고 나서 각각에 대해 "설명할 수 있나"를 물어봐.</p>
+    <table>
+      <tr><th>항목</th><th>노트</th></tr>
+      <tr><td>확률변수는 결과를 실수로 보내는 함수다</td><td><a href="L05-random-variables.html#s2">M5 · 02</a></td></tr>
+      <tr><td>누적분포함수</td><td><a href="L05-random-variables.html#s4">M5 · 04</a></td></tr>
+      <tr><td>확률질량함수와 확률밀도함수</td><td><a href="L05-random-variables.html#s6">M5 · 06</a>, <a href="L05-random-variables.html#s7">07</a></td></tr>
+      <tr><td>Bernoulli · binomial · geometric · Poisson</td><td><a href="L05-random-variables.html#s8">M5 · 08</a></td></tr>
+      <tr><td>uniform · exponential</td><td><a href="L05-random-variables.html#s9">M5 · 09</a></td></tr>
+      <tr><td>사건이 주어졌을 때의 조건부 CDF와 PDF</td><td><a href="L06-conditional-distributions.html#s2">M6 · 02</a>, <a href="L06-conditional-distributions.html#s3">03</a>, <a href="L06-conditional-distributions.html#s4">04</a></td></tr>
+      <tr><td>분포에 대한 전확률 법칙</td><td><a href="L06-conditional-distributions.html#s6">M6 · 06</a></td></tr>
+      <tr><td>연속 관측에서의 Bayes 규칙</td><td><a href="L06-conditional-distributions.html#s7">M6 · 07</a>, <a href="L06-conditional-distributions.html#s8">08</a></td></tr>
+      <tr><td>확률변수의 함수와 CDF 방법</td><td><a href="L07-functions-of-random-variables.html#s3">M7 · 03</a></td></tr>
+      <tr><td>단조 변환과 비단조 변환</td><td><a href="L07-functions-of-random-variables.html#s6">M7 · 06</a>, <a href="L07-functions-of-random-variables.html#s8">08</a></td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>목록에 없는데 이 과제가 요구한 것이 하나 있어.</strong> 이산 확률변수의 <strong>조건부 PMF</strong>야. P1(d)(e)와 P2(d)가 그걸 쓰는데 강의 슬라이드에도 없고 이 목록에도 없어. <a href="L06-conditional-distributions.html#s5">M6 §05</a>가 교재로 그 자리를 메워놨어.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">The review list the assignment specifies</span>
+    <p>The <em>Topics to Review</em> list has ten entries. Once you have finished, ask yourself whether you could explain each one.</p>
+    <table>
+      <tr><th>topic</th><th>notes</th></tr>
+      <tr><td>random variables as functions from outcomes to reals</td><td><a href="L05-random-variables.html#s2">M5 · §02</a></td></tr>
+      <tr><td>cumulative distribution functions</td><td><a href="L05-random-variables.html#s4">M5 · §04</a></td></tr>
+      <tr><td>probability mass and probability density functions</td><td><a href="L05-random-variables.html#s6">M5 · §06</a>, <a href="L05-random-variables.html#s7">§07</a></td></tr>
+      <tr><td>Bernoulli, binomial, geometric, Poisson</td><td><a href="L05-random-variables.html#s8">M5 · §08</a></td></tr>
+      <tr><td>uniform and exponential</td><td><a href="L05-random-variables.html#s9">M5 · §09</a></td></tr>
+      <tr><td>conditional CDFs and PDFs given an event</td><td><a href="L06-conditional-distributions.html#s2">M6 · §02</a>, <a href="L06-conditional-distributions.html#s3">§03</a>, <a href="L06-conditional-distributions.html#s4">§04</a></td></tr>
+      <tr><td>the law of total probability for distributions</td><td><a href="L06-conditional-distributions.html#s6">M6 · §06</a></td></tr>
+      <tr><td>Bayes' rule with continuous observations</td><td><a href="L06-conditional-distributions.html#s7">M6 · §07</a>, <a href="L06-conditional-distributions.html#s8">§08</a></td></tr>
+      <tr><td>functions of random variables and the CDF method</td><td><a href="L07-functions-of-random-variables.html#s3">M7 · §03</a></td></tr>
+      <tr><td>monotonic and non-monotonic transformations</td><td><a href="L07-functions-of-random-variables.html#s6">M7 · §06</a>, <a href="L07-functions-of-random-variables.html#s8">§08</a></td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>One thing this set requires is missing from the list:</strong> the <strong>conditional PMF</strong> of a discrete random variable. P1(d), P1(e) and P2(d) all need it, and it appears neither on the slides nor in the review list. <a href="L06-conditional-distributions.html#s5">M6 §05</a> fills that gap from the textbook.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">이 과제가 반복해서 요구한 것</span>
+    <h4>"for all real <span class="m"><i>x</i></span>"가 세 번 나온다</h4>
+    <p>P1(b), P3(b), P4(b). 그리고 P7(b)도 사실상 같은 요구야. <strong>CDF를 물으면 구간 전체에 대해 답하라는 뜻</strong>이라는 걸 이 과제가 네 번 강조한 셈이야. 시험에서도 그럴 거라고 보면 돼.</p>
+    <h4>검산할 자리를 문제가 직접 만들어준다</h4>
+    <p>P1(c)의 <span class="m"><i>P</i>(<i>X</i>≤2) + <i>P</i>(<i>X</i>&gt;2)</span>, P3(c)(d)의 합, P4(d)의 <span class="m">∫<i>f</i> = 1</span>, P5(c)(d)의 합. <strong>네 군데 다 "합이 1"이야.</strong> 이걸 다 하면 틀린 채로 제출할 확률이 크게 떨어져.</p>
+    <h4>서술 문항이 네 개다</h4>
+    <p style="margin-bottom:0">P1(f), P2(e), P5(f), P7(d). <strong>전부 "왜"를 묻고, 전부 계산만으로는 점수가 안 나와.</strong> 숫자를 낸 뒤에 <em>그 숫자가 무엇을 뜻하는지</em> 두세 문장을 붙이는 습관을 들여두면 시험에서도 그대로 쓰여.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">What this set keeps asking for</span>
+    <h4>"For all real <span class="m"><i>x</i></span>" appears three times</h4>
+    <p>P1(b), P3(b), P4(b), and P7(b) amounts to the same demand. <strong>Asking for a CDF means asking for it on the whole line</strong>, a point this assignment makes four times over. Expect the same on an exam.</p>
+    <h4>The problems build in their own checks</h4>
+    <p>P1(c)'s <span class="m"><i>P</i>(<i>X</i>≤2) + <i>P</i>(<i>X</i>&gt;2)</span>, the sum in P3(c) and (d), P4(d)'s <span class="m">∫<i>f</i> = 1</span>, the sum in P5(c) and (d). <strong>All four are "does it total 1".</strong> Doing every one of them sharply reduces the chance of submitting something wrong.</p>
+    <h4>Four parts want prose</h4>
+    <p style="margin-bottom:0">P1(f), P2(e), P5(f), P7(d). <strong>All of them ask why, and none of them score on arithmetic alone.</strong> Getting into the habit of adding two or three sentences on <em>what the number means</em> after computing it carries straight over to the exam.</p>
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">Reflection · 5문항</span>
+    <p>제출물에 회고가 붙어 있어. 문제를 다 풀고 나서 쓰는 거지만, <strong>풀면서 메모해두면 훨씬 정확해져.</strong></p>
+    <ol style="margin-bottom:0">
+      <li>어느 문제 또는 개념이 가장 쉬웠나. 왜 그랬나.</li>
+      <li>어느 것이 가장 어려웠나. 구체적으로 무엇이 어렵게 만들었나.</li>
+      <li>풀이가 맞는지 아직 확신이 없는 문제가 있나. 어느 대목이 불확실한가.</li>
+      <li>나중에 알아차리거나 고친 실수가 있나. 거기서 뭘 배웠나.</li>
+      <li>이 과제에 대략 몇 시간을 썼나.</li>
+    </ol>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Reflection · five questions</span>
+    <p>The submission includes a reflection. It is written after the fact, but <strong>notes taken while working make it far more accurate.</strong></p>
+    <ol style="margin-bottom:0">
+      <li>Which problem or concept was easiest, and why?</li>
+      <li>Which was hardest, and what specifically made it hard?</li>
+      <li>Is there a solution you are still unsure about, and where exactly is the uncertainty?</li>
+      <li>Did you make a mistake you later caught or corrected, and what did you learn from it?</li>
+      <li>Roughly how much time did the assignment take?</li>
+    </ol>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>이 과제가 다루지 않는 것.</strong> <a href="L08-expectation.html">Module 8 기댓값</a>은 HW3 범위 밖이야. 다만 <strong>P2(e)의 무기억성</strong>은 Module 8 §08의 지수분포 버전과 정확히 같은 성질이고, 슬라이드 어디에도 둘이 나란히 놓인 적이 없어. 이산과 연속을 한 번에 보고 싶으면 <a href="L08-expectation.html#s8">M8 §08</a>을 같이 읽어.
+  </div>
+  <div class="callout" lang="en">
+    <strong>What this set does not touch.</strong> <a href="L08-expectation.html">Module 8, expectation</a>, is outside HW3. That said, <strong>the memorylessness in P2(e)</strong> is exactly the property Module 8 §08 derives for the exponential, and no slide ever places the two side by side. To see the discrete and continuous halves together, read <a href="L08-expectation.html#s8">M8 §08</a> alongside.
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span lang="ko">EEE 554 Probability and Random Processes · Homework 3 공략<br>
+  강의: Nicolò Michelusi · School of Electrical, Computer and Energy Engineering, Arizona State University<br>
+  교재: Bruce Hajek, <em>Random Processes for Engineers</em> (Cambridge University Press, 2015) §1.3–§1.5<br>
+  이 페이지는 수강생이 만든 개인 학습 자료이고 공식 강의 자료가 아닙니다. <strong>문제 원문과 해답은 싣지 않았습니다.</strong><br>
+  과제와 강의 슬라이드의 저작권은 Nicolò Michelusi 교수와 Arizona State University에 있습니다.</span><span lang="en">EEE 554 Probability and Random Processes · Homework 3 guide<br>
+  Course: Nicolò Michelusi · School of Electrical, Computer and Energy Engineering, Arizona State University<br>
+  Textbook: Bruce Hajek, <em>Random Processes for Engineers</em> (Cambridge University Press, 2015) §1.3 to §1.5<br>
+  This page was written by a student and is not official course material. <strong>Neither the problem statements nor any solutions are reproduced here.</strong><br>
+  Copyright in the assignment and the lecture slides belongs to Professor Nicolò Michelusi and Arizona State University.</span>
+</footer>
+
+</div>
+<button class="lang-btn" type="button">English</button>
+<button class="theme-btn" type="button">☾ 다크</button>
+
+<script>
+// 큰 제목이 화면에서 사라지면 목차 위 미니 헤더를 띄운다.
+(function () {
+  var title = document.querySelector('header.top h1.title');
+  var mini = document.querySelector('nav.toc .mini-head');
+  if (!title || !mini || !window.IntersectionObserver) return;
+  new IntersectionObserver(function (es) {
+    mini.classList.toggle('on', !es[0].isIntersecting);
+  }, { threshold: 0 }).observe(title);
+})();
+</script>
+<script>
+// 테마 토글. 기본은 OS 설정을 따르고, 누르면 그 반대로 고정한다.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.theme-btn');
+  if (!btn) return;
+  var osDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  function current() {
+    return root.dataset.theme || (osDark && osDark.matches ? 'dark' : 'light');
+  }
+  function paint() {
+    var dark = current() === 'dark';
+    btn.textContent = dark ? '☀ 라이트' : '☾ 다크';
+    btn.setAttribute('aria-label', dark ? '라이트 모드로' : '다크 모드로');
+  }
+  btn.addEventListener('click', function () {
+    root.dataset.theme = current() === 'dark' ? 'light' : 'dark';
+    paint();
+  });
+  if (osDark && osDark.addEventListener) osDark.addEventListener('change', paint);
+  paint();
+})();
+</script>
+<script>
+// 언어 토글. 기본은 한국어.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.lang-btn');
+  if (!btn) return;
+  function paint() {
+    var en = root.dataset.lang === 'en';
+    btn.textContent = en ? '한국어' : 'English';
+    btn.setAttribute('aria-label', en ? '한국어로 보기' : 'View in English');
+    root.lang = en ? 'en' : 'ko';
+  }
+  btn.addEventListener('click', function () {
+    root.dataset.lang = root.dataset.lang === 'en' ? 'ko' : 'en';
+    paint();
+    window.dispatchEvent(new Event('langchange'));
+  });
+  paint();
+})();
+</script>
+</body>
+</html>

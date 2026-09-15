@@ -222,33 +222,33 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
   <p class="lede" lang="en">Personal study notes rebuilt slide by slide from the lecture deck, with a picture attached to every formula and worked examples and counterexamples filled in.</p>
 
   <div class="facts" lang="ko">
-    <span class="chip">Module 5 / 5 완료</span>
-    <span class="chip">인터랙티브 도구 5종</span>
+    <span class="chip">Module 8 / 8 완료</span>
+    <span class="chip">인터랙티브 도구 8종</span>
     <span class="chip">슬라이드 동기화</span>
     <span class="chip">한국어</span>
   </div>
   <div class="facts" lang="en">
-    <span class="chip">Modules 1–5 done</span>
-    <span class="chip">5 interactive tools</span>
+    <span class="chip">Modules 1–8 done</span>
+    <span class="chip">8 interactive tools</span>
     <span class="chip">slide sync</span>
     <span class="chip">Korean &amp; English</span>
   </div>
 
-  <a class="hw" id="hwbox" href="HW2-conditional-probability-and-independence.html">
-    <div class="d" id="hwd">HW2</div>
+  <a class="hw" id="hwbox" href="HW3-random-variables-conditional-distributions-and-functions-of-random-variables.html">
+    <div class="d" id="hwd">HW3</div>
     <div class="txt" lang="ko">
-      <b>Homework 2 · Conditional Probability and Independence</b> · 마감 9월 6일 (일) 자정<br>
-      문제마다 뭘 알아야 풀리는지, 첫 수를 어디에 두는지, 뭘 빠뜨리기 쉬운지. P1–4와 P8은 Module 3, P5–7은 Module 4로 커버된다.
+      <b>Homework 3 · Random Variables, Conditional Distributions and Functions of RVs</b> · 마감 9월 13일 (일) 자정<br>
+      문제마다 뭘 알아야 풀리는지, 첫 수를 어디에 두는지, 뭘 빠뜨리기 쉬운지. 일곱 문제가 Module 5·6·7 셋에 걸쳐 있어서, 어느 노트로 가야 하는지부터 정리했다.
     </div>
     <div class="txt" lang="en">
-      <b>Homework 2 · Conditional Probability and Independence</b> · due midnight, Sunday September 6<br>
-      What each problem needs, where to put your first move, and what people leave out. P1 through P4 and P8 are covered by Module 3, P5 through P7 by Module 4.
+      <b>Homework 3 · Random Variables, Conditional Distributions and Functions of RVs</b> · due midnight, Sunday September 13<br>
+      What each problem needs, where to put your first move, and what people leave out. The seven problems span Modules 5, 6 and 7, so the guide starts by mapping each one to the right note.
     </div>
     <span class="hwgo" lang="ko">공략 보기 →</span>
     <span class="hwgo" lang="en">Open the guide →</span>
   </a>
-  <p style="margin:10px 0 0;font-size:12.5px;color:var(--ink3)" lang="ko">지난 과제: <a href="HW1-sets-and-probability-spaces.html">HW1 · Sets and Probability Spaces 공략</a></p>
-  <p style="margin:10px 0 0;font-size:12.5px;color:var(--ink3)" lang="en">Previous set: <a href="HW1-sets-and-probability-spaces.html">the HW1 guide, Sets and Probability Spaces</a></p>
+  <p style="margin:10px 0 0;font-size:12.5px;color:var(--ink3)" lang="ko">지난 과제: <a href="HW1-sets-and-probability-spaces.html">HW1 · Sets and Probability Spaces</a> · <a href="HW2-conditional-probability-and-independence.html">HW2 · Conditional Probability and Independence</a></p>
+  <p style="margin:10px 0 0;font-size:12.5px;color:var(--ink3)" lang="en">Previous sets: <a href="HW1-sets-and-probability-spaces.html">HW1, Sets and Probability Spaces</a> · <a href="HW2-conditional-probability-and-independence.html">HW2, Conditional Probability and Independence</a></p>
 </header>
 
 <h2 lang="ko">모듈</h2>
@@ -355,6 +355,74 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
   <span class="status done" lang="ko">읽기</span><span class="status done" lang="en">read</span>
 </a>
 
+<a class="mod" href="L06-conditional-distributions.html">
+  <div class="num">06</div>
+  <div>
+    <div class="en">Conditional Distributions</div>
+    <h3 lang="ko">조건부 분포</h3>
+    <h3 lang="en">Conditional Distributions</h3>
+    <p lang="ko">Module 3의 조건부 확률을 분포 전체에 적용한다. 하는 일은 언제나 둘이다. 정보가 배제한 값을 잘라내고, 남은 밀도를 1/P(M)배로 다시 채운다. 끝에서는 확률이 0인 사건으로 조건부를 거는 법까지 간다. 자르는 위치를 끌어보면 배율이 어떻게 폭발하는지 보인다.</p>
+    <p lang="en">Module 3 conditional probability, applied to a whole distribution. It always does two things: delete what the information ruled out, then scale what survives by 1/P(M). It ends by conditioning on an event of probability zero. Drag the cut point and watch the factor blow up.</p>
+    <div class="tags">
+      <span class="tag a">conditional CDF</span>
+      <span class="tag b">conditional PDF</span>
+      <span class="tag">renormalization</span>
+      <span class="tag c">total probability</span>
+      <span class="tag">Bayes with a density</span>
+    </div>
+  </div>
+  <span class="status done" lang="ko">읽기</span><span class="status done" lang="en">read</span>
+</a>
+
+<a class="mod" href="L07-functions-of-random-variables.html">
+  <div class="num">07</div>
+  <div>
+    <div class="en">Functions of Random Variables</div>
+    <h3 lang="ko">확률변수의 함수</h3>
+    <h3 lang="en">Functions of Random Variables</h3>
+    <p lang="ko">X의 분포를 알 때 Y = g(X)의 분포를 구한다. 방법은 CDF 방법 하나뿐이고 나머지는 전부 그 특수한 경우다. 밀도가 자리마다 다른 배율로 늘어나고 눌리는 것이 |dx/dy|이고, 무선 채널의 U자 Doppler 스펙트럼이 그 계산 하나로 나온다. 네 가지 g를 눌러보며 확인할 수 있다.</p>
+    <p lang="en">Given the distribution of X, find the distribution of Y = g(X). There is one method, the CDF method, and everything else is a special case of it. The factor |dx/dy| is the density stretching and compressing differently at every point, and the U-shaped Doppler spectrum of a wireless channel falls out of that one calculation. Four choices of g to click through.</p>
+    <div class="tags">
+      <span class="tag a">CDF method</span>
+      <span class="tag">monotone transform</span>
+      <span class="tag b">Jacobian</span>
+      <span class="tag c">Doppler</span>
+    </div>
+  </div>
+  <span class="status done" lang="ko">읽기</span><span class="status done" lang="en">read</span>
+</a>
+
+<a class="mod" href="L08-expectation.html">
+  <div class="num">08</div>
+  <div>
+    <div class="en">Expectation</div>
+    <h3 lang="ko">기댓값과 분산</h3>
+    <h3 lang="en">Expectation &amp; Variance</h3>
+    <p lang="ko">분포를 숫자 하나로 접는다. 질량중심이라는 그림 하나로 평균의 성질이 거의 다 보이고, E[g(X)]는 Module 7을 통째로 건너뛰게 해준다. 평균이 버린 퍼짐을 분산이 되찾고, 지수분포의 무기억성은 손글씨 슬라이드 네 쪽까지 따라가 유도했다. 막대를 직접 끌어 분포를 그려볼 수 있다.</p>
+    <p lang="en">Fold a distribution into a single number. One picture, the centre of mass, carries almost every property of the mean, and E[g(X)] lets you skip all of Module 7. Variance recovers the spread the mean threw away, and the memorylessness of the exponential is derived in full, following four handwritten slides. Drag the bars to draw your own distribution.</p>
+    <div class="tags">
+      <span class="tag a">E[X]</span>
+      <span class="tag">LOTUS</span>
+      <span class="tag c">linearity</span>
+      <span class="tag b">variance</span>
+      <span class="tag">memoryless</span>
+    </div>
+  </div>
+  <span class="status done" lang="ko">읽기</span><span class="status done" lang="en">read</span>
+</a>
+
+<div class="mod soon">
+  <div class="num">09</div>
+  <div>
+    <div class="en">Module 9</div>
+    <h3 lang="ko">아직 슬라이드가 없다</h3>
+    <h3 lang="en">No slides yet</h3>
+    <p lang="ko">09번 덱이 올라오면 같은 방식으로 정리한다. 주제는 짐작해서 적지 않고, 슬라이드를 보고 채우려고 비워뒀다.</p>
+    <p lang="en">Once deck 09 is posted it gets the same treatment. The topic is deliberately left blank, to be filled in from the slides rather than guessed at.</p>
+  </div>
+  <span class="status wait" lang="ko">준비 중</span><span class="status wait" lang="en">coming soon</span>
+</div>
+
 <h2 lang="ko">노트 구조</h2>
 <h2 lang="en">How the notes are built</h2>
 <div class="note" lang="ko">
@@ -407,7 +475,7 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
 
 <script>
 (function(){
-  var due = new Date(2026, 8, 7, 0, 0, 0); // Sep 6 midnight = Sep 7 00:00 local
+  var due = new Date(2026, 8, 14, 0, 0, 0); // Sep 13 midnight = Sep 14 00:00 local
   var now = new Date();
   var ms = due - now;
   var el = document.getElementById("hwd");

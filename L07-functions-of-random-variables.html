@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="ko" data-lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EEE 554 · Module 7 · Functions of Random Variables</title>
+<style>
+:root{
+  color-scheme:light dark;
+
+  /* 색 성분. rgba(var(--blue-rgb),.16) 형태로 농도 변형을 만든다. */
+  --ink-rgb:20,22,26;
+  --blue-rgb:18,80,196;
+  --pink-rgb:217,20,122;
+  --violet-rgb:107,47,168;
+  --green-rgb:0,132,95;
+  --amber-rgb:178,106,0;
+  --sel-rgb:75,29,140;
+
+  --paper:#FAFAF8;
+  --card:#FFFFFF;
+  --ink:rgb(var(--ink-rgb));
+  --ink2:#565D66;
+  --ink3:#8A9099;
+  --rule:#E2E1DB;
+  --blue:rgb(var(--blue-rgb));
+  --pink:rgb(var(--pink-rgb));
+  --violet:rgb(var(--violet-rgb));
+  --green:rgb(var(--green-rgb));
+  --amber:rgb(var(--amber-rgb));
+  --amber-bg:#FDF6E9;
+  --red:#C02626;
+  --sel:rgb(var(--sel-rgb));
+
+  /* 보조 표면과 진한 변형 */
+  --amber-line:#F0E2C4;
+  --code-bg:#F0EFEA;
+  --chip:#F1F0EB;
+  --sel-soft:#F6F2FB;
+  --pink-deep:#8B0D4E;
+  --green-deep:#005A42;
+  --amber-deep:#7A4A00;
+  --violet-deep:#3B1E70;
+  --brown:#A3532B;
+  --teal:#0E7490;
+  --shadow:rgba(var(--ink-rgb),.06);
+
+  --mono:ui-monospace,"Cascadia Mono","Cascadia Code",Consolas,"SFMono-Regular",monospace;
+  --sans:"Pretendard","Pretendard Variable",-apple-system,"Segoe UI Variable Text","Segoe UI","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --serif:"Cambria Math","STIX Two Math","Latin Modern Math",Cambria,"Times New Roman",serif;
+}
+
+/* 다크 팔레트. 의미 고정 색상(A=blue, B=pink, 교집합=violet, 함정=amber)은
+   그대로 두고 밝기만 어두운 배경에 맞게 올린다. */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 120px;display:grid;grid-template-columns:210px minmax(0,1fr);gap:56px}
+@media(max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);gap:0;padding:0 18px 80px}}
+
+header.top{grid-column:1/-1;padding:64px 0 40px;border-bottom:1px solid var(--rule);margin-bottom:48px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+h1.title{font-size:clamp(30px,5vw,50px);line-height:1.1;letter-spacing:-.025em;font-weight:800;margin:14px 0 6px}
+.subtitle{font-size:17px;color:var(--ink2);margin:0}
+.meta{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--mono);font-size:11px;letter-spacing:.05em;padding:5px 11px;border:1px solid var(--rule);border-radius:999px;color:var(--ink2);background:var(--card)}
+.chip.hot{border-color:var(--amber);color:var(--amber);background:var(--amber-bg)}
+.backlink{display:inline-block;margin-top:20px;font-family:var(--mono);font-size:11.5px;color:var(--blue);text-decoration:none;letter-spacing:.04em}
+.backlink:hover{text-decoration:underline}
+
+nav.toc{position:sticky;top:24px;align-self:start;font-size:13.5px;line-height:1.5}
+nav.toc .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:14px}
+nav.toc a{display:flex;gap:9px;padding:5px 0;color:var(--ink2);text-decoration:none;border-left:2px solid transparent;padding-left:11px;margin-left:-13px}
+nav.toc a:hover{color:var(--ink);border-left-color:var(--blue)}
+nav.toc a .n{font-family:var(--mono);font-size:11px;color:var(--ink3);padding-top:2px;min-width:14px}
+@media(max-width:900px){nav.toc{position:static;margin-bottom:44px;padding-bottom:28px;border-bottom:1px solid var(--rule)}}
+/* ── 상단 미니 헤더 ─────────────────────── */
+/* 큰 제목이 화면 밖으로 나가면 목차 위에 작게 나타나 계속 남는다.
+   목차가 이미 sticky라 그 안에 넣으면 따로 고정 장치가 필요 없다.
+   모바일에서는 목차가 static이라 의미가 없으므로 숨긴다. */
+.mini-head{max-height:0;opacity:0;visibility:hidden;overflow:hidden;margin-bottom:0;
+  transition:max-height .22s ease,opacity .18s ease,margin-bottom .22s ease,visibility .18s}
+.mini-head.on{max-height:150px;opacity:1;visibility:visible;margin-bottom:22px}
+nav.toc .mini-head a.back{display:inline-block;margin:0 0 12px;padding:0;border-left:none;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--blue);text-decoration:none}
+nav.toc .mini-head a.back:hover{text-decoration:underline;color:var(--blue);border-left-color:transparent}
+.mini-head .mod{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:3px}
+.mini-head .name{font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--ink);line-height:1.3}
+.mini-head .rule{height:1px;background:var(--rule);margin-top:16px}
+@media(max-width:900px){.mini-head{display:none}}
+
+section{margin-bottom:76px;scroll-margin-top:20px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+.sec-num{font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:.1em;padding-top:4px}
+h2{font-size:clamp(22px,3vw,29px);letter-spacing:-.02em;font-weight:750;margin:0;line-height:1.25}
+.sec-sub{color:var(--ink2);font-size:15px;margin:0 0 30px 0}
+h3{font-size:17.5px;font-weight:700;letter-spacing:-.01em;margin:38px 0 12px}
+h4{font-size:15px;font-weight:700;margin:26px 0 8px;color:var(--ink)}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 16px;padding-left:22px}
+li{margin-bottom:7px}
+code{font-family:var(--mono);font-size:.87em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+
+.m{font-family:var(--serif);font-style:normal;font-size:1.07em;white-space:nowrap}
+@media(max-width:900px){.m{white-space:normal}}
+.m i{font-style:italic}
+.eq{font-family:var(--serif);font-size:19px;text-align:center;margin:22px 0;line-height:1.9}
+.eq i{font-style:italic}
+.eq .note{font-family:var(--sans);font-size:13px;color:var(--ink3);display:block;margin-top:4px}
+.cA{color:var(--blue);font-weight:600}
+.cB{color:var(--pink);font-weight:600}
+.cC{color:var(--green);font-weight:600}
+
+.def{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--ink);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.def .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:7px}
+.def p:last-child,.def ol:last-child,.def ul:last-child{margin-bottom:0}
+
+.trap{background:var(--amber-bg);border:1px solid var(--amber-line);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.trap .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:7px;font-weight:600}
+.trap p:last-child,.trap ul:last-child{margin-bottom:0}
+.trap h4{margin-top:18px;font-size:14.5px}
+.trap h4:first-of-type{margin-top:0}
+
+.ex{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:18px 22px;margin:20px 0}
+.ex .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:7px;font-weight:600}
+.ex p:last-child,.ex ul:last-child,.ex ol:last-child{margin-bottom:0}
+details{margin-top:12px;border-top:1px dashed var(--rule);padding-top:12px}
+details summary{cursor:pointer;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--blue);list-style:none;user-select:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"▸ ";display:inline-block}
+details[open] summary::before{content:"▾ "}
+details .body{margin-top:12px}
+details .body p:last-child,details .body ol:last-child{margin-bottom:0}
+
+.callout{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:16px 0;margin:26px 0;font-size:15px;color:var(--ink2)}
+.callout strong{color:var(--ink)}
+
+/* ── 슬라이드 출처 표시 ─────────────────── */
+/* data-slide 값에서 라벨을 직접 만든다. 라벨과 앵커가 어긋날 수 없다.
+   리더가 꺼져 있어도, 모바일이어도 "이 대목이 슬라이드 몇 쪽인지"는 보여야 한다. */
+.sec-head[data-slide],h3[data-slide]{display:flex;align-items:baseline;gap:14px}
+.sec-head[data-slide]>h2,h3[data-slide]{min-width:0}
+.sec-head[data-slide]::before,h3[data-slide]::before{
+  content:"";order:1;flex:1 1 auto;min-width:16px;height:1px;
+  background:var(--rule);align-self:center;opacity:.75}
+.sec-head[data-slide]::after,h3[data-slide]::after{
+  content:"슬라이드 " attr(data-slide) "쪽";order:2;flex:none;
+  font-family:var(--mono);font-size:10px;letter-spacing:.05em;
+  color:var(--ink3);white-space:nowrap;align-self:center}
+@media(max-width:900px){
+  .sec-head[data-slide]::before,h3[data-slide]::before{min-width:10px}
+  .sec-head[data-slide]::after,h3[data-slide]::after{font-size:9.5px}
+}
+
+figure{margin:28px 0;background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:22px}
+figure svg{display:block;width:100%;height:auto;max-width:100%}
+figcaption{font-size:13px;color:var(--ink2);margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:720px){.grid2,.grid3{grid-template-columns:1fr}}
+.mini{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px}
+.mini .cap{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--ink2);text-align:center;margin-top:8px;line-height:1.4}
+.mini svg{display:block;width:100%;height:auto}
+.svgtxt{font-family:var(--serif);font-size:15px;fill:var(--ink)}
+.svgtxt.it{font-style:italic}
+.svglab{font-family:var(--mono);font-size:11px;fill:var(--ink2)}
+.svgnum{font-family:var(--mono);font-size:13px;font-weight:600}
+
+/* sigma-algebra checker */
+.play{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:22px;margin:28px 0}
+.plab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin:20px 0 9px}
+.plab:first-child{margin-top:0}
+.subsets{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+@media(max-width:560px){.subsets{grid-template-columns:repeat(2,1fr)}}
+.sub{font-family:var(--serif);font-size:15px;padding:9px 6px;text-align:center;background:var(--paper);border:1px solid var(--rule);border-radius:6px;cursor:pointer;user-select:none;transition:.12s;position:relative}
+.sub:hover{border-color:var(--sel)}
+.sub.on{background:var(--sel);border-color:var(--sel);color:var(--card);font-weight:600}
+.sub.need{background:var(--amber-bg);border-color:var(--amber);border-style:dashed;color:var(--amber)}
+.verdict{margin-top:18px;border-radius:8px;padding:15px 18px;font-size:14.5px;line-height:1.65}
+.verdict.ok{background:rgba(var(--green-rgb),.08);border:1px solid rgba(var(--green-rgb),.3);color:var(--green-deep)}
+.verdict.bad{background:var(--amber-bg);border:1px solid var(--amber-line);color:var(--amber-deep)}
+.verdict .hd{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:8px}
+.verdict ul{margin:8px 0 0;padding-left:20px}
+.verdict li{margin-bottom:5px;font-size:14px}
+.verdict .m{font-size:1em}
+.presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.presets button{font-family:var(--sans);font-size:12.5px;padding:7px 12px;background:var(--paper);border:1px solid var(--rule);border-radius:6px;color:var(--ink2);cursor:pointer;transition:.13s}
+.presets button:hover{border-color:var(--sel);color:var(--sel);background:var(--sel-soft)}
+.presets button.act{border-color:var(--green);color:var(--green);background:rgba(var(--green-rgb),.06);font-weight:600}
+.hintline{font-size:13px;color:var(--ink2);margin-top:16px;line-height:1.6;border-top:1px solid var(--rule);padding-top:13px}
+
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14.5px}
+@media(max-width:900px){table{display:block;max-width:100%;overflow-x:auto}}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);font-weight:500}
+
+footer{grid-column:1/-1;border-top:1px solid var(--rule);padding-top:28px;margin-top:20px;font-size:13.5px;color:var(--ink3);line-height:1.7}
+footer a{color:var(--blue)}
+/* 본문 링크. 규칙이 없으면 브라우저 기본 남색이 나오고 다크모드에서 묻는다. */
+main a{color:var(--blue);text-decoration:none;border-bottom:1px solid rgba(var(--blue-rgb),.4)}
+main a:hover{border-bottom-color:var(--blue);background:rgba(var(--blue-rgb),.09)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ── 테마 토글 ──────────────────────────── */
+/* 기본은 OS 설정(prefers-color-scheme)을 따른다. 이 버튼은 그걸 덮어쓴다. */
+.theme-btn{position:fixed;left:16px;bottom:16px;z-index:70;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 6px var(--shadow);transition:.13s}
+.theme-btn:hover{border-color:var(--sel);color:var(--sel)}
+@media(max-width:900px){.theme-btn{left:10px;bottom:10px;font-size:10.5px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.theme-btn{transition:none}}
+
+/* ── 언어 전환 ──────────────────────────── */
+/* 한 파일에 한국어와 영어를 나란히 두고 보이는 쪽만 남긴다.
+   도해·앵커·CSS·리더를 공유하므로 두 언어의 구조가 어긋날 수 없다.
+   lang 속성을 쓰는 건 스크린리더와 하이픈 처리도 같이 얻기 위해서다. */
+/* 언어 표시는 어떤 규칙보다 우선해야 한다. 목차나 도해 쪽 선택자가
+   더 구체적이어서 display를 되살리는 일이 실제로 있었다. */
+html[data-lang="ko"] [lang="en"]{display:none!important}
+html[data-lang="en"] [lang="ko"]{display:none!important}
+.lang-btn{position:fixed;left:16px;bottom:56px;z-index:70;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 6px var(--shadow);transition:.13s}
+.lang-btn:hover{border-color:var(--blue);color:var(--blue)}
+@media(max-width:900px){.lang-btn{left:10px;bottom:46px;font-size:10.5px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.lang-btn{transition:none}}
+
+/* ── 기호 뜯어보기 ────────────────────────────────────────────────
+   수학 표기 관습을 모르면 정의가 통째로 안 읽힌다. 그 관습만 따로 푼다.
+   기본은 펼쳐둔다(open). 모르는 사람에게 보이지 않으면 의미가 없기 때문이다.
+   대신 접을 수 있다. 알고 나면 매번 지나가야 하는 장애물이 되면 안 된다. */
+.nota{margin:18px 0;border:1px dashed var(--rule);border-radius:8px;background:var(--chip)}
+.nota>summary{cursor:pointer;list-style:none;padding:9px 14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);display:flex;align-items:center;gap:8px;user-select:none}
+.nota>summary::-webkit-details-marker{display:none}
+.nota>summary::before{content:"\25be";font-size:9px;display:inline-block;transition:transform .15s}
+.nota:not([open])>summary::before{transform:rotate(-90deg)}
+.nota>summary:hover{color:var(--ink2)}
+.nota .body{padding:2px 16px 14px;font-size:14px;color:var(--ink2);line-height:1.7}
+.nota .body>*:first-child{margin-top:0}
+.nota .body>*:last-child{margin-bottom:0}
+.nota .parts{width:100%;border-collapse:collapse;margin:12px 0}
+.nota .parts td{padding:6px 12px 6px 0;vertical-align:top;border-bottom:1px solid var(--rule);font-size:13.5px}
+.nota .parts tr:last-child td{border-bottom:0}
+.nota .parts td:first-child{white-space:nowrap;width:1%;color:var(--ink);padding-right:18px}
+.nota figure{margin:14px 0;background:var(--card);border:1px solid var(--rule)}
+.nota .eq{margin:12px 0}
+@media(max-width:900px){.nota .parts td:first-child{white-space:normal}}
+
+/* 인터랙티브 도구 (14번). .play 안에서만 쓴다. */
+.play button{font-family:var(--mono);font-size:11px;padding:6px 11px;background:var(--paper);color:var(--ink2);border:1px solid var(--rule);border-radius:6px;cursor:pointer;transition:.12s}
+.play button:hover{border-color:var(--ink3);color:var(--ink)}
+.play input[type=range]{accent-color:var(--sel)}
+.play table td,.play table th{padding:7px 10px}
+.play .win{color:var(--green);font-weight:700}
+.play .lose{color:var(--ink3)}
+
+
+/* ── 7강 전용 ─────────────────────────────── */
+/* 변환 도구: 슬라이스가 g 를 통과하면서 늘어나고 눌리는 것을 보여준다. */
+.cut-ctl{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:14px 0 4px}
+.cut-ctl label{font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:.06em}
+.cut-ctl input[type=range]{flex:1;min-width:150px}
+.cut-val{font-family:var(--mono);font-size:12.5px;color:var(--sel);font-weight:600;min-width:52px}
+.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+@media(max-width:560px){.readout{grid-template-columns:1fr}}
+.readout .cell{background:var(--paper);border:1px solid var(--rule);border-radius:7px;padding:10px 12px}
+.readout .cell .k{font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:4px}
+.readout .cell .v{font-family:var(--serif);font-size:16px;color:var(--ink)}
+.bars{margin-top:6px}
+.bars .row{display:flex;align-items:center;gap:10px;margin:5px 0;font-family:var(--mono);font-size:11.5px}
+.bars .row .k{width:74px;text-align:right;color:var(--ink3)}
+.bars .row .t{flex:1;height:14px;background:var(--chip);border-radius:3px;overflow:hidden}
+.bars .row .t>i{display:block;height:100%;border-radius:3px;transition:width .12s}
+.bars .row .v{width:58px;color:var(--ink2)}
+@media(prefers-reduced-motion:reduce){.bars .row .t>i{transition:none}}
+</style>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="eyebrow">EEE 554 · Probability and Random Processes · Michelusi</div>
+  <h1 class="title">Module 7<br>Functions of Random Variables</h1>
+  <p class="subtitle" lang="ko">X의 분포를 알 때, g(X)의 분포를 구한다. 밀도는 늘어나거나 눌린다.</p>
+  <p class="subtitle" lang="en">Given the distribution of X, find the distribution of g(X). Densities stretch and compress.</p>
+  <div class="meta" lang="ko">
+    <span class="chip">슬라이드 29쪽 (인쇄 번호 27)</span>
+    <span class="chip hot">HW3 P4, P6, P7</span>
+    <span class="chip">SNR을 스펙트럼 효율로 바꾸는 계산</span>
+  </div>
+  <div class="meta" lang="en">
+    <span class="chip">29 PDF pages, numbered to 27</span>
+    <span class="chip hot">HW3 P4, P6, P7</span>
+    <span class="chip">Turning an SNR into a spectral efficiency</span>
+  </div>
+  <a class="backlink" href="index.html" lang="ko">← 모듈 목록으로</a>
+  <a class="backlink" href="index.html" lang="en">← All modules</a>
+</header>
+
+<nav class="toc">
+  <div class="mini-head">
+    <a class="back" href="index.html" lang="ko">← 모듈 목록</a>
+    <a class="back" href="index.html" lang="en">← All modules</a>
+    <div class="mod">Module 7</div>
+    <div class="name">Functions of Random Variables</div>
+    <div class="rule"></div>
+  </div>
+  <div class="lab" lang="ko">목차</div>
+  <div class="lab" lang="en">Contents</div>
+  <a href="#s0"><span class="n">00</span><span lang="ko">이 모듈이 하는 일</span><span lang="en">What this module does</span></a>
+  <a href="#s1"><span class="n">01</span><span lang="ko">왜 변형하나</span><span lang="en">Why transform</span></a>
+  <a href="#s2"><span class="n">02</span><span lang="ko">g(X)도 확률변수다</span><span lang="en">g(X) is a random variable too</span></a>
+  <a href="#s3"><span class="n">03</span><span lang="ko">CDF 방법</span><span lang="en">The CDF method</span></a>
+  <a href="#s4"><span class="n">04</span><span lang="ko">예제 1: 아핀 변환</span><span lang="en">Example 1: affine</span></a>
+  <a href="#s5"><span class="n">05</span><span lang="ko">예제 2: Y = X²</span><span lang="en">Example 2: Y = X²</span></a>
+  <a href="#s6"><span class="n">06</span><span lang="ko">단조 변환 정리</span><span lang="en">The monotonic theorem</span></a>
+  <a href="#s7"><span class="n">07</span><span lang="ko">왜 미분이 붙나</span><span lang="en">Why the derivative appears</span></a>
+  <a href="#s8"><span class="n">08</span><span lang="ko">비단조: Jacobian 공식</span><span lang="en">Non-monotonic: the Jacobian</span></a>
+  <a href="#s9"><span class="n">09</span><span lang="ko">이산이면</span><span lang="en">If X is discrete</span></a>
+  <a href="#s10"><span class="n">10</span><span lang="ko">Doppler 편이</span><span lang="en">Doppler shift</span></a>
+  <a href="#s11"><span class="n">11</span><span lang="ko">직접 만져보기</span><span lang="en">Try it yourself</span></a>
+  <a href="#s99"><span class="n">99</span><span lang="ko">정리 &amp; 다음</span><span lang="en">Recap &amp; next</span></a>
+</nav>
+
+<main>
+
+<!-- ══ 00 ══ -->
+<section id="s0">
+  <div class="sec-head"><span class="sec-num">00</span><h2 lang="ko">이 모듈이 하는 일</h2><h2 lang="en">What this module does</h2></div>
+  <p class="sec-sub" lang="ko">한 줄 요약: 분포를 <em>결정론적인 함수</em>에 통과시킨다.</p>
+  <p class="sec-sub" lang="en">In one line: push a distribution through a <em>deterministic function</em>.</p>
+
+  <p lang="ko"><a href="L06-conditional-distributions.html">Module 6</a>은 분포를 <strong>정보로</strong> 바꿨어. 잘라내고 남은 걸 키웠지. 이 모듈은 분포를 <strong>함수로</strong> 바꿔. <span class="m"><i>X</i></span>의 분포를 아는 상태에서 <span class="m"><i>Y</i> = <i>g</i>(<i>X</i>)</span>의 분포를 구하는 일이야.</p>
+  <p lang="en"><a href="L06-conditional-distributions.html">Module 6</a> reshaped a distribution with <strong>information</strong>: cut, then scale what was left. This module reshapes one with a <strong>function</strong>. Knowing the distribution of <span class="m"><i>X</i></span>, find the distribution of <span class="m"><i>Y</i> = <i>g</i>(<i>X</i>)</span>.</p>
+
+  <div class="callout" lang="ko">
+    <strong>둘을 나란히 놓으면 대칭이 보여.</strong><br><br>
+    조건부는 지지집합을 <em>줄이고</em>, 살아남은 밀도를 <strong>상수 하나로</strong> 키워. 어디서나 같은 배율이지.<br>
+    변형은 지지집합을 <em>옮기고</em>, 밀도를 <strong>자리마다 다른 배율로</strong> 늘이거나 눌러. 그 배율이 <span class="m">|d<i>x</i>/d<i>y</i>|</span>야.<br><br>
+    <strong>둘 다 같은 제약에서 나와.</strong> 면적이 1로 유지되어야 한다는 것. 조건부는 잘라낸 만큼을 상수로 보충하고, 변형은 좁아진 만큼을 그 자리에서 보충해.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Put the two side by side and the symmetry shows.</strong><br><br>
+    Conditioning <em>shrinks</em> the support and scales the surviving density by <strong>a single constant</strong>, the same factor everywhere.<br>
+    Transforming <em>moves</em> the support and stretches or compresses the density by <strong>a factor that varies with position</strong>. That factor is <span class="m">|d<i>x</i>/d<i>y</i>|</span>.<br><br>
+    <strong>Both come from one constraint:</strong> the area must stay at 1. Conditioning makes up for what was cut with a constant; transforming makes up for local narrowing right where it happens.
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">새로 나오는 단어들</span>
+    <table>
+      <tr><th>용어</th><th>뜻</th><th>어디서 쓰이나</th></tr>
+      <tr><td><span class="m"><i>Y</i> = <i>g</i>(<i>X</i>)</span></td><td><span class="m"><i>g</i> ∘ <i>X</i></span>. 함수의 합성이다</td><td>02번</td></tr>
+      <tr><td><strong>CDF 방법</strong></td><td><span class="m">{<i>g</i>(<i>X</i>) ≤ <i>y</i>}</span>를 <span class="m">{<i>X</i> ∈ <i>A<sub>y</sub></i>}</span>로 고쳐 쓴다</td><td>03번 · <strong>이게 전부다</strong></td></tr>
+      <tr><td><span class="m"><i>A<sub>y</sub></i></span></td><td><span class="m"><i>g</i>(<i>x</i>) ≤ <i>y</i></span>인 <span class="m"><i>x</i></span>들의 <strong>집합</strong>. 구간이 아닐 수도 있다</td><td>03번</td></tr>
+      <tr><td><span class="m"><i>g</i><sup>−1</sup></span></td><td>역함수. 단조일 때만 존재한다</td><td>06번</td></tr>
+      <tr><td><strong>Jacobian 공식</strong></td><td><span class="m"><i>f<sub>Y</sub></i>(<i>y</i>) = ∑<sub><i>i</i></sub> <i>f<sub>X</sub></i>(<i>x<sub>i</sub></i>) |d<i>x<sub>i</sub></i>/d<i>y</i>|</span></td><td>08번 · HW3 P7</td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>제일 조심할 건 <span class="m"><i>A<sub>y</sub></i></span>가 집합이라는 점이야.</strong> <span class="m"><i>g</i></span>가 단조면 <span class="m"><i>A<sub>y</sub></i></span>가 반직선 하나라서 <span class="m"><i>F<sub>X</sub></i></span> 한 번으로 끝나. 그런데 <span class="m"><i>g</i></span>가 단조가 아니면 <span class="m"><i>A<sub>y</sub></i></span>가 구간 여러 개가 되고, 그 조각들을 <strong>전부</strong> 더해야 해. 빠뜨리는 게 이 모듈에서 제일 흔한 실수야.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">New vocabulary</span>
+    <table>
+      <tr><th>term</th><th>meaning</th><th>where it lands</th></tr>
+      <tr><td><span class="m"><i>Y</i> = <i>g</i>(<i>X</i>)</span></td><td><span class="m"><i>g</i> ∘ <i>X</i></span>, a composition of functions</td><td>§02</td></tr>
+      <tr><td><strong>the CDF method</strong></td><td>rewrite <span class="m">{<i>g</i>(<i>X</i>) ≤ <i>y</i>}</span> as <span class="m">{<i>X</i> ∈ <i>A<sub>y</sub></i>}</span></td><td>§03 · <strong>this is the whole module</strong></td></tr>
+      <tr><td><span class="m"><i>A<sub>y</sub></i></span></td><td>the <strong>set</strong> of <span class="m"><i>x</i></span> with <span class="m"><i>g</i>(<i>x</i>) ≤ <i>y</i></span>. Not necessarily an interval</td><td>§03</td></tr>
+      <tr><td><span class="m"><i>g</i><sup>−1</sup></span></td><td>the inverse, which exists only when <span class="m"><i>g</i></span> is monotone</td><td>§06</td></tr>
+      <tr><td><strong>the Jacobian formula</strong></td><td><span class="m"><i>f<sub>Y</sub></i>(<i>y</i>) = ∑<sub><i>i</i></sub> <i>f<sub>X</sub></i>(<i>x<sub>i</sub></i>) |d<i>x<sub>i</sub></i>/d<i>y</i>|</span></td><td>§08 · HW3 P7</td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>The thing to watch is that <span class="m"><i>A<sub>y</sub></i></span> is a set.</strong> When <span class="m"><i>g</i></span> is monotone, <span class="m"><i>A<sub>y</sub></i></span> is a single half-line and one evaluation of <span class="m"><i>F<sub>X</sub></i></span> finishes the job. When it is not, <span class="m"><i>A<sub>y</sub></i></span> becomes several intervals and you must add up <strong>all</strong> of them. Dropping one is the most common mistake in this module.</p>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>이미 한 번 해본 적이 있어.</strong> <a href="L05-random-variables.html#s10">Module 5의 역변환 샘플링</a>이 <span class="m"><i>X</i> = <i>F</i><sup>−1</sup>(<i>U</i>)</span>였잖아. 균등 확률변수를 함수에 통과시켜 원하는 분포를 만드는 일이었어. <strong>그게 이 모듈의 특수한 경우야.</strong> 교재도 그렇게 봐: Hajek §1.4 "Functions of a random variable" 안에 역변환 샘플링이 들어 있어.<br><br>
+    다른 점은 방향이야. Module 5는 <em>원하는 <span class="m"><i>Y</i></span>의 분포를 주고 <span class="m"><i>g</i></span>를 찾는</em> 문제였고, 이 모듈은 <em><span class="m"><i>g</i></span>를 주고 <span class="m"><i>Y</i></span>의 분포를 찾는</em> 문제야.
+  </div>
+  <div class="callout" lang="en">
+    <strong>You have done this once already.</strong> <a href="L05-random-variables.html#s10">Module 5's inverse transform sampling</a> was <span class="m"><i>X</i> = <i>F</i><sup>−1</sup>(<i>U</i>)</span>: push a uniform random variable through a function to manufacture the distribution you want. <strong>That is a special case of this module</strong>, and the textbook treats it that way, tucking inverse transform sampling inside Hajek §1.4, "Functions of a random variable."<br><br>
+    The difference is direction. Module 5 <em>gave you the distribution of <span class="m"><i>Y</i></span> and asked for <span class="m"><i>g</i></span></em>; this module <em>gives you <span class="m"><i>g</i></span> and asks for the distribution of <span class="m"><i>Y</i></span></em>.
+  </div>
+</section>
+
+<!-- ══ 01 ══ -->
+<section id="s1">
+  <div class="sec-head" data-slide="2-3"><span class="sec-num">01</span><h2 lang="ko">왜 변형하나</h2><h2 lang="en">Why transform</h2></div>
+  <p class="sec-sub" lang="ko">공학에서 재는 것과 쓰는 것이 다르기 때문이다.</p>
+  <p class="sec-sub" lang="en">Because in engineering, what you measure and what you use are different things.</p>
+
+  <p lang="ko">슬라이드 2쪽이 짚는 게 이거야. 확률변수 <span class="m"><i>X</i></span>를 만들어놓고 보면, 정작 관심 있는 건 <span class="m"><i>X</i></span> 자체가 아니라 <span class="m"><i>X</i></span>를 <strong>가공한 양</strong>인 경우가 많아. 3쪽의 예제 넷이 전부 무선통신이야.</p>
+  <p lang="en">Slide 2 makes the point: once you have built a random variable <span class="m"><i>X</i></span>, what you actually care about is usually not <span class="m"><i>X</i></span> but some <strong>quantity derived from it</strong>. All four examples on slide 3 come from wireless.</p>
+
+  <table>
+    <tr><th lang="ko">쓰고 싶은 양</th><th lang="en">what you want</th><th lang="ko">재는 양과의 관계</th><th lang="en">how it relates to what you measure</th></tr>
+    <tr><td lang="ko">수신 전력</td><td lang="en">received power</td><td><span class="m"><i>P</i> = <i>V</i><sup>2</sup></span></td></tr>
+    <tr><td lang="ko">신호 대 잡음비</td><td lang="en">signal-to-noise ratio</td><td><span class="m"><i>γ</i> = <i>P</i> ⁄ <i>N</i></span></td></tr>
+    <tr><td lang="ko">Doppler 편이</td><td lang="en">Doppler shift</td><td><span class="m"><i>f<sub>D</sub></i> = <i>f<sub>c</sub></i> (<i>v</i>/<i>c</i>) cos <i>θ</i></span></td></tr>
+    <tr><td lang="ko">신호 에너지</td><td lang="en">signal energy</td><td><span class="m"><i>E</i> = ∑<sub><i>i</i></sub> <i>X<sub>i</sub></i><sup>2</sup></span></td></tr>
+  </table>
+
+  <p lang="ko">재는 건 전압 <span class="m"><i>V</i></span>인데 설계에 쓰는 건 전력 <span class="m"><i>V</i><sup>2</sup></span>야. 재는 건 이동 방향의 각도인데 수신기가 겪는 건 주파수 편이고. <strong>중간의 함수는 결정론적이야.</strong> 무작위성은 전부 <span class="m"><i>X</i></span>에 있고 <span class="m"><i>g</i></span>는 물리 법칙이야. 그래서 <span class="m"><i>X</i></span>의 분포만 알면 <span class="m"><i>Y</i></span>의 분포는 원리적으로 결정돼 있어.</p>
+  <p lang="en">You measure a voltage <span class="m"><i>V</i></span> and design against a power <span class="m"><i>V</i><sup>2</sup></span>. You have randomness in the direction of travel and the receiver experiences a frequency shift. <strong>The function in between is deterministic.</strong> All the randomness sits in <span class="m"><i>X</i></span>; <span class="m"><i>g</i></span> is physics. So the distribution of <span class="m"><i>X</i></span> already determines the distribution of <span class="m"><i>Y</i></span> in principle.</p>
+
+  <div class="callout" lang="ko">
+    <strong>슬라이드 3쪽이 던지는 질문이 이 모듈의 제목이야.</strong> <em>"<span class="m"><i>X</i></span>의 분포를 안다면, <span class="m"><i>Y</i> = <i>g</i>(<i>X</i>)</span>의 분포는 무엇인가?"</em><br><br>
+    "원리적으로 결정돼 있다"와 "실제로 구할 수 있다"는 다른 얘기야. 남은 29쪽이 그 <strong>구하는 절차</strong>를 만드는 데 쓰여.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Slide 3's question is the title of this module:</strong> <em>"If we know the distribution of <span class="m"><i>X</i></span>, what is the distribution of <span class="m"><i>Y</i> = <i>g</i>(<i>X</i>)</span>?"</em><br><br>
+    "Determined in principle" and "computable in practice" are not the same claim. The remaining pages of the deck are spent building the <strong>procedure</strong>.
+  </div>
+</section>
+
+<!-- ══ 02 ══ -->
+<section id="s2">
+  <div class="sec-head" data-slide="4-6"><span class="sec-num">02</span><h2 lang="ko">g(X)도 확률변수다</h2><h2 lang="en">g(X) is a random variable too</h2></div>
+  <p class="sec-sub" lang="ko">먼저 확인해야 할 것: 새로 만든 물건이 여전히 확률변수인가?</p>
+  <p class="sec-sub" lang="en">First things first: is the new object still a random variable?</p>
+
+  <p lang="ko">슬라이드 4~5쪽이 이걸 먼저 정리해. <span class="m"><i>X</i></span>가 함수라는 걸 기억하면 답이 바로 나와. <span class="m"><i>X</i> : <i>Ω</i> → ℝ</span>이고 <span class="m"><i>g</i> : ℝ → ℝ</span>이니까, 둘을 이으면 <span class="m"><i>Ω</i></span>에서 <span class="m">ℝ</span>로 가는 함수가 하나 더 생겨.</p>
+  <p lang="en">Slides 4 and 5 settle this first, and remembering that <span class="m"><i>X</i></span> is a function gives it away. <span class="m"><i>X</i> : <i>Ω</i> → ℝ</span> and <span class="m"><i>g</i> : ℝ → ℝ</span>, so joining them gives one more function from <span class="m"><i>Ω</i></span> to <span class="m">ℝ</span>.</p>
+
+  <div class="eq"><i>Y</i>(<i>ω</i>) = <i>g</i>(<i>X</i>(<i>ω</i>)) = (<i>g</i> ∘ <i>X</i>)(<i>ω</i>)</div>
+
+  <figure>
+    <svg viewBox="0 0 560 206" role="img" aria-label="A function of a random variable as a composition: omega maps through X into the reals and then through g into the reals again">
+      <defs>
+        <marker id="m7f1-tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="var(--ink3)"/>
+        </marker>
+        <marker id="m7f1-vio" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="var(--violet)"/>
+        </marker>
+      </defs>
+
+      <rect x="20" y="42" width="120" height="82" rx="40" fill="rgba(var(--ink-rgb),.04)" stroke="var(--ink3)" stroke-width="1.4"/>
+      <text class="svgtxt" x="40" y="62" style="fill:var(--ink2)">Ω</text>
+      <circle cx="80" cy="90" r="4.5" fill="var(--blue)"/>
+      <text class="svgtxt it" x="80" y="115" text-anchor="middle" style="fill:var(--blue)">ω</text>
+
+      <rect x="220" y="42" width="120" height="82" rx="10" fill="rgba(var(--ink-rgb),.04)" stroke="var(--ink3)" stroke-width="1.4"/>
+      <text class="svgtxt" x="240" y="62" style="fill:var(--ink2)">ℝ</text>
+      <circle cx="280" cy="90" r="4.5" fill="var(--blue)"/>
+      <text class="svglab" x="280" y="115" text-anchor="middle" style="fill:var(--blue)">X(ω)</text>
+
+      <rect x="420" y="42" width="120" height="82" rx="10" fill="rgba(var(--ink-rgb),.04)" stroke="var(--ink3)" stroke-width="1.4"/>
+      <text class="svgtxt" x="440" y="62" style="fill:var(--ink2)">ℝ</text>
+      <circle cx="480" cy="90" r="4.5" fill="var(--pink)"/>
+      <text class="svglab" x="480" y="115" text-anchor="middle" style="fill:var(--pink)">g(X(ω))</text>
+
+      <line x1="146" y1="88" x2="212" y2="88" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#m7f1-tip)"/>
+      <text class="svgtxt it" x="179" y="76" text-anchor="middle" style="fill:var(--ink2)">X</text>
+      <line x1="346" y1="88" x2="412" y2="88" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#m7f1-tip)"/>
+      <text class="svgtxt it" x="379" y="76" text-anchor="middle" style="fill:var(--ink2)">g</text>
+
+      <path d="M80,132 Q280,192 476,134" fill="none" stroke="var(--violet)" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#m7f1-vio)"/>
+      <text class="svglab" x="280" y="182" text-anchor="middle" style="fill:var(--violet)">Y = g ∘ X</text>
+    </svg>
+    <figcaption lang="ko">슬라이드 5쪽의 그림이야. <strong>무작위성은 왼쪽 화살표에만 있어.</strong> <span class="m"><i>ω</i></span>가 뽑히는 순간 <span class="m"><i>X</i>(<i>ω</i>)</span>가 정해지고, 거기서 <span class="m"><i>g</i></span>는 아무것도 뽑지 않아. 그래서 점선 화살표 하나로 합쳐도 되고, 그게 바로 <span class="m"><i>Y</i></span>야. <span class="m"><i>Ω</i></span>에서 <span class="m">ℝ</span>로 가는 함수니까 정의상 확률변수야.</figcaption>
+    <figcaption lang="en">This is the diagram on slide 5. <strong>The randomness lives only in the left arrow.</strong> Once <span class="m"><i>ω</i></span> is drawn, <span class="m"><i>X</i>(<i>ω</i>)</span> is fixed, and <span class="m"><i>g</i></span> draws nothing further. So the two arrows collapse into the dashed one, which is <span class="m"><i>Y</i></span>. It maps <span class="m"><i>Ω</i></span> to <span class="m">ℝ</span>, so by definition it is a random variable.</figcaption>
+  </figure>
+
+  <p lang="ko">슬라이드 6쪽이 예를 넷 들어. <span class="m"><i>Y</i> = <i>X</i><sup>2</sup></span>, <span class="m"><i>Y</i> = √<i>X</i></span>, <span class="m"><i>Y</i> = log <i>X</i></span>, <span class="m"><i>Y</i> = cos <i>X</i></span>. 이 중 <strong>둘은 단조고 둘은 아니야.</strong> 뒤에서 이 차이가 전부를 가른다.</p>
+  <p lang="en">Slide 6 lists four: <span class="m"><i>Y</i> = <i>X</i><sup>2</sup></span>, <span class="m"><i>Y</i> = √<i>X</i></span>, <span class="m"><i>Y</i> = log <i>X</i></span>, <span class="m"><i>Y</i> = cos <i>X</i></span>. <strong>Two of them are monotone and two are not</strong>, and that split decides everything later.</p>
+
+  <div class="trap" lang="ko">
+    <span class="tag">함정</span>
+    <h4>정의역을 밝히지 않으면 단조인지 알 수 없다</h4>
+    <p><span class="m"><i>X</i><sup>2</sup></span>은 <span class="m">ℝ</span> 전체에서는 단조가 아니지만 <span class="m"><i>X</i> ≥ 0</span>에서는 <strong>단조 증가</strong>야. <span class="m">cos <i>X</i></span>도 <span class="m">[0, <i>π</i>]</span>로 제한하면 <strong>단조 감소</strong>고, 그래서 10번의 Doppler 예제가 풀려. <strong>"이 <span class="m"><i>g</i></span>는 단조인가"는 <span class="m"><i>X</i></span>의 지지집합 위에서만 물을 수 있는 질문이야.</strong></p>
+    <p>시험에서는 정의역을 흘려보지 말고 먼저 확인해. <span class="m"><i>X</i> ~ <i>U</i>[−1, 1]</span>과 <span class="m"><i>X</i> ~ <i>U</i>[0, 1]</span>은 <span class="m"><i>Y</i> = <i>X</i><sup>2</sup></span>에 대해 완전히 다른 문제야.</p>
+    <h4><span class="m"><i>g</i></span>가 아무 함수여도 되는 건 아니다</h4>
+    <p style="margin-bottom:0">슬라이드는 넘어가지만 교재 Hajek §1.4는 조건을 적어. <span class="m"><i>g</i></span>는 "너무 기괴하지 않아야" 하고, 구체적으로는 모든 <span class="m"><i>c</i></span>에 대해 <span class="m">{<i>x</i> : <i>g</i>(<i>x</i>) ≤ <i>c</i>}</span>가 <strong>Borel 집합</strong>이어야 해. 그래야 <span class="m">{<i>Y</i> ≤ <i>c</i>}</span>가 사건이 되고 확률을 매길 수 있거든. <a href="L02-probability-space.html">Module 2</a>에서 σ-algebra를 왜 세웠는지가 여기서 또 한 번 값을 해. 시험에 나오는 함수는 전부 조건을 만족하니 실전에서는 걱정 안 해도 돼.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Traps</span>
+    <h4>Without the domain you cannot say whether it is monotone</h4>
+    <p><span class="m"><i>X</i><sup>2</sup></span> is not monotone on all of <span class="m">ℝ</span>, but on <span class="m"><i>X</i> ≥ 0</span> it is <strong>strictly increasing</strong>. <span class="m">cos <i>X</i></span> restricted to <span class="m">[0, <i>π</i>]</span> is <strong>strictly decreasing</strong>, which is exactly what makes the Doppler example in §10 solvable. <strong>"Is this <span class="m"><i>g</i></span> monotone" is a question you can only ask on the support of <span class="m"><i>X</i></span>.</strong></p>
+    <p>On an exam, check the domain before anything else. <span class="m"><i>X</i> ~ <i>U</i>[−1, 1]</span> and <span class="m"><i>X</i> ~ <i>U</i>[0, 1]</span> are completely different problems for <span class="m"><i>Y</i> = <i>X</i><sup>2</sup></span>.</p>
+    <h4><span class="m"><i>g</i></span> cannot be literally any function</h4>
+    <p style="margin-bottom:0">The slides skip this, but Hajek §1.4 states the condition: <span class="m"><i>g</i></span> must be "not too bizarre," specifically <span class="m">{<i>x</i> : <i>g</i>(<i>x</i>) ≤ <i>c</i>}</span> has to be a <strong>Borel set</strong> for every <span class="m"><i>c</i></span>. Otherwise <span class="m">{<i>Y</i> ≤ <i>c</i>}</span> is not an event and cannot be assigned a probability. The σ-algebra machinery from <a href="L02-probability-space.html">Module 2</a> earns its keep once more. Every function you will meet on an exam satisfies the condition, so in practice this is not something to worry about.</p>
+  </div>
+</section>
+
+<!-- ══ 03 ══ -->
+<section id="s3">
+  <div class="sec-head" data-slide="7-10"><span class="sec-num">03</span><h2 lang="ko">CDF 방법</h2><h2 lang="en">The CDF method</h2></div>
+  <p class="sec-sub" lang="ko">이 모듈에서 방법은 하나뿐이다. 나머지는 전부 이것의 특수한 경우다.</p>
+  <p class="sec-sub" lang="en">There is only one method in this module. Everything else is a special case of it.</p>
+
+  <p lang="ko"><span class="m"><i>Y</i></span>의 밀도를 직접 구하려고 하면 막혀. <span class="m"><i>Y</i></span>에 대해 아는 게 없으니까. 그런데 <strong>CDF는 확률이라서 <span class="m"><i>X</i></span>의 언어로 번역할 수 있어.</strong> 슬라이드 7쪽.</p>
+  <p lang="en">Going straight for the density of <span class="m"><i>Y</i></span> gets you nowhere, because you know nothing about <span class="m"><i>Y</i></span> yet. But <strong>a CDF is a probability, and probabilities can be translated into the language of <span class="m"><i>X</i></span>.</strong> Slide 7.</p>
+
+  <div class="eq"><i>F<sub>Y</sub></i>(<i>y</i>) = <i>P</i>(<i>Y</i> ≤ <i>y</i>) = <i>P</i>(<i>g</i>(<i>X</i>) ≤ <i>y</i>)</div>
+
+  <p lang="ko">슬라이드 8쪽이 <strong>핵심 단계</strong>라고 부르는 게 다음 줄이야. <span class="m"><i>g</i>(<i>X</i>)</span>에 대한 사건을 <span class="m"><i>X</i></span>에 대한 사건으로 고쳐 쓴다.</p>
+  <p lang="en">Slide 8 calls the next line <strong>the key step</strong>: rewrite an event about <span class="m"><i>g</i>(<i>X</i>)</span> as an event about <span class="m"><i>X</i></span>.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드 8쪽 · 핵심 단계</span>
+    <div class="eq">{<i>g</i>(<i>X</i>) ≤ <i>y</i>} = {<i>X</i> ∈ <i>A<sub>y</sub></i>} &nbsp;&nbsp; ⟹ &nbsp;&nbsp; <i>F<sub>Y</sub></i>(<i>y</i>) = <i>P</i>(<i>X</i> ∈ <i>A<sub>y</sub></i>)</div>
+    <p style="margin-bottom:0">여기서 <span class="m"><i>A<sub>y</sub></i> = {<i>x</i> : <i>g</i>(<i>x</i>) ≤ <i>y</i>}</span>야. <span class="m"><i>P</i>(<i>X</i> ∈ <i>A<sub>y</sub></i>)</span>는 <span class="m"><i>X</i></span>의 분포만 알면 계산할 수 있어. 그게 전부야. 그리고 <span class="m"><i>F<sub>Y</sub></i></span>를 얻었으면 미분해서 <span class="m"><i>f<sub>Y</sub></i></span>를 구해.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Slide 8 · the key step</span>
+    <div class="eq">{<i>g</i>(<i>X</i>) ≤ <i>y</i>} = {<i>X</i> ∈ <i>A<sub>y</sub></i>} &nbsp;&nbsp; ⟹ &nbsp;&nbsp; <i>F<sub>Y</sub></i>(<i>y</i>) = <i>P</i>(<i>X</i> ∈ <i>A<sub>y</sub></i>)</div>
+    <p style="margin-bottom:0">with <span class="m"><i>A<sub>y</sub></i> = {<i>x</i> : <i>g</i>(<i>x</i>) ≤ <i>y</i>}</span>. And <span class="m"><i>P</i>(<i>X</i> ∈ <i>A<sub>y</sub></i>)</span> is computable from the distribution of <span class="m"><i>X</i></span> alone. That is the whole idea. Once you have <span class="m"><i>F<sub>Y</sub></i></span>, differentiate to get <span class="m"><i>f<sub>Y</sub></i></span>.</p>
+  </div>
+
+  <details class="nota" open>
+    <summary><span lang="ko">기호 뜯어보기 · 사건을 고쳐 쓴다는 것</span><span lang="en">Unpacking the notation · rewriting an event</span></summary>
+    <div class="body">
+      <div lang="ko">
+        <p><span class="m">{<i>g</i>(<i>X</i>) ≤ <i>y</i>} = {<i>X</i> ∈ <i>A<sub>y</sub></i>}</span>의 등호는 <strong>수의 등호가 아니라 집합의 등호</strong>야. 양쪽 다 <span class="m"><i>Ω</i></span>의 부분집합이고, 같은 <span class="m"><i>ω</i></span>들을 담고 있다는 뜻이야.</p>
+        <table class="parts">
+          <tr><td><span class="m">{<i>g</i>(<i>X</i>) ≤ <i>y</i>}</span></td><td>줄여 쓴 것. 원래는 <span class="m">{<i>ω</i> ∈ <i>Ω</i> : <i>g</i>(<i>X</i>(<i>ω</i>)) ≤ <i>y</i>}</span>.</td></tr>
+          <tr><td><span class="m"><i>A<sub>y</sub></i></span></td><td><strong><span class="m">ℝ</span>의</strong> 부분집합. <span class="m"><i>Ω</i></span>가 아니다. <span class="m"><i>x</i></span>축 위에 산다.</td></tr>
+          <tr><td><span class="m">{<i>X</i> ∈ <i>A<sub>y</sub></i>}</span></td><td>다시 <span class="m"><i>Ω</i></span>의 부분집합. <span class="m"><i>X</i></span>의 값이 <span class="m"><i>A<sub>y</sub></i></span>에 떨어지는 <span class="m"><i>ω</i></span>들.</td></tr>
+          <tr><td>아래첨자 <span class="m"><i>y</i></span></td><td><span class="m"><i>A<sub>y</sub></i></span>는 <span class="m"><i>y</i></span>마다 <strong>다른 집합</strong>이다. <span class="m"><i>y</i></span>가 커지면 커진다.</td></tr>
+        </table>
+        <p style="margin-bottom:0"><strong>레벨이 세 개야.</strong> <span class="m"><i>Ω</i></span> 위의 사건, <span class="m">ℝ</span> 위의 집합, 그리고 실수 <span class="m"><i>y</i></span>. 이 세 층을 오가는 게 이 모듈의 전부고, 그림으로 보면 훨씬 쉬워. 바로 아래 도해가 <span class="m"><i>A<sub>y</sub></i></span>를 <span class="m"><i>x</i></span>축 위에 직접 칠해놓은 거야.</p>
+      </div>
+      <div lang="en">
+        <p>The equals sign in <span class="m">{<i>g</i>(<i>X</i>) ≤ <i>y</i>} = {<i>X</i> ∈ <i>A<sub>y</sub></i>}</span> is <strong>set equality, not numeric equality</strong>. Both sides are subsets of <span class="m"><i>Ω</i></span>, and the claim is that they contain the same <span class="m"><i>ω</i></span>.</p>
+        <table class="parts">
+          <tr><td><span class="m">{<i>g</i>(<i>X</i>) ≤ <i>y</i>}</span></td><td>An abbreviation for <span class="m">{<i>ω</i> ∈ <i>Ω</i> : <i>g</i>(<i>X</i>(<i>ω</i>)) ≤ <i>y</i>}</span>.</td></tr>
+          <tr><td><span class="m"><i>A<sub>y</sub></i></span></td><td>A subset <strong>of <span class="m">ℝ</span></strong>, not of <span class="m"><i>Ω</i></span>. It lives on the <span class="m"><i>x</i></span> axis.</td></tr>
+          <tr><td><span class="m">{<i>X</i> ∈ <i>A<sub>y</sub></i>}</span></td><td>Back to a subset of <span class="m"><i>Ω</i></span>: the <span class="m"><i>ω</i></span> whose <span class="m"><i>X</i></span> value lands in <span class="m"><i>A<sub>y</sub></i></span>.</td></tr>
+          <tr><td>the subscript <span class="m"><i>y</i></span></td><td><span class="m"><i>A<sub>y</sub></i></span> is a <strong>different set for every <span class="m"><i>y</i></span></strong>, and it grows as <span class="m"><i>y</i></span> grows.</td></tr>
+        </table>
+        <p style="margin-bottom:0"><strong>Three levels are in play:</strong> an event in <span class="m"><i>Ω</i></span>, a set in <span class="m">ℝ</span>, and a real number <span class="m"><i>y</i></span>. Moving between them is the whole module, and a picture makes it far easier. The figure below paints <span class="m"><i>A<sub>y</sub></i></span> directly onto the <span class="m"><i>x</i></span> axis.</p>
+      </div>
+    </div>
+  </details>
+
+  <figure>
+    <svg viewBox="0 0 520 296" role="img" aria-label="The set A-sub-y for a non-monotonic g: the horizontal level line at y cuts the curve in three places and A-sub-y is the union of two intervals on the x axis">
+      <line x1="40" y1="135" x2="490" y2="135" stroke="var(--rule)" stroke-width="1.2"/>
+      <line x1="60" y1="36" x2="60" y2="238" stroke="var(--rule)" stroke-width="1.2"/>
+
+      <path d="M60,238 L60,123.7 L110.7,123.7 L110.7,238 Z" fill="rgba(var(--blue-rgb),.10)"/>
+      <path d="M244.7,238 L244.7,123.7 L424.5,123.7 L424.5,238 Z" fill="rgba(var(--blue-rgb),.10)"/>
+
+      <polyline points="60,226.6 78.2,180.2 96.4,144.8 114.5,119.1 132.7,102.1 150.9,92.7 169.1,89.8 187.3,92.3 205.5,99.2 223.6,109.3 241.8,121.6 260,135 278.2,148.4 296.4,160.7 314.5,170.8 332.7,177.7 350.9,180.2 369.1,177.3 387.3,167.9 405.5,150.9 423.6,125.2 441.8,89.8 460,43.4" fill="none" stroke="var(--pink)" stroke-width="2.2" stroke-linejoin="round"/>
+
+      <line x1="60" y1="123.7" x2="480" y2="123.7" stroke="var(--violet)" stroke-width="1.6" stroke-dasharray="5 4"/>
+      <text class="svgtxt it" x="488" y="128" style="fill:var(--violet)">y</text>
+
+      <line x1="110.7" y1="123.7" x2="110.7" y2="252" stroke="var(--ink3)" stroke-width="1" stroke-dasharray="3 3"/>
+      <line x1="244.7" y1="123.7" x2="244.7" y2="252" stroke="var(--ink3)" stroke-width="1" stroke-dasharray="3 3"/>
+      <line x1="424.5" y1="123.7" x2="424.5" y2="252" stroke="var(--ink3)" stroke-width="1" stroke-dasharray="3 3"/>
+
+      <circle cx="110.7" cy="123.7" r="4" fill="var(--violet)"/>
+      <circle cx="244.7" cy="123.7" r="4" fill="var(--violet)"/>
+      <circle cx="424.5" cy="123.7" r="4" fill="var(--violet)"/>
+
+      <line x1="60" y1="256" x2="490" y2="256" stroke="var(--rule)" stroke-width="1.2"/>
+      <rect x="60" y="250" width="50.7" height="12" rx="3" fill="var(--blue)"/>
+      <rect x="244.7" y="250" width="179.8" height="12" rx="3" fill="var(--blue)"/>
+
+      <text class="svglab" x="242" y="284" text-anchor="middle" style="fill:var(--blue)">A<tspan font-size="9" dy="3">y</tspan><tspan dy="-3"> = { x : g(x) ≤ y }</tspan></text>
+      <text class="svgtxt it" x="472" y="150" style="fill:var(--pink)">g</text>
+      <text class="svglab" x="470" y="260" text-anchor="middle" style="fill:var(--ink3)">x</text>
+    </svg>
+    <figcaption lang="ko"><span class="m"><i>g</i></span>가 단조가 아니면 수평선이 곡선을 <strong>여러 번</strong> 잘라. 그래서 <span class="m"><i>A<sub>y</sub></i></span>가 구간 하나가 아니라 <strong>구간 두 개의 합집합</strong>이 됐어. <span class="m"><i>F<sub>Y</sub></i>(<i>y</i>)</span>는 파란 띠 두 개에 담긴 확률을 <strong>더한</strong> 값이야. 한쪽만 세면 틀려.<br><br><span class="m"><i>y</i></span>를 위로 올리면 띠가 자라다가 결국 축 전체를 덮어 <span class="m"><i>F<sub>Y</sub></i> = 1</span>이 되고, 아래로 내리면 왼쪽 띠만 남았다가 사라져. <strong>CDF가 비감소라는 성질이 "띠는 자라기만 한다"로 보이는 게 이 그림의 값이야.</strong></figcaption>
+    <figcaption lang="en">When <span class="m"><i>g</i></span> is not monotone the level line cuts the curve <strong>more than once</strong>, so <span class="m"><i>A<sub>y</sub></i></span> is not an interval but a <strong>union of two of them</strong>. <span class="m"><i>F<sub>Y</sub></i>(<i>y</i>)</span> is the probability in both blue bands <strong>added together</strong>. Count only one and the answer is wrong.<br><br>Slide <span class="m"><i>y</i></span> upward and the bands grow until they cover the whole axis and <span class="m"><i>F<sub>Y</sub></i> = 1</span>; slide it down and only the left band survives before vanishing. <strong>The point of the picture is that "a CDF is nondecreasing" becomes "the bands only ever grow."</strong></figcaption>
+  </figure>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드 9~10쪽 · 절차 네 단계</span>
+    <ol style="margin-bottom:0">
+      <li><strong>그린다.</strong> <span class="m"><i>y</i> = <i>g</i>(<i>x</i>)</span>를 스케치한다. 슬라이드도 "도움이 되면"이라고 적었지만, 실전에서는 거의 항상 도움이 된다.</li>
+      <li><strong><span class="m"><i>A<sub>y</sub></i></span>를 찾는다.</strong> <span class="m"><i>y</i></span>를 고정하고 <span class="m">{<i>g</i>(<i>X</i>) ≤ <i>y</i>}</span>를 <span class="m">{<i>X</i> ∈ <i>A<sub>y</sub></i>}</span>로 고쳐 쓴다.</li>
+      <li><strong>확률을 계산한다.</strong> <span class="m"><i>F<sub>Y</sub></i>(<i>y</i>) = <i>P</i>(<i>X</i> ∈ <i>A<sub>y</sub></i>)</span>. 여기서 <span class="m"><i>F<sub>X</sub></i></span>가 등장한다.</li>
+      <li><strong>미분한다.</strong> <span class="m"><i>f<sub>Y</sub></i>(<i>y</i>) = d<i>F<sub>Y</sub></i>/d<i>y</i></span>, 존재할 때.</li>
+    </ol>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Slides 9 and 10 · the four steps</span>
+    <ol style="margin-bottom:0">
+      <li><strong>Sketch</strong> <span class="m"><i>y</i> = <i>g</i>(<i>x</i>)</span>. The slides say "if helpful"; in practice it almost always is.</li>
+      <li><strong>Find <span class="m"><i>A<sub>y</sub></i></span>.</strong> Fix <span class="m"><i>y</i></span> and rewrite <span class="m">{<i>g</i>(<i>X</i>) ≤ <i>y</i>}</span> as <span class="m">{<i>X</i> ∈ <i>A<sub>y</sub></i>}</span>.</li>
+      <li><strong>Compute the probability:</strong> <span class="m"><i>F<sub>Y</sub></i>(<i>y</i>) = <i>P</i>(<i>X</i> ∈ <i>A<sub>y</sub></i>)</span>. This is where <span class="m"><i>F<sub>X</sub></i></span> enters.</li>
+      <li><strong>Differentiate:</strong> <span class="m"><i>f<sub>Y</sub></i>(<i>y</i>) = d<i>F<sub>Y</sub></i>/d<i>y</i></span>, where it exists.</li>
+    </ol>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>이 절차가 왜 항상 통하냐면, 2단계가 확률 이야기가 아니기 때문이야.</strong> <span class="m">{<i>g</i>(<i>x</i>) ≤ <i>y</i>}</span>를 푸는 건 순수한 대수 문제야. 부등식 하나 푸는 거지. 확률은 3단계에서 딱 한 번 들어와.<br><br>
+    <strong>그래서 막히면 확률을 의심하지 말고 대수를 다시 봐.</strong> 이 모듈에서 틀리는 대부분은 부등식을 잘못 푼 거야. 특히 <strong>음수를 곱하거나 나눌 때 부등호 방향</strong>, 그리고 <strong>제곱근을 씌울 때 ± 두 갈래.</strong>
+  </div>
+  <div class="callout" lang="en">
+    <strong>The procedure always works because step 2 is not about probability at all.</strong> Solving <span class="m">{<i>g</i>(<i>x</i>) ≤ <i>y</i>}</span> is pure algebra, one inequality. Probability enters exactly once, at step 3.<br><br>
+    <strong>So when you get stuck, do not suspect the probability. Recheck the algebra.</strong> Most errors in this module are a mishandled inequality, and above all <strong>the direction flip when multiplying or dividing by a negative</strong>, and <strong>the two branches you get from taking a square root.</strong>
+  </div>
+</section>
+
+<!-- ══ 04 ══ -->
+<section id="s4">
+  <div class="sec-head" data-slide="11-12"><span class="sec-num">04</span><h2 lang="ko">예제 1: 아핀 변환</h2><h2 lang="en">Example 1: the affine transform</h2></div>
+  <p class="sec-sub" lang="ko">가장 쉬운 경우인데, 부호 하나가 함정이다.</p>
+  <p class="sec-sub" lang="en">The easiest case, and a single sign is the trap.</p>
+
+  <p lang="ko">슬라이드 11쪽. <span class="m"><i>X</i></span>는 연속이고 <span class="m"><i>Y</i> = <i>aX</i> + <i>b</i></span>, <span class="m"><i>a</i> ≠ 0</span>이야. 절차대로 <span class="m">{<i>aX</i> + <i>b</i> ≤ <i>y</i>}</span>를 <span class="m"><i>X</i></span>에 대해 풀면 <span class="m"><i>X</i> ≤ (<i>y</i> − <i>b</i>)/<i>a</i></span>인데, <strong><span class="m"><i>a</i></span>로 나눌 때 부호에 따라 부등호가 뒤집혀.</strong> 그래서 경우가 둘이야.</p>
+  <p lang="en">Slide 11. <span class="m"><i>X</i></span> is continuous and <span class="m"><i>Y</i> = <i>aX</i> + <i>b</i></span> with <span class="m"><i>a</i> ≠ 0</span>. Following the procedure, solving <span class="m">{<i>aX</i> + <i>b</i> ≤ <i>y</i>}</span> for <span class="m"><i>X</i></span> gives <span class="m"><i>X</i> ≤ (<i>y</i> − <i>b</i>)/<i>a</i></span>, except that <strong>dividing by <span class="m"><i>a</i></span> flips the inequality when <span class="m"><i>a</i></span> is negative.</strong> Two cases.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드 12쪽</span>
+    <div class="eq"><i>a</i> &gt; 0: &nbsp; <i>F<sub>Y</sub></i>(<i>y</i>) = <i>P</i>(<i>X</i> ≤ (<i>y</i>−<i>b</i>)/<i>a</i>) = <i>F<sub>X</sub></i>((<i>y</i>−<i>b</i>)/<i>a</i>)</div>
+    <div class="eq"><i>a</i> &lt; 0: &nbsp; <i>F<sub>Y</sub></i>(<i>y</i>) = <i>P</i>(<i>X</i> ≥ (<i>y</i>−<i>b</i>)/<i>a</i>) = 1 − <i>F<sub>X</sub></i>((<i>y</i>−<i>b</i>)/<i>a</i>)</div>
+    <p><strong>CDF는 두 경우가 다른데, 미분하면 하나로 합쳐져.</strong></p>
+    <div class="eq" style="margin-bottom:0"><i>f<sub>Y</sub></i>(<i>y</i>) = (1 ⁄ |<i>a</i>|) <i>f<sub>X</sub></i>((<i>y</i> − <i>b</i>) ⁄ <i>a</i>)</div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Slide 12</span>
+    <div class="eq"><i>a</i> &gt; 0: &nbsp; <i>F<sub>Y</sub></i>(<i>y</i>) = <i>P</i>(<i>X</i> ≤ (<i>y</i>−<i>b</i>)/<i>a</i>) = <i>F<sub>X</sub></i>((<i>y</i>−<i>b</i>)/<i>a</i>)</div>
+    <div class="eq"><i>a</i> &lt; 0: &nbsp; <i>F<sub>Y</sub></i>(<i>y</i>) = <i>P</i>(<i>X</i> ≥ (<i>y</i>−<i>b</i>)/<i>a</i>) = 1 − <i>F<sub>X</sub></i>((<i>y</i>−<i>b</i>)/<i>a</i>)</div>
+    <p><strong>The two CDFs differ, and yet differentiating collapses them into one formula.</strong></p>
+    <div class="eq" style="margin-bottom:0"><i>f<sub>Y</sub></i>(<i>y</i>) = (1 ⁄ |<i>a</i>|) <i>f<sub>X</sub></i>((<i>y</i> − <i>b</i>) ⁄ <i>a</i>)</div>
+  </div>
+
+  <p lang="ko">두 경우가 합쳐지는 이유를 손으로 확인해봐. <span class="m"><i>a</i> &lt; 0</span>일 때 <span class="m">1 − <i>F<sub>X</sub></i>(·)</span>를 미분하면 앞에 <span class="m">−</span>가 붙고, 안쪽 <span class="m">(<i>y</i>−<i>b</i>)/<i>a</i></span>를 미분하면 <span class="m">1/<i>a</i></span>가 나와. 둘을 곱하면 <span class="m">−1/<i>a</i></span>인데, <span class="m"><i>a</i></span>가 음수라 이게 곧 <span class="m">1/|<i>a</i>|</span>야. <strong>부호가 정확히 상쇄돼.</strong></p>
+  <p lang="en">Work out by hand why they collapse. For <span class="m"><i>a</i> &lt; 0</span>, differentiating <span class="m">1 − <i>F<sub>X</sub></i>(·)</span> brings down a <span class="m">−</span>, and the chain rule on <span class="m">(<i>y</i>−<i>b</i>)/<i>a</i></span> brings down <span class="m">1/<i>a</i></span>. Their product is <span class="m">−1/<i>a</i></span>, which equals <span class="m">1/|<i>a</i>|</span> precisely because <span class="m"><i>a</i></span> is negative. <strong>The signs cancel exactly.</strong></p>
+
+  <figure>
+    <svg viewBox="0 0 560 234" role="img" aria-label="An affine transform with a negative slope: the density is flipped left to right and flattened by the factor one over the absolute value of a">
+      <defs>
+        <marker id="m7f2-tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="var(--ink3)"/>
+        </marker>
+      </defs>
+
+      <g transform="translate(16,0)">
+        <text class="svglab" x="0" y="20">f<tspan font-size="9" dy="3">X</tspan></text>
+        <line x1="6" y1="170" x2="216" y2="170" stroke="var(--rule)" stroke-width="1.2"/>
+        <line x1="6" y1="170" x2="6" y2="40" stroke="var(--rule)" stroke-width="1.2"/>
+        <path d="M6,170 L106,170 L106,60 Z" fill="rgba(var(--blue-rgb),.22)" stroke="var(--blue)" stroke-width="2" stroke-linejoin="round"/>
+        <line x1="106" y1="170" x2="216" y2="170" stroke="var(--blue)" stroke-width="2.4"/>
+        <text class="svglab" x="10" y="188" text-anchor="middle">0</text>
+        <text class="svglab" x="106" y="188" text-anchor="middle">2</text>
+        <text class="svglab" x="6" y="52" text-anchor="end" style="fill:var(--ink3)">1</text>
+        <text class="svglab" x="110" y="212" text-anchor="middle" style="fill:var(--blue)" lang="ko">봉우리가 오른쪽</text>
+        <text class="svglab" x="110" y="212" text-anchor="middle" style="fill:var(--blue)" lang="en">peak on the right</text>
+      </g>
+
+      <line x1="252" y1="108" x2="308" y2="108" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#m7f2-tip)"/>
+      <text class="svglab" x="280" y="98" text-anchor="middle">Y = −2X + 3</text>
+
+      <g transform="translate(322,0)">
+        <text class="svglab" x="0" y="20">f<tspan font-size="9" dy="3">Y</tspan></text>
+        <line x1="6" y1="170" x2="216" y2="170" stroke="var(--rule)" stroke-width="1.2"/>
+        <line x1="6" y1="170" x2="6" y2="40" stroke="var(--rule)" stroke-width="1.2"/>
+        <path d="M6,115 L206,170 L6,170 Z" fill="rgba(var(--pink-rgb),.22)" stroke="var(--pink)" stroke-width="2" stroke-linejoin="round"/>
+        <text class="svglab" x="10" y="188" text-anchor="middle">−1</text>
+        <text class="svglab" x="206" y="188" text-anchor="middle">3</text>
+        <text class="svglab" x="6" y="52" text-anchor="end" style="fill:var(--ink3)">1</text>
+        <text class="svglab" x="30" y="108" style="fill:var(--pink)">½</text>
+        <text class="svglab" x="110" y="212" text-anchor="middle" style="fill:var(--pink)" lang="ko">뒤집히고 절반 높이</text>
+        <text class="svglab" x="110" y="212" text-anchor="middle" style="fill:var(--pink)" lang="en">flipped and half as tall</text>
+      </g>
+    </svg>
+    <figcaption lang="ko"><span class="m"><i>f<sub>X</sub></i>(<i>x</i>) = <i>x</i>/2</span>가 <span class="m">[0, 2]</span>에 있고 <span class="m"><i>Y</i> = −2<i>X</i> + 3</span>이야. <span class="m"><i>a</i> = −2</span>가 두 가지 일을 동시에 해. <strong>부호가 좌우를 뒤집고</strong>, <strong>크기 2가 가로를 두 배로 늘이면서 세로를 절반으로 눌러.</strong> 봉우리가 원래 <span class="m">1</span>이었는데 <span class="m">½</span>이 됐지. 면적이 1로 유지되어야 하니까 그럴 수밖에 없어. <span class="m">1/|<i>a</i>|</span>가 바로 그 눌림이야.</figcaption>
+    <figcaption lang="en"><span class="m"><i>f<sub>X</sub></i>(<i>x</i>) = <i>x</i>/2</span> on <span class="m">[0, 2]</span>, with <span class="m"><i>Y</i> = −2<i>X</i> + 3</span>. The <span class="m"><i>a</i> = −2</span> does two things at once: <strong>the sign flips left and right</strong>, and <strong>the magnitude 2 doubles the width while halving the height.</strong> The peak went from <span class="m">1</span> to <span class="m">½</span>, and it had to, because the area stays at 1. The <span class="m">1/|<i>a</i>|</span> is exactly that flattening.</figcaption>
+  </figure>
+
+  <div class="trap" lang="ko">
+    <span class="tag">함정</span>
+    <h4><span class="m">|<i>a</i>|</span>를 <span class="m"><i>a</i></span>로 쓴다</h4>
+    <p>이게 이 섹션에서 제일 자주 나오는 실수야. <span class="m"><i>a</i> &lt; 0</span>인데 절댓값을 안 씌우면 <strong>밀도가 음수</strong>가 돼. 밀도는 절대 음수일 수 없으니까, 답에 음수가 나왔으면 그 자리에서 틀린 걸 알 수 있어. <strong>검산으로 쓰기 좋은 자리야.</strong></p>
+    <h4>안쪽의 <span class="m"><i>a</i></span>에는 절댓값이 없다</h4>
+    <p>공식이 <span class="m">(1/|<i>a</i>|) <i>f<sub>X</sub></i>((<i>y</i>−<i>b</i>)/<i>a</i>)</span>야. <strong>앞의 <span class="m"><i>a</i></span>만 절댓값이고 안쪽은 그냥 <span class="m"><i>a</i></span>야.</strong> 안쪽까지 절댓값을 씌우면 뒤집기가 사라져서 위 그림의 오른쪽이 왼쪽과 같은 방향이 돼버려.</p>
+    <h4>지지집합도 같이 변형해야 한다</h4>
+    <p style="margin-bottom:0">밀도 공식만 옮기고 정의역을 원래 것으로 두는 실수가 흔해. 위 예제에서 <span class="m"><i>X</i> ∈ [0, 2]</span>니까 <span class="m"><i>Y</i> ∈ [−1, 3]</span>이야. <span class="m"><i>a</i></span>가 음수라 <strong>끝점의 순서까지 바뀐다</strong>는 걸 놓치기 쉬워. <span class="m"><i>x</i> = 0</span>이 <span class="m"><i>y</i> = 3</span>으로 가고 <span class="m"><i>x</i> = 2</span>가 <span class="m"><i>y</i> = −1</span>로 가.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Traps</span>
+    <h4>Writing <span class="m"><i>a</i></span> where <span class="m">|<i>a</i>|</span> belongs</h4>
+    <p>The most common error in this section. With <span class="m"><i>a</i> &lt; 0</span> and no absolute value you get a <strong>negative density</strong>. A density can never be negative, so a negative answer tells you immediately that something went wrong. <strong>Use it as a check.</strong></p>
+    <h4>The <span class="m"><i>a</i></span> inside carries no absolute value</h4>
+    <p>The formula is <span class="m">(1/|<i>a</i>|) <i>f<sub>X</sub></i>((<i>y</i>−<i>b</i>)/<i>a</i>)</span>. <strong>Only the leading <span class="m"><i>a</i></span> is in absolute value; the one inside is plain <span class="m"><i>a</i></span>.</strong> Put bars around the inner one too and the flip disappears, leaving the right panel above pointing the same way as the left.</p>
+    <h4>The support has to be transformed as well</h4>
+    <p style="margin-bottom:0">Moving the density formula while leaving the old domain in place is a frequent slip. Above, <span class="m"><i>X</i> ∈ [0, 2]</span> gives <span class="m"><i>Y</i> ∈ [−1, 3]</span>, and because <span class="m"><i>a</i></span> is negative <strong>the endpoints swap order</strong>: <span class="m"><i>x</i> = 0</span> maps to <span class="m"><i>y</i> = 3</span> and <span class="m"><i>x</i> = 2</span> maps to <span class="m"><i>y</i> = −1</span>.</p>
+  </div>
+
+  <div class="ex" lang="ko">
+    <span class="tag">예제 4.1 · 지수분포를 아핀 변환하면</span>
+    <p><span class="m"><i>X</i> ~ Exp(<i>λ</i>)</span>이고 <span class="m"><i>Y</i> = 3<i>X</i> + 2</span>야. <span class="m"><i>f<sub>Y</sub></i></span>를 구하고 지지집합도 밝혀.</p>
+    <details>
+      <summary>풀이 보기</summary>
+      <div class="body">
+        <p><span class="m"><i>a</i> = 3 &gt; 0</span>이라 부등호가 안 뒤집혀. 공식에 바로 넣어.</p>
+        <div class="eq"><i>f<sub>Y</sub></i>(<i>y</i>) = (1/3) <i>f<sub>X</sub></i>((<i>y</i> − 2)/3) = (1/3) <i>λ</i> <i>e</i><sup>−<i>λ</i>(<i>y</i>−2)/3</sup></div>
+        <p><strong>지지집합.</strong> <span class="m"><i>X</i> ≥ 0</span>이니까 <span class="m"><i>Y</i> = 3<i>X</i> + 2 ≥ 2</span>야. 그래서</p>
+        <div class="eq"><i>f<sub>Y</sub></i>(<i>y</i>) = (<i>λ</i>/3) <i>e</i><sup>−(<i>λ</i>/3)(<i>y</i>−2)</sup>, &nbsp; <i>y</i> ≥ 2, &nbsp; 그 외 0</div>
+        <p style="margin-bottom:0"><strong>모양을 봐.</strong> 이건 <span class="m">2</span>만큼 옮겨진 <span class="m">Exp(<i>λ</i>/3)</span>야. <strong>지수분포를 양의 상수배 하면 다시 지수분포고, 파라미터가 그 상수로 나뉘어.</strong> 이런 성질을 가진 분포족을 스케일 족이라고 불러. 검산은 <span class="m">∫<sub>2</sub><sup>∞</sup></span>가 1인지 보면 돼.</p>
+      </div>
+    </details>
+  </div>
+  <div class="ex" lang="en">
+    <span class="tag">Example 4.1 · an affine transform of an exponential</span>
+    <p><span class="m"><i>X</i> ~ Exp(<i>λ</i>)</span> and <span class="m"><i>Y</i> = 3<i>X</i> + 2</span>. Find <span class="m"><i>f<sub>Y</sub></i></span>, and state its support.</p>
+    <details>
+      <summary>show the solution</summary>
+      <div class="body">
+        <p><span class="m"><i>a</i> = 3 &gt; 0</span>, so no inequality flips. Straight into the formula.</p>
+        <div class="eq"><i>f<sub>Y</sub></i>(<i>y</i>) = (1/3) <i>f<sub>X</sub></i>((<i>y</i> − 2)/3) = (1/3) <i>λ</i> <i>e</i><sup>−<i>λ</i>(<i>y</i>−2)/3</sup></div>
+        <p><strong>The support.</strong> <span class="m"><i>X</i> ≥ 0</span> gives <span class="m"><i>Y</i> = 3<i>X</i> + 2 ≥ 2</span>, so</p>
+        <div class="eq"><i>f<sub>Y</sub></i>(<i>y</i>) = (<i>λ</i>/3) <i>e</i><sup>−(<i>λ</i>/3)(<i>y</i>−2)</sup>, &nbsp; <i>y</i> ≥ 2, &nbsp; zero otherwise</div>
+        <p style="margin-bottom:0"><strong>Look at the shape.</strong> It is an <span class="m">Exp(<i>λ</i>/3)</span> shifted by <span class="m">2</span>. <strong>Scaling an exponential by a positive constant gives an exponential again, with the parameter divided by that constant.</strong> Families with this property are called scale families. Check it by confirming <span class="m">∫<sub>2</sub><sup>∞</sup></span> comes out to 1.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ══ 05 ══ -->
+<section id="s5">
+  <div class="sec-head" data-slide="13-15"><span class="sec-num">05</span><h2 lang="ko">예제 2: Y = X²</h2><h2 lang="en">Example 2: Y = X²</h2></div>
+  <p class="sec-sub" lang="ko">단조가 아닌 첫 사례. 여기서 두 갈래가 생긴다.</p>
+  <p class="sec-sub" lang="en">The first non-monotone case, and where two branches appear.</p>
+
+  <p lang="ko">슬라이드 13쪽이 먼저 <strong>지지집합부터 잡아.</strong> <span class="m"><i>Y</i> = <i>X</i><sup>2</sup> ≥ 0</span>이니까 <span class="m"><i>y</i> &lt; 0</span>에서는 <span class="m"><i>F<sub>Y</sub></i>(<i>y</i>) = 0</span>이야. 이건 확률 계산을 시작하기도 전에 결정되는 거고, <strong>이걸 먼저 적는 습관이 시험에서 시간을 벌어줘.</strong></p>
+  <p lang="en">Slide 13 <strong>pins down the support first.</strong> Since <span class="m"><i>Y</i> = <i>X</i><sup>2</sup> ≥ 0</span>, <span class="m"><i>F<sub>Y</sub></i>(<i>y</i>) = 0</span> for <span class="m"><i>y</i> &lt; 0</span>. This is settled before any probability is computed, and <strong>writing it down first saves time on an exam.</strong></p>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드 13쪽</span>
+    <p><span class="m"><i>y</i> ≥ 0</span>일 때 <span class="m"><i>X</i><sup>2</sup> ≤ <i>y</i></span>를 풀면 양쪽이 잡혀.</p>
+    <div class="eq"><i>F<sub>Y</sub></i>(<i>y</i>) = <i>P</i>(<i>X</i><sup>2</sup> ≤ <i>y</i>) = <i>P</i>(−√<i>y</i> ≤ <i>X</i> ≤ √<i>y</i>) = <i>F<sub>X</sub></i>(√<i>y</i>) − <i>F<sub>X</sub></i>(−√<i>y</i>)</div>
+    <p style="margin-bottom:0">미분하면 (슬라이드 14쪽)</p>
+    <div class="eq" style="margin-bottom:0"><i>f<sub>Y</sub></i>(<i>y</i>) = (<i>f<sub>X</sub></i>(√<i>y</i>) + <i>f<sub>X</sub></i>(−√<i>y</i>)) ⁄ (2√<i>y</i>), &nbsp; <i>y</i> &gt; 0</div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Slide 13</span>
+    <p>For <span class="m"><i>y</i> ≥ 0</span>, solving <span class="m"><i>X</i><sup>2</sup> ≤ <i>y</i></span> catches both sides.</p>
+    <div class="eq"><i>F<sub>Y</sub></i>(<i>y</i>) = <i>P</i>(<i>X</i><sup>2</sup> ≤ <i>y</i>) = <i>P</i>(−√<i>y</i> ≤ <i>X</i> ≤ √<i>y</i>) = <i>F<sub>X</sub></i>(√<i>y</i>) − <i>F<sub>X</sub></i>(−√<i>y</i>)</div>
+    <p style="margin-bottom:0">and differentiating gives slide 14:</p>
+    <div class="eq" style="margin-bottom:0"><i>f<sub>Y</sub></i>(<i>y</i>) = (<i>f<sub>X</sub></i>(√<i>y</i>) + <i>f<sub>X</sub></i>(−√<i>y</i>)) ⁄ (2√<i>y</i>), &nbsp; <i>y</i> &gt; 0</div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 520 250" role="img" aria-label="The parabola y equals x squared with a horizontal level line: the set where x squared is at most y is the interval between minus root y and root y">
+      <line x1="10" y1="170" x2="240" y2="170" stroke="var(--rule)" stroke-width="1.2"/>
+      <line x1="110" y1="170" x2="110" y2="34" stroke="var(--rule)" stroke-width="1.2"/>
+      <polyline points="10,40 35,96.9 60,137.5 85,161.9 110,170 135,161.9 160,137.5 185,96.9 210,40" fill="none" stroke="var(--pink)" stroke-width="2.2" stroke-linejoin="round"/>
+      <line x1="10" y1="137.5" x2="230" y2="137.5" stroke="var(--violet)" stroke-width="1.6" stroke-dasharray="5 4"/>
+      <text class="svgtxt it" x="236" y="142" style="fill:var(--violet)">y</text>
+      <circle cx="60" cy="137.5" r="4" fill="var(--violet)"/>
+      <circle cx="160" cy="137.5" r="4" fill="var(--violet)"/>
+      <line x1="60" y1="137.5" x2="60" y2="196" stroke="var(--ink3)" stroke-width="1" stroke-dasharray="3 3"/>
+      <line x1="160" y1="137.5" x2="160" y2="196" stroke="var(--ink3)" stroke-width="1" stroke-dasharray="3 3"/>
+      <rect x="60" y="188" width="100" height="12" rx="3" fill="var(--blue)"/>
+      <text class="svglab" x="60" y="220" text-anchor="middle" style="fill:var(--violet)">−√y</text>
+      <text class="svglab" x="160" y="220" text-anchor="middle" style="fill:var(--violet)">√y</text>
+      <text class="svgtxt" x="206" y="60" style="fill:var(--pink)">x<tspan font-size="11" dy="-6">2</tspan></text>
+
+      <text class="svgtxt" x="290" y="96" style="fill:var(--ink2)">A<tspan font-size="11" dy="4">y</tspan><tspan dy="-4"> = [ −√y , √y ]</tspan></text>
+      <text class="svgtxt" x="290" y="134" style="fill:var(--ink2)">F<tspan font-size="11" dy="4">Y</tspan><tspan dy="-4">(y) = F</tspan><tspan font-size="11" dy="4">X</tspan><tspan dy="-4">(√y) − F</tspan><tspan font-size="11" dy="4">X</tspan><tspan dy="-4">(−√y)</tspan></text>
+      <text class="svglab" x="290" y="172" style="fill:var(--blue)" lang="ko">구간 하나지만 원점을 감싼다</text>
+      <text class="svglab" x="290" y="172" style="fill:var(--blue)" lang="en">one interval, but it straddles the origin</text>
+      <text class="svglab" x="290" y="192" style="fill:var(--blue)" lang="ko">그래서 CDF 를 두 번 불러야 한다</text>
+      <text class="svglab" x="290" y="192" style="fill:var(--blue)" lang="en">so the CDF gets evaluated twice</text>
+    </svg>
+    <figcaption lang="ko">포물선은 <span class="m"><i>x</i> = 0</span>에서 방향을 바꿔. 그래서 수평선이 <strong>두 점</strong>에서 만나고 <span class="m"><i>A<sub>y</sub></i></span>가 양쪽 끝이 다 막힌 구간이 돼. 아핀 변환에서는 <span class="m"><i>A<sub>y</sub></i></span>가 반직선이라 <span class="m"><i>F<sub>X</sub></i></span>를 한 번만 불렀는데, 여기서는 <strong>두 번 부르고 빼야</strong> 해. <span class="m"><i>y</i></span>를 내리면 구간이 원점으로 오그라들고, <span class="m"><i>y</i> = 0</span>에서 점 하나가 돼.</figcaption>
+    <figcaption lang="en">The parabola turns around at <span class="m"><i>x</i> = 0</span>, so the level line meets it at <strong>two points</strong> and <span class="m"><i>A<sub>y</sub></i></span> is an interval closed at both ends. In the affine case <span class="m"><i>A<sub>y</sub></i></span> was a half-line and <span class="m"><i>F<sub>X</sub></i></span> was called once; here it has to be <strong>called twice and subtracted.</strong> Lower <span class="m"><i>y</i></span> and the interval contracts toward the origin, collapsing to a single point at <span class="m"><i>y</i> = 0</span>.</figcaption>
+  </figure>
+
+  <p lang="ko">슬라이드 14~15쪽이 결과를 해석해. <em><span class="m"><i>Y</i> = <i>X</i><sup>2</sup></span>은 일대일이 아니다. 모든 <span class="m"><i>y</i> &gt; 0</span>에 대해 <span class="m"><i>X</i> = √<i>y</i></span>와 <span class="m"><i>X</i> = −√<i>y</i></span> 두 값이 같은 <span class="m"><i>Y</i> = <i>y</i></span>를 만든다. 그래서 두 값이 모두 <span class="m"><i>Y</i></span>의 밀도에 기여한다.</em></p>
+  <p lang="en">Slides 14 and 15 read the result back: <em><span class="m"><i>Y</i> = <i>X</i><sup>2</sup></span> is not one-to-one. For every <span class="m"><i>y</i> &gt; 0</span> two values of <span class="m"><i>X</i></span>, namely <span class="m">√<i>y</i></span> and <span class="m">−√<i>y</i></span>, produce the same <span class="m"><i>Y</i> = <i>y</i></span>, so both contribute to the PDF of <span class="m"><i>Y</i></span>.</em></p>
+
+  <div class="ex" lang="ko">
+    <span class="tag">예제 5.1 · 지지집합이 비대칭이면</span>
+    <p><span class="m"><i>X</i> ~ <i>U</i>[−1, 2]</span>이고 <span class="m"><i>Y</i> = <i>X</i><sup>2</sup></span>이야. <span class="m"><i>f<sub>Y</sub></i></span>를 구해. <strong>공식에 숫자만 넣지 말고 <span class="m"><i>y</i></span>의 범위에 따라 나눠서 생각해.</strong></p>
+    <details>
+      <summary>풀이 보기</summary>
+      <div class="body">
+        <p><span class="m"><i>f<sub>X</sub></i>(<i>x</i>) = 1/3</span>, <span class="m">−1 ≤ <i>x</i> ≤ 2</span>야. <span class="m"><i>Y</i></span>의 범위는 <span class="m">[0, 4]</span>고.</p>
+        <p><strong>여기가 핵심이야.</strong> 공식 <span class="m">(<i>f<sub>X</sub></i>(√<i>y</i>) + <i>f<sub>X</sub></i>(−√<i>y</i>))/(2√<i>y</i>)</span>에서 <span class="m"><i>f<sub>X</sub></i>(−√<i>y</i>)</span>는 <span class="m">−√<i>y</i> ≥ −1</span>일 때만 0이 아니야. 즉 <span class="m"><i>y</i> ≤ 1</span>일 때만.</p>
+        <ul>
+          <li><span class="m">0 &lt; <i>y</i> ≤ 1</span>: 두 갈래가 다 살아 있어. <span class="m"><i>f<sub>Y</sub></i>(<i>y</i>) = (1/3 + 1/3)/(2√<i>y</i>) = 1/(3√<i>y</i>)</span></li>
+          <li><span class="m">1 &lt; <i>y</i> ≤ 4</span>: 음수 갈래가 지지집합 밖이야. <span class="m"><i>f<sub>Y</sub></i>(<i>y</i>) = (1/3 + 0)/(2√<i>y</i>) = 1/(6√<i>y</i>)</span></li>
+          <li>그 외: 0</li>
+        </ul>
+        <p><strong>검산.</strong> <span class="m">∫<sub>0</sub><sup>1</sup> 1/(3√<i>y</i>) d<i>y</i> = (2/3)√<i>y</i> |<sub>0</sub><sup>1</sup> = 2/3</span>. <span class="m">∫<sub>1</sub><sup>4</sup> 1/(6√<i>y</i>) d<i>y</i> = (1/3)√<i>y</i> |<sub>1</sub><sup>4</sup> = 2/3 − 1/3 = 1/3</span>. 합이 <span class="m">1</span>. 통과.</p>
+        <p style="margin-bottom:0"><strong><span class="m"><i>y</i> = 1</span>에서 밀도가 뚝 떨어지는 걸 봐.</strong> <span class="m">1/3 → 1/6</span>으로 정확히 절반이야. <span class="m"><i>g</i></span>는 매끄러운데 <span class="m"><i>f<sub>Y</sub></i></span>가 불연속인 이유는, 그 지점에서 <strong>기여하는 갈래의 개수가 2에서 1로 바뀌기 때문</strong>이야. HW3 P7은 <span class="m"><i>U</i>[−1, 1]</span>이라 지지집합이 대칭이고 이 불연속이 안 생겨. 숫자가 다르니 직접 해보고, 대칭이라 뭐가 간단해지는지 확인해봐.</p>
+      </div>
+    </details>
+  </div>
+  <div class="ex" lang="en">
+    <span class="tag">Example 5.1 · when the support is not symmetric</span>
+    <p><span class="m"><i>X</i> ~ <i>U</i>[−1, 2]</span> and <span class="m"><i>Y</i> = <i>X</i><sup>2</sup></span>. Find <span class="m"><i>f<sub>Y</sub></i></span>. <strong>Do not just substitute into the formula: split on the range of <span class="m"><i>y</i></span>.</strong></p>
+    <details>
+      <summary>show the solution</summary>
+      <div class="body">
+        <p><span class="m"><i>f<sub>X</sub></i>(<i>x</i>) = 1/3</span> on <span class="m">−1 ≤ <i>x</i> ≤ 2</span>, and <span class="m"><i>Y</i></span> ranges over <span class="m">[0, 4]</span>.</p>
+        <p><strong>Here is the point.</strong> In <span class="m">(<i>f<sub>X</sub></i>(√<i>y</i>) + <i>f<sub>X</sub></i>(−√<i>y</i>))/(2√<i>y</i>)</span>, the term <span class="m"><i>f<sub>X</sub></i>(−√<i>y</i>)</span> is nonzero only while <span class="m">−√<i>y</i> ≥ −1</span>, that is only for <span class="m"><i>y</i> ≤ 1</span>.</p>
+        <ul>
+          <li><span class="m">0 &lt; <i>y</i> ≤ 1</span>: both branches alive. <span class="m"><i>f<sub>Y</sub></i>(<i>y</i>) = (1/3 + 1/3)/(2√<i>y</i>) = 1/(3√<i>y</i>)</span></li>
+          <li><span class="m">1 &lt; <i>y</i> ≤ 4</span>: the negative branch has left the support. <span class="m"><i>f<sub>Y</sub></i>(<i>y</i>) = (1/3 + 0)/(2√<i>y</i>) = 1/(6√<i>y</i>)</span></li>
+          <li>otherwise zero.</li>
+        </ul>
+        <p><strong>Check.</strong> <span class="m">∫<sub>0</sub><sup>1</sup> 1/(3√<i>y</i>) d<i>y</i> = (2/3)√<i>y</i> |<sub>0</sub><sup>1</sup> = 2/3</span> and <span class="m">∫<sub>1</sub><sup>4</sup> 1/(6√<i>y</i>) d<i>y</i> = (1/3)√<i>y</i> |<sub>1</sub><sup>4</sup> = 1/3</span>. They sum to <span class="m">1</span>. Good.</p>
+        <p style="margin-bottom:0"><strong>Notice the jump at <span class="m"><i>y</i> = 1</span></strong>, from <span class="m">1/3</span> to <span class="m">1/6</span>, exactly a factor of two. <span class="m"><i>g</i></span> is smooth and yet <span class="m"><i>f<sub>Y</sub></i></span> is discontinuous, because at that point <strong>the number of contributing branches drops from two to one.</strong> HW3 P7 uses <span class="m"><i>U</i>[−1, 1]</span>, a symmetric support, so no such jump appears. The numbers differ, so do it yourself and see what the symmetry buys you.</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">함정</span>
+    <h4><span class="m"><i>P</i>(<i>X</i><sup>2</sup> ≤ <i>y</i>) = <i>P</i>(<i>X</i> ≤ √<i>y</i>)</span>라고 쓴다</h4>
+    <p>가장 흔한 실수이고, 슬라이드가 굳이 두 줄로 나눠 적은 이유야. 제곱근을 씌우면 <strong>양쪽 갈래가 다 나와.</strong> <span class="m"><i>P</i>(<i>X</i> ≤ √<i>y</i>)</span>는 <span class="m"><i>X</i></span>가 아주 큰 음수인 경우까지 포함해버리는데, 그런 <span class="m"><i>X</i></span>는 <span class="m"><i>X</i><sup>2</sup></span>이 오히려 커.</p>
+    <h4><span class="m"><i>y</i> = 0</span>에서 <span class="m"><i>f<sub>Y</sub></i></span>가 정의되지 않는다</h4>
+    <p>공식에 <span class="m">2√<i>y</i></span>가 분모에 있어서 <span class="m"><i>y</i> → 0</span>이면 발산해. 슬라이드도 <span class="m"><i>y</i> &gt; 0</span>이라고 조건을 달아놨어. <strong>이건 오류가 아니야.</strong> 밀도는 무한대가 되어도 적분이 유한하면 문제없고, <span class="m">1/√<i>y</i></span>는 0 근처에서 적분 가능해.</p>
+    <h4>갈래 개수가 <span class="m"><i>y</i></span>에 따라 바뀐다</h4>
+    <p style="margin-bottom:0">예제 5.1이 이걸 보여줘. 공식을 한 번 쓰고 전 구간에 적용하면 틀려. <strong>어느 <span class="m"><i>y</i></span>에서 갈래가 지지집합을 벗어나는지 먼저 확인하고 구간을 나눠.</strong></p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Traps</span>
+    <h4>Writing <span class="m"><i>P</i>(<i>X</i><sup>2</sup> ≤ <i>y</i>) = <i>P</i>(<i>X</i> ≤ √<i>y</i>)</span></h4>
+    <p>The most common error, and why the slides split it across two lines. Taking a square root <strong>produces both branches.</strong> <span class="m"><i>P</i>(<i>X</i> ≤ √<i>y</i>)</span> would sweep in very negative <span class="m"><i>X</i></span>, which are exactly the ones with large <span class="m"><i>X</i><sup>2</sup></span>.</p>
+    <h4><span class="m"><i>f<sub>Y</sub></i></span> is undefined at <span class="m"><i>y</i> = 0</span></h4>
+    <p>The <span class="m">2√<i>y</i></span> in the denominator blows up as <span class="m"><i>y</i> → 0</span>, which is why the slides attach the condition <span class="m"><i>y</i> &gt; 0</span>. <strong>This is not an error.</strong> A density may be unbounded as long as it integrates to something finite, and <span class="m">1/√<i>y</i></span> is integrable near zero.</p>
+    <h4>The number of branches depends on <span class="m"><i>y</i></span></h4>
+    <p style="margin-bottom:0">Example 5.1 shows it. Applying the formula once across the whole range is wrong. <strong>Find the <span class="m"><i>y</i></span> at which a branch leaves the support, then split into cases.</strong></p>
+  </div>
+</section>
+
+<!-- ══ 06 ══ -->
+<section id="s6">
+  <div class="sec-head" data-slide="16-18"><span class="sec-num">06</span><h2 lang="ko">단조 변환 정리</h2><h2 lang="en">The monotonic theorem</h2></div>
+  <p class="sec-sub" lang="ko">갈래가 하나뿐이면 CDF 방법을 매번 돌릴 필요가 없다.</p>
+  <p class="sec-sub" lang="en">With only one branch, you do not have to run the CDF method every time.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">Theorem 1 (슬라이드 16쪽)</span>
+    <p><span class="m"><i>g</i></span>가 <strong>순증가</strong>이고 미분가능하면</p>
+    <div class="eq"><i>F<sub>Y</sub></i>(<i>y</i>) = <i>F<sub>X</sub></i>(<i>g</i><sup>−1</sup>(<i>y</i>))</div>
+    <p>그리고 <span class="m"><i>g</i><sup>−1</sup></span>도 미분가능하면</p>
+    <div class="eq" style="margin-bottom:0"><i>f<sub>Y</sub></i>(<i>y</i>) = <i>f<sub>X</sub></i>(<i>g</i><sup>−1</sup>(<i>y</i>)) · |(d/d<i>y</i>) <i>g</i><sup>−1</sup>(<i>y</i>)|</div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Theorem 1 (slide 16)</span>
+    <p>If <span class="m"><i>g</i></span> is <strong>strictly increasing</strong> and differentiable, then</p>
+    <div class="eq"><i>F<sub>Y</sub></i>(<i>y</i>) = <i>F<sub>X</sub></i>(<i>g</i><sup>−1</sup>(<i>y</i>))</div>
+    <p>and if <span class="m"><i>g</i><sup>−1</sup></span> is differentiable as well,</p>
+    <div class="eq" style="margin-bottom:0"><i>f<sub>Y</sub></i>(<i>y</i>) = <i>f<sub>X</sub></i>(<i>g</i><sup>−1</sup>(<i>y</i>)) · |(d/d<i>y</i>) <i>g</i><sup>−1</sup>(<i>y</i>)|</div>
+  </div>
+
+  <p lang="ko">슬라이드 17쪽의 증명은 세 줄이야. <span class="m"><i>g</i></span>가 순증가라 <span class="m">{<i>g</i>(<i>X</i>) ≤ <i>y</i>} = {<i>X</i> ≤ <i>g</i><sup>−1</sup>(<i>y</i>)}</span>고, 그러면 <span class="m"><i>A<sub>y</sub></i></span>가 반직선 하나야. <strong>03번 절차의 2단계가 자동으로 풀린 거야.</strong> 미분하면 연쇄법칙으로 <span class="m"><i>g</i><sup>−1</sup></span>의 도함수가 따라 나오고, 순증가면 그게 양수라 절댓값을 붙여도 값이 안 변해.</p>
+  <p lang="en">The proof on slide 17 is three lines. Because <span class="m"><i>g</i></span> is strictly increasing, <span class="m">{<i>g</i>(<i>X</i>) ≤ <i>y</i>} = {<i>X</i> ≤ <i>g</i><sup>−1</sup>(<i>y</i>)}</span>, so <span class="m"><i>A<sub>y</sub></i></span> is a single half-line. <strong>Step 2 of §03's procedure solved itself.</strong> Differentiating pulls down the derivative of <span class="m"><i>g</i><sup>−1</sup></span> by the chain rule, and for an increasing <span class="m"><i>g</i></span> that derivative is positive, so wrapping it in absolute values changes nothing.</p>
+
+  <p lang="ko">슬라이드 18쪽이 <strong>순감소</strong>인 경우를 해. 이번에는 부등호가 뒤집혀서 <span class="m">{<i>Y</i> ≤ <i>y</i>} = {<i>X</i> ≥ <i>g</i><sup>−1</sup>(<i>y</i>)}</span>이고 <span class="m"><i>F<sub>Y</sub></i>(<i>y</i>) = 1 − <i>F<sub>X</sub></i>(<i>g</i><sup>−1</sup>(<i>y</i>))</span>가 돼. 그런데 <strong>미분하면 PDF 공식이 위와 똑같아.</strong> 04번의 아핀 변환에서 본 것과 정확히 같은 상쇄야.</p>
+  <p lang="en">Slide 18 handles the <strong>strictly decreasing</strong> case. The inequality flips, giving <span class="m">{<i>Y</i> ≤ <i>y</i>} = {<i>X</i> ≥ <i>g</i><sup>−1</sup>(<i>y</i>)}</span> and <span class="m"><i>F<sub>Y</sub></i>(<i>y</i>) = 1 − <i>F<sub>X</sub></i>(<i>g</i><sup>−1</sup>(<i>y</i>))</span>. And yet <strong>differentiating produces the same PDF formula as before.</strong> The same cancellation you saw in the affine case in §04.</p>
+
+  <div class="callout" lang="ko">
+    <strong>절댓값이 왜 거기 있는지가 이제 보여.</strong> CDF는 증가 · 감소 두 경우가 다른 식인데, <strong>PDF는 하나로 합쳐져.</strong> 절댓값이 그 두 경우를 한 줄에 담는 장치야.<br><br>
+    <strong>그래서 시험에서 순서가 중요해.</strong> CDF를 구할 때는 증가인지 감소인지를 <strong>반드시</strong> 먼저 정하고 부등호를 맞춰야 해. 반면 PDF만 물으면 단조라는 것만 확인하고 공식에 바로 넣어도 돼. 04번의 아핀 변환이 이 정리의 가장 단순한 사례고, <span class="m"><i>g</i><sup>−1</sup>(<i>y</i>) = (<i>y</i>−<i>b</i>)/<i>a</i></span>, <span class="m">|d<i>g</i><sup>−1</sup>/d<i>y</i>| = 1/|<i>a</i>|</span>를 넣으면 그대로 나와.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Now you can see why the absolute value is there.</strong> The CDF has two different forms for increasing and decreasing <span class="m"><i>g</i></span>, but <strong>the PDF collapses to one.</strong> The absolute value is the device that fits both cases on a single line.<br><br>
+    <strong>Which makes the order matter on an exam.</strong> If you need the CDF you <strong>must</strong> decide increasing or decreasing first and get the inequality right. If only the PDF is asked, confirming monotonicity is enough to use the formula directly. The affine map of §04 is the simplest instance of the theorem: substitute <span class="m"><i>g</i><sup>−1</sup>(<i>y</i>) = (<i>y</i>−<i>b</i>)/<i>a</i></span> and <span class="m">|d<i>g</i><sup>−1</sup>/d<i>y</i>| = 1/|<i>a</i>|</span> and it falls right out.
+  </div>
+
+  <details class="nota" open>
+    <summary><span lang="ko">기호 뜯어보기 · g⁻¹ 은 역수가 아니다</span><span lang="en">Unpacking the notation · g⁻¹ is not a reciprocal</span></summary>
+    <div class="body">
+      <div lang="ko">
+        <p>위첨자 <span class="m">−1</span>이 두 가지 뜻으로 쓰여서 헷갈리는 자리야.</p>
+        <table class="parts">
+          <tr><td><span class="m"><i>g</i><sup>−1</sup>(<i>y</i>)</span></td><td><strong>역함수</strong>에 <span class="m"><i>y</i></span>를 넣은 값. <span class="m"><i>g</i>(<i>x</i>) = <i>y</i></span>인 그 <span class="m"><i>x</i></span>.</td></tr>
+          <tr><td><span class="m">1 ⁄ <i>g</i>(<i>y</i>)</span></td><td><strong>역수</strong>. 완전히 다른 것. <span class="m"><i>g</i>(<i>y</i>)</span>를 계산한 뒤 뒤집는 것.</td></tr>
+          <tr><td><span class="m">(d/d<i>y</i>) <i>g</i><sup>−1</sup>(<i>y</i>)</span></td><td>역함수를 <span class="m"><i>y</i></span>로 미분한 것. 흔히 <span class="m">d<i>x</i>/d<i>y</i></span>로 쓴다.</td></tr>
+          <tr><td><span class="m"><i>g</i>′(<i>x</i>)</span></td><td>원래 함수를 <span class="m"><i>x</i></span>로 미분한 것. <span class="m">d<i>y</i>/d<i>x</i></span>.</td></tr>
+        </table>
+        <p><strong>그런데 마지막 두 개는 서로 역수야.</strong> 역함수 정리가 그걸 말해.</p>
+        <div class="eq">(d/d<i>y</i>) <i>g</i><sup>−1</sup>(<i>y</i>) = 1 ⁄ <i>g</i>′(<i>x</i>) &nbsp;&nbsp; (<i>x</i> = <i>g</i><sup>−1</sup>(<i>y</i>)에서)</div>
+        <p style="margin-bottom:0"><strong>이것 때문에 같은 정리가 두 가지 얼굴로 돌아다녀.</strong> 슬라이드 16쪽은 <span class="m">|d<i>g</i><sup>−1</sup>/d<i>y</i>|</span>로 쓰고, 10번의 Doppler 유도는 <span class="m">1 ⁄ |<i>g</i>′(<i>θ</i>)|</span>로 써. 값은 같아. <strong>어느 쪽이 편한지는 문제가 정해줘.</strong> <span class="m"><i>g</i><sup>−1</sup></span>을 명시적으로 쓸 수 있으면 앞쪽이 빠르고, <span class="m"><i>g</i></span>는 간단한데 <span class="m"><i>g</i><sup>−1</sup></span>이 지저분하면 뒤쪽이 빨라. 섞어 쓰다가 <strong>뒤집는 걸 빼먹는 게</strong> 흔한 실수야.</p>
+      </div>
+      <div lang="en">
+        <p>The superscript <span class="m">−1</span> carries two different meanings, and this is where they collide.</p>
+        <table class="parts">
+          <tr><td><span class="m"><i>g</i><sup>−1</sup>(<i>y</i>)</span></td><td>The <strong>inverse function</strong> evaluated at <span class="m"><i>y</i></span>: the <span class="m"><i>x</i></span> with <span class="m"><i>g</i>(<i>x</i>) = <i>y</i></span>.</td></tr>
+          <tr><td><span class="m">1 ⁄ <i>g</i>(<i>y</i>)</span></td><td>A <strong>reciprocal</strong>. A completely different object: evaluate <span class="m"><i>g</i></span>, then flip.</td></tr>
+          <tr><td><span class="m">(d/d<i>y</i>) <i>g</i><sup>−1</sup>(<i>y</i>)</span></td><td>The inverse differentiated with respect to <span class="m"><i>y</i></span>, often written <span class="m">d<i>x</i>/d<i>y</i></span>.</td></tr>
+          <tr><td><span class="m"><i>g</i>′(<i>x</i>)</span></td><td>The original differentiated with respect to <span class="m"><i>x</i></span>: <span class="m">d<i>y</i>/d<i>x</i></span>.</td></tr>
+        </table>
+        <p><strong>The last two are reciprocals of each other</strong>, which is what the inverse function theorem says.</p>
+        <div class="eq">(d/d<i>y</i>) <i>g</i><sup>−1</sup>(<i>y</i>) = 1 ⁄ <i>g</i>′(<i>x</i>) &nbsp;&nbsp; (evaluated at <i>x</i> = <i>g</i><sup>−1</sup>(<i>y</i>))</div>
+        <p style="margin-bottom:0"><strong>Which is why the same theorem circulates with two faces.</strong> Slide 16 writes <span class="m">|d<i>g</i><sup>−1</sup>/d<i>y</i>|</span>; the Doppler derivation in §10 writes <span class="m">1 ⁄ |<i>g</i>′(<i>θ</i>)|</span>. Same value. <strong>The problem decides which is easier:</strong> use the first when <span class="m"><i>g</i><sup>−1</sup></span> is easy to write down, the second when <span class="m"><i>g</i></span> is clean but its inverse is messy. The common error is mixing them and <strong>forgetting to take the reciprocal.</strong></p>
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ══ 07 ══ -->
+<section id="s7">
+  <div class="sec-head" data-slide="19-20"><span class="sec-num">07</span><h2 lang="ko">왜 미분이 붙나</h2><h2 lang="en">Why the derivative appears</h2></div>
+  <p class="sec-sub" lang="ko">공식을 외우는 대신 이 그림 하나를 기억하면 된다.</p>
+  <p class="sec-sub" lang="en">Remember this one picture instead of memorising the formula.</p>
+
+  <p lang="ko">슬라이드 19쪽이 두 줄로 설명해. 변환 <span class="m"><i>y</i> = <i>g</i>(<i>x</i>)</span>는 구간을 <strong>국소적으로 늘이거나 줄여.</strong> 작은 <span class="m">d<i>x</i></span>에 대해</p>
+  <p lang="en">Slide 19 explains it in two lines. A transformation <span class="m"><i>y</i> = <i>g</i>(<i>x</i>)</span> <strong>locally stretches or compresses</strong> intervals. For small <span class="m">d<i>x</i></span>,</p>
+
+  <div class="eq">d<i>y</i> ≈ |<i>g</i>′(<i>x</i>)| d<i>x</i></div>
+
+  <p lang="ko">그리고 <strong>확률은 보존돼야 해.</strong> <span class="m"><i>X</i></span>가 <span class="m">d<i>x</i></span>에 떨어지는 사건과 <span class="m"><i>Y</i></span>가 <span class="m">d<i>y</i></span>에 떨어지는 사건은 <strong>같은 사건</strong>이거든. 같은 <span class="m"><i>ω</i></span>들이야.</p>
+  <p lang="en">And <strong>probability has to be preserved</strong>, because "<span class="m"><i>X</i></span> lands in <span class="m">d<i>x</i></span>" and "<span class="m"><i>Y</i></span> lands in <span class="m">d<i>y</i></span>" are <strong>the same event</strong>. The same <span class="m"><i>ω</i></span>.</p>
+
+  <div class="eq"><i>f<sub>X</sub></i>(<i>x</i>) d<i>x</i> ≈ <i>f<sub>Y</sub></i>(<i>y</i>) d<i>y</i> &nbsp;&nbsp; ⟹ &nbsp;&nbsp; <i>f<sub>Y</sub></i>(<i>y</i>) ≈ <i>f<sub>X</sub></i>(<i>x</i>) |d<i>x</i> ⁄ d<i>y</i>|</div>
+
+  <figure>
+    <svg viewBox="0 0 520 292" role="img" aria-label="Equal width intervals on the x axis map to unequal intervals on the y axis: where the curve is steep the image is wide and the density thins out, where it is flat the image is narrow and the density piles up">
+      <line x1="140" y1="220" x2="480" y2="220" stroke="var(--rule)" stroke-width="1.2"/>
+      <line x1="140" y1="220" x2="140" y2="50" stroke="var(--rule)" stroke-width="1.2"/>
+      <polyline points="140,215 180,170 220,140 260,118 300,102 340,90 380,80 420,70 470,60" fill="none" stroke="var(--pink)" stroke-width="2.2" stroke-linejoin="round"/>
+
+      <rect x="160" y="162.5" width="30" height="30" fill="rgba(var(--blue-rgb),.10)"/>
+      <rect x="400" y="68" width="30" height="7" fill="rgba(var(--green-rgb),.16)"/>
+
+      <line x1="160" y1="192.5" x2="160" y2="232" stroke="var(--blue)" stroke-width="1" stroke-dasharray="3 3"/>
+      <line x1="190" y1="162.5" x2="190" y2="232" stroke="var(--blue)" stroke-width="1" stroke-dasharray="3 3"/>
+      <line x1="140" y1="192.5" x2="160" y2="192.5" stroke="var(--blue)" stroke-width="1" stroke-dasharray="3 3"/>
+      <line x1="140" y1="162.5" x2="190" y2="162.5" stroke="var(--blue)" stroke-width="1" stroke-dasharray="3 3"/>
+
+      <line x1="400" y1="75" x2="400" y2="232" stroke="var(--green)" stroke-width="1" stroke-dasharray="3 3"/>
+      <line x1="430" y1="68" x2="430" y2="232" stroke="var(--green)" stroke-width="1" stroke-dasharray="3 3"/>
+      <line x1="140" y1="75" x2="400" y2="75" stroke="var(--green)" stroke-width="1" stroke-dasharray="3 3"/>
+      <line x1="140" y1="68" x2="430" y2="68" stroke="var(--green)" stroke-width="1" stroke-dasharray="3 3"/>
+
+      <rect x="160" y="226" width="30" height="10" rx="2" fill="var(--blue)"/>
+      <rect x="400" y="226" width="30" height="10" rx="2" fill="var(--green)"/>
+      <rect x="128" y="162.5" width="10" height="30" rx="2" fill="var(--blue)"/>
+      <rect x="128" y="68" width="10" height="7" rx="2" fill="var(--green)"/>
+
+      <text class="svglab" x="175" y="252" text-anchor="middle" style="fill:var(--blue)">dx</text>
+      <text class="svglab" x="415" y="252" text-anchor="middle" style="fill:var(--green)">dx</text>
+      <text class="svglab" x="120" y="182" text-anchor="end" style="fill:var(--blue)">dy</text>
+      <text class="svglab" x="120" y="76" text-anchor="end" style="fill:var(--green)">dy</text>
+      <text class="svgtxt it" x="478" y="56" style="fill:var(--pink)">g</text>
+
+      <text class="svglab" x="175" y="274" text-anchor="middle" style="fill:var(--blue)" lang="ko">가파르다 · dy 넓다 · 밀도 묽어짐</text>
+      <text class="svglab" x="175" y="274" text-anchor="middle" style="fill:var(--blue)" lang="en">steep · wide dy · density thins</text>
+      <text class="svglab" x="415" y="274" text-anchor="middle" style="fill:var(--green)" lang="ko">완만 · dy 좁다 · 밀도 쌓임</text>
+      <text class="svglab" x="415" y="274" text-anchor="middle" style="fill:var(--green)" lang="en">flat · narrow dy · density piles</text>
+    </svg>
+    <figcaption lang="ko"><span class="m"><i>x</i></span>축 위의 두 조각은 <strong>폭이 같아.</strong> 그러니까 <span class="m"><i>X</i></span>가 균등하다면 둘에 담긴 확률도 같아. 그런데 <span class="m"><i>g</i></span>를 통과하면 <span class="m"><i>y</i></span>축에서의 폭이 달라져. 왼쪽은 가파른 자리라 넓게 퍼지고, 오른쪽은 완만한 자리라 좁게 뭉쳐.<br><br><strong>같은 확률이 좁은 구간에 들어가면 밀도가 높아.</strong> 그게 <span class="m">|d<i>x</i>/d<i>y</i>|</span>야. 슬라이드 20쪽의 문장 그대로, "도함수는 변환이 만들어내는 국소적인 늘임과 눌림을 설명한다."</figcaption>
+    <figcaption lang="en">The two slabs on the <span class="m"><i>x</i></span> axis have <strong>the same width</strong>, so if <span class="m"><i>X</i></span> is uniform they carry the same probability. Push them through <span class="m"><i>g</i></span> and their widths on the <span class="m"><i>y</i></span> axis differ: the left one sits where the curve is steep and spreads out, the right one sits where it is flat and bunches up.<br><br><strong>The same probability squeezed into a narrower interval means a higher density.</strong> That is <span class="m">|d<i>x</i>/d<i>y</i>|</span>. In slide 20's words, "the derivative accounts for the local stretching or compression introduced by the transformation."</figcaption>
+  </figure>
+
+  <div class="callout" lang="ko">
+    <strong>Module 6과 나란히 놓아봐.</strong> 조건부 밀도도 원래 밀도를 어떤 수로 나눴어. 다만 그 수가 <span class="m"><i>P</i>(<i>M</i>)</span>이라 <strong>어디서나 같았지.</strong> 여기서는 나누는 수가 <span class="m">|d<i>y</i>/d<i>x</i>|</span>라 <strong>자리마다 달라.</strong><br><br>
+    그래서 조건부는 모양을 안 바꾸고 변환은 모양을 바꿔. <span class="m"><i>g</i></span>가 아핀이면 <span class="m"><i>g</i>′</span>이 상수라 <strong>변환도 모양을 안 바꿔.</strong> 04번 그림에서 삼각형이 삼각형으로 간 이유가 이거야.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Set this next to Module 6.</strong> A conditional density also divided the original by a number. That number was <span class="m"><i>P</i>(<i>M</i>)</span>, and it was <strong>the same everywhere.</strong> Here the divisor is <span class="m">|d<i>y</i>/d<i>x</i>|</span>, and it <strong>varies with position.</strong><br><br>
+    Which is why conditioning leaves the shape alone and transforming does not. And when <span class="m"><i>g</i></span> is affine, <span class="m"><i>g</i>′</span> is constant, so <strong>the transformation leaves the shape alone too.</strong> That is why the triangle in §04's figure came out a triangle.
+  </div>
+</section>
+
+<!-- ══ 08 ══ -->
+<section id="s8">
+  <div class="sec-head" data-slide="21-22"><span class="sec-num">08</span><h2 lang="ko">비단조: Jacobian 공식</h2><h2 lang="en">Non-monotonic: the Jacobian formula</h2></div>
+  <p class="sec-sub" lang="ko">갈래가 여럿이면 각 갈래가 따로 기여하고, 그걸 전부 더한다.</p>
+  <p class="sec-sub" lang="en">Several branches, each contributing separately, and you add them all.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드 21쪽 · Jacobian 공식</span>
+    <p><span class="m"><i>g</i>(<i>x</i>) = <i>y</i></span>의 해가 <span class="m"><i>x</i></span><sub>1</sub>, <span class="m"><i>x</i></span><sub>2</sub>, … 여러 개일 때</p>
+    <div class="eq" style="margin-bottom:0"><i>f<sub>Y</sub></i>(<i>y</i>) = ∑<sub><i>i</i></sub> <i>f<sub>X</sub></i>(<i>x<sub>i</sub></i>) |d<i>x<sub>i</sub></i> ⁄ d<i>y</i>|</div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Slide 21 · the Jacobian formula</span>
+    <p>When <span class="m"><i>g</i>(<i>x</i>) = <i>y</i></span> has several solutions <span class="m"><i>x</i></span><sub>1</sub>, <span class="m"><i>x</i></span><sub>2</sub>, …,</p>
+    <div class="eq" style="margin-bottom:0"><i>f<sub>Y</sub></i>(<i>y</i>) = ∑<sub><i>i</i></sub> <i>f<sub>X</sub></i>(<i>x<sub>i</sub></i>) |d<i>x<sub>i</sub></i> ⁄ d<i>y</i>|</div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 520 292" role="img" aria-label="A horizontal band of width dy cuts a non-monotonic curve in three places, and each crossing sends a band of a different width down to the x axis">
+      <line x1="50" y1="135" x2="490" y2="135" stroke="var(--rule)" stroke-width="1.2"/>
+      <line x1="50" y1="40" x2="50" y2="252" stroke="var(--rule)" stroke-width="1.2"/>
+
+      <rect x="50" y="114.6" width="412" height="18.1" fill="rgba(var(--violet-rgb),.16)"/>
+      <rect x="106.1" y="114.6" width="14.4" height="137.4" fill="rgba(var(--blue-rgb),.12)"/>
+      <rect x="233.8" y="114.6" width="25.1" height="137.4" fill="rgba(var(--blue-rgb),.12)"/>
+      <rect x="421.0" y="114.6" width="10.1" height="137.4" fill="rgba(var(--blue-rgb),.12)"/>
+
+      <polyline points="62,226.6 80.2,180.2 98.4,144.8 116.5,119.1 134.7,102.1 152.9,92.7 171.1,89.8 189.3,92.3 207.5,99.2 225.6,109.3 243.8,121.6 262,135 280.2,148.4 298.4,160.7 316.5,170.8 334.7,177.7 352.9,180.2 371.1,177.3 389.3,167.9 407.5,150.9 425.6,125.2 443.8,89.8 462,43.4" fill="none" stroke="var(--pink)" stroke-width="2.2" stroke-linejoin="round"/>
+
+      <line x1="50" y1="256" x2="490" y2="256" stroke="var(--rule)" stroke-width="1.2"/>
+      <rect x="106.1" y="250" width="14.4" height="12" rx="2" fill="var(--blue)"/>
+      <rect x="233.8" y="250" width="25.1" height="12" rx="2" fill="var(--blue)"/>
+      <rect x="421.0" y="250" width="10.1" height="12" rx="2" fill="var(--blue)"/>
+      <rect x="38" y="114.6" width="10" height="18.1" rx="2" fill="var(--violet)"/>
+
+      <text class="svglab" x="30" y="128" text-anchor="end" style="fill:var(--violet)">dy</text>
+      <text class="svglab" x="113" y="280" text-anchor="middle" style="fill:var(--blue)">dx₁</text>
+      <text class="svglab" x="246" y="280" text-anchor="middle" style="fill:var(--blue)">dx₂</text>
+      <text class="svglab" x="426" y="280" text-anchor="middle" style="fill:var(--blue)">dx₃</text>
+      <text class="svgtxt it" x="470" y="58" style="fill:var(--pink)">g</text>
+    </svg>
+    <figcaption lang="ko">보라색 띠 하나가 <span class="m"><i>y</i></span>축의 <span class="m">d<i>y</i></span>야. 곡선이 그 띠를 <strong>세 번</strong> 통과하니까, <span class="m"><i>x</i></span>축에는 조각이 세 개 생겨. <span class="m"><i>Y</i></span>가 <span class="m">d<i>y</i></span>에 떨어지는 사건은 <span class="m"><i>X</i></span>가 <strong>이 세 조각 중 하나</strong>에 떨어지는 사건이고, 세 조각은 서로 겹치지 않으니 확률을 그냥 더하면 돼.<br><br>폭이 셋 다 달라. 가운데가 제일 넓은 건 그 자리에서 곡선이 제일 완만하기 때문이야. <strong>완만한 갈래가 더 많이 기여해.</strong> 그게 <span class="m">|d<i>x<sub>i</sub></i>/d<i>y</i>|</span>가 갈래마다 다른 이유고.</figcaption>
+    <figcaption lang="en">The violet band is a <span class="m">d<i>y</i></span> on the <span class="m"><i>y</i></span> axis. The curve passes through it <strong>three times</strong>, so three slabs appear on the <span class="m"><i>x</i></span> axis. "<span class="m"><i>Y</i></span> lands in <span class="m">d<i>y</i></span>" is the event "<span class="m"><i>X</i></span> lands in <strong>one of these three</strong>", and since they do not overlap you simply add the probabilities.<br><br>All three widths differ. The middle one is widest because the curve is flattest there. <strong>A flatter branch contributes more</strong>, which is why <span class="m">|d<i>x<sub>i</sub></i>/d<i>y</i>|</span> differs from branch to branch.</figcaption>
+  </figure>
+
+  <p lang="ko">슬라이드 22쪽이 <span class="m"><i>Y</i> = <i>X</i><sup>2</sup></span>이 이 공식의 특수한 경우라고 짚어. 해가 <span class="m"><i>x</i></span><sub>1</sub> <span class="m">= √<i>y</i></span>, <span class="m"><i>x</i></span><sub>2</sub> <span class="m">= −√<i>y</i></span> 둘이고, 각각 <span class="m">|d<i>x<sub>i</sub></i>/d<i>y</i>| = 1/(2√<i>y</i>)</span>야. 넣으면 05번의 식이 그대로 나와.</p>
+  <p lang="en">Slide 22 notes that <span class="m"><i>Y</i> = <i>X</i><sup>2</sup></span> is a special case: the solutions are <span class="m"><i>x</i></span><sub>1</sub> <span class="m">= √<i>y</i></span> and <span class="m"><i>x</i></span><sub>2</sub> <span class="m">= −√<i>y</i></span>, each with <span class="m">|d<i>x<sub>i</sub></i>/d<i>y</i>| = 1/(2√<i>y</i>)</span>. Substituting recovers the formula from §05 exactly.</p>
+
+  <div class="trap" lang="ko">
+    <span class="tag">함정</span>
+    <h4>갈래를 하나 빠뜨린다</h4>
+    <p>이 모듈에서 가장 비싼 실수야. 답이 그럴듯해 보이는데 적분이 1이 안 돼. <strong>검산 방법: <span class="m">∫<i>f<sub>Y</sub></i></span>가 1인지 확인해.</strong> 갈래를 빠뜨렸으면 1보다 작게 나와. 예제 5.1처럼 갈래 수가 <span class="m"><i>y</i></span>에 따라 바뀌면 구간별로 나눠서 적분해야 해.</p>
+    <h4><span class="m"><i>g</i>′(<i>x<sub>i</sub></i>) = 0</span>인 지점</h4>
+    <p>거기서는 <span class="m">|d<i>x</i>/d<i>y</i>|</span>가 발산해. <span class="m"><i>Y</i> = <i>X</i><sup>2</sup></span>의 <span class="m"><i>x</i> = 0</span>이 그 경우고, 그래서 <span class="m"><i>f<sub>Y</sub></i></span>가 <span class="m"><i>y</i> = 0</span>에서 폭발해. <strong>곡선이 평평해지는 곳에 밀도가 쌓인다</strong>는 07번 그림의 극단이야. 10번의 Doppler 예제도 <span class="m"><i>θ</i> = 0, <i>π</i></span>에서 같은 일이 일어나.</p>
+    <h4>정의역을 벗어난 해를 센다</h4>
+    <p style="margin-bottom:0"><span class="m"><i>g</i>(<i>x</i>) = <i>y</i></span>를 대수적으로 풀면 <span class="m"><i>X</i></span>의 지지집합 밖의 해도 나와. <strong>그런 해는 기여가 0이야.</strong> <span class="m"><i>f<sub>X</sub></i>(<i>x<sub>i</sub></i>) = 0</span>이니까 자동으로 떨어지긴 하는데, 손으로 풀 때는 명시적으로 걸러내는 게 안전해.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Traps</span>
+    <h4>Dropping a branch</h4>
+    <p>The most expensive error in this module, because the answer still looks plausible; it just fails to integrate to 1. <strong>So check that <span class="m">∫<i>f<sub>Y</sub></i></span> equals 1.</strong> A missing branch shows up as a total below 1. When the branch count depends on <span class="m"><i>y</i></span>, as in Example 5.1, integrate piece by piece.</p>
+    <h4>Points where <span class="m"><i>g</i>′(<i>x<sub>i</sub></i>) = 0</span></h4>
+    <p>There <span class="m">|d<i>x</i>/d<i>y</i>|</span> blows up. <span class="m"><i>x</i> = 0</span> for <span class="m"><i>Y</i> = <i>X</i><sup>2</sup></span> is exactly that case, which is why <span class="m"><i>f<sub>Y</sub></i></span> explodes at <span class="m"><i>y</i> = 0</span>. It is the extreme of §07's picture: <strong>density piles up where the curve flattens.</strong> The Doppler example in §10 does the same thing at <span class="m"><i>θ</i> = 0</span> and <span class="m"><i>θ</i> = <i>π</i></span>.</p>
+    <h4>Counting solutions outside the support</h4>
+    <p style="margin-bottom:0">Solving <span class="m"><i>g</i>(<i>x</i>) = <i>y</i></span> algebraically also turns up solutions outside the support of <span class="m"><i>X</i></span>. <strong>Those contribute nothing</strong>, since <span class="m"><i>f<sub>X</sub></i>(<i>x<sub>i</sub></i>) = 0</span> kills them automatically. Still, when working by hand it is safer to discard them explicitly.</p>
+  </div>
+</section>
+
+<!-- ══ 09 ══ -->
+<section id="s9">
+  <div class="sec-head"><span class="sec-num">09</span><h2 lang="ko">이산이면</h2><h2 lang="en">If X is discrete</h2></div>
+  <p class="sec-sub" lang="ko">슬라이드에는 없다. 그런데 훨씬 쉽고, 비단조의 본질이 더 잘 보인다.</p>
+  <p class="sec-sub" lang="en">Not on the slides. It is also easier, and it shows the non-monotone idea more plainly.</p>
+
+  <div class="trap" lang="ko">
+    <span class="tag">슬라이드 밖 내용</span>
+    <p style="margin-bottom:0"><strong>07번 덱은 연속 확률변수만 다뤄.</strong> 이산 <span class="m"><i>X</i></span>에 대한 <span class="m"><i>Y</i> = <i>g</i>(<i>X</i>)</span>는 한 장도 없어. 이 섹션은 Hajek §1.4에서 가져온 거야. 교재는 절차를 설명하면서 <em>"<span class="m"><i>X</i></span>가 이산이면 1단계만 따르고, 그 다음 <span class="m"><i>Y</i></span>의 PMF를 <span class="m"><i>X</i></span>의 PMF에서 구할 수 있다"</em>고 적고 공식을 준다. <strong>강의가 나중에 다루면 그쪽 표기를 기준으로 삼아.</strong></p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Beyond the slides</span>
+    <p style="margin-bottom:0"><strong>Deck 07 only covers continuous random variables.</strong> There is not one slide on <span class="m"><i>Y</i> = <i>g</i>(<i>X</i>)</span> for discrete <span class="m"><i>X</i></span>. This section comes from Hajek §1.4, which describes the procedure and then adds that <em>"if instead <span class="m"><i>X</i></span> is a discrete random variable then step 1 should be followed,"</em> after which the PMF of <span class="m"><i>Y</i></span> follows from that of <span class="m"><i>X</i></span>. <strong>If the lecture covers it later, follow the lecture's notation.</strong></p>
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">정의 (교재 §1.4)</span>
+    <div class="eq"><i>p<sub>Y</sub></i>(<i>y</i>) = <i>P</i>(<i>g</i>(<i>X</i>) = <i>y</i>) = ∑<sub><i>x</i> : <i>g</i>(<i>x</i>) = <i>y</i></sub> <i>p<sub>X</sub></i>(<i>x</i>)</div>
+    <p style="margin-bottom:0"><strong>미분도 없고 Jacobian도 없어.</strong> 같은 <span class="m"><i>y</i></span>로 가는 <span class="m"><i>x</i></span>들의 질량을 그냥 더하면 끝이야. <span class="m">|d<i>x</i>/d<i>y</i>|</span>가 등장하는 건 연속에서 <em>밀도</em>를 다루기 때문이고, 질량은 그런 보정이 필요 없거든.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Definition (textbook §1.4)</span>
+    <div class="eq"><i>p<sub>Y</sub></i>(<i>y</i>) = <i>P</i>(<i>g</i>(<i>X</i>) = <i>y</i>) = ∑<sub><i>x</i> : <i>g</i>(<i>x</i>) = <i>y</i></sub> <i>p<sub>X</sub></i>(<i>x</i>)</div>
+    <p style="margin-bottom:0"><strong>No derivative, no Jacobian.</strong> Add up the mass of every <span class="m"><i>x</i></span> that maps to the same <span class="m"><i>y</i></span> and you are done. The <span class="m">|d<i>x</i>/d<i>y</i>|</span> shows up in the continuous case only because a <em>density</em> is involved; mass needs no such correction.</p>
+  </div>
+
+  <div class="ex" lang="ko">
+    <span class="tag">예제 9.1 · 이산에서 Y = X²</span>
+    <p><span class="m"><i>X</i></span>가 <span class="m">{−2, −1, 0, 1, 2}</span> 위에 균등이고 <span class="m"><i>Y</i> = <i>X</i><sup>2</sup></span>이야. <span class="m"><i>p<sub>Y</sub></i></span>를 구해.</p>
+    <details>
+      <summary>풀이 보기</summary>
+      <div class="body">
+        <p><span class="m"><i>p<sub>X</sub></i>(<i>k</i>) = 1/5</span>야. <span class="m"><i>Y</i></span>가 가질 수 있는 값은 <span class="m">{0, 1, 4}</span>고, 어느 <span class="m"><i>x</i></span>가 어디로 가는지만 보면 돼.</p>
+        <div class="eq"><i>p<sub>Y</sub></i>(0) = <i>p<sub>X</sub></i>(0) = 1/5</div>
+        <div class="eq"><i>p<sub>Y</sub></i>(1) = <i>p<sub>X</sub></i>(−1) + <i>p<sub>X</sub></i>(1) = 2/5</div>
+        <div class="eq"><i>p<sub>Y</sub></i>(4) = <i>p<sub>X</sub></i>(−2) + <i>p<sub>X</sub></i>(2) = 2/5</div>
+        <p style="margin-bottom:0"><strong>연속판과 나란히 놓아봐.</strong> <span class="m"><i>Y</i> = 1</span>과 <span class="m"><i>Y</i> = 4</span>는 갈래가 둘이라 <span class="m"><i>Y</i> = 0</span>의 <strong>두 배</strong>야. 05번에서 밀도에 갈래 둘이 더해진 것과 완전히 같은 일이고, 여기서는 분수 계산 없이 눈으로 바로 보여. <strong>비단조 변환이 하는 일은 결국 "합치기"야.</strong> 정보가 손실되는 거지. <span class="m"><i>Y</i></span>를 보고 <span class="m"><i>X</i></span>의 부호를 되찾을 수 없잖아.</p>
+      </div>
+    </details>
+  </div>
+  <div class="ex" lang="en">
+    <span class="tag">Example 9.1 · Y = X² in the discrete case</span>
+    <p><span class="m"><i>X</i></span> is uniform on <span class="m">{−2, −1, 0, 1, 2}</span> and <span class="m"><i>Y</i> = <i>X</i><sup>2</sup></span>. Find <span class="m"><i>p<sub>Y</sub></i></span>.</p>
+    <details>
+      <summary>show the solution</summary>
+      <div class="body">
+        <p><span class="m"><i>p<sub>X</sub></i>(<i>k</i>) = 1/5</span>. The possible values of <span class="m"><i>Y</i></span> are <span class="m">{0, 1, 4}</span>, and all you have to track is which <span class="m"><i>x</i></span> goes where.</p>
+        <div class="eq"><i>p<sub>Y</sub></i>(0) = <i>p<sub>X</sub></i>(0) = 1/5</div>
+        <div class="eq"><i>p<sub>Y</sub></i>(1) = <i>p<sub>X</sub></i>(−1) + <i>p<sub>X</sub></i>(1) = 2/5</div>
+        <div class="eq"><i>p<sub>Y</sub></i>(4) = <i>p<sub>X</sub></i>(−2) + <i>p<sub>X</sub></i>(2) = 2/5</div>
+        <p style="margin-bottom:0"><strong>Compare it with the continuous version.</strong> <span class="m"><i>Y</i> = 1</span> and <span class="m"><i>Y</i> = 4</span> have two branches each and come out <strong>twice</strong> as likely as <span class="m"><i>Y</i> = 0</span>. It is exactly what happened when two branches were added in the density in §05, except here you see it without any fractions. <strong>What a non-monotone transformation does is merge.</strong> Information is destroyed: given <span class="m"><i>Y</i></span> you cannot recover the sign of <span class="m"><i>X</i></span>.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ══ 10 ══ -->
+<section id="s10">
+  <div class="sec-head" data-slide="23-28"><span class="sec-num">10</span><h2 lang="ko">Doppler 편이</h2><h2 lang="en">Doppler shift</h2></div>
+  <p class="sec-sub" lang="ko">이 모듈 전체가 실제 무선 문제 하나에 쓰인다.</p>
+  <p class="sec-sub" lang="en">The whole module, spent on one real wireless problem.</p>
+
+  <p lang="ko">설정은 이래. 차량이 일정한 속력 <span class="m"><i>a</i></span>로 움직이고, 이동 방향과 수신기까지의 시선 사이의 각도가 <span class="m"><i>Θ</i> ~ <i>U</i>[0, <i>π</i>]</span>야. 시선 방향 속도는 <span class="m"><i>V</i> = <i>a</i> cos <i>Θ</i></span>이고, 그에 따른 Doppler 편이는</p>
+  <p lang="en">The setup: a vehicle moves at constant speed <span class="m"><i>a</i></span>, and the angle between its direction of travel and the line of sight to the receiver is <span class="m"><i>Θ</i> ~ <i>U</i>[0, <i>π</i>]</span>. The radial velocity is <span class="m"><i>V</i> = <i>a</i> cos <i>Θ</i></span>, and the resulting Doppler shift is</p>
+
+  <div class="eq"><i>D</i> = (<i>f<sub>c</sub></i> ⁄ <i>c</i>) <i>V</i> = <i>D</i><sub>max</sub> cos <i>Θ</i>, &nbsp;&nbsp; <i>D</i><sub>max</sub> = <i>f<sub>c</sub></i> <i>a</i> ⁄ <i>c</i></div>
+
+  <p lang="ko"><span class="m"><i>f<sub>c</sub></i></span>는 반송파 주파수, <span class="m"><i>c</i></span>는 빛의 속도야. <strong>무작위인 건 각도 하나뿐이야.</strong> 나머지는 전부 상수고, 그래서 이건 <span class="m"><i>g</i>(<i>θ</i>) = <i>D</i><sub>max</sub> cos <i>θ</i></span>라는 함수 하나를 통과시키는 문제야.</p>
+  <p lang="en">with <span class="m"><i>f<sub>c</sub></i></span> the carrier frequency and <span class="m"><i>c</i></span> the speed of light. <strong>The only random thing is the angle.</strong> Everything else is a constant, so this is a single function <span class="m"><i>g</i>(<i>θ</i>) = <i>D</i><sub>max</sub> cos <i>θ</i></span> to push a distribution through.</p>
+
+  <div class="callout" lang="ko">
+    <strong>02번의 함정이 여기서 값을 해.</strong> <span class="m">cos</span>은 <span class="m">ℝ</span>에서 단조가 아니지만 <span class="m">[0, <i>π</i>]</span>로 제한하면 <strong>순감소</strong>야. 슬라이드 24쪽이 그걸 명시해. 그래서 06번의 단조 변환 정리를 쓸 수 있고, 갈래가 하나뿐이야.<br><br>
+    <span class="m"><i>Θ</i></span>의 지지집합이 <span class="m">[0, <i>π</i>]</span>인 건 우연이 아니야. 3차원에서 각도는 <span class="m">[0, 2<i>π</i>)</span>인데, <span class="m">cos</span>이 짝함수라 <span class="m"><i>θ</i></span>와 <span class="m">−<i>θ</i></span>가 같은 Doppler를 주거든. 그래서 절반만 봐도 충분해.
+  </div>
+  <div class="callout" lang="en">
+    <strong>The trap from §02 pays off here.</strong> <span class="m">cos</span> is not monotone on <span class="m">ℝ</span>, but restricted to <span class="m">[0, <i>π</i>]</span> it is <strong>strictly decreasing</strong>, which slide 24 states explicitly. So the monotonic theorem from §06 applies and there is only one branch.<br><br>
+    The support <span class="m">[0, <i>π</i>]</span> is not an accident. Angles run over <span class="m">[0, 2<i>π</i>)</span>, but <span class="m">cos</span> is even, so <span class="m"><i>θ</i></span> and <span class="m">−<i>θ</i></span> give the same Doppler shift and half the circle carries all the information.
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드 24~27쪽 · 유도</span>
+    <p><strong>1. 역함수.</strong> <span class="m"><i>d</i> = <i>D</i><sub>max</sub> cos <i>θ</i></span>를 <span class="m"><i>θ</i></span>에 대해 풀면</p>
+    <div class="eq"><i>θ</i> = <i>g</i><sup>−1</sup>(<i>d</i>) = arccos(<i>d</i> ⁄ <i>D</i><sub>max</sub>)</div>
+    <p><strong>2. 도함수.</strong> 여기서는 <span class="m"><i>g</i>′</span> 쪽이 편해. <span class="m"><i>g</i>′(<i>θ</i>) = −<i>D</i><sub>max</sub> sin <i>θ</i></span>이고 <span class="m"><i>θ</i> = arccos(<i>d</i>/<i>D</i><sub>max</sub>)</span>에서 평가하면</p>
+    <div class="eq">|<i>g</i>′| = <i>D</i><sub>max</sub> |sin(arccos(<i>d</i>/<i>D</i><sub>max</sub>))| = <i>D</i><sub>max</sub> √(1 − (<i>d</i>/<i>D</i><sub>max</sub>)<sup>2</sup>) = √(<i>D</i><sub>max</sub><sup>2</sup> − <i>d</i><sup>2</sup>)</div>
+    <p><strong>3. 공식에 넣는다.</strong> <span class="m"><i>Θ</i></span>가 균등이라 <span class="m"><i>f<sub>Θ</sub></i>(<i>θ</i>) = 1/<i>π</i></span>야.</p>
+    <div class="eq" style="margin-bottom:0"><i>f<sub>D</sub></i>(<i>d</i>) = <i>f<sub>Θ</sub></i>(<i>g</i><sup>−1</sup>(<i>d</i>)) ⁄ |<i>g</i>′| = 1 ⁄ (<i>π</i> √(<i>D</i><sub>max</sub><sup>2</sup> − <i>d</i><sup>2</sup>)), &nbsp; |<i>d</i>| &lt; <i>D</i><sub>max</sub></div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Slides 24 to 27 · the derivation</span>
+    <p><strong>1. The inverse.</strong> Solving <span class="m"><i>d</i> = <i>D</i><sub>max</sub> cos <i>θ</i></span> for <span class="m"><i>θ</i></span>,</p>
+    <div class="eq"><i>θ</i> = <i>g</i><sup>−1</sup>(<i>d</i>) = arccos(<i>d</i> ⁄ <i>D</i><sub>max</sub>)</div>
+    <p><strong>2. The derivative.</strong> Here the <span class="m"><i>g</i>′</span> form is easier. <span class="m"><i>g</i>′(<i>θ</i>) = −<i>D</i><sub>max</sub> sin <i>θ</i></span>, evaluated at <span class="m"><i>θ</i> = arccos(<i>d</i>/<i>D</i><sub>max</sub>)</span>:</p>
+    <div class="eq">|<i>g</i>′| = <i>D</i><sub>max</sub> |sin(arccos(<i>d</i>/<i>D</i><sub>max</sub>))| = <i>D</i><sub>max</sub> √(1 − (<i>d</i>/<i>D</i><sub>max</sub>)<sup>2</sup>) = √(<i>D</i><sub>max</sub><sup>2</sup> − <i>d</i><sup>2</sup>)</div>
+    <p><strong>3. Into the formula.</strong> <span class="m"><i>Θ</i></span> is uniform, so <span class="m"><i>f<sub>Θ</sub></i>(<i>θ</i>) = 1/<i>π</i></span>.</p>
+    <div class="eq" style="margin-bottom:0"><i>f<sub>D</sub></i>(<i>d</i>) = <i>f<sub>Θ</sub></i>(<i>g</i><sup>−1</sup>(<i>d</i>)) ⁄ |<i>g</i>′| = 1 ⁄ (<i>π</i> √(<i>D</i><sub>max</sub><sup>2</sup> − <i>d</i><sup>2</sup>)), &nbsp; |<i>d</i>| &lt; <i>D</i><sub>max</sub></div>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">슬라이드를 읽을 때 주의</span>
+    <p><strong>PDF 25쪽과 26쪽은 손으로 쓴 삽입 페이지야.</strong> 인쇄된 쪽 번호가 없어서, 그 뒤부터 슬라이드에 찍힌 번호가 PDF 쪽보다 2 작아. PDF 29쪽에 "27"이 찍혀 있어. <strong>이 노트의 <span class="m"><i>data-slide</i></span> 값은 전부 PDF 쪽 기준이야.</strong></p>
+    <p style="margin-bottom:0">두 삽입 페이지가 바로 위 <strong>2단계</strong>야. 인쇄된 슬라이드는 <span class="m">|d<i>θ</i>/d<i>d</i>| = 1/√(<i>D</i><sub>max</sub><sup>2</sup> − <i>d</i><sup>2</sup>)</span>라는 결과만 주고, <span class="m">|sin(arccos(·))| = √(1 − cos<sup>2</sup>)</span>로 정리하는 과정은 손글씨에만 있어. <strong>시험에 그대로 나올 만한 계산이라 노트에 옮겨 적었어.</strong></p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Reading the slides here</span>
+    <p><strong>PDF pages 25 and 26 are handwritten inserts.</strong> They carry no printed number, so from there on the number printed on a slide runs two behind the PDF page: PDF page 29 is printed "27". <strong>Every <span class="m"><i>data-slide</i></span> value in these notes counts PDF pages.</strong></p>
+    <p style="margin-bottom:0">Those two inserts are <strong>step 2</strong> above. The printed slides give only the result <span class="m">|d<i>θ</i>/d<i>d</i>| = 1/√(<i>D</i><sub>max</sub><sup>2</sup> − <i>d</i><sup>2</sup>)</span>; the simplification through <span class="m">|sin(arccos(·))| = √(1 − cos<sup>2</sup>)</span> exists only in the handwriting. <strong>It is the kind of step that shows up on an exam, so it is written out here.</strong></p>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 560 234" role="img" aria-label="Left: the geometry of a vehicle, its direction of travel and the line of sight to a receiver. Right: the resulting Doppler density, U shaped and unbounded at both ends">
+      <defs>
+        <marker id="m7f5-tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="var(--blue)"/>
+        </marker>
+        <marker id="m7f5-los" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="var(--green)"/>
+        </marker>
+      </defs>
+
+      <g transform="translate(14,0)">
+        <line x1="20" y1="124" x2="150" y2="124" stroke="var(--blue)" stroke-width="2.2" marker-end="url(#m7f5-tip)"/>
+        <line x1="20" y1="124" x2="180" y2="54" stroke="var(--green)" stroke-width="2.2" marker-end="url(#m7f5-los)"/>
+        <path d="M54,124 A34,34 0 0 0 51.1,110.3" fill="none" stroke="var(--violet)" stroke-width="1.6"/>
+        <circle cx="20" cy="124" r="4.5" fill="var(--ink2)"/>
+        <text class="svgtxt it" x="64" y="116" style="fill:var(--violet)">Θ</text>
+        <text class="svgtxt it" x="96" y="142" style="fill:var(--blue)">a</text>
+        <text class="svglab" x="188" y="50" style="fill:var(--green)" lang="ko">수신기</text>
+        <text class="svglab" x="188" y="50" style="fill:var(--green)" lang="en">receiver</text>
+        <text class="svglab" x="20" y="146" text-anchor="start" style="fill:var(--ink3)" lang="ko">차량</text>
+        <text class="svglab" x="20" y="146" text-anchor="start" style="fill:var(--ink3)" lang="en">vehicle</text>
+        <text class="svgtxt" x="100" y="186" text-anchor="middle" style="fill:var(--ink2)">D = D<tspan font-size="11" dy="4">max</tspan><tspan dy="-4"> cos Θ</tspan></text>
+        <text class="svglab" x="100" y="210" text-anchor="middle" style="fill:var(--violet)">Θ ~ U[0, π]</text>
+      </g>
+
+      <g transform="translate(310,0)">
+        <line x1="10" y1="170" x2="235" y2="170" stroke="var(--rule)" stroke-width="1.2"/>
+        <polyline points="20.5,48.8 22,109.2 25,131.3 30,142.3 40,149.8 60,154.9 90,157.3 120,157.9 150,157.3 180,154.9 200,149.8 210,142.3 215,131.3 218,109.2 219.5,48.8" fill="none" stroke="var(--pink)" stroke-width="2.2" stroke-linejoin="round"/>
+        <line x1="20" y1="170" x2="20" y2="44" stroke="var(--ink3)" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="220" y1="170" x2="220" y2="44" stroke="var(--ink3)" stroke-width="1" stroke-dasharray="3 3"/>
+        <text class="svglab" x="24" y="190" text-anchor="middle">−D<tspan font-size="9" dy="3">max</tspan></text>
+        <text class="svglab" x="120" y="190" text-anchor="middle">0</text>
+        <text class="svglab" x="216" y="190" text-anchor="middle">D<tspan font-size="9" dy="3">max</tspan></text>
+        <text class="svgtxt it" x="120" y="88" text-anchor="middle" style="fill:var(--pink)">f</text>
+        <text class="svglab" x="120" y="212" text-anchor="middle" style="fill:var(--pink)" lang="ko">양 끝에서 발산한다</text>
+        <text class="svglab" x="120" y="212" text-anchor="middle" style="fill:var(--pink)" lang="en">unbounded at both ends</text>
+      </g>
+    </svg>
+    <figcaption lang="ko">각도가 균등한데 <strong>Doppler 편이는 전혀 균등하지 않아.</strong> <span class="m"><i>θ</i></span>가 <span class="m">0</span>이나 <span class="m"><i>π</i></span> 근처일 때 <span class="m">cos</span>이 <strong>평평해서</strong>, 넓은 각도 구간이 좁은 <span class="m"><i>d</i></span> 구간으로 몰려. 07번 그림의 오른쪽 상황이고, 여기서는 <span class="m"><i>g</i>′ = 0</span>이라 극단까지 가서 밀도가 발산해.<br><br>그래도 <span class="m">∫<sub>−<i>D</i></sub><sup><i>D</i></sup> <i>f<sub>D</sub></i> = 1</span>이야. <span class="m">1/√(<i>D</i><sup>2</sup> − <i>d</i><sup>2</sup>)</span>의 부정적분이 <span class="m">arcsin(<i>d</i>/<i>D</i>)</span>고 <span class="m">[−<i>π</i>/2, <i>π</i>/2]</span>만큼 움직이니까 <span class="m"><i>π</i></span>로 나눈 게 딱 1이 돼. <strong>물리적으로는, 차가 수신기를 향하거나 등지고 달릴 때의 편이가 가장 자주 관측된다는 뜻</strong>이고, 이게 무선 채널의 고전적인 U자 Doppler 스펙트럼이야.</figcaption>
+    <figcaption lang="en">The angle is uniform and <strong>the Doppler shift is anything but.</strong> Near <span class="m"><i>θ</i> = 0</span> and <span class="m"><i>θ</i> = <i>π</i></span> the cosine is <strong>flat</strong>, so a wide band of angles is crowded into a narrow band of <span class="m"><i>d</i></span>. It is the right-hand situation from §07's figure, pushed all the way: <span class="m"><i>g</i>′ = 0</span> there, so the density becomes unbounded.<br><br>It still integrates to one. The antiderivative of <span class="m">1/√(<i>D</i><sup>2</sup> − <i>d</i><sup>2</sup>)</span> is <span class="m">arcsin(<i>d</i>/<i>D</i>)</span>, which moves through <span class="m"><i>π</i></span> over the range, and dividing by <span class="m"><i>π</i></span> leaves exactly 1. <strong>Physically it says the shifts you observe most often are those from driving straight toward or straight away from the receiver</strong>, and this is the classic U-shaped Doppler spectrum of a wireless channel.</figcaption>
+  </figure>
+
+  <div class="callout" lang="ko">
+    <strong>교재가 같은 문제를 다르게 포장했어.</strong> Hajek §1.4의 Example 1.8이 이거야. 거기서는 Doppler가 아니라 <em>"임의 방향에서 본 유효 속도"</em> <span class="m"><i>B</i> = <i>a</i> cos <i>Θ</i></span>로 두고, <span class="m"><i>f<sub>B</sub></i>(<i>c</i>) = 1/(<i>π</i>√(<i>a</i><sup>2</sup> − <i>c</i><sup>2</sup>))</span>를 얻어. <strong>슬라이드의 답과 글자만 다르고 같은 식이야.</strong> 슬라이드는 <span class="m"><i>a</i></span> 자리에 <span class="m"><i>D</i><sub>max</sub></span>를, <span class="m"><i>c</i></span> 자리에 <span class="m"><i>d</i></span>를 쓴 거지.<br><br>
+    다만 교재는 CDF 방법으로 곧장 가. <span class="m"><i>F<sub>B</sub></i>(<i>c</i>) = <i>P</i>(cos <i>Θ</i> ≤ <i>c</i>/<i>a</i>) = <i>P</i>(<i>Θ</i> ≥ arccos(<i>c</i>/<i>a</i>)) = 1 − arccos(<i>c</i>/<i>a</i>)/<i>π</i></span>를 쓰고 미분해. <strong>단조 변환 정리를 안 거치고 03번 절차만으로 푼 거야.</strong> 어느 쪽이든 답은 같고, 정리를 까먹었을 때 돌아갈 길이 있다는 뜻이기도 해.
+  </div>
+  <div class="callout" lang="en">
+    <strong>The textbook packages the same problem differently.</strong> It is Example 1.8 in Hajek §1.4, where instead of a Doppler shift it is the <em>"effective speed in a random direction"</em> <span class="m"><i>B</i> = <i>a</i> cos <i>Θ</i></span>, giving <span class="m"><i>f<sub>B</sub></i>(<i>c</i>) = 1/(<i>π</i>√(<i>a</i><sup>2</sup> − <i>c</i><sup>2</sup>))</span>. <strong>The same formula as the slides, with different letters:</strong> <span class="m"><i>D</i><sub>max</sub></span> where the book writes <span class="m"><i>a</i></span>, and <span class="m"><i>d</i></span> where it writes <span class="m"><i>c</i></span>.<br><br>
+    The book goes straight through the CDF method, though: <span class="m"><i>F<sub>B</sub></i>(<i>c</i>) = <i>P</i>(cos <i>Θ</i> ≤ <i>c</i>/<i>a</i>) = <i>P</i>(<i>Θ</i> ≥ arccos(<i>c</i>/<i>a</i>)) = 1 − arccos(<i>c</i>/<i>a</i>)/<i>π</i></span>, then differentiate. <strong>No monotonic theorem, just §03's procedure.</strong> Either route gives the same answer, which also means you have a way back if the theorem escapes you under exam pressure.
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>슬라이드 28쪽이 붙이는 해석이 이 모듈의 요점이야.</strong> <em>"이동 방향의 무작위성이 관측되는 Doppler 편이의 무작위성을 만든다. 결정론적인 물리 관계 <span class="m"><i>D</i> = <i>D</i><sub>max</sub> cos <i>Θ</i></span>가 <span class="m"><i>Θ</i></span>의 분포를 <span class="m"><i>D</i></span>의 분포로 변환한다."</em><br><br>
+    <strong>무작위성의 출처는 하나고 모양은 함수가 정한다.</strong> 이걸 잡아두면 앞으로 나올 온갖 변환 문제가 같은 틀로 보여.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Slide 28's reading is the point of the module:</strong> <em>"The randomness in the angle of motion induces randomness in the observed Doppler shift. A deterministic physical relationship <span class="m"><i>D</i> = <i>D</i><sub>max</sub> cos <i>Θ</i></span> transforms the distribution of <span class="m"><i>Θ</i></span> into the distribution of <span class="m"><i>D</i></span>."</em><br><br>
+    <strong>There is one source of randomness, and the function decides its shape.</strong> Hold on to that and every transformation problem ahead looks like the same problem.
+  </div>
+</section>
+
+<!-- ══ 11 ══ -->
+<section id="s11">
+  <div class="sec-head"><span class="sec-num">11</span><h2 lang="ko">직접 만져보기</h2><h2 lang="en">Try it yourself</h2></div>
+  <p class="sec-sub" lang="ko">폭이 같은 조각들이 <span class="m"><i>g</i></span>를 지나면 어떻게 달라지는지 본다.</p>
+  <p class="sec-sub" lang="en">Watch equal-width slices come out unequal on the other side of <span class="m"><i>g</i></span>.</p>
+
+  <div class="play">
+    <div class="plab" lang="ko">변환이 밀도를 늘이고 누른다</div>
+    <div class="plab" lang="en">A transform stretching and compressing a density</div>
+    <p style="font-size:14px;color:var(--ink2);margin:0 0 10px" lang="ko"><span class="m"><i>X</i></span>는 언제나 <strong>균등</strong>이야. 그래서 아래쪽 띠의 여덟 조각은 폭이 같고 확률도 각각 <span class="m">1/8</span>로 같아. 그 조각들을 <span class="m"><i>g</i></span>에 통과시켜서 <span class="m"><i>y</i></span>축에 생기는 <strong>서로 다른 폭</strong>을 보면 돼. 왼쪽 막대가 그렇게 계산한 <span class="m"><i>f<sub>Y</sub></i></span>야.</p>
+    <p style="font-size:14px;color:var(--ink2);margin:0 0 10px" lang="en"><span class="m"><i>X</i></span> is always <strong>uniform</strong>, so the eight slices in the strip below have equal width and each carries probability <span class="m">1/8</span>. Push them through <span class="m"><i>g</i></span> and look at the <strong>unequal widths</strong> they produce on the <span class="m"><i>y</i></span> axis. The bars on the left are the resulting <span class="m"><i>f<sub>Y</sub></i></span>.</p>
+
+    <div class="presets">
+      <button type="button" class="act" data-g="aff">Y = 3X − 1</button>
+      <button type="button" data-g="sq">Y = X²</button>
+      <button type="button" data-g="log">Y = log₂(1 + X)</button>
+      <button type="button" data-g="cos">Y = cos X</button>
+    </div>
+
+    <svg id="d7t-svg" viewBox="0 0 480 312" role="img" aria-label="An interactive transformation explorer: equal probability slices of a uniform X mapped through g onto the y axis, with the resulting density drawn as horizontal bars">
+      <g id="d7t-ybars"></g>
+      <g id="d7t-guides"></g>
+      <line x1="150" y1="230" x2="450" y2="230" stroke="var(--rule)" stroke-width="1.2"/>
+      <line x1="150" y1="230" x2="150" y2="40" stroke="var(--rule)" stroke-width="1.2"/>
+      <path id="d7t-curve" d="" fill="none" stroke="var(--pink)" stroke-width="2.2" stroke-linejoin="round"/>
+      <g id="d7t-xslices"></g>
+      <text id="d7t-ytop" class="svglab" x="26" y="44" text-anchor="end" style="fill:var(--ink3)">1</text>
+      <text id="d7t-ybot" class="svglab" x="26" y="234" text-anchor="end" style="fill:var(--ink3)">0</text>
+      <text id="d7t-xlo" class="svglab" x="150" y="246" text-anchor="middle">0</text>
+      <text id="d7t-xhi" class="svglab" x="450" y="246" text-anchor="middle">1</text>
+      <text class="svglab" x="60" y="32" style="fill:var(--blue)">f<tspan font-size="9" dy="3">Y</tspan></text>
+      <text class="svglab" x="300" y="300" text-anchor="middle" style="fill:var(--green)">f<tspan font-size="9" dy="3">X</tspan><tspan dy="-3"> (uniform)</tspan></text>
+    </svg>
+
+    <div class="readout">
+      <div class="cell"><span class="k" lang="ko">Y 범위</span><span class="k" lang="en">range of Y</span><span class="v" id="d7t-range">[−1, 2]</span></div>
+      <div class="cell"><span class="k">f<sub>Y</sub> max</span><span class="v" id="d7t-max">0.333</span></div>
+      <div class="cell"><span class="k">f<sub>Y</sub> min</span><span class="v" id="d7t-min">0.333</span></div>
+    </div>
+
+    <div class="hintline" id="d7t-hint"></div>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>네 개를 차례로 눌러보고 이걸 확인해.</strong><br><br>
+    <strong>1. <span class="m">3<i>X</i> − 1</span>:</strong> 조각 폭이 <span class="m"><i>y</i></span>축에서도 전부 같아. <span class="m"><i>g</i>′</span>이 상수라 어디서나 같은 배율로 늘어나거든. 그래서 <span class="m"><i>f<sub>Y</sub></i></span>도 균등이고, 최댓값과 최솟값이 같아.<br>
+    <strong>2. <span class="m"><i>X</i><sup>2</sup></span>:</strong> <span class="m"><i>X</i> ~ <i>U</i>[−1.5, 1]</span>이라 지지집합이 비대칭이야. <span class="m"><i>y</i></span>가 작을 때는 왼쪽 조각과 오른쪽 조각이 <strong>같은 자리에 겹쳐서</strong> 막대가 길어지고, <span class="m"><i>y</i> &gt; 1</span>부터는 왼쪽만 남아 절반이 돼. 예제 5.1에서 손으로 구한 그 불연속이 여기 보여.<br>
+    <strong>3. <span class="m">log<sub>2</sub>(1 + <i>X</i>)</span>:</strong> <span class="m"><i>x</i></span>가 클수록 곡선이 평평해져서 오른쪽 조각들이 좁게 뭉쳐. 그래서 <span class="m"><i>f<sub>Y</sub></i></span>가 위쪽에서 커져. <strong>로그는 큰 값을 압축한다</strong>는 말의 확률 버전이야.<br>
+    <strong>4. <span class="m">cos <i>X</i></span>:</strong> 양 끝에서 곡선이 수평이라 막대가 폭발해. 10번의 U자 Doppler 밀도를 8조각으로 근사한 거고, 조각을 더 잘게 쪼개면 계속 커져.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Click through all four and check these.</strong><br><br>
+    <strong>1. <span class="m">3<i>X</i> − 1</span>:</strong> the slices stay equally wide on the <span class="m"><i>y</i></span> axis, because a constant <span class="m"><i>g</i>′</span> stretches everything by the same factor. So <span class="m"><i>f<sub>Y</sub></i></span> is uniform too and its max equals its min.<br>
+    <strong>2. <span class="m"><i>X</i><sup>2</sup></span>:</strong> with <span class="m"><i>X</i> ~ <i>U</i>[−1.5, 1]</span> the support is lopsided. For small <span class="m"><i>y</i></span> a left slice and a right slice <strong>land on top of each other</strong> and the bar gets long; past <span class="m"><i>y</i> = 1</span> only the left branch survives and it halves. That is the discontinuity you computed by hand in Example 5.1.<br>
+    <strong>3. <span class="m">log<sub>2</sub>(1 + <i>X</i>)</span>:</strong> the curve flattens as <span class="m"><i>x</i></span> grows, so the right-hand slices bunch together and <span class="m"><i>f<sub>Y</sub></i></span> grows toward the top. This is the probabilistic version of "a logarithm compresses large values."<br>
+    <strong>4. <span class="m">cos <i>X</i></span>:</strong> the curve is horizontal at both ends, so the bars explode there. It is §10's U-shaped Doppler density approximated with eight slices, and it keeps growing as you slice finer.
+  </div>
+</section>
+
+<!-- ══ 99 ══ -->
+<section id="s99">
+  <div class="sec-head" data-slide="29"><span class="sec-num">99</span><h2 lang="ko">정리 &amp; 다음 모듈</h2><h2 lang="en">Recap and what comes next</h2></div>
+
+  <p lang="ko">슬라이드 29쪽(인쇄 27쪽)의 요약은 세 줄이야. <em>CDF 방법을 쓴다. 미분해서 PDF를 얻는다. 가능하면 Jacobian 공식을 쓴다.</em> 그리고 마지막 문장: <em>"많은 공학 문제가 확률변수를 변환하는 문제로 환원된다."</em></p>
+  <p lang="en">Slide 29, printed 27, summarises in three lines: <em>use the CDF method, differentiate to get the PDF, use the Jacobian formula where it applies.</em> Then the closing sentence: <em>"Many engineering problems reduce to transforming random variables."</em></p>
+
+  <div class="def" lang="ko">
+    <span class="tag">한 장 요약</span>
+    <table>
+      <tr><th>상황</th><th>쓰는 것</th><th>주의</th></tr>
+      <tr><td><span class="m"><i>g</i></span>가 아무거나</td><td><strong>CDF 방법.</strong> <span class="m"><i>F<sub>Y</sub></i>(<i>y</i>) = <i>P</i>(<i>X</i> ∈ <i>A<sub>y</sub></i>)</span></td><td>언제나 통한다. <span class="m"><i>A<sub>y</sub></i></span>가 구간 여럿일 수 있다</td></tr>
+      <tr><td><span class="m"><i>g</i></span>가 단조</td><td><span class="m"><i>f<sub>Y</sub></i>(<i>y</i>) = <i>f<sub>X</sub></i>(<i>g</i><sup>−1</sup>(<i>y</i>)) |d<i>g</i><sup>−1</sup>/d<i>y</i>|</span></td><td>CDF는 증감에 따라 다르지만 PDF는 같다</td></tr>
+      <tr><td><span class="m"><i>g</i></span>가 아핀</td><td><span class="m"><i>f<sub>Y</sub></i>(<i>y</i>) = (1/|<i>a</i>|) <i>f<sub>X</sub></i>((<i>y</i>−<i>b</i>)/<i>a</i>)</span></td><td>앞은 <span class="m">|<i>a</i>|</span>, 안은 <span class="m"><i>a</i></span>. 모양은 안 바뀐다</td></tr>
+      <tr><td><span class="m"><i>g</i></span>가 비단조</td><td><span class="m"><i>f<sub>Y</sub></i>(<i>y</i>) = ∑<sub><i>i</i></sub> <i>f<sub>X</sub></i>(<i>x<sub>i</sub></i>)|d<i>x<sub>i</sub></i>/d<i>y</i>|</span></td><td>갈래를 다 센다. 갈래 수가 <span class="m"><i>y</i></span>마다 다를 수 있다</td></tr>
+      <tr><td><span class="m"><i>X</i></span>가 이산</td><td><span class="m"><i>p<sub>Y</sub></i>(<i>y</i>) = ∑<sub><i>g</i>(<i>x</i>)=<i>y</i></sub> <i>p<sub>X</sub></i>(<i>x</i>)</span></td><td>슬라이드에 없다. 미분도 Jacobian도 없다</td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>검산은 늘 하나야.</strong> <span class="m">∫<i>f<sub>Y</sub></i> = 1</span>인지 본다. 갈래를 빠뜨렸거나 절댓값을 놓쳤으면 여기서 걸린다.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">One-page recap</span>
+    <table>
+      <tr><th>situation</th><th>what to use</th><th>watch out for</th></tr>
+      <tr><td>any <span class="m"><i>g</i></span></td><td><strong>the CDF method:</strong> <span class="m"><i>F<sub>Y</sub></i>(<i>y</i>) = <i>P</i>(<i>X</i> ∈ <i>A<sub>y</sub></i>)</span></td><td>always works; <span class="m"><i>A<sub>y</sub></i></span> may be several intervals</td></tr>
+      <tr><td>monotone <span class="m"><i>g</i></span></td><td><span class="m"><i>f<sub>Y</sub></i>(<i>y</i>) = <i>f<sub>X</sub></i>(<i>g</i><sup>−1</sup>(<i>y</i>)) |d<i>g</i><sup>−1</sup>/d<i>y</i>|</span></td><td>the CDFs differ by direction; the PDFs do not</td></tr>
+      <tr><td>affine <span class="m"><i>g</i></span></td><td><span class="m"><i>f<sub>Y</sub></i>(<i>y</i>) = (1/|<i>a</i>|) <i>f<sub>X</sub></i>((<i>y</i>−<i>b</i>)/<i>a</i>)</span></td><td><span class="m">|<i>a</i>|</span> outside, plain <span class="m"><i>a</i></span> inside; the shape is preserved</td></tr>
+      <tr><td>non-monotone <span class="m"><i>g</i></span></td><td><span class="m"><i>f<sub>Y</sub></i>(<i>y</i>) = ∑<sub><i>i</i></sub> <i>f<sub>X</sub></i>(<i>x<sub>i</sub></i>)|d<i>x<sub>i</sub></i>/d<i>y</i>|</span></td><td>count every branch; the count can change with <span class="m"><i>y</i></span></td></tr>
+      <tr><td>discrete <span class="m"><i>X</i></span></td><td><span class="m"><i>p<sub>Y</sub></i>(<i>y</i>) = ∑<sub><i>g</i>(<i>x</i>)=<i>y</i></sub> <i>p<sub>X</sub></i>(<i>x</i>)</span></td><td>not on the slides; no derivative, no Jacobian</td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>There is only one check:</strong> does <span class="m">∫<i>f<sub>Y</sub></i></span> equal 1? A missing branch or a missing absolute value gets caught right there.</p>
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">이전 모듈이 여기서 하는 일</span>
+    <table>
+      <tr><th>어디서 왔나</th><th>여기서 뭘 하나</th></tr>
+      <tr><td><a href="L02-probability-space.html">Module 2</a> σ-algebra</td><td><span class="m">{<i>g</i>(<i>X</i>) ≤ <i>y</i>}</span>가 사건이려면 <span class="m"><i>A<sub>y</sub></i></span>가 Borel이어야 한다 (02번)</td></tr>
+      <tr><td><a href="L05-random-variables.html">Module 5</a> CDF</td><td>03번 절차의 3단계가 전부 <span class="m"><i>F<sub>X</sub></i></span> 호출이다</td></tr>
+      <tr><td><a href="L05-random-variables.html#s10">Module 5</a> 역변환 샘플링</td><td>이 모듈의 특수한 경우. 교재도 같은 절에 넣었다</td></tr>
+      <tr><td><a href="L06-conditional-distributions.html">Module 6</a> 조건부 밀도</td><td>둘 다 밀도를 어떤 수로 나눈다. 상수냐 위치마다 다르냐가 차이 (07번)</td></tr>
+    </table>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">What the earlier modules are doing here</span>
+    <table>
+      <tr><th>where it came from</th><th>what it does here</th></tr>
+      <tr><td><a href="L02-probability-space.html">Module 2</a>, σ-algebras</td><td><span class="m">{<i>g</i>(<i>X</i>) ≤ <i>y</i>}</span> is an event only because <span class="m"><i>A<sub>y</sub></i></span> is Borel (§02)</td></tr>
+      <tr><td><a href="L05-random-variables.html">Module 5</a>, the CDF</td><td>step 3 of §03's procedure is nothing but calls to <span class="m"><i>F<sub>X</sub></i></span></td></tr>
+      <tr><td><a href="L05-random-variables.html#s10">Module 5</a>, inverse transform sampling</td><td>a special case of this module; the textbook files it in the same section</td></tr>
+      <tr><td><a href="L06-conditional-distributions.html">Module 6</a>, conditional densities</td><td>both divide a density by something; constant there, position-dependent here (§07)</td></tr>
+    </table>
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">HW3 대응표</span>
+    <p>이 모듈이 덮는 건 <strong>HW3 Problem 4</strong>와 <strong>HW3 Problems 6–7</strong>이야.</p>
+    <table>
+      <tr><th>문제</th><th>이 노트</th></tr>
+      <tr><td>P4 <span class="m"><i>X</i>(<i>ω</i>) = <i>ω</i>/(1+<i>ω</i>)</span></td><td>사실 단조 변환이다. <a href="#s6">06 정리</a> · <a href="L05-random-variables.html#s2">M5 §02</a></td></tr>
+      <tr><td>P6(a)(b) <span class="m"><i>Y</i> = log<sub>2</sub>(1+<i>X</i>)</span> 일반형</td><td><a href="#s3">03 CDF 방법</a> · <a href="#s6">06 단조 정리</a></td></tr>
+      <tr><td>P6(c)(d)(e) <span class="m"><i>X</i> ~ <i>U</i>[0,1]</span> 대입</td><td><a href="#s11">11번 도구</a>의 log 프리셋으로 모양 먼저 보기</td></tr>
+      <tr><td>P6(f) <span class="m"><i>Y</i></span>가 균등인가</td><td><a href="#s7">07 늘임과 눌림</a>: <span class="m"><i>g</i>′</span>이 상수가 아니면 균등이 안 된다</td></tr>
+      <tr><td>P7(a) <span class="m"><i>Y</i> = 2<i>X</i> + 1</span></td><td><a href="#s4">04 아핀 변환</a>, 예제 4.1</td></tr>
+      <tr><td>P7(b)(c)(e) <span class="m"><i>Z</i> = <i>X</i><sup>2</sup></span></td><td><a href="#s5">05 예제 2</a>, 예제 5.1 (숫자가 다르다)</td></tr>
+      <tr><td>P7(d) 왜 두 값이 기여하나</td><td><a href="#s8">08 Jacobian 도해</a> · <a href="#s9">09 이산판</a></td></tr>
+      <tr><td>P1, P2, P3, P5</td><td>이 모듈 범위가 아니다 (<a href="L05-random-variables.html">M5</a>, <a href="L06-conditional-distributions.html">M6</a>)</td></tr>
+    </table>
+    <p style="margin-bottom:0">문제 번호에서 출발하고 싶으면 <a href="HW3-random-variables-conditional-distributions-and-functions-of-random-variables.html">HW3 공략 페이지</a>를 봐.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">HW3 map</span>
+    <p>This module covers <strong>HW3 Problem 4</strong> and <strong>HW3 Problems 6–7</strong>.</p>
+    <table>
+      <tr><th>problem</th><th>where in these notes</th></tr>
+      <tr><td>P4 <span class="m"><i>X</i>(<i>ω</i>) = <i>ω</i>/(1+<i>ω</i>)</span></td><td>a monotone transform in disguise: <a href="#s6">§06</a> and <a href="L05-random-variables.html#s2">M5 §02</a></td></tr>
+      <tr><td>P6(a)(b) <span class="m"><i>Y</i> = log<sub>2</sub>(1+<i>X</i>)</span> in general</td><td><a href="#s3">§03 the CDF method</a> and <a href="#s6">§06 the monotonic theorem</a></td></tr>
+      <tr><td>P6(c)(d)(e) with <span class="m"><i>X</i> ~ <i>U</i>[0,1]</span></td><td>see the shape first with the log preset in <a href="#s11">§11</a></td></tr>
+      <tr><td>P6(f) is <span class="m"><i>Y</i></span> uniform</td><td><a href="#s7">§07 stretching</a>: a non-constant <span class="m"><i>g</i>′</span> cannot give a uniform</td></tr>
+      <tr><td>P7(a) <span class="m"><i>Y</i> = 2<i>X</i> + 1</span></td><td><a href="#s4">§04 the affine case</a>, Example 4.1</td></tr>
+      <tr><td>P7(b)(c)(e) <span class="m"><i>Z</i> = <i>X</i><sup>2</sup></span></td><td><a href="#s5">§05 Example 2</a> and Example 5.1, with different numbers</td></tr>
+      <tr><td>P7(d) why two values contribute</td><td><a href="#s8">§08's Jacobian figure</a> and <a href="#s9">§09 the discrete version</a></td></tr>
+      <tr><td>P1, P2, P3, P5</td><td>outside this module (<a href="L05-random-variables.html">M5</a>, <a href="L06-conditional-distributions.html">M6</a>)</td></tr>
+    </table>
+    <p style="margin-bottom:0">To start from a problem number instead, use the <a href="HW3-random-variables-conditional-distributions-and-functions-of-random-variables.html">HW3 guide</a>.</p>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>다음은 분포를 숫자 하나로 붕괴시키는 일이야.</strong> Module 6은 분포를 정보로 바꿨고, 이 모듈은 함수로 바꿨어. <a href="L08-expectation.html">Module 8</a>은 분포를 <strong>기댓값</strong> 하나로 줄여.<br><br>
+    <strong>그리고 거기서 이 모듈이 지름길로 바뀌어.</strong> <span class="m"><i>E</i>[<i>Y</i>]</span>만 필요하면 <span class="m"><i>f<sub>Y</sub></i></span>를 구할 필요가 없거든. <span class="m"><i>E</i>[<i>g</i>(<i>X</i>)] = ∫<i>g</i>(<i>x</i>)<i>f<sub>X</sub></i>(<i>x</i>)d<i>x</i></span>로 바로 가면 돼. 8강 슬라이드가 <em>"<span class="m"><i>f<sub>X</sub></i> → <i>f<sub>Y</sub></i> → <i>E</i>[<i>Y</i>]</span>를 돌 필요가 없다"</em>고 이 모듈을 직접 지목해.<br><br>
+    그러니까 이 모듈이 헛수고였냐면 아니야. <strong>분포 전체가 필요한 문제에서는 여전히 이게 유일한 길이고</strong>, 평균만 필요할 때 건너뛸 수 있다는 걸 아는 게 시험에서 시간을 크게 아껴줘.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Next comes collapsing a distribution to a single number.</strong> Module 6 reshaped one with information, this module reshaped one with a function, and <a href="L08-expectation.html">Module 8</a> reduces one to an <strong>expectation</strong>.<br><br>
+    <strong>And there this module turns into a shortcut you can skip.</strong> If all you want is <span class="m"><i>E</i>[<i>Y</i>]</span> you never need <span class="m"><i>f<sub>Y</sub></i></span>: go straight to <span class="m"><i>E</i>[<i>g</i>(<i>X</i>)] = ∫<i>g</i>(<i>x</i>)<i>f<sub>X</sub></i>(<i>x</i>)d<i>x</i></span>. Deck 8 points at this module by name, saying <em>"we do not need to determine the distribution of <span class="m"><i>Y</i></span>."</em><br><br>
+    That does not make this module wasted work. <strong>When a problem needs the whole distribution, this is still the only route</strong>, and knowing you may skip it when only a mean is wanted saves real time on an exam.
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span lang="ko">EEE 554 Probability and Random Processes · Module 7<br>
+  강의: Nicolò Michelusi · School of Electrical, Computer and Energy Engineering, Arizona State University<br>
+  교재: Bruce Hajek, <em>Random Processes for Engineers</em> (Cambridge University Press, 2015) §1.4<br>
+  이 노트 본문은 수강생이 강의 슬라이드를 재구성하고 보충해 만든 개인 학습 자료이며, 공식 강의 자료가 아닙니다.<br>
+  함께 실린 강의 슬라이드의 저작권은 Nicolò Michelusi 교수와 Arizona State University에 있습니다.</span><span lang="en">EEE 554 Probability and Random Processes · Module 7<br>
+  Course: Nicolò Michelusi · School of Electrical, Computer and Energy Engineering, Arizona State University<br>
+  Textbook: Bruce Hajek, <em>Random Processes for Engineers</em> (Cambridge University Press, 2015) §1.4<br>
+  These notes were written by a student who reorganised and expanded the lecture slides. They are not official course material.<br>
+  Copyright in the accompanying lecture slides belongs to Professor Nicolò Michelusi and Arizona State University.</span>
+</footer>
+
+</div>
+<button class="lang-btn" type="button">English</button>
+<button class="theme-btn" type="button">☾ 다크</button>
+
+<script>
+// 변환 탐색기. 균등한 X 를 8조각으로 나눠 g 에 통과시키고,
+// y 축에서 조각들의 폭이 어떻게 달라지는지 보여준다. 폭이 좁아진 곳이 밀도가 높은 곳이다.
+(function () {
+  var SVG = document.getElementById('d7t-svg');
+  if (!SVG) return;
+  var L = function (ko, en) { return document.documentElement.dataset.lang === 'en' ? en : ko; };
+  var id = function (s) { return document.getElementById(s); };
+  var NS = 'http://www.w3.org/2000/svg';
+
+  var PX0 = 150, PX1 = 450, PY0 = 230, PY1 = 40;   // 플롯 영역
+  var BARX = 146, BARMAX = 110;                     // f_Y 막대는 여기서 왼쪽으로 자란다
+  var SY0 = 254, SY1 = 280;                         // f_X 띠
+  var NSL = 8, NBIN = 28;
+  // 격자 수를 구간 수의 배수로 두면 아핀 변환에서 각 구간에 정확히 같은 개수가 떨어진다.
+  // 그래야 "f_Y 도 균등"이라는 결론이 반올림 찌꺼기 없이 숫자로도 확인된다.
+  var NGRID = NBIN * 1000;
+
+  var G = {
+    aff: { ex: '3x − 1', f: function (x) { return 3 * x - 1; }, a: 0, b: 1, lo: -1, hi: 2,
+           xa: '0', xb: '1',
+           hint: ['g′ 이 상수라 어느 조각이든 같은 배율로 늘어나. 그래서 f_Y 도 균등이고 최댓값과 최솟값이 같아.',
+                  'g′ is constant, so every slice stretches by the same factor. f_Y comes out uniform and its max equals its min.'] },
+    sq:  { ex: 'x²', f: function (x) { return x * x; }, a: -1.5, b: 1, lo: 0, hi: 2.25,
+           xa: '−1.5', xb: '1',
+           hint: ['지지집합이 비대칭이라 y < 1 에서는 두 갈래가 겹치고 y > 1 에서는 하나만 남아. 막대가 y = 1 에서 꺾이는 게 그거야.',
+                  'The support is lopsided: below y = 1 two branches overlap, above it only one survives. That is the step you see in the bars at y = 1.'] },
+    log: { ex: 'log₂(1 + x)', f: function (x) { return Math.log(1 + x) / Math.LN2; }, a: 0, b: 3, lo: 0, hi: 2,
+           xa: '0', xb: '3',
+           hint: ['오른쪽으로 갈수록 곡선이 평평해서 조각이 좁게 뭉쳐. 큰 값을 압축한 만큼 그 자리의 밀도가 올라가.',
+                  'The curve flattens to the right, so the slices bunch up there. Compressing large values raises the density exactly where it compressed.'] },
+    cos: { ex: 'cos x', f: function (x) { return Math.cos(x); }, a: 0, b: Math.PI, lo: -1, hi: 1,
+           xa: '0', xb: 'π',
+           hint: ['양 끝에서 g′ = 0 이라 조각이 거의 한 점으로 뭉쳐. 10번의 U자 Doppler 밀도를 8조각으로 근사한 거야.',
+                  'At both ends g′ = 0, so a whole slice collapses to nearly a point. This is §10’s U-shaped Doppler density, approximated with eight slices.'] }
+  };
+  var cur = 'aff';
+
+  function el(tag, attrs) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+
+  function paint() {
+    var d = G[cur];
+    var px = function (x) { return PX0 + (x - d.a) / (d.b - d.a) * (PX1 - PX0); };
+    var py = function (y) { return PY0 + (y - d.lo) / (d.hi - d.lo) * (PY1 - PY0); };
+
+    var pts = [], i, k;
+    for (i = 0; i <= 200; i++) {
+      var xc = d.a + (d.b - d.a) * i / 200;
+      pts.push(px(xc).toFixed(1) + ',' + py(d.f(xc)).toFixed(1));
+    }
+    id('d7t-curve').setAttribute('d', 'M' + pts.join(' L'));
+
+    // 확률이 같은 8조각. 폭이 같다는 게 눈에 보여야 한다.
+    var xs = id('d7t-xslices'); clear(xs);
+    for (k = 0; k < NSL; k++) {
+      var x0 = d.a + (d.b - d.a) * k / NSL, x1 = d.a + (d.b - d.a) * (k + 1) / NSL;
+      xs.appendChild(el('rect', { x: px(x0), y: SY0, width: px(x1) - px(x0), height: SY1 - SY0,
+        fill: 'rgba(var(--green-rgb),' + (k % 2 ? '.34' : '.15') + ')' }));
+    }
+
+    // 조각 경계를 곡선까지 올렸다가 y 축으로 꺾는다. 이게 "폭이 달라진다"를 잇는 선이다.
+    var gd = id('d7t-guides'); clear(gd);
+    for (k = 0; k <= NSL; k++) {
+      var xb = d.a + (d.b - d.a) * k / NSL, yb2 = py(d.f(xb));
+      gd.appendChild(el('line', { x1: px(xb), y1: PY0, x2: px(xb), y2: yb2,
+        stroke: 'var(--ink3)', 'stroke-width': 0.8, 'stroke-dasharray': '2 3', opacity: 0.5 }));
+      gd.appendChild(el('line', { x1: px(xb), y1: yb2, x2: PX0, y2: yb2,
+        stroke: 'var(--ink3)', 'stroke-width': 0.8, 'stroke-dasharray': '2 3', opacity: 0.5 }));
+    }
+
+    // f_Y 를 등간격 격자로 계산한다. 난수를 쓰지 않으므로 누를 때마다 같은 그림이 나온다.
+    var bw = (d.hi - d.lo) / NBIN, cnt = [];
+    for (i = 0; i < NBIN; i++) cnt.push(0);
+    for (i = 0; i < NGRID; i++) {
+      var xg = d.a + (d.b - d.a) * (i + 0.5) / NGRID;
+      var b = Math.floor((d.f(xg) - d.lo) / bw);
+      if (b < 0) b = 0; if (b >= NBIN) b = NBIN - 1;
+      cnt[b]++;
+    }
+    var dens = [], mx = 0, mn = Infinity;
+    for (i = 0; i < NBIN; i++) {
+      var v = cnt[i] / NGRID / bw;
+      dens.push(v);
+      if (v > mx) mx = v;
+      if (v < mn) mn = v;
+    }
+
+    var yb = id('d7t-ybars'); clear(yb);
+    for (i = 0; i < NBIN; i++) {
+      var ya = py(d.lo + i * bw), yc = py(d.lo + (i + 1) * bw);
+      var top = Math.min(ya, yc), h = Math.abs(yc - ya);
+      var w = mx > 0 ? dens[i] / mx * BARMAX : 0;
+      yb.appendChild(el('rect', { x: BARX - w, y: top + 0.4, width: w, height: Math.max(h - 0.8, 0.8),
+        rx: 1, fill: 'rgba(var(--blue-rgb),.42)' }));
+    }
+
+    id('d7t-ytop').textContent = d.hi;
+    id('d7t-ybot').textContent = d.lo;
+    id('d7t-xlo').textContent = d.xa;
+    id('d7t-xhi').textContent = d.xb;
+    id('d7t-range').textContent = '[' + d.lo + ', ' + d.hi + ']';
+    id('d7t-max').textContent = mx.toFixed(3);
+    id('d7t-min').textContent = mn.toFixed(3);
+    id('d7t-hint').textContent = L(d.hint[0], d.hint[1]);
+  }
+
+  var btns = document.querySelectorAll('.presets button[data-g]');
+  Array.prototype.forEach.call(btns, function (b) {
+    b.addEventListener('click', function () {
+      cur = b.getAttribute('data-g');
+      Array.prototype.forEach.call(btns, function (o) { o.classList.toggle('act', o === b); });
+      paint();
+    });
+  });
+  window.addEventListener('langchange', paint);
+  paint();
+})();
+</script>
+<script>
+// 큰 제목이 화면에서 사라지면 목차 위 미니 헤더를 띄운다.
+(function () {
+  var title = document.querySelector('header.top h1.title');
+  var mini = document.querySelector('nav.toc .mini-head');
+  if (!title || !mini || !window.IntersectionObserver) return;
+  new IntersectionObserver(function (es) {
+    mini.classList.toggle('on', !es[0].isIntersecting);
+  }, { threshold: 0 }).observe(title);
+})();
+</script>
+<script>
+// 테마 토글. 기본은 OS 설정을 따르고, 누르면 그 반대로 고정한다.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.theme-btn');
+  if (!btn) return;
+  var osDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  function current() {
+    return root.dataset.theme || (osDark && osDark.matches ? 'dark' : 'light');
+  }
+  function paint() {
+    var dark = current() === 'dark';
+    btn.textContent = dark ? '☀ 라이트' : '☾ 다크';
+    btn.setAttribute('aria-label', dark ? '라이트 모드로' : '다크 모드로');
+  }
+  btn.addEventListener('click', function () {
+    root.dataset.theme = current() === 'dark' ? 'light' : 'dark';
+    paint();
+  });
+  if (osDark && osDark.addEventListener) osDark.addEventListener('change', paint);
+  paint();
+})();
+</script>
+<script>
+// 언어 토글. 기본은 한국어.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.lang-btn');
+  if (!btn) return;
+  function paint() {
+    var en = root.dataset.lang === 'en';
+    btn.textContent = en ? '한국어' : 'English';
+    btn.setAttribute('aria-label', en ? '한국어로 보기' : 'View in English');
+    root.lang = en ? 'en' : 'ko';
+  }
+  btn.addEventListener('click', function () {
+    root.dataset.lang = root.dataset.lang === 'en' ? 'ko' : 'en';
+    paint();
+    window.dispatchEvent(new Event('langchange'));
+  });
+  paint();
+})();
+</script>
+<script src="reader.js" type="module"></script>
+</body>
+</html>

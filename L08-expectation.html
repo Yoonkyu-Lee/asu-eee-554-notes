@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="ko" data-lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EEE 554 · Module 8 · Expectation</title>
+<style>
+:root{
+  color-scheme:light dark;
+
+  /* 색 성분. rgba(var(--blue-rgb),.16) 형태로 농도 변형을 만든다. */
+  --ink-rgb:20,22,26;
+  --blue-rgb:18,80,196;
+  --pink-rgb:217,20,122;
+  --violet-rgb:107,47,168;
+  --green-rgb:0,132,95;
+  --amber-rgb:178,106,0;
+  --sel-rgb:75,29,140;
+
+  --paper:#FAFAF8;
+  --card:#FFFFFF;
+  --ink:rgb(var(--ink-rgb));
+  --ink2:#565D66;
+  --ink3:#8A9099;
+  --rule:#E2E1DB;
+  --blue:rgb(var(--blue-rgb));
+  --pink:rgb(var(--pink-rgb));
+  --violet:rgb(var(--violet-rgb));
+  --green:rgb(var(--green-rgb));
+  --amber:rgb(var(--amber-rgb));
+  --amber-bg:#FDF6E9;
+  --red:#C02626;
+  --sel:rgb(var(--sel-rgb));
+
+  /* 보조 표면과 진한 변형 */
+  --amber-line:#F0E2C4;
+  --code-bg:#F0EFEA;
+  --chip:#F1F0EB;
+  --sel-soft:#F6F2FB;
+  --pink-deep:#8B0D4E;
+  --green-deep:#005A42;
+  --amber-deep:#7A4A00;
+  --violet-deep:#3B1E70;
+  --brown:#A3532B;
+  --teal:#0E7490;
+  --shadow:rgba(var(--ink-rgb),.06);
+
+  --mono:ui-monospace,"Cascadia Mono","Cascadia Code",Consolas,"SFMono-Regular",monospace;
+  --sans:"Pretendard","Pretendard Variable",-apple-system,"Segoe UI Variable Text","Segoe UI","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --serif:"Cambria Math","STIX Two Math","Latin Modern Math",Cambria,"Times New Roman",serif;
+}
+
+/* 다크 팔레트. 의미 고정 색상(A=blue, B=pink, 교집합=violet, 함정=amber)은
+   그대로 두고 밝기만 어두운 배경에 맞게 올린다. */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  --ink-rgb:232,234,238;
+  --blue-rgb:116,164,255;
+  --pink-rgb:255,124,178;
+  --violet-rgb:192,152,247;
+  --green-rgb:74,203,158;
+  --amber-rgb:232,172,82;
+  --sel-rgb:192,152,247;
+
+  --paper:#131519;
+  --card:#1B1E24;
+  --ink2:#AEB4BD;
+  --ink3:#7B828C;
+  --rule:#2E333B;
+  --amber-bg:#2A2216;
+  --red:#FF7A7A;
+
+  --amber-line:#4A3A1E;
+  --code-bg:#23272E;
+  --chip:#262B33;
+  --sel-soft:#2A2140;
+  --pink-deep:#FFA8CC;
+  --green-deep:#7EE0BC;
+  --amber-deep:#F0C070;
+  --violet-deep:#3A2A66;
+  --brown:#C98A5A;
+  --teal:#4FC3DE;
+  --shadow:rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 120px;display:grid;grid-template-columns:210px minmax(0,1fr);gap:56px}
+@media(max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);gap:0;padding:0 18px 80px}}
+
+header.top{grid-column:1/-1;padding:64px 0 40px;border-bottom:1px solid var(--rule);margin-bottom:48px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+h1.title{font-size:clamp(30px,5vw,50px);line-height:1.1;letter-spacing:-.025em;font-weight:800;margin:14px 0 6px}
+.subtitle{font-size:17px;color:var(--ink2);margin:0}
+.meta{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--mono);font-size:11px;letter-spacing:.05em;padding:5px 11px;border:1px solid var(--rule);border-radius:999px;color:var(--ink2);background:var(--card)}
+.chip.hot{border-color:var(--amber);color:var(--amber);background:var(--amber-bg)}
+.backlink{display:inline-block;margin-top:20px;font-family:var(--mono);font-size:11.5px;color:var(--blue);text-decoration:none;letter-spacing:.04em}
+.backlink:hover{text-decoration:underline}
+
+nav.toc{position:sticky;top:24px;align-self:start;font-size:13.5px;line-height:1.5}
+nav.toc .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:14px}
+nav.toc a{display:flex;gap:9px;padding:5px 0;color:var(--ink2);text-decoration:none;border-left:2px solid transparent;padding-left:11px;margin-left:-13px}
+nav.toc a:hover{color:var(--ink);border-left-color:var(--blue)}
+nav.toc a .n{font-family:var(--mono);font-size:11px;color:var(--ink3);padding-top:2px;min-width:14px}
+@media(max-width:900px){nav.toc{position:static;margin-bottom:44px;padding-bottom:28px;border-bottom:1px solid var(--rule)}}
+/* ── 상단 미니 헤더 ─────────────────────── */
+/* 큰 제목이 화면 밖으로 나가면 목차 위에 작게 나타나 계속 남는다.
+   목차가 이미 sticky라 그 안에 넣으면 따로 고정 장치가 필요 없다.
+   모바일에서는 목차가 static이라 의미가 없으므로 숨긴다. */
+.mini-head{max-height:0;opacity:0;visibility:hidden;overflow:hidden;margin-bottom:0;
+  transition:max-height .22s ease,opacity .18s ease,margin-bottom .22s ease,visibility .18s}
+.mini-head.on{max-height:150px;opacity:1;visibility:visible;margin-bottom:22px}
+nav.toc .mini-head a.back{display:inline-block;margin:0 0 12px;padding:0;border-left:none;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--blue);text-decoration:none}
+nav.toc .mini-head a.back:hover{text-decoration:underline;color:var(--blue);border-left-color:transparent}
+.mini-head .mod{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:3px}
+.mini-head .name{font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--ink);line-height:1.3}
+.mini-head .rule{height:1px;background:var(--rule);margin-top:16px}
+@media(max-width:900px){.mini-head{display:none}}
+
+section{margin-bottom:76px;scroll-margin-top:20px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+.sec-num{font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:.1em;padding-top:4px}
+h2{font-size:clamp(22px,3vw,29px);letter-spacing:-.02em;font-weight:750;margin:0;line-height:1.25}
+.sec-sub{color:var(--ink2);font-size:15px;margin:0 0 30px 0}
+h3{font-size:17.5px;font-weight:700;letter-spacing:-.01em;margin:38px 0 12px}
+h4{font-size:15px;font-weight:700;margin:26px 0 8px;color:var(--ink)}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 16px;padding-left:22px}
+li{margin-bottom:7px}
+code{font-family:var(--mono);font-size:.87em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+
+.m{font-family:var(--serif);font-style:normal;font-size:1.07em;white-space:nowrap}
+@media(max-width:900px){.m{white-space:normal}}
+.m i{font-style:italic}
+.eq{font-family:var(--serif);font-size:19px;text-align:center;margin:22px 0;line-height:1.9}
+.eq i{font-style:italic}
+.eq .note{font-family:var(--sans);font-size:13px;color:var(--ink3);display:block;margin-top:4px}
+.cA{color:var(--blue);font-weight:600}
+.cB{color:var(--pink);font-weight:600}
+.cC{color:var(--green);font-weight:600}
+
+.def{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--ink);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.def .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:7px}
+.def p:last-child,.def ol:last-child,.def ul:last-child{margin-bottom:0}
+
+.trap{background:var(--amber-bg);border:1px solid var(--amber-line);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:18px 22px;margin:20px 0}
+.trap .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:7px;font-weight:600}
+.trap p:last-child,.trap ul:last-child{margin-bottom:0}
+.trap h4{margin-top:18px;font-size:14.5px}
+.trap h4:first-of-type{margin-top:0}
+
+.ex{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:18px 22px;margin:20px 0}
+.ex .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:7px;font-weight:600}
+.ex p:last-child,.ex ul:last-child,.ex ol:last-child{margin-bottom:0}
+details{margin-top:12px;border-top:1px dashed var(--rule);padding-top:12px}
+details summary{cursor:pointer;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--blue);list-style:none;user-select:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"▸ ";display:inline-block}
+details[open] summary::before{content:"▾ "}
+details .body{margin-top:12px}
+details .body p:last-child,details .body ol:last-child{margin-bottom:0}
+
+.callout{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:16px 0;margin:26px 0;font-size:15px;color:var(--ink2)}
+.callout strong{color:var(--ink)}
+
+/* ── 슬라이드 출처 표시 ─────────────────── */
+/* data-slide 값에서 라벨을 직접 만든다. 라벨과 앵커가 어긋날 수 없다.
+   리더가 꺼져 있어도, 모바일이어도 "이 대목이 슬라이드 몇 쪽인지"는 보여야 한다. */
+.sec-head[data-slide],h3[data-slide]{display:flex;align-items:baseline;gap:14px}
+.sec-head[data-slide]>h2,h3[data-slide]{min-width:0}
+.sec-head[data-slide]::before,h3[data-slide]::before{
+  content:"";order:1;flex:1 1 auto;min-width:16px;height:1px;
+  background:var(--rule);align-self:center;opacity:.75}
+.sec-head[data-slide]::after,h3[data-slide]::after{
+  content:"슬라이드 " attr(data-slide) "쪽";order:2;flex:none;
+  font-family:var(--mono);font-size:10px;letter-spacing:.05em;
+  color:var(--ink3);white-space:nowrap;align-self:center}
+@media(max-width:900px){
+  .sec-head[data-slide]::before,h3[data-slide]::before{min-width:10px}
+  .sec-head[data-slide]::after,h3[data-slide]::after{font-size:9.5px}
+}
+
+figure{margin:28px 0;background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:22px}
+figure svg{display:block;width:100%;height:auto;max-width:100%}
+figcaption{font-size:13px;color:var(--ink2);margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:720px){.grid2,.grid3{grid-template-columns:1fr}}
+.mini{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px}
+.mini .cap{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--ink2);text-align:center;margin-top:8px;line-height:1.4}
+.mini svg{display:block;width:100%;height:auto}
+.svgtxt{font-family:var(--serif);font-size:15px;fill:var(--ink)}
+.svgtxt.it{font-style:italic}
+.svglab{font-family:var(--mono);font-size:11px;fill:var(--ink2)}
+.svgnum{font-family:var(--mono);font-size:13px;font-weight:600}
+
+/* sigma-algebra checker */
+.play{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:22px;margin:28px 0}
+.plab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin:20px 0 9px}
+.plab:first-child{margin-top:0}
+.subsets{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+@media(max-width:560px){.subsets{grid-template-columns:repeat(2,1fr)}}
+.sub{font-family:var(--serif);font-size:15px;padding:9px 6px;text-align:center;background:var(--paper);border:1px solid var(--rule);border-radius:6px;cursor:pointer;user-select:none;transition:.12s;position:relative}
+.sub:hover{border-color:var(--sel)}
+.sub.on{background:var(--sel);border-color:var(--sel);color:var(--card);font-weight:600}
+.sub.need{background:var(--amber-bg);border-color:var(--amber);border-style:dashed;color:var(--amber)}
+.verdict{margin-top:18px;border-radius:8px;padding:15px 18px;font-size:14.5px;line-height:1.65}
+.verdict.ok{background:rgba(var(--green-rgb),.08);border:1px solid rgba(var(--green-rgb),.3);color:var(--green-deep)}
+.verdict.bad{background:var(--amber-bg);border:1px solid var(--amber-line);color:var(--amber-deep)}
+.verdict .hd{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:8px}
+.verdict ul{margin:8px 0 0;padding-left:20px}
+.verdict li{margin-bottom:5px;font-size:14px}
+.verdict .m{font-size:1em}
+.presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.presets button{font-family:var(--sans);font-size:12.5px;padding:7px 12px;background:var(--paper);border:1px solid var(--rule);border-radius:6px;color:var(--ink2);cursor:pointer;transition:.13s}
+.presets button:hover{border-color:var(--sel);color:var(--sel);background:var(--sel-soft)}
+.presets button.act{border-color:var(--green);color:var(--green);background:rgba(var(--green-rgb),.06);font-weight:600}
+.hintline{font-size:13px;color:var(--ink2);margin-top:16px;line-height:1.6;border-top:1px solid var(--rule);padding-top:13px}
+
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14.5px}
+@media(max-width:900px){table{display:block;max-width:100%;overflow-x:auto}}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);font-weight:500}
+
+footer{grid-column:1/-1;border-top:1px solid var(--rule);padding-top:28px;margin-top:20px;font-size:13.5px;color:var(--ink3);line-height:1.7}
+footer a{color:var(--blue)}
+/* 본문 링크. 규칙이 없으면 브라우저 기본 남색이 나오고 다크모드에서 묻는다. */
+main a{color:var(--blue);text-decoration:none;border-bottom:1px solid rgba(var(--blue-rgb),.4)}
+main a:hover{border-bottom-color:var(--blue);background:rgba(var(--blue-rgb),.09)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ── 테마 토글 ──────────────────────────── */
+/* 기본은 OS 설정(prefers-color-scheme)을 따른다. 이 버튼은 그걸 덮어쓴다. */
+.theme-btn{position:fixed;left:16px;bottom:16px;z-index:70;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 6px var(--shadow);transition:.13s}
+.theme-btn:hover{border-color:var(--sel);color:var(--sel)}
+@media(max-width:900px){.theme-btn{left:10px;bottom:10px;font-size:10.5px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.theme-btn{transition:none}}
+
+/* ── 언어 전환 ──────────────────────────── */
+/* 한 파일에 한국어와 영어를 나란히 두고 보이는 쪽만 남긴다.
+   도해·앵커·CSS·리더를 공유하므로 두 언어의 구조가 어긋날 수 없다.
+   lang 속성을 쓰는 건 스크린리더와 하이픈 처리도 같이 얻기 위해서다. */
+/* 언어 표시는 어떤 규칙보다 우선해야 한다. 목차나 도해 쪽 선택자가
+   더 구체적이어서 display를 되살리는 일이 실제로 있었다. */
+html[data-lang="ko"] [lang="en"]{display:none!important}
+html[data-lang="en"] [lang="ko"]{display:none!important}
+.lang-btn{position:fixed;left:16px;bottom:56px;z-index:70;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:7px 11px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 6px var(--shadow);transition:.13s}
+.lang-btn:hover{border-color:var(--blue);color:var(--blue)}
+@media(max-width:900px){.lang-btn{left:10px;bottom:46px;font-size:10.5px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.lang-btn{transition:none}}
+
+/* ── 기호 뜯어보기 ────────────────────────────────────────────────
+   수학 표기 관습을 모르면 정의가 통째로 안 읽힌다. 그 관습만 따로 푼다.
+   기본은 펼쳐둔다(open). 모르는 사람에게 보이지 않으면 의미가 없기 때문이다.
+   대신 접을 수 있다. 알고 나면 매번 지나가야 하는 장애물이 되면 안 된다. */
+.nota{margin:18px 0;border:1px dashed var(--rule);border-radius:8px;background:var(--chip)}
+.nota>summary{cursor:pointer;list-style:none;padding:9px 14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);display:flex;align-items:center;gap:8px;user-select:none}
+.nota>summary::-webkit-details-marker{display:none}
+.nota>summary::before{content:"\25be";font-size:9px;display:inline-block;transition:transform .15s}
+.nota:not([open])>summary::before{transform:rotate(-90deg)}
+.nota>summary:hover{color:var(--ink2)}
+.nota .body{padding:2px 16px 14px;font-size:14px;color:var(--ink2);line-height:1.7}
+.nota .body>*:first-child{margin-top:0}
+.nota .body>*:last-child{margin-bottom:0}
+.nota .parts{width:100%;border-collapse:collapse;margin:12px 0}
+.nota .parts td{padding:6px 12px 6px 0;vertical-align:top;border-bottom:1px solid var(--rule);font-size:13.5px}
+.nota .parts tr:last-child td{border-bottom:0}
+.nota .parts td:first-child{white-space:nowrap;width:1%;color:var(--ink);padding-right:18px}
+.nota figure{margin:14px 0;background:var(--card);border:1px solid var(--rule)}
+.nota .eq{margin:12px 0}
+@media(max-width:900px){.nota .parts td:first-child{white-space:normal}}
+
+/* 인터랙티브 도구 (14번). .play 안에서만 쓴다. */
+.play button{font-family:var(--mono);font-size:11px;padding:6px 11px;background:var(--paper);color:var(--ink2);border:1px solid var(--rule);border-radius:6px;cursor:pointer;transition:.12s}
+.play button:hover{border-color:var(--ink3);color:var(--ink)}
+.play input[type=range]{accent-color:var(--sel)}
+.play table td,.play table th{padding:7px 10px}
+.play .win{color:var(--green);font-weight:700}
+.play .lose{color:var(--ink3)}
+
+
+/* ── 8강 전용 ─────────────────────────────── */
+/* 분포 그리기 도구: 막대를 끌어 분포를 만들고 평균과 분산이 따라오는 것을 본다. */
+.cut-ctl{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:14px 0 4px}
+.cut-ctl label{font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:.06em}
+.cut-ctl input[type=range]{flex:1;min-width:150px}
+.cut-val{font-family:var(--mono);font-size:12.5px;color:var(--sel);font-weight:600;min-width:52px}
+.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+@media(max-width:560px){.readout{grid-template-columns:1fr}}
+.readout .cell{background:var(--paper);border:1px solid var(--rule);border-radius:7px;padding:10px 12px}
+.readout .cell .k{font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:4px}
+.readout .cell .v{font-family:var(--serif);font-size:16px;color:var(--ink)}
+.bars{margin-top:6px}
+.bars .row{display:flex;align-items:center;gap:10px;margin:5px 0;font-family:var(--mono);font-size:11.5px}
+.bars .row .k{width:74px;text-align:right;color:var(--ink3)}
+.bars .row .t{flex:1;height:14px;background:var(--chip);border-radius:3px;overflow:hidden}
+.bars .row .t>i{display:block;height:100%;border-radius:3px;transition:width .12s}
+.bars .row .v{width:58px;color:var(--ink2)}
+@media(prefers-reduced-motion:reduce){.bars .row .t>i{transition:none}}
+</style>
+<style>
+/* 분포 그리기 도구. 막대를 끌 수 있게 커서를 바꾸고 선택을 막는다. */
+#d8b-svg{cursor:crosshair;touch-action:none;user-select:none}
+</style>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="eyebrow">EEE 554 · Probability and Random Processes · Michelusi</div>
+  <h1 class="title">Module 8<br>Expectation</h1>
+  <p class="subtitle" lang="ko">분포 전체를 숫자 하나로 접는다. 그리고 그 하나로 얼마나 많은 걸 할 수 있는지 본다.</p>
+  <p class="subtitle" lang="en">Fold a whole distribution into one number, then see how much that one number can do.</p>
+  <div class="meta" lang="ko">
+    <span class="chip">슬라이드 39쪽 (인쇄 번호 35)</span>
+    <span class="chip">손글씨 삽입 4쪽 포함</span>
+    <span class="chip">HW3 범위 밖 · HW4 대비</span>
+  </div>
+  <div class="meta" lang="en">
+    <span class="chip">39 PDF pages, numbered to 35</span>
+    <span class="chip">including four handwritten inserts</span>
+    <span class="chip">Beyond HW3, ahead of HW4</span>
+  </div>
+  <a class="backlink" href="index.html" lang="ko">← 모듈 목록으로</a>
+  <a class="backlink" href="index.html" lang="en">← All modules</a>
+</header>
+
+<nav class="toc">
+  <div class="mini-head">
+    <a class="back" href="index.html" lang="ko">← 모듈 목록</a>
+    <a class="back" href="index.html" lang="en">← All modules</a>
+    <div class="mod">Module 8</div>
+    <div class="name">Expectation</div>
+    <div class="rule"></div>
+  </div>
+  <div class="lab" lang="ko">목차</div>
+  <div class="lab" lang="en">Contents</div>
+  <a href="#s0"><span class="n">00</span><span lang="ko">이 모듈이 하는 일</span><span lang="en">What this module does</span></a>
+  <a href="#s1"><span class="n">01</span><span lang="ko">왜 기댓값인가</span><span lang="en">Why expectation</span></a>
+  <a href="#s2"><span class="n">02</span><span lang="ko">왜 이 형태인가</span><span lang="en">Why this form</span></a>
+  <a href="#s3"><span class="n">03</span><span lang="ko">평균은 가능한 값이 아닐 수 있다</span><span lang="en">The mean need not be attainable</span></a>
+  <a href="#s4"><span class="n">04</span><span lang="ko">질량중심</span><span lang="en">Centre of mass</span></a>
+  <a href="#s5"><span class="n">05</span><span lang="ko">E[g(X)]: 지름길</span><span lang="en">E[g(X)]: the shortcut</span></a>
+  <a href="#s6"><span class="n">06</span><span lang="ko">확률도 기댓값이다</span><span lang="en">Probability is an expectation</span></a>
+  <a href="#s7"><span class="n">07</span><span lang="ko">선형성과 세기</span><span lang="en">Linearity and counting</span></a>
+  <a href="#s8"><span class="n">08</span><span lang="ko">조건부 기댓값과 무기억성</span><span lang="en">Conditional expectation and memorylessness</span></a>
+  <a href="#s9"><span class="n">09</span><span lang="ko">분산과 표준편차</span><span lang="en">Variance and standard deviation</span></a>
+  <a href="#s10"><span class="n">10</span><span lang="ko">분포별 평균과 분산</span><span lang="en">The distribution table</span></a>
+  <a href="#s11"><span class="n">11</span><span lang="ko">적률, 그리고 없을 때</span><span lang="en">Moments, and when they fail</span></a>
+  <a href="#s12"><span class="n">12</span><span lang="ko">교재가 더 주는 것</span><span lang="en">What the textbook adds</span></a>
+  <a href="#s13"><span class="n">13</span><span lang="ko">직접 만져보기</span><span lang="en">Try it yourself</span></a>
+  <a href="#s99"><span class="n">99</span><span lang="ko">정리 &amp; 다음</span><span lang="en">Recap &amp; next</span></a>
+</nav>
+
+<main>
+
+<!-- ══ 00 ══ -->
+<section id="s0">
+  <div class="sec-head"><span class="sec-num">00</span><h2 lang="ko">이 모듈이 하는 일</h2><h2 lang="en">What this module does</h2></div>
+  <p class="sec-sub" lang="ko">한 줄 요약: 분포를 <em>숫자 하나</em>로 접는다.</p>
+  <p class="sec-sub" lang="en">In one line: collapse a distribution into <em>a single number</em>.</p>
+
+  <p lang="ko">Module 5부터 7까지는 전부 <strong>분포를 다루는</strong> 일이었어. Module 5가 분포를 기술했고, <a href="L06-conditional-distributions.html">Module 6</a>이 정보로 그걸 바꿨고, <a href="L07-functions-of-random-variables.html">Module 7</a>이 함수로 바꿨어. <strong>이 모듈은 분포를 버려.</strong> 함수 하나 대신 숫자 하나를 남겨.</p>
+  <p lang="en">Modules 5 through 7 were all about <strong>handling a distribution</strong>. Module 5 described one, <a href="L06-conditional-distributions.html">Module 6</a> reshaped one with information, <a href="L07-functions-of-random-variables.html">Module 7</a> reshaped one with a function. <strong>This module throws the distribution away</strong> and keeps a number instead of a function.</p>
+
+  <div class="callout" lang="ko">
+    <strong>정보를 잃는 게 목적이야.</strong> 이상하게 들리지만 그래. 평균 지연이 12 ms라는 한 문장이 지연 분포 전체보다 쓸모 있는 경우가 대부분이거든. 설계 결정은 대개 숫자를 비교해서 내리는 거고, 함수끼리는 비교가 안 돼.<br><br>
+    <strong>그래서 이 모듈의 핵심 질문은 "무엇을 버리는가"야.</strong> 평균은 중심을 남기고 퍼짐을 버려. 그래서 <strong>분산</strong>이 바로 뒤에 따라 나와. 그것도 부족하면 <strong>적률</strong>을 더 가져가는 거고. 슬라이드가 이 순서로 가는 이유가 그거야.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Losing information is the point.</strong> That sounds backwards, but it is not. "The average delay is 12 ms" is usually more useful than the entire delay distribution, because design decisions compare numbers and you cannot compare two functions.<br><br>
+    <strong>Which makes the module's real question "what gets thrown away."</strong> A mean keeps the centre and discards the spread, so <strong>variance</strong> follows immediately behind it. Still not enough, and you take more <strong>moments</strong>. That is why the deck goes in this order.
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">새로 나오는 단어들</span>
+    <table>
+      <tr><th>용어</th><th>뜻</th><th>어디서 쓰이나</th></tr>
+      <tr><td><span class="m"><i>E</i>[<i>X</i>]</span></td><td>확률로 가중한 평균. 분포의 중심</td><td>01~04번</td></tr>
+      <tr><td><span class="m"><i>E</i>[<i>g</i>(<i>X</i>)]</span></td><td><span class="m"><i>f<sub>Y</sub></i></span>를 안 구하고 평균 내는 법</td><td>05번 · <strong>제일 유용한 도구</strong></td></tr>
+      <tr><td><span class="m">1<sub><i>A</i></sub>(<i>x</i>)</span></td><td>지시함수. 안이면 1, 밖이면 0</td><td>06·07번</td></tr>
+      <tr><td><span class="m"><i>E</i>[<i>X</i> | <i>M</i>]</span></td><td>조건부 분포로 낸 평균</td><td>08번 · Module 6이 필요하다</td></tr>
+      <tr><td><span class="m">Var(<i>X</i>)</span>, <span class="m"><i>σ</i></span></td><td>중심으로부터의 퍼짐, 그리고 그 제곱근</td><td>09번</td></tr>
+      <tr><td><span class="m"><i>E</i>[<i>X<sup>n</sup></i>]</span></td><td><span class="m"><i>n</i></span>차 적률</td><td>11번</td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>제일 조심할 건 05번이야.</strong> <span class="m"><i>E</i>[<i>g</i>(<i>X</i>)]</span>를 <span class="m"><i>g</i>(<i>E</i>[<i>X</i>])</span>와 헷갈리는 게 이 과목 전체에서 가장 비싼 실수야. 둘은 <strong>거의 항상 다르고</strong>, 언제 어느 쪽이 큰지에도 규칙이 있어 (09번 마지막).</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">New vocabulary</span>
+    <table>
+      <tr><th>term</th><th>meaning</th><th>where it lands</th></tr>
+      <tr><td><span class="m"><i>E</i>[<i>X</i>]</span></td><td>the probability-weighted average, the centre of a distribution</td><td>§01 to §04</td></tr>
+      <tr><td><span class="m"><i>E</i>[<i>g</i>(<i>X</i>)]</span></td><td>averaging without ever computing <span class="m"><i>f<sub>Y</sub></i></span></td><td>§05 · <strong>the most useful tool here</strong></td></tr>
+      <tr><td><span class="m">1<sub><i>A</i></sub>(<i>x</i>)</span></td><td>the indicator: 1 inside, 0 outside</td><td>§06 and §07</td></tr>
+      <tr><td><span class="m"><i>E</i>[<i>X</i> | <i>M</i>]</span></td><td>an average taken under the conditional distribution</td><td>§08 · needs Module 6</td></tr>
+      <tr><td><span class="m">Var(<i>X</i>)</span>, <span class="m"><i>σ</i></span></td><td>spread about the centre, and its square root</td><td>§09</td></tr>
+      <tr><td><span class="m"><i>E</i>[<i>X<sup>n</sup></i>]</span></td><td>the <span class="m"><i>n</i></span>-th moment</td><td>§11</td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>Section 05 is the one to watch.</strong> Confusing <span class="m"><i>E</i>[<i>g</i>(<i>X</i>)]</span> with <span class="m"><i>g</i>(<i>E</i>[<i>X</i>])</span> is the most expensive mistake in this course. They are <strong>almost never equal</strong>, and there is even a rule for which one is larger (end of §09).</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">슬라이드를 읽을 때 주의</span>
+    <p><strong>PDF 22~25쪽은 손으로 쓴 삽입 페이지야.</strong> 인쇄된 번호가 없어서 그 뒤부터 슬라이드에 찍힌 번호가 PDF 쪽보다 <strong>4 작아.</strong> PDF 39쪽에 "35"가 찍혀 있어. 이 노트의 <span class="m"><i>data-slide</i></span> 값은 전부 PDF 쪽 기준이야.</p>
+    <p style="margin-bottom:0">그 네 쪽은 <strong>지수분포의 평균과 조건부 평균을 처음부터 유도하는 과정</strong>이야. 인쇄된 21쪽은 <span class="m"><i>E</i>[<i>X</i>] = 1/<i>λ</i></span>와 <span class="m"><i>E</i>[<i>X</i>|<i>X</i>&gt;<i>x</i>] = <i>x</i> + 1/<i>λ</i></span>라는 <strong>결과만</strong> 주고, 어떻게 거기 도달했는지는 손글씨에만 있어. <a href="#s8">08번</a>에서 활자로 다시 써놨어.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Reading the slides here</span>
+    <p><strong>PDF pages 22 to 25 are handwritten inserts.</strong> They carry no printed number, so from there on the number printed on a slide runs <strong>four</strong> behind the PDF page: PDF page 39 is printed "35". Every <span class="m"><i>data-slide</i></span> value in these notes counts PDF pages.</p>
+    <p style="margin-bottom:0">Those four pages <strong>derive the mean and the conditional mean of an exponential from scratch.</strong> Printed slide 21 gives only the <strong>results</strong>, <span class="m"><i>E</i>[<i>X</i>] = 1/<i>λ</i></span> and <span class="m"><i>E</i>[<i>X</i>|<i>X</i>&gt;<i>x</i>] = <i>x</i> + 1/<i>λ</i></span>, with no trace of how they were reached except in the handwriting. <a href="#s8">§08</a> sets it back in type.</p>
+  </div>
+</section>
+
+<!-- ══ 01 ══ -->
+<section id="s1">
+  <div class="sec-head" data-slide="2-3"><span class="sec-num">01</span><h2 lang="ko">왜 기댓값인가</h2><h2 lang="en">Why expectation</h2></div>
+  <p class="sec-sub" lang="ko">공학 문제의 답이 대개 "평균 얼마"이기 때문이다.</p>
+  <p class="sec-sub" lang="en">Because the answer to an engineering question is usually an average.</p>
+
+  <p lang="ko">슬라이드 2쪽이 예를 넷 들어. <strong>평균 패킷 지연, 평균 수신 전력, 평균 큐 길이, 평균 배터리 수명.</strong> 전부 "평균"이야. 그러고 묻지. <em>"확률변수의 평균값을 어떻게 계산하는가?"</em></p>
+  <p lang="en">Slide 2 lists four: <strong>average packet delay, average received power, average queue length, average battery lifetime.</strong> All averages. Then the question: <em>"How do we compute the average value of a random variable?"</em></p>
+
+  <div class="def" lang="ko">
+    <span class="tag">Definition (슬라이드 3쪽)</span>
+    <p>확률변수의 <strong>기댓값</strong>(또는 평균)은 확률로 가중한 평균이야.</p>
+    <div class="eq"><i>E</i>[<i>X</i>] = ∫<sub>−∞</sub><sup>∞</sup> <i>x</i> <i>f<sub>X</sub></i>(<i>x</i>) d<i>x</i> &nbsp;&nbsp; (연속)</div>
+    <div class="eq" style="margin-bottom:0"><i>E</i>[<i>X</i>] = ∑<sub><i>x</i></sub> <i>x</i> <i>p<sub>X</sub></i>(<i>x</i>) &nbsp;&nbsp; (이산)</div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Definition (slide 3)</span>
+    <p>The <strong>expectation</strong>, or mean, of a random variable is its probability-weighted average.</p>
+    <div class="eq"><i>E</i>[<i>X</i>] = ∫<sub>−∞</sub><sup>∞</sup> <i>x</i> <i>f<sub>X</sub></i>(<i>x</i>) d<i>x</i> &nbsp;&nbsp; (continuous)</div>
+    <div class="eq" style="margin-bottom:0"><i>E</i>[<i>X</i>] = ∑<sub><i>x</i></sub> <i>x</i> <i>p<sub>X</sub></i>(<i>x</i>) &nbsp;&nbsp; (discrete)</div>
+  </div>
+
+  <details class="nota" open>
+    <summary><span lang="ko">기호 뜯어보기 · 가중 평균의 골격</span><span lang="en">Unpacking the notation · the skeleton of a weighted average</span></summary>
+    <div class="body">
+      <div lang="ko">
+        <p>두 식이 달라 보이지만 <strong>골격이 같아.</strong> 값 곱하기 무게, 그걸 전부 합치기.</p>
+        <table class="parts">
+          <tr><td><span class="m"><i>x</i></span></td><td><strong>값.</strong> 얼마짜리인가.</td></tr>
+          <tr><td><span class="m"><i>p<sub>X</sub></i>(<i>x</i>)</span> 또는 <span class="m"><i>f<sub>X</sub></i>(<i>x</i>)d<i>x</i></span></td><td><strong>무게.</strong> 그 값이 얼마나 자주 나오는가. 둘 다 합치면 1.</td></tr>
+          <tr><td><span class="m">∑</span> 또는 <span class="m">∫</span></td><td><strong>전부 합치기.</strong> 이산이면 세고, 연속이면 적분한다.</td></tr>
+        </table>
+        <p><strong>왜 연속에서는 <span class="m"><i>f</i>(<i>x</i>)</span>가 아니라 <span class="m"><i>f</i>(<i>x</i>)d<i>x</i></span>가 무게냐면</strong>, <span class="m"><i>f</i>(<i>x</i>)</span> 자체는 확률이 아니라 밀도라서 그래. Module 5에서 계속 짚었던 그 구분이야. <span class="m">d<i>x</i></span>를 곱해야 비로소 확률이 돼.</p>
+        <p style="margin-bottom:0"><strong>성적 계산과 골격이 같아.</strong> 과목 점수에 학점 수를 곱해서 더하고 총 학점으로 나누잖아. 여기서는 무게의 합이 이미 1이라 나누는 단계가 없을 뿐이야.</p>
+      </div>
+      <div lang="en">
+        <p>The two lines look different and have <strong>the same skeleton:</strong> value times weight, summed over everything.</p>
+        <table class="parts">
+          <tr><td><span class="m"><i>x</i></span></td><td><strong>The value.</strong> How much this outcome is worth.</td></tr>
+          <tr><td><span class="m"><i>p<sub>X</sub></i>(<i>x</i>)</span> or <span class="m"><i>f<sub>X</sub></i>(<i>x</i>)d<i>x</i></span></td><td><strong>The weight.</strong> How often that value comes up. Either one totals to 1.</td></tr>
+          <tr><td><span class="m">∑</span> or <span class="m">∫</span></td><td><strong>Combine everything.</strong> Count in the discrete case, integrate in the continuous one.</td></tr>
+        </table>
+        <p><strong>The weight in the continuous case is <span class="m"><i>f</i>(<i>x</i>)d<i>x</i></span> and not <span class="m"><i>f</i>(<i>x</i>)</span></strong> because <span class="m"><i>f</i>(<i>x</i>)</span> is a density, not a probability. The same distinction Module 5 kept hammering. Only after multiplying by <span class="m">d<i>x</i></span> does it become a probability.</p>
+        <p style="margin-bottom:0"><strong>It is the skeleton of a GPA.</strong> Multiply each grade by its credit hours, add, divide by total credits. Here the weights already sum to 1, so the dividing step is gone.</p>
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ══ 02 ══ -->
+<section id="s2">
+  <div class="sec-head" data-slide="4-5"><span class="sec-num">02</span><h2 lang="ko">왜 이 형태인가</h2><h2 lang="en">Why this form</h2></div>
+  <p class="sec-sub" lang="ko">정의를 던져놓고 넘어가지 않는다. 표본평균의 극한으로 유도한다.</p>
+  <p class="sec-sub" lang="en">The slides do not just assert the definition. They derive it as a limit of sample averages.</p>
+
+  <p lang="ko">슬라이드 4쪽. <span class="m"><i>X</i></span>를 반복해서 관측한다고 하자. <span class="m"><i>X</i></span><sub>1</sub>, …, <span class="m"><i>X<sub>N</sub></i></span>가 유한집합 <span class="m">{<i>v</i><sub>1</sub>, …, <i>v<sub>K</sub></i>}</span>에서 값을 갖는 독립 실현이고, 표본평균은</p>
+  <p lang="en">Slide 4. Suppose <span class="m"><i>X</i></span> is observed repeatedly, with <span class="m"><i>X</i></span><sub>1</sub>, …, <span class="m"><i>X<sub>N</sub></i></span> independent realisations taking values in a finite set <span class="m">{<i>v</i><sub>1</sub>, …, <i>v<sub>K</sub></i>}</span>. The sample average is</p>
+
+  <div class="eq"><span style="font-size:1.15em">X̄</span><sub><i>N</i></sub> = (1/<i>N</i>) ∑<sub><i>i</i>=1</sub><sup><i>N</i></sup> <i>X<sub>i</sub></i></div>
+
+  <p lang="ko">슬라이드 5쪽이 이걸 다시 묶어. <span class="m"><i>N<sub>k</sub></i></span>개의 관측이 값 <span class="m"><i>v<sub>k</sub></i></span>였다고 하면, 하나씩 더하는 대신 <strong>값별로 묶어서</strong> 셀 수 있어.</p>
+  <p lang="en">Slide 5 regroups it. If <span class="m"><i>N<sub>k</sub></i></span> of the observations equalled <span class="m"><i>v<sub>k</sub></i></span>, then instead of adding one at a time you can <strong>group by value</strong>.</p>
+
+  <div class="eq"><span style="font-size:1.15em">X̄</span><sub><i>N</i></sub> = ∑<sub><i>k</i></sub> <i>v<sub>k</sub></i> (<i>N<sub>k</sub></i> ⁄ <i>N</i>)</div>
+
+  <p lang="ko">그리고 <span class="m"><i>N</i> → ∞</span>이면 상대빈도 <span class="m"><i>N<sub>k</sub></i>/<i>N</i></span>이 <span class="m"><i>P</i>(<i>X</i> = <i>v<sub>k</sub></i>)</span>로 가. 그러니까</p>
+  <p lang="en">As <span class="m"><i>N</i> → ∞</span> the relative frequency <span class="m"><i>N<sub>k</sub></i>/<i>N</i></span> approaches <span class="m"><i>P</i>(<i>X</i> = <i>v<sub>k</sub></i>)</span>, so</p>
+
+  <div class="eq"><span style="font-size:1.15em">X̄</span><sub><i>N</i></sub> ⟶ ∑<sub><i>k</i></sub> <i>v<sub>k</sub></i> <i>P</i>(<i>X</i> = <i>v<sub>k</sub></i>) = <i>E</i>[<i>X</i>]</div>
+
+  <div class="callout" lang="ko">
+    <strong>여기서 논리 방향을 정확히 봐야 해.</strong> 슬라이드는 "<span class="m"><i>E</i>[<i>X</i>]</span>가 표본평균의 극한이다"를 <strong>증명한 게 아니야.</strong> <em>왜 정의를 이렇게 쓰는 게 자연스러운지</em>를 보인 거야. 5쪽이 스스로 단서를 달아: <em>"나중에 <strong>큰 수의 법칙(Law of Large Numbers)</strong>을 통해 이 수렴을 형식화할 것이다."</em><br><br>
+    <strong>그러니까 이 모듈에서 <span class="m"><i>N<sub>k</sub></i>/<i>N</i> → <i>P</i></span>는 가정이야.</strong> 나중에 정리로 갚게 돼. 그때 "어떤 의미의 수렴인가"를 네 가지로 나누는 게 교재 Chapter 2야. 지금은 그냥 직관으로 받아들이고 넘어가면 돼.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Watch the direction of the argument.</strong> The slides do <strong>not prove</strong> that <span class="m"><i>E</i>[<i>X</i>]</span> is the limit of sample averages. They show <em>why defining it this way is the natural move</em>. Slide 5 flags this itself: <em>"We will later formalize the convergence through the <strong>Law of Large Numbers</strong>."</em><br><br>
+    <strong>So <span class="m"><i>N<sub>k</sub></i>/<i>N</i> → <i>P</i></span> is an assumption in this module</strong>, repaid as a theorem later. Sorting out what kind of convergence is even meant takes four separate definitions, which is Chapter 2 of the textbook. For now, take it as intuition and move on.
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">교재와 다른 점</span>
+    <p><strong>Hajek §1.5는 기댓값을 완전히 다른 데서 시작해.</strong> 표본평균 이야기가 한 줄도 없어. 대신 <strong>simple random variable</strong>(유한개의 값만 갖는 확률변수)에 대해 <span class="m"><i>E</i>[<i>X</i>] = ∑ <i>x<sub>i</sub></i> <i>P</i>(<i>X</i> = <i>x<sub>i</sub></i>)</span>를 <em>정의</em>하고, 임의의 비음수 확률변수를 simple 확률변수의 <strong>증가 수열로 근사해서 극한</strong>으로 정의해. 그게 Lebesgue 적분이야.</p>
+    <p><strong>왜 그렇게까지 하냐면, 두 정의가 다른 것을 감당하기 때문이야.</strong> 슬라이드의 <span class="m">∫<i>xf</i>(<i>x</i>)d<i>x</i></span>는 밀도가 있어야 쓸 수 있어. 그런데 밀도도 PMF도 없는 확률변수가 있어. 교재는 그런 경우까지 한 번에 정의하고, <span class="m"><i>E</i>[<i>X</i>] = ∫<i>x</i> d<i>F<sub>X</sub></i>(<i>x</i>)</span>라는 통합된 형태를 얻어. 그러고 나서 <strong>슬라이드의 두 식은 그 정의의 <em>성질</em>로 유도해</strong> (교재의 E.3, E.4).</p>
+    <p style="margin-bottom:0"><strong>시험은 슬라이드 기준이야.</strong> 적분과 합을 쓰면 돼. 다만 교재를 폈을 때 <span class="m">∫<i>x</i> d<i>F</i></span>나 "simple random variable"이 나와도 당황하지 않으려고 적어둬. <strong>다른 정의가 아니라 더 넓은 정의야.</strong></p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Where the textbook differs</span>
+    <p><strong>Hajek §1.5 starts from somewhere else entirely.</strong> There is no sample-average story at all. Instead it <em>defines</em> <span class="m"><i>E</i>[<i>X</i>] = ∑ <i>x<sub>i</sub></i> <i>P</i>(<i>X</i> = <i>x<sub>i</sub></i>)</span> for a <strong>simple random variable</strong>, one taking finitely many values, and then defines the expectation of an arbitrary nonnegative random variable as the <strong>limit along an increasing sequence</strong> of simple ones. That construction is the Lebesgue integral.</p>
+    <p><strong>It goes to that trouble because the two definitions cover different ground.</strong> The slides' <span class="m">∫<i>xf</i>(<i>x</i>)d<i>x</i></span> needs a density to exist, and some random variables have neither a density nor a PMF. The textbook's definition handles all of them at once and produces the unified <span class="m"><i>E</i>[<i>X</i>] = ∫<i>x</i> d<i>F<sub>X</sub></i>(<i>x</i>)</span>. The slides' two formulas then come back as <strong><em>properties</em> of that definition</strong> (E.3 and E.4 in the book).</p>
+    <p style="margin-bottom:0"><strong>Exams follow the slides</strong>, so use the integral and the sum. This is here so that <span class="m">∫<i>x</i> d<i>F</i></span> or "simple random variable" does not throw you when you open the textbook. <strong>It is not a different definition, it is a wider one.</strong></p>
+  </div>
+</section>
+
+<!-- ══ 03 ══ -->
+<section id="s3">
+  <div class="sec-head" data-slide="6-7"><span class="sec-num">03</span><h2 lang="ko">평균은 가능한 값이 아닐 수 있다</h2><h2 lang="en">The mean need not be attainable</h2></div>
+  <p class="sec-sub" lang="ko">슬라이드가 굳이 두 쪽을 쓴다. 그만큼 자주 틀리는 자리다.</p>
+  <p class="sec-sub" lang="en">The slides spend two pages on this, which tells you how often it goes wrong.</p>
+
+  <p lang="ko">슬라이드 6쪽의 예제는 주사위야. <span class="m"><i>X</i> ~ <i>U</i>{1, …, 6}</span>이면</p>
+  <p lang="en">The example on slide 6 is a die. For <span class="m"><i>X</i> ~ <i>U</i>{1, …, 6}</span>,</p>
+
+  <div class="eq"><i>E</i>[<i>X</i>] = ∑<sub><i>k</i>=1</sub><sup>6</sup> <i>k</i> · (1/6) = 21/6 = 7/2</div>
+
+  <p lang="ko">그런데 슬라이드 7쪽이 바로 덧붙여. <span class="m"><i>P</i>(<i>X</i> = 7/2) = 0</span>이야. <strong>주사위를 아무리 굴려도 3.5가 나오는 일은 없어.</strong></p>
+  <p lang="en">And slide 7 immediately adds that <span class="m"><i>P</i>(<i>X</i> = 7/2) = 0</span>. <strong>No roll of a die ever comes up 3.5.</strong></p>
+
+  <figure>
+    <svg viewBox="0 0 520 176" role="img" aria-label="A fair die PMF with six equal bars, and the mean of 3.5 falling in the gap between the bars at 3 and 4">
+      <line x1="30" y1="130" x2="400" y2="130" stroke="var(--rule)" stroke-width="1.2"/>
+      <rect x="45" y="60" width="30" height="70" fill="rgba(var(--blue-rgb),.30)" stroke="var(--blue)" stroke-width="1.2"/>
+      <rect x="105" y="60" width="30" height="70" fill="rgba(var(--blue-rgb),.30)" stroke="var(--blue)" stroke-width="1.2"/>
+      <rect x="165" y="60" width="30" height="70" fill="rgba(var(--blue-rgb),.30)" stroke="var(--blue)" stroke-width="1.2"/>
+      <rect x="225" y="60" width="30" height="70" fill="rgba(var(--blue-rgb),.30)" stroke="var(--blue)" stroke-width="1.2"/>
+      <rect x="285" y="60" width="30" height="70" fill="rgba(var(--blue-rgb),.30)" stroke="var(--blue)" stroke-width="1.2"/>
+      <rect x="345" y="60" width="30" height="70" fill="rgba(var(--blue-rgb),.30)" stroke="var(--blue)" stroke-width="1.2"/>
+      <line x1="210" y1="130" x2="210" y2="46" stroke="var(--amber)" stroke-width="1.8" stroke-dasharray="5 4"/>
+      <path d="M210,126 L202,142 L218,142 Z" fill="var(--amber)"/>
+      <text class="svgnum" x="210" y="38" text-anchor="middle" style="fill:var(--amber-deep)">E[X] = 3.5</text>
+      <text class="svglab" x="60" y="160" text-anchor="middle">1</text>
+      <text class="svglab" x="120" y="160" text-anchor="middle">2</text>
+      <text class="svglab" x="180" y="160" text-anchor="middle">3</text>
+      <text class="svglab" x="240" y="160" text-anchor="middle">4</text>
+      <text class="svglab" x="300" y="160" text-anchor="middle">5</text>
+      <text class="svglab" x="360" y="160" text-anchor="middle">6</text>
+      <text class="svglab" x="424" y="96" style="fill:var(--amber-deep)" lang="ko">여기엔</text>
+      <text class="svglab" x="424" y="96" style="fill:var(--amber-deep)" lang="en">no bar</text>
+      <text class="svglab" x="424" y="112" style="fill:var(--amber-deep)" lang="ko">막대가 없다</text>
+      <text class="svglab" x="424" y="112" style="fill:var(--amber-deep)" lang="en">lives here</text>
+    </svg>
+    <figcaption lang="ko">평균이 정확히 <strong>막대 사이의 빈틈</strong>에 떨어져. 슬라이드 7쪽의 문장 그대로, <em>기댓값은 확률분포의 중심을 기술하는 것이지 <span class="m"><i>X</i></span>가 실제로 가질 수 있는 값이 아니다.</em><br><br>이건 이산에서만 생기는 일이 아니야. 연속이어도 지지집합이 <span class="m">[0,1] ∪ [4,5]</span>처럼 끊겨 있으면 평균이 그 사이 빈 구간에 놓일 수 있어.</figcaption>
+    <figcaption lang="en">The mean lands exactly in <strong>a gap between bars</strong>. In slide 7's words, <em>the expectation describes the centre of the probability distribution, not necessarily a realizable value of <span class="m"><i>X</i></span>.</em><br><br>This is not a discrete-only phenomenon. A continuous variable whose support is broken, say <span class="m">[0,1] ∪ [4,5]</span>, can have its mean sitting in the empty stretch between the pieces.</figcaption>
+  </figure>
+
+  <div class="trap" lang="ko">
+    <span class="tag">함정</span>
+    <h4>평균을 "가장 자주 나오는 값"으로 읽는다</h4>
+    <p>그건 <strong>최빈값(mode)</strong>이야. 주사위에서는 여섯 값이 전부 최빈값이고 평균은 3.5야. 셋이 전부 다를 수 있어. 시험 문제가 "평균"을 물었는데 최빈값을 답하면 안 되고, 그 반대도 마찬가지야.</p>
+    <h4>평균을 "가운데 값"으로 읽는다</h4>
+    <p>그건 <strong>중앙값(median)</strong>이야. 주사위에서는 우연히 둘 다 3.5지만, 한쪽으로 꼬리가 긴 분포에서는 크게 갈려. 지수분포가 좋은 예야. <span class="m"><i>E</i>[<i>X</i>] = 1/<i>λ</i></span>인데 중앙값은 <span class="m">ln2/<i>λ</i> ≈ 0.69/<i>λ</i></span>라서 <strong>평균보다 작아.</strong> 긴 꼬리가 평균을 오른쪽으로 끌거든.</p>
+    <h4><span class="m"><i>P</i>(<i>X</i> = <i>E</i>[<i>X</i>]) = 0</span>이 이상한 게 아니다</h4>
+    <p style="margin-bottom:0">연속 확률변수라면 <strong>어떤 값에 대해서든</strong> 그래. Module 5의 결론이었지. 이 섹션이 진짜 하는 말은 <em>이산에서도 그럴 수 있다</em>는 거야.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Traps</span>
+    <h4>Reading the mean as "the most common value"</h4>
+    <p>That is the <strong>mode</strong>. For a die every value is a mode and the mean is 3.5. All three summaries can differ. If a question asks for the mean, the mode is not an answer, and the other way round as well.</p>
+    <h4>Reading the mean as "the middle value"</h4>
+    <p>That is the <strong>median</strong>. For a die they happen to coincide at 3.5, but a skewed distribution pulls them apart. The exponential is the standard example: <span class="m"><i>E</i>[<i>X</i>] = 1/<i>λ</i></span> while the median is <span class="m">ln2/<i>λ</i> ≈ 0.69/<i>λ</i></span>, <strong>smaller than the mean</strong>, because the long tail drags the mean to the right.</p>
+    <h4><span class="m"><i>P</i>(<i>X</i> = <i>E</i>[<i>X</i>]) = 0</span> is not strange</h4>
+    <p style="margin-bottom:0">For a continuous random variable that holds for <strong>every</strong> value; Module 5 settled that. What this section really says is that <em>it can happen in the discrete case too.</em></p>
+  </div>
+</section>
+
+<!-- ══ 04 ══ -->
+<section id="s4">
+  <div class="sec-head" data-slide="8-10"><span class="sec-num">04</span><h2 lang="ko">질량중심</h2><h2 lang="en">Centre of mass</h2></div>
+  <p class="sec-sub" lang="ko">이 모듈에서 기억할 그림은 이거 하나면 된다.</p>
+  <p class="sec-sub" lang="en">If you remember one picture from this module, make it this one.</p>
+
+  <p lang="ko">슬라이드 8~9쪽이 연속 경우에 대해 같은 논증을 반복해. 실수축을 작은 구간 <span class="m">[<i>x<sub>i</sub></i>, <i>x<sub>i</sub></i> + Δ<i>x</i>]</span>로 쪼개고, <span class="m"><i>N<sub>i</sub></i>/<i>N</i> ≈ <i>f<sub>X</sub></i>(<i>x<sub>i</sub></i>)Δ<i>x</i></span>를 쓰면 표본평균이 <span class="m">∑ <i>x<sub>i</sub></i> <i>f<sub>X</sub></i>(<i>x<sub>i</sub></i>)Δ<i>x</i></span>가 되고, <span class="m">Δ<i>x</i> → 0</span>에서 적분이 돼. <strong><a href="L06-conditional-distributions.html#s7">Module 6 §07</a>의 <span class="m"><i>Δ</i></span> 논법과 정확히 같은 수법이야.</strong></p>
+  <p lang="en">Slides 8 and 9 repeat the argument for the continuous case. Partition the line into small intervals <span class="m">[<i>x<sub>i</sub></i>, <i>x<sub>i</sub></i> + Δ<i>x</i>]</span>, use <span class="m"><i>N<sub>i</sub></i>/<i>N</i> ≈ <i>f<sub>X</sub></i>(<i>x<sub>i</sub></i>)Δ<i>x</i></span>, and the sample average becomes <span class="m">∑ <i>x<sub>i</sub></i> <i>f<sub>X</sub></i>(<i>x<sub>i</sub></i>)Δ<i>x</i></span>, which turns into an integral as <span class="m">Δ<i>x</i> → 0</span>. <strong>The same device as the <span class="m"><i>Δ</i></span> argument in <a href="L06-conditional-distributions.html#s7">Module 6 §07</a>.</strong></p>
+
+  <div class="def" lang="ko">
+    <span class="tag">Interpretation (슬라이드 9쪽)</span>
+    <p style="margin-bottom:0">기댓값은 확률분포의 <strong>질량중심</strong>이다. 확률이 큰 값이 평균에 더 무겁게 기여한다. 기댓값은 관측 횟수가 아주 커질 때 표본평균이 수렴하는 값이다.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Interpretation (slide 9)</span>
+    <p style="margin-bottom:0">Expectation is the <strong>centre of mass</strong> of the probability distribution. Values with larger probabilities contribute more heavily to the average. It is the value around which the sample average converges as the number of observations becomes very large.</p>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 520 222" role="img" aria-label="A probability mass function drawn as weights on a beam, balancing on a fulcrum placed at the mean">
+      <line x1="40" y1="160" x2="460" y2="160" stroke="var(--ink2)" stroke-width="2.4"/>
+      <rect x="67" y="60" width="26" height="100" fill="rgba(var(--blue-rgb),.32)" stroke="var(--blue)" stroke-width="1.2"/>
+      <rect x="137" y="77" width="26" height="83" fill="rgba(var(--blue-rgb),.32)" stroke="var(--blue)" stroke-width="1.2"/>
+      <rect x="207" y="93" width="26" height="67" fill="rgba(var(--blue-rgb),.32)" stroke="var(--blue)" stroke-width="1.2"/>
+      <rect x="277" y="110" width="26" height="50" fill="rgba(var(--blue-rgb),.32)" stroke="var(--blue)" stroke-width="1.2"/>
+      <rect x="347" y="127" width="26" height="33" fill="rgba(var(--blue-rgb),.32)" stroke="var(--blue)" stroke-width="1.2"/>
+      <text class="svglab" x="80" y="52" text-anchor="middle" style="fill:var(--blue)">.30</text>
+      <text class="svglab" x="150" y="69" text-anchor="middle" style="fill:var(--blue)">.25</text>
+      <text class="svglab" x="220" y="85" text-anchor="middle" style="fill:var(--blue)">.20</text>
+      <text class="svglab" x="290" y="102" text-anchor="middle" style="fill:var(--blue)">.15</text>
+      <text class="svglab" x="360" y="119" text-anchor="middle" style="fill:var(--blue)">.10</text>
+      <text class="svglab" x="80" y="178" text-anchor="middle">1</text>
+      <text class="svglab" x="150" y="178" text-anchor="middle">2</text>
+      <text class="svglab" x="220" y="178" text-anchor="middle">3</text>
+      <text class="svglab" x="290" y="178" text-anchor="middle">4</text>
+      <text class="svglab" x="360" y="178" text-anchor="middle">5</text>
+      <path d="M185,163 L171,188 L199,188 Z" fill="var(--violet)"/>
+      <line x1="185" y1="160" x2="185" y2="44" stroke="var(--violet)" stroke-width="1.4" stroke-dasharray="4 4"/>
+      <text class="svgnum" x="185" y="36" text-anchor="middle" style="fill:var(--violet)">E[X] = 2.5</text>
+      <text class="svglab" x="300" y="206" style="fill:var(--ink3)" lang="ko">받침을 여기 두어야 막대가 균형을 잡는다</text>
+      <text class="svglab" x="300" y="206" style="fill:var(--ink3)" lang="en">the beam balances only with the pivot here</text>
+    </svg>
+    <figcaption lang="ko">막대 높이가 확률이고 가로축이 값이야. <strong>물리에서 질량중심을 구하는 식과 글자 하나 다르지 않아.</strong> <span class="m">∑ <i>m<sub>i</sub></i> <i>x<sub>i</sub></i> / ∑ <i>m<sub>i</sub></i></span>에서 <span class="m">∑ <i>m<sub>i</sub></i> = 1</span>인 경우니까.<br><br>이 그림이 주는 감각 두 가지. <strong>먼 쪽 막대는 가벼워도 크게 당긴다</strong>는 것 (지렛대의 팔이 기니까), 그리고 <strong>받침은 막대 위에 있을 필요가 없다</strong>는 것. 03번에서 본 그대로야.</figcaption>
+    <figcaption lang="en">Bar heights are probabilities and the horizontal axis carries the values. <strong>The formula is character for character the physics formula for a centre of mass</strong>, <span class="m">∑ <i>m<sub>i</sub></i> <i>x<sub>i</sub></i> / ∑ <i>m<sub>i</sub></i></span>, in the case where <span class="m">∑ <i>m<sub>i</sub></i> = 1</span>.<br><br>Two things the picture gives you. <strong>A far-off bar pulls hard even when it is light</strong>, because its lever arm is long. And <strong>the pivot does not have to sit under a bar</strong>, which is §03 again.</figcaption>
+  </figure>
+
+  <div class="ex" lang="ko">
+    <span class="tag">예제 4.1 · 슬라이드 10쪽의 일반화</span>
+    <p><span class="m"><i>X</i> ~ <i>U</i>{1, …, <i>n</i>}</span>일 때 <span class="m"><i>E</i>[<i>X</i>]</span>를 구해. 슬라이드가 답을 주지만, <strong>나오는 과정을 알아야 다른 데 쓸 수 있어.</strong></p>
+    <details>
+      <summary>풀이 보기</summary>
+      <div class="body">
+        <p>정의를 그대로 쓰면 <span class="m"><i>E</i>[<i>X</i>] = ∑<sub><i>k</i>=1</sub><sup><i>n</i></sup> <i>k</i> (1/<i>n</i>) = (1/<i>n</i>) ∑<sub><i>k</i>=1</sub><sup><i>n</i></sup> <i>k</i></span>야. 그리고 <span class="m">∑<sub><i>k</i>=1</sub><sup><i>n</i></sup> <i>k</i> = <i>n</i>(<i>n</i>+1)/2</span>이니까</p>
+        <div class="eq"><i>E</i>[<i>X</i>] = (1/<i>n</i>) · <i>n</i>(<i>n</i>+1)/2 = (<i>n</i>+1)/2</div>
+        <p><strong>대칭으로 확인하는 게 더 빨라.</strong> 분포가 <span class="m">(<i>n</i>+1)/2</span>를 중심으로 대칭이잖아. <span class="m"><i>k</i></span>와 <span class="m"><i>n</i>+1−<i>k</i></span>가 같은 확률이고 둘의 평균이 <span class="m">(<i>n</i>+1)/2</span>니까, 짝지어 묶으면 전부 그 값이야. <strong>대칭인 분포의 평균은 대칭축이야.</strong> 적분이나 합을 안 해도 되는 경우가 많으니 기억해둬.</p>
+        <p style="margin-bottom:0"><span class="m"><i>n</i> = 6</span>을 넣으면 <span class="m">7/2</span>, 03번의 주사위야. <span class="m"><i>n</i></span>이 홀수면 <span class="m">(<i>n</i>+1)/2</span>가 정수라 평균이 실제 가능한 값이 되고, 짝수면 빈틈에 떨어져. <strong>평균이 가능한 값인지 아닌지가 <span class="m"><i>n</i></span>의 홀짝에 달려 있는 셈이야.</strong></p>
+      </div>
+    </details>
+  </div>
+  <div class="ex" lang="en">
+    <span class="tag">Example 4.1 · slide 10, generalised</span>
+    <p>Find <span class="m"><i>E</i>[<i>X</i>]</span> for <span class="m"><i>X</i> ~ <i>U</i>{1, …, <i>n</i>}</span>. The slides give the answer, but <strong>you need the route to reuse it elsewhere.</strong></p>
+    <details>
+      <summary>show the solution</summary>
+      <div class="body">
+        <p>Straight from the definition, <span class="m"><i>E</i>[<i>X</i>] = ∑<sub><i>k</i>=1</sub><sup><i>n</i></sup> <i>k</i> (1/<i>n</i>) = (1/<i>n</i>) ∑<sub><i>k</i>=1</sub><sup><i>n</i></sup> <i>k</i></span>, and <span class="m">∑<sub><i>k</i>=1</sub><sup><i>n</i></sup> <i>k</i> = <i>n</i>(<i>n</i>+1)/2</span>, so</p>
+        <div class="eq"><i>E</i>[<i>X</i>] = (1/<i>n</i>) · <i>n</i>(<i>n</i>+1)/2 = (<i>n</i>+1)/2</div>
+        <p><strong>The symmetry argument is faster.</strong> The distribution is symmetric about <span class="m">(<i>n</i>+1)/2</span>: <span class="m"><i>k</i></span> and <span class="m"><i>n</i>+1−<i>k</i></span> carry equal probability and average to that value, so pairing them off gives it directly. <strong>A symmetric distribution has its mean at the axis of symmetry.</strong> Worth remembering, since it often removes the sum or integral entirely.</p>
+        <p style="margin-bottom:0">Putting <span class="m"><i>n</i> = 6</span> gives <span class="m">7/2</span>, the die from §03. For odd <span class="m"><i>n</i></span> the value <span class="m">(<i>n</i>+1)/2</span> is an integer and the mean is attainable; for even <span class="m"><i>n</i></span> it lands in a gap. <strong>Whether the mean is a possible value comes down to the parity of <span class="m"><i>n</i></span>.</strong></p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ══ 05 ══ -->
+<section id="s5">
+  <div class="sec-head" data-slide="11-16"><span class="sec-num">05</span><h2 lang="ko">E[g(X)]: 지름길</h2><h2 lang="en">E[g(X)]: the shortcut</h2></div>
+  <p class="sec-sub" lang="ko">Module 7을 통째로 건너뛸 수 있는 자리다.</p>
+  <p class="sec-sub" lang="en">The place where you get to skip all of Module 7.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드 11쪽</span>
+    <p><span class="m"><i>Y</i> = <i>g</i>(<i>X</i>)</span>일 때</p>
+    <div class="eq"><i>E</i>[<i>g</i>(<i>X</i>)] = ∫<sub>−∞</sub><sup>∞</sup> <i>g</i>(<i>x</i>) <i>f<sub>X</sub></i>(<i>x</i>) d<i>x</i> &nbsp;&nbsp; (연속)</div>
+    <div class="eq" style="margin-bottom:0"><i>E</i>[<i>g</i>(<i>X</i>)] = ∑<sub><i>x</i></sub> <i>g</i>(<i>x</i>) <i>p<sub>X</sub></i>(<i>x</i>) &nbsp;&nbsp; (이산)</div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Slide 11</span>
+    <p>For <span class="m"><i>Y</i> = <i>g</i>(<i>X</i>)</span>,</p>
+    <div class="eq"><i>E</i>[<i>g</i>(<i>X</i>)] = ∫<sub>−∞</sub><sup>∞</sup> <i>g</i>(<i>x</i>) <i>f<sub>X</sub></i>(<i>x</i>) d<i>x</i> &nbsp;&nbsp; (continuous)</div>
+    <div class="eq" style="margin-bottom:0"><i>E</i>[<i>g</i>(<i>X</i>)] = ∑<sub><i>x</i></sub> <i>g</i>(<i>x</i>) <i>p<sub>X</sub></i>(<i>x</i>) &nbsp;&nbsp; (discrete)</div>
+  </div>
+
+  <p lang="ko"><strong>이 식을 자세히 봐.</strong> 왼쪽은 <span class="m"><i>Y</i></span>에 대한 기댓값인데 오른쪽에는 <span class="m"><i>f<sub>Y</sub></i></span>가 없어. <span class="m"><i>f<sub>X</sub></i></span>만 있어. 슬라이드 12~13쪽이 왜 그런지를 02번과 같은 방식으로 보여. 표본평균 <span class="m">(1/<i>N</i>)∑<i>g</i>(<i>X<sub>i</sub></i>)</span>를 값별로 묶으면 <span class="m">∑<sub><i>k</i></sub> <i>g</i>(<i>v<sub>k</sub></i>)(<i>N<sub>k</sub></i>/<i>N</i>)</span>가 되고, <strong>묶는 기준이 여전히 <span class="m"><i>X</i></span>의 값이야.</strong> <span class="m"><i>Y</i></span>를 볼 필요가 없어.</p>
+  <p lang="en"><strong>Look closely at that line.</strong> The left side is an expectation of <span class="m"><i>Y</i></span> and the right side contains no <span class="m"><i>f<sub>Y</sub></i></span> at all, only <span class="m"><i>f<sub>X</sub></i></span>. Slides 12 and 13 explain why using §02's argument: group the sample average <span class="m">(1/<i>N</i>)∑<i>g</i>(<i>X<sub>i</sub></i>)</span> by value and you get <span class="m">∑<sub><i>k</i></sub> <i>g</i>(<i>v<sub>k</sub></i>)(<i>N<sub>k</sub></i>/<i>N</i>)</span>. <strong>You are still grouping by the values of <span class="m"><i>X</i></span>.</strong> <span class="m"><i>Y</i></span> never has to be looked at.</p>
+
+  <figure>
+    <svg viewBox="0 0 560 182" role="img" aria-label="Two routes from the density of X to the expectation of Y: the long way through the density of Y, and the direct shortcut">
+      <defs>
+        <marker id="m8f2-tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="var(--ink3)"/>
+        </marker>
+        <marker id="m8f2-gre" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="var(--green)"/>
+        </marker>
+      </defs>
+
+      <text class="svglab" x="26" y="34" style="fill:var(--ink3)" lang="ko">긴 길</text>
+      <text class="svglab" x="26" y="34" style="fill:var(--ink3)" lang="en">the long way</text>
+
+      <rect x="30" y="50" width="100" height="38" rx="8" fill="rgba(var(--blue-rgb),.12)" stroke="var(--blue)" stroke-width="1.4"/>
+      <rect x="230" y="50" width="100" height="38" rx="8" fill="rgba(var(--pink-rgb),.12)" stroke="var(--pink)" stroke-width="1.4"/>
+      <rect x="430" y="50" width="100" height="38" rx="8" fill="rgba(var(--violet-rgb),.12)" stroke="var(--violet)" stroke-width="1.4"/>
+      <text class="svgtxt" x="80" y="75" text-anchor="middle" style="fill:var(--blue)">f<tspan font-size="11" dy="4">X</tspan></text>
+      <text class="svgtxt" x="280" y="75" text-anchor="middle" style="fill:var(--pink)">f<tspan font-size="11" dy="4">Y</tspan></text>
+      <text class="svgtxt" x="480" y="75" text-anchor="middle" style="fill:var(--violet)">E[Y]</text>
+
+      <line x1="134" y1="69" x2="224" y2="69" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#m8f2-tip)"/>
+      <line x1="334" y1="69" x2="424" y2="69" stroke="var(--ink3)" stroke-width="1.4" marker-end="url(#m8f2-tip)"/>
+      <text class="svglab" x="179" y="40" text-anchor="middle">Module 7</text>
+      <text class="svglab" x="379" y="40" text-anchor="middle">∫ y f(y) dy</text>
+
+      <path d="M80,94 Q280,168 476,94" fill="none" stroke="var(--green)" stroke-width="1.8" marker-end="url(#m8f2-gre)"/>
+      <text class="svgtxt" x="280" y="152" text-anchor="middle" style="fill:var(--green)">∫ g(x) f<tspan font-size="11" dy="4">X</tspan><tspan dy="-4">(x) dx</tspan></text>
+      <text class="svglab" x="280" y="172" text-anchor="middle" style="fill:var(--green)" lang="ko">지름길</text>
+      <text class="svglab" x="280" y="172" text-anchor="middle" style="fill:var(--green)" lang="en">the shortcut</text>
+    </svg>
+    <figcaption lang="ko">슬라이드 14~15쪽이 이 그림을 말로 적어. <em>"<span class="m"><i>Y</i></span>의 기댓값만 필요하다면 <span class="m"><i>Y</i></span>의 분포를 결정할 필요가 없다."</em> 그리고 예로 <span class="m"><i>Y</i> = <i>X</i><sup>2</sup></span>을 들어. <strong>바로 앞 모듈에서 <span class="m">(<i>f<sub>X</sub></i>(√<i>y</i>) + <i>f<sub>X</sub></i>(−√<i>y</i>))/(2√<i>y</i>)</span>를 힘들게 구했는데, 평균만 필요하면 <span class="m">∫<i>x</i><sup>2</sup><i>f<sub>X</sub></i>(<i>x</i>)d<i>x</i></span> 한 줄이면 돼.</strong><br><br>단 <strong>분포 전체가 필요한 문제에서는 여전히 긴 길밖에 없어.</strong> <span class="m"><i>P</i>(<i>Y</i> &gt; 3)</span>을 물으면 <span class="m"><i>f<sub>Y</sub></i></span>가 있어야 하거든. HW3 P6이 <span class="m"><i>P</i>(<i>Y</i> ≤ 0.5)</span>를 묻는 게 그 경우야.</figcaption>
+    <figcaption lang="en">Slides 14 and 15 put the picture into words: <em>"if we are interested only in the expectation of <span class="m"><i>Y</i></span>, we do not need to determine the distribution of <span class="m"><i>Y</i></span>."</em> The example they give is <span class="m"><i>Y</i> = <i>X</i><sup>2</sup></span>. <strong>The previous module worked hard for <span class="m">(<i>f<sub>X</sub></i>(√<i>y</i>) + <i>f<sub>X</sub></i>(−√<i>y</i>))/(2√<i>y</i>)</span>, and if all you want is the mean, <span class="m">∫<i>x</i><sup>2</sup><i>f<sub>X</sub></i>(<i>x</i>)d<i>x</i></span> is one line.</strong><br><br>But <strong>a question about the whole distribution still leaves only the long way.</strong> Asking for <span class="m"><i>P</i>(<i>Y</i> &gt; 3)</span> needs <span class="m"><i>f<sub>Y</sub></i></span>, and HW3 P6 asking for <span class="m"><i>P</i>(<i>Y</i> ≤ 0.5)</span> is exactly that case.</figcaption>
+  </figure>
+
+  <p lang="ko">슬라이드 16쪽이 예를 셋 더 들어. <span class="m"><i>g</i>(<i>x</i>) = <i>x</i></span>면 <span class="m"><i>E</i>[<i>X</i>]</span>, <span class="m"><i>g</i>(<i>x</i>) = <i>x</i><sup>3</sup></span>이면 <span class="m"><i>E</i>[<i>X</i><sup>3</sup>]</span>, <span class="m"><i>g</i>(<i>x</i>) = |<i>x</i>|</span>면 <span class="m"><i>E</i>[|<i>X</i>|]</span>. <strong>첫 번째가 중요해.</strong> <span class="m"><i>g</i></span>를 항등함수로 두면 이 공식이 03쪽의 기본 정의로 되돌아와. 즉 <span class="m"><i>E</i>[<i>X</i>]</span>는 <span class="m"><i>E</i>[<i>g</i>(<i>X</i>)]</span>의 특수한 경우야.</p>
+  <p lang="en">Slide 16 adds three more: <span class="m"><i>g</i>(<i>x</i>) = <i>x</i></span> gives <span class="m"><i>E</i>[<i>X</i>]</span>, <span class="m"><i>g</i>(<i>x</i>) = <i>x</i><sup>3</sup></span> gives <span class="m"><i>E</i>[<i>X</i><sup>3</sup>]</span>, <span class="m"><i>g</i>(<i>x</i>) = |<i>x</i>|</span> gives <span class="m"><i>E</i>[|<i>X</i>|]</span>. <strong>The first one matters.</strong> Take <span class="m"><i>g</i></span> to be the identity and the formula folds back into the plain definition from slide 3, so <span class="m"><i>E</i>[<i>X</i>]</span> is itself a special case of <span class="m"><i>E</i>[<i>g</i>(<i>X</i>)]</span>.</p>
+
+  <div class="trap" lang="ko">
+    <span class="tag">함정 · 이 과목에서 제일 비싼 것</span>
+    <h4><span class="m"><i>E</i>[<i>g</i>(<i>X</i>)] ≠ <i>g</i>(<i>E</i>[<i>X</i>])</span></h4>
+    <p>둘이 같다고 쓰는 게 이 과목에서 가장 흔하고 가장 비싼 실수야. 숫자로 한 번 보면 안 잊어.</p>
+    <p><span class="m"><i>X</i></span>가 <span class="m">{1, 3}</span>에 각각 <span class="m">1/2</span>씩이라고 하자. <span class="m"><i>g</i>(<i>x</i>) = <i>x</i><sup>2</sup></span>이면</p>
+    <div class="eq"><i>E</i>[<i>X</i><sup>2</sup>] = (1 + 9)/2 = 5, &nbsp;&nbsp; (<i>E</i>[<i>X</i>])<sup>2</sup> = 2<sup>2</sup> = 4</div>
+    <p><strong>5와 4야. 다르고, 하필 <span class="m"><i>E</i>[<i>X</i><sup>2</sup>]</span> 쪽이 커.</strong> 그리고 그 차이 <span class="m">5 − 4 = 1</span>이 정확히 <span class="m">Var(<i>X</i>)</span>야. <a href="#s9">09번</a>에서 이게 공식이 돼.</p>
+    <h4>어느 쪽이 큰지에는 규칙이 있다</h4>
+    <p><span class="m"><i>g</i></span>가 <strong>볼록</strong>(convex)이면 언제나 <span class="m"><i>E</i>[<i>g</i>(<i>X</i>)] ≥ <i>g</i>(<i>E</i>[<i>X</i>])</span>이고, <strong>오목</strong>이면 반대야. 이걸 <strong>Jensen 부등식</strong>이라고 부르고, 교재는 §2.4에서 다뤄. <strong>슬라이드에는 아직 안 나왔어.</strong> 지금은 "볼록하면 제곱 쪽이 크다" 정도로 기억해두면 돼. 위의 <span class="m"><i>x</i><sup>2</sup></span>이 볼록이라 <span class="m">5 &gt; 4</span>가 나온 거야.</p>
+    <h4>기댓값은 선형인데 함수는 선형이 아니다</h4>
+    <p style="margin-bottom:0">헷갈리는 이유가 이거야. <span class="m"><i>E</i>[2<i>X</i> + 3] = 2<i>E</i>[<i>X</i>] + 3</span>은 <strong>맞아</strong> (07번). 그래서 <span class="m"><i>E</i></span>가 함수 안팎을 자유롭게 드나든다고 착각하기 쉬워. <strong>드나들 수 있는 건 아핀 함수뿐이야.</strong> 그게 선형성의 정확한 범위고, 그 밖으로 나가는 순간 등호가 깨져.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Traps · the most expensive one in this course</span>
+    <h4><span class="m"><i>E</i>[<i>g</i>(<i>X</i>)] ≠ <i>g</i>(<i>E</i>[<i>X</i>])</span></h4>
+    <p>Writing these as equal is the most common and most costly error in the course. One numerical example fixes it for good.</p>
+    <p>Let <span class="m"><i>X</i></span> take <span class="m">1</span> and <span class="m">3</span> with probability <span class="m">1/2</span> each, and let <span class="m"><i>g</i>(<i>x</i>) = <i>x</i><sup>2</sup></span>.</p>
+    <div class="eq"><i>E</i>[<i>X</i><sup>2</sup>] = (1 + 9)/2 = 5, &nbsp;&nbsp; (<i>E</i>[<i>X</i>])<sup>2</sup> = 2<sup>2</sup> = 4</div>
+    <p><strong>Five against four, and it is <span class="m"><i>E</i>[<i>X</i><sup>2</sup>]</span> that is larger.</strong> The gap <span class="m">5 − 4 = 1</span> is exactly <span class="m">Var(<i>X</i>)</span>, which becomes a formula in <a href="#s9">§09</a>.</p>
+    <h4>There is a rule for which one is larger</h4>
+    <p>For <strong>convex</strong> <span class="m"><i>g</i></span> you always have <span class="m"><i>E</i>[<i>g</i>(<i>X</i>)] ≥ <i>g</i>(<i>E</i>[<i>X</i>])</span>, and for <strong>concave</strong> <span class="m"><i>g</i></span> the inequality reverses. That is <strong>Jensen's inequality</strong>, which the textbook covers in §2.4. <strong>It has not appeared on the slides yet.</strong> For now "convex means the squared side is bigger" is enough, and <span class="m"><i>x</i><sup>2</sup></span> being convex is why the example came out <span class="m">5 &gt; 4</span>.</p>
+    <h4>Expectation is linear; functions are not</h4>
+    <p style="margin-bottom:0">That is the source of the confusion. <span class="m"><i>E</i>[2<i>X</i> + 3] = 2<i>E</i>[<i>X</i>] + 3</span> <strong>is true</strong> (see §07), which makes it easy to believe <span class="m"><i>E</i></span> slides in and out of any function. <strong>Only affine functions let it through.</strong> That is the exact reach of linearity, and the equality breaks the moment you step outside it.</p>
+  </div>
+</section>
+
+<!-- ══ 06 ══ -->
+<section id="s6">
+  <div class="sec-head" data-slide="17"><span class="sec-num">06</span><h2 lang="ko">확률도 기댓값이다</h2><h2 lang="en">Probability is an expectation</h2></div>
+  <p class="sec-sub" lang="ko">한 쪽짜리 슬라이드인데, 뒤에서 계속 써먹는다.</p>
+  <p class="sec-sub" lang="en">One slide, and it keeps getting used from here on.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드 17쪽</span>
+    <p>사건 <span class="m"><i>A</i></span>의 <strong>지시함수</strong>(indicator function)를</p>
+    <div class="eq">1<sub><i>A</i></sub>(<i>x</i>) = 1 &nbsp;(<i>x</i> ∈ <i>A</i>), &nbsp;&nbsp; 0 &nbsp;(<i>x</i> ∉ <i>A</i>)</div>
+    <p>라고 두면</p>
+    <div class="eq"><i>P</i>(<i>X</i> ∈ <i>A</i>) = <i>E</i>[1<sub><i>A</i></sub>(<i>X</i>)]</div>
+    <p style="margin-bottom:0"><strong>Interpretation.</strong> 확률은 지시 확률변수의 기댓값일 뿐이다. 따라서 <strong>기댓값은 확률의 일반화</strong>다.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Slide 17</span>
+    <p>Let the <strong>indicator function</strong> of an event <span class="m"><i>A</i></span> be</p>
+    <div class="eq">1<sub><i>A</i></sub>(<i>x</i>) = 1 &nbsp;(<i>x</i> ∈ <i>A</i>), &nbsp;&nbsp; 0 &nbsp;(<i>x</i> ∉ <i>A</i>)</div>
+    <p>and then</p>
+    <div class="eq"><i>P</i>(<i>X</i> ∈ <i>A</i>) = <i>E</i>[1<sub><i>A</i></sub>(<i>X</i>)]</div>
+    <p style="margin-bottom:0"><strong>Interpretation.</strong> A probability is nothing but the expectation of an indicator random variable, so <strong>expectation generalises probability.</strong></p>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 480 200" role="img" aria-label="A density with a region A shaded, and the indicator function of A drawn as a step of height one over the same region">
+      <line x1="30" y1="150" x2="450" y2="150" stroke="var(--rule)" stroke-width="1.2"/>
+      <polyline points="30,148 80,132 130,102 180,74 230,62 280,72 330,98 380,126 430,146" fill="none" stroke="var(--pink)" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M160,150 L160,82 L180,74 L230,62 L260,66 L260,150 Z" fill="rgba(var(--blue-rgb),.26)"/>
+      <path d="M160,60 L260,60" fill="none" stroke="var(--blue)" stroke-width="2" stroke-dasharray="5 4"/>
+      <line x1="160" y1="60" x2="160" y2="150" stroke="var(--blue)" stroke-width="1.4" stroke-dasharray="3 3"/>
+      <line x1="260" y1="60" x2="260" y2="150" stroke="var(--blue)" stroke-width="1.4" stroke-dasharray="3 3"/>
+      <line x1="30" y1="150" x2="160" y2="150" stroke="var(--blue)" stroke-width="2.6"/>
+      <line x1="260" y1="150" x2="440" y2="150" stroke="var(--blue)" stroke-width="2.6"/>
+      <text class="svglab" x="26" y="64" text-anchor="end" style="fill:var(--blue)">1</text>
+      <text class="svglab" x="26" y="154" text-anchor="end" style="fill:var(--blue)">0</text>
+      <text class="svglab" x="210" y="50" text-anchor="middle" style="fill:var(--blue)">1<tspan font-size="9" dy="3">A</tspan><tspan dy="-3">(x)</tspan></text>
+      <text class="svgtxt it" x="398" y="96" style="fill:var(--pink)">f</text>
+      <rect x="160" y="160" width="100" height="10" rx="2" fill="var(--blue)"/>
+      <text class="svglab" x="210" y="188" text-anchor="middle" style="fill:var(--blue)">A</text>
+    </svg>
+    <figcaption lang="ko">파란 계단이 <span class="m">1<sub><i>A</i></sub></span>야. <span class="m"><i>A</i></span> 안에서 1, 밖에서 0. 이걸 밀도와 곱해서 적분하면 <span class="m"><i>A</i></span> 밖은 0이 곱해져 사라지고 <span class="m"><i>A</i></span> 안은 1이 곱해져 그대로 남아. 남는 게 <span class="m">∫<sub><i>A</i></sub> <i>f</i></span>, 즉 <strong>칠해진 넓이 = <span class="m"><i>P</i>(<i>X</i> ∈ <i>A</i>)</span></strong>야.<br><br><strong>지시함수의 정체는 "선택 스위치"야.</strong> 적분 구간을 바꾸는 대신 적분 안에 0/1을 곱해서 같은 일을 하는 거지. 이 수법이 07번에서 진짜 힘을 발휘해.</figcaption>
+    <figcaption lang="en">The blue step is <span class="m">1<sub><i>A</i></sub></span>: one inside <span class="m"><i>A</i></span>, zero outside. Multiply it by the density and integrate, and everything outside <span class="m"><i>A</i></span> is multiplied by zero and disappears while everything inside is multiplied by one and survives. What remains is <span class="m">∫<sub><i>A</i></sub> <i>f</i></span>, the <strong>shaded area, which is <span class="m"><i>P</i>(<i>X</i> ∈ <i>A</i>)</span></strong>.<br><br><strong>An indicator is really a selector switch.</strong> Instead of changing the limits of integration, you multiply by 0 or 1 inside it and get the same effect. That trick is what does the real work in §07.</figcaption>
+  </figure>
+
+  <div class="callout" lang="ko">
+    <strong>"기댓값이 확률의 일반화"라는 말의 무게를 짚고 가자.</strong> Module 2에서 확률 측도 <span class="m"><i>P</i></span>를 공리로 세웠잖아. 이제 그 <span class="m"><i>P</i></span>가 <span class="m"><i>E</i></span>의 <em>특수한 경우</em>로 보인다는 거야.<br><br>
+    <strong>교재는 아예 이 방향으로 책을 써.</strong> Hajek는 서문에서 <em>"공리와 기댓값의 정의에 강조점을 둔다"</em>고 밝히고, §1.5에서 기댓값을 Lebesgue 적분으로 정의한 뒤 확률을 그 위에 얹어. 슬라이드는 반대 순서(확률 먼저, 기댓값 나중)로 가지만 <strong>도착점은 같아.</strong> 17쪽이 그 두 길이 만나는 지점이야.
+  </div>
+  <div class="callout" lang="en">
+    <strong>It is worth pausing on "expectation generalises probability."</strong> Module 2 set up the probability measure <span class="m"><i>P</i></span> from axioms. Now that same <span class="m"><i>P</i></span> turns out to be a <em>special case</em> of <span class="m"><i>E</i></span>.<br><br>
+    <strong>The textbook is written in that direction.</strong> Hajek says in the preface that the book puts <em>"more emphasis on axioms and the definition of expectation"</em>, defines expectation as a Lebesgue integral in §1.5, and builds probability on top. The slides travel the other way, probability first and expectation later, but <strong>they arrive at the same place.</strong> Slide 17 is where the two roads meet.
+  </div>
+</section>
+
+<!-- ══ 07 ══ -->
+<section id="s7">
+  <div class="sec-head" data-slide="18-19"><span class="sec-num">07</span><h2 lang="ko">선형성과 세기</h2><h2 lang="en">Linearity and counting</h2></div>
+  <p class="sec-sub" lang="ko">슬라이드가 두 쪽에서 똑같은 경고를 반복한다. <strong>독립이 필요 없다.</strong></p>
+  <p class="sec-sub" lang="en">Two slides in a row carry the same warning: <strong>independence is not required.</strong></p>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드 18쪽</span>
+    <p>기댓값은 선형이야.</p>
+    <div class="eq"><i>E</i>[<i>aX</i> + <i>bY</i>] = <i>aE</i>[<i>X</i>] + <i>bE</i>[<i>Y</i>]</div>
+    <div class="eq"><i>E</i>[∑<sub><i>i</i></sub> <i>a<sub>i</sub></i> <i>X<sub>i</sub></i>] = ∑<sub><i>i</i></sub> <i>a<sub>i</sub></i> <i>E</i>[<i>X<sub>i</sub></i>]</div>
+    <p style="margin-bottom:0"><strong>Important.</strong> 기댓값의 선형성은 <span class="m"><i>X</i></span><sub>1</sub>, …, <span class="m"><i>X<sub>n</sub></i></span>이 독립일 것을 요구하지 않는다.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Slide 18</span>
+    <p>Expectation is linear.</p>
+    <div class="eq"><i>E</i>[<i>aX</i> + <i>bY</i>] = <i>aE</i>[<i>X</i>] + <i>bE</i>[<i>Y</i>]</div>
+    <div class="eq"><i>E</i>[∑<sub><i>i</i></sub> <i>a<sub>i</sub></i> <i>X<sub>i</sub></i>] = ∑<sub><i>i</i></sub> <i>a<sub>i</sub></i> <i>E</i>[<i>X<sub>i</sub></i>]</div>
+    <p style="margin-bottom:0"><strong>Important.</strong> Linearity of expectation does not require <span class="m"><i>X</i></span><sub>1</sub>, …, <span class="m"><i>X<sub>n</sub></i></span> to be independent.</p>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong><a href="L04-independence.html">Module 4</a>를 떠올려봐.</strong> 거기서는 독립이 있어야만 되는 일이 많았어. <span class="m"><i>P</i>(<i>A</i> ∩ <i>B</i>) = <i>P</i>(<i>A</i>)<i>P</i>(<i>B</i>)</span>도, 반복 전송의 이득 계산도 전부 독립을 가정했지. <strong>그래서 이 슬라이드의 경고가 거꾸로 들리는 거야.</strong> "독립이 필요하다"가 아니라 "필요 없다"거든.<br><br>
+    이유는 간단해. <span class="m"><i>E</i></span>는 <strong>적분</strong>이고, 적분은 원래 선형이야. <span class="m">∫(<i>f</i> + <i>g</i>) = ∫<i>f</i> + ∫<i>g</i></span>에 조건이 붙은 적 없잖아. 확률변수들이 어떻게 얽혀 있든 각 <span class="m"><i>ω</i></span>에서 값을 더한 뒤 평균내는 것과, 각각 평균낸 뒤 더하는 것은 같아.<br><br>
+    <strong>대비해서 기억할 것: <span class="m"><i>E</i>[<i>XY</i>] = <i>E</i>[<i>X</i>]<i>E</i>[<i>Y</i>]</span>는 독립이 <em>필요해.</em></strong> 더하기는 공짜고 곱하기는 아니야. <span class="m">Var(<i>X</i> + <i>Y</i>) = Var(<i>X</i>) + Var(<i>Y</i>)</span>도 마찬가지로 조건이 붙고, 그건 <a href="#s9">09번</a>에서 짚을게.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Think back to <a href="L04-independence.html">Module 4</a>.</strong> Most of what happened there needed independence: <span class="m"><i>P</i>(<i>A</i> ∩ <i>B</i>) = <i>P</i>(<i>A</i>)<i>P</i>(<i>B</i>)</span>, the gain from retransmission, all of it. <strong>Which is why this slide's warning reads backwards</strong>: it says independence is <em>not</em> needed.<br><br>
+    The reason is simple. <span class="m"><i>E</i></span> is an <strong>integral</strong>, and integrals are linear by construction. Nothing was ever attached to <span class="m">∫(<i>f</i> + <i>g</i>) = ∫<i>f</i> + ∫<i>g</i></span>. However tangled the random variables are, adding values at each <span class="m"><i>ω</i></span> and then averaging gives the same number as averaging each and then adding.<br><br>
+    <strong>Store the contrast: <span class="m"><i>E</i>[<i>XY</i>] = <i>E</i>[<i>X</i>]<i>E</i>[<i>Y</i>]</span> <em>does</em> need independence.</strong> Addition is free, multiplication is not. <span class="m">Var(<i>X</i> + <i>Y</i>) = Var(<i>X</i>) + Var(<i>Y</i>)</span> carries a condition for the same reason, which <a href="#s9">§09</a> picks up.
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드 19쪽 · 지시함수로 세기</span>
+    <p><span class="m"><i>I<sub>i</sub></i> = 1<sub><i>A<sub>i</sub></i></sub></span>가 사건 <span class="m"><i>A<sub>i</sub></i></span>의 발생 여부를 나타낸다고 하면, 일어난 사건의 개수는</p>
+    <div class="eq"><i>N</i> = ∑<sub><i>i</i>=1</sub><sup><i>n</i></sup> <i>I<sub>i</sub></i></div>
+    <p>이고 선형성으로</p>
+    <div class="eq"><i>E</i>[<i>N</i>] = ∑<sub><i>i</i>=1</sub><sup><i>n</i></sup> <i>E</i>[<i>I<sub>i</sub></i>] = ∑<sub><i>i</i>=1</sub><sup><i>n</i></sup> <i>P</i>(<i>A<sub>i</sub></i>)</div>
+    <p style="margin-bottom:0"><strong>Important.</strong> 이 결과 역시 <span class="m"><i>A</i></span><sub>1</sub>, …, <span class="m"><i>A<sub>n</sub></i></span>이 독립일 것을 요구하지 않는다.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Slide 19 · counting with indicators</span>
+    <p>If <span class="m"><i>I<sub>i</sub></i> = 1<sub><i>A<sub>i</sub></i></sub></span> records whether event <span class="m"><i>A<sub>i</sub></i></span> occurred, the number of events that occur is</p>
+    <div class="eq"><i>N</i> = ∑<sub><i>i</i>=1</sub><sup><i>n</i></sup> <i>I<sub>i</sub></i></div>
+    <p>and linearity gives</p>
+    <div class="eq"><i>E</i>[<i>N</i>] = ∑<sub><i>i</i>=1</sub><sup><i>n</i></sup> <i>E</i>[<i>I<sub>i</sub></i>] = ∑<sub><i>i</i>=1</sub><sup><i>n</i></sup> <i>P</i>(<i>A<sub>i</sub></i>)</div>
+    <p style="margin-bottom:0"><strong>Important.</strong> This result does not require <span class="m"><i>A</i></span><sub>1</sub>, …, <span class="m"><i>A<sub>n</sub></i></span> to be independent either.</p>
+  </div>
+
+  <p lang="ko"><span class="m"><i>E</i>[<i>I<sub>i</sub></i>] = <i>P</i>(<i>A<sub>i</sub></i>)</span>는 06번에서 나온 거야. 지시함수의 기댓값이 곧 확률이니까. <strong>06번과 18쪽을 붙이면 19쪽이 저절로 나와.</strong></p>
+  <p lang="en"><span class="m"><i>E</i>[<i>I<sub>i</sub></i>] = <i>P</i>(<i>A<sub>i</sub></i>)</span> is §06: the expectation of an indicator is the probability. <strong>Glue §06 to slide 18 and slide 19 falls out on its own.</strong></p>
+
+  <div class="ex" lang="ko">
+    <span class="tag">예제 7.1 · 독립이 아닌데도 통한다</span>
+    <p>패킷 <span class="m"><i>n</i></span>개를 슬롯 <span class="m"><i>n</i></span>개에 <strong>무작위 순열로</strong> 배정해. 각 슬롯에 정확히 하나씩 들어가. <span class="m"><i>i</i></span>번 패킷이 하필 <span class="m"><i>i</i></span>번 슬롯에 들어가는 걸 "제자리"라고 부르자.</p>
+    <p style="margin-bottom:0">제자리에 들어간 패킷 수의 기댓값을 구해.</p>
+    <details>
+      <summary>풀이 보기</summary>
+      <div class="body">
+        <p><strong>순열의 분포를 구하려 하면 안 돼.</strong> 제자리 개수의 PMF는 (교란순열이 얽혀서) 꽤 지저분해. 지시함수로 가.</p>
+        <p><span class="m"><i>I<sub>i</sub></i> = 1</span>을 "<span class="m"><i>i</i></span>번이 제자리"로 두면 <span class="m"><i>N</i> = ∑<i>I<sub>i</sub></i></span>야. 그리고</p>
+        <div class="eq"><i>P</i>(<i>I<sub>i</sub></i> = 1) = 1/<i>n</i></div>
+        <p><span class="m"><i>i</i></span>번 패킷 입장에서 <span class="m"><i>n</i></span>개 슬롯 중 하나가 균등하게 걸리니까. 따라서</p>
+        <div class="eq"><i>E</i>[<i>N</i>] = ∑<sub><i>i</i>=1</sub><sup><i>n</i></sup> (1/<i>n</i>) = <i>n</i> · (1/<i>n</i>) = 1</div>
+        <p><strong><span class="m"><i>n</i></span>이 뭐든 답이 1이야.</strong> 패킷이 10개든 10<sup>6</sup>개든 평균 하나가 제자리에 들어가.</p>
+        <p style="margin-bottom:0"><strong>여기서 중요한 건 <span class="m"><i>I<sub>i</sub></i></span>들이 명백히 독립이 아니라는 거야.</strong> <span class="m"><i>n</i> = 2</span>면 <span class="m"><i>I</i></span><sub>1</sub><span class="m"> = 1</span>인 순간 <span class="m"><i>I</i></span><sub>2</sub><span class="m"> = 1</span>이 강제돼. 완전히 종속이지. <strong>그런데 선형성은 신경 쓰지 않아.</strong> 슬라이드가 18쪽과 19쪽에서 같은 경고를 두 번 한 이유가 이거야. 독립을 확인하느라 시간을 쓰지 말라는 거야.</p>
+      </div>
+    </details>
+  </div>
+  <div class="ex" lang="en">
+    <span class="tag">Example 7.1 · it works without independence</span>
+    <p><span class="m"><i>n</i></span> packets are assigned to <span class="m"><i>n</i></span> slots by a <strong>uniformly random permutation</strong>, one packet per slot. Call it a "hit" when packet <span class="m"><i>i</i></span> happens to land in slot <span class="m"><i>i</i></span>.</p>
+    <p style="margin-bottom:0">Find the expected number of hits.</p>
+    <details>
+      <summary>show the solution</summary>
+      <div class="body">
+        <p><strong>Do not go after the distribution.</strong> The PMF of the number of hits is genuinely messy, tangled up with derangements. Use indicators instead.</p>
+        <p>Let <span class="m"><i>I<sub>i</sub></i> = 1</span> mean "packet <span class="m"><i>i</i></span> is a hit", so <span class="m"><i>N</i> = ∑<i>I<sub>i</sub></i></span>, and</p>
+        <div class="eq"><i>P</i>(<i>I<sub>i</sub></i> = 1) = 1/<i>n</i></div>
+        <p>since from packet <span class="m"><i>i</i></span>'s point of view one of <span class="m"><i>n</i></span> slots is picked uniformly. Therefore</p>
+        <div class="eq"><i>E</i>[<i>N</i>] = ∑<sub><i>i</i>=1</sub><sup><i>n</i></sup> (1/<i>n</i>) = <i>n</i> · (1/<i>n</i>) = 1</div>
+        <p><strong>The answer is 1 whatever <span class="m"><i>n</i></span> is.</strong> Ten packets or a million, one of them lands in its own slot on average.</p>
+        <p style="margin-bottom:0"><strong>The point is that the <span class="m"><i>I<sub>i</sub></i></span> are blatantly not independent.</strong> With <span class="m"><i>n</i> = 2</span>, <span class="m"><i>I</i></span><sub>1</sub><span class="m"> = 1</span> forces <span class="m"><i>I</i></span><sub>2</sub><span class="m"> = 1</span>. Completely dependent. <strong>Linearity does not care.</strong> That is why the slides repeat the same warning twice in a row: do not spend time checking independence you do not need.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ══ 08 ══ -->
+<section id="s8">
+  <div class="sec-head" data-slide="20-25"><span class="sec-num">08</span><h2 lang="ko">조건부 기댓값과 무기억성</h2><h2 lang="en">Conditional expectation and memorylessness</h2></div>
+  <p class="sec-sub" lang="ko">Module 6이 여기서 값을 한다. 그리고 손글씨 네 쪽이 여기 있다.</p>
+  <p class="sec-sub" lang="en">Module 6 pays off here, and this is where the four handwritten pages live.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드 20쪽</span>
+    <p>사건 <span class="m"><i>M</i></span>이 주어졌을 때의 <strong>조건부 기댓값</strong>은</p>
+    <div class="eq"><i>E</i>[<i>X</i> | <i>M</i>] = ∫ <i>x</i> <i>f</i><sub><i>X</i>|<i>M</i></sub>(<i>x</i>) d<i>x</i> &nbsp;&nbsp; (연속)</div>
+    <div class="eq" style="margin-bottom:0"><i>E</i>[<i>X</i> | <i>M</i>] = ∑<sub><i>k</i></sub> <i>x<sub>k</sub></i> <i>p</i><sub><i>X</i>|<i>M</i></sub>(<i>x<sub>k</sub></i>) &nbsp;&nbsp; (이산)</div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Slide 20</span>
+    <p>The <strong>conditional expectation</strong> given an event <span class="m"><i>M</i></span> is</p>
+    <div class="eq"><i>E</i>[<i>X</i> | <i>M</i>] = ∫ <i>x</i> <i>f</i><sub><i>X</i>|<i>M</i></sub>(<i>x</i>) d<i>x</i> &nbsp;&nbsp; (continuous)</div>
+    <div class="eq" style="margin-bottom:0"><i>E</i>[<i>X</i> | <i>M</i>] = ∑<sub><i>k</i></sub> <i>x<sub>k</sub></i> <i>p</i><sub><i>X</i>|<i>M</i></sub>(<i>x<sub>k</sub></i>) &nbsp;&nbsp; (discrete)</div>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>새로운 게 하나도 없다는 걸 봐.</strong> 01번의 정의에서 <span class="m"><i>f<sub>X</sub></i></span>를 <span class="m"><i>f</i><sub><i>X</i>|<i>M</i></sub></span>로 바꾼 것뿐이야. <a href="L06-conditional-distributions.html#s2">Module 6 §02</a>에서 <span class="m"><i>P</i>(·|<i>M</i>)</span>이 그 자체로 확률 측도라고 했잖아. <strong>그 세계 안에서 평소대로 평균을 내는 거야.</strong><br><br>
+    그러니까 이 섹션의 실제 작업은 전부 Module 6이야. <span class="m"><i>f</i><sub><i>X</i>|<i>M</i></sub></span>를 구하는 게 어려운 부분이고, 거기에 <span class="m"><i>x</i></span>를 곱해 적분하는 건 기계적인 일이야.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Notice there is nothing new here.</strong> §01's definition with <span class="m"><i>f<sub>X</sub></i></span> swapped for <span class="m"><i>f</i><sub><i>X</i>|<i>M</i></sub></span>, and nothing else. <a href="L06-conditional-distributions.html#s2">Module 6 §02</a> established that <span class="m"><i>P</i>(·|<i>M</i>)</span> is itself a probability measure, so <strong>you are averaging as usual, just inside that world.</strong><br><br>
+    Which means the real work in this section is all Module 6. Getting <span class="m"><i>f</i><sub><i>X</i>|<i>M</i></sub></span> is the hard part; multiplying by <span class="m"><i>x</i></span> and integrating is mechanical.
+  </div>
+
+  <p lang="ko">슬라이드 21쪽이 대기시간 예제를 꺼내. <span class="m"><i>X</i> ~ Exp(<i>λ</i>)</span>가 큐에서의 대기시간을 모형화한다고 하고, 두 결과를 제시해.</p>
+  <p lang="en">Slide 21 brings in the waiting-time example: <span class="m"><i>X</i> ~ Exp(<i>λ</i>)</span> models a wait in a queue, and it states two results.</p>
+
+  <div class="eq"><i>E</i>[<i>X</i>] = 1 ⁄ <i>λ</i>, &nbsp;&nbsp;&nbsp; <i>E</i>[<i>X</i> | <i>X</i> &gt; <i>x</i>] = <i>x</i> + 1 ⁄ <i>λ</i></div>
+  <div class="eq"><i>E</i>[<i>X</i> − <i>x</i> | <i>X</i> &gt; <i>x</i>] = 1 ⁄ <i>λ</i> <span class="note" lang="ko">이미 x 만큼 기다렸을 때, 앞으로 더 기다릴 시간의 기댓값</span><span class="note" lang="en">having already waited x, the expected remaining wait</span></div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">슬라이드를 읽을 때 주의</span>
+    <p style="margin-bottom:0"><strong>인쇄된 21쪽은 여기까지야. 결과만 있고 유도가 없어.</strong> 유도는 <strong>PDF 22~25쪽의 손글씨</strong>에 있고 인쇄된 쪽 번호가 없어. 아래는 그 네 쪽을 순서대로 활자로 옮긴 거야. <strong>시험에 그대로 나올 만한 계산이라 접어두지 않았어.</strong></p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Reading the slides here</span>
+    <p style="margin-bottom:0"><strong>The printed slide 21 stops there: results, no derivation.</strong> The derivation is the <strong>handwriting on PDF pages 22 to 25</strong>, which carry no printed number. What follows sets those four pages in type, in order. <strong>It is the kind of calculation that shows up on an exam, so it is not folded away.</strong></p>
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">손글씨 1 (PDF 22쪽) · 지수분포의 평균</span>
+    <p><span class="m"><i>f<sub>X</sub></i>(<i>x</i>) = <i>λe</i><sup>−<i>λx</i></sup></span>, <span class="m"><i>x</i> ≥ 0</span>이야. 부분적분을 쓰는데, <span class="m"><i>λe</i><sup>−<i>λx</i></sup>d<i>x</i> = −d(<i>e</i><sup>−<i>λx</i></sup>)</span>로 보는 게 빨라.</p>
+    <div class="eq"><i>E</i>[<i>X</i>] = ∫<sub>0</sub><sup>∞</sup> <i>x</i> · <i>λe</i><sup>−<i>λx</i></sup> d<i>x</i> = −∫<sub>0</sub><sup>∞</sup> <i>x</i> d(<i>e</i><sup>−<i>λx</i></sup>)</div>
+    <div class="eq">= [−<i>e</i><sup>−<i>λx</i></sup> · <i>x</i>]<sub>0</sub><sup>∞</sup> + ∫<sub>0</sub><sup>∞</sup> <i>e</i><sup>−<i>λx</i></sup> d<i>x</i></div>
+    <div class="eq" style="margin-bottom:0">= 0 + [−(1/<i>λ</i>) <i>e</i><sup>−<i>λx</i></sup>]<sub>0</sub><sup>∞</sup> = 1 ⁄ <i>λ</i></div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Handwritten page 1 (PDF 22) · the mean of an exponential</span>
+    <p><span class="m"><i>f<sub>X</sub></i>(<i>x</i>) = <i>λe</i><sup>−<i>λx</i></sup></span> for <span class="m"><i>x</i> ≥ 0</span>. Integrate by parts, most quickly by reading <span class="m"><i>λe</i><sup>−<i>λx</i></sup>d<i>x</i></span> as <span class="m">−d(<i>e</i><sup>−<i>λx</i></sup>)</span>.</p>
+    <div class="eq"><i>E</i>[<i>X</i>] = ∫<sub>0</sub><sup>∞</sup> <i>x</i> · <i>λe</i><sup>−<i>λx</i></sup> d<i>x</i> = −∫<sub>0</sub><sup>∞</sup> <i>x</i> d(<i>e</i><sup>−<i>λx</i></sup>)</div>
+    <div class="eq">= [−<i>e</i><sup>−<i>λx</i></sup> · <i>x</i>]<sub>0</sub><sup>∞</sup> + ∫<sub>0</sub><sup>∞</sup> <i>e</i><sup>−<i>λx</i></sup> d<i>x</i></div>
+    <div class="eq" style="margin-bottom:0">= 0 + [−(1/<i>λ</i>) <i>e</i><sup>−<i>λx</i></sup>]<sub>0</sub><sup>∞</sup> = 1 ⁄ <i>λ</i></div>
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">손글씨 2~3 (PDF 23~24쪽) · 조건부 분포</span>
+    <p><span class="m"><i>M</i> = {<i>X</i> &gt; <i>x</i>}</span>로 두고 <span class="m"><i>F</i><sub><i>X</i>|<i>M</i></sub>(<i>t</i>) = <i>P</i>(<i>X</i> ≤ <i>t</i> | <i>X</i> &gt; <i>x</i>)</span>를 구해. <a href="L06-conditional-distributions.html#s3">Module 6 예제 3.1</a>이 그대로야.</p>
+    <div class="eq"><i>F</i><sub><i>X</i>|<i>M</i></sub>(<i>t</i>) = 0 &nbsp;(<i>t</i> &lt; <i>x</i>), &nbsp;&nbsp; <i>P</i>(<i>x</i> &lt; <i>X</i> ≤ <i>t</i>) ⁄ <i>P</i>(<i>X</i> &gt; <i>x</i>) &nbsp;(<i>t</i> ≥ <i>x</i>)</div>
+    <p>여기서 <span class="m"><i>P</i>(<i>X</i> &gt; <i>x</i>) = <i>e</i><sup>−<i>λx</i></sup> = 1 − <i>F<sub>X</sub></i>(<i>x</i>)</span>를 넣으면</p>
+    <div class="eq"><i>F</i><sub><i>X</i>|<i>M</i></sub>(<i>t</i>) = (<i>F<sub>X</sub></i>(<i>t</i>) − <i>F<sub>X</sub></i>(<i>x</i>)) ⁄ (1 − <i>F<sub>X</sub></i>(<i>x</i>)) = (<i>e</i><sup>−<i>λx</i></sup> − <i>e</i><sup>−<i>λt</i></sup>) ⁄ <i>e</i><sup>−<i>λx</i></sup> = 1 − <i>e</i><sup>−<i>λ</i>(<i>t</i>−<i>x</i>)</sup></div>
+    <p style="margin-bottom:0">미분하면</p>
+    <div class="eq" style="margin-bottom:0"><i>f</i><sub><i>X</i>|<i>M</i></sub>(<i>t</i>) = <i>λ</i> <i>e</i><sup>−<i>λ</i>(<i>t</i>−<i>x</i>)</sup>, &nbsp; <i>t</i> ≥ <i>x</i></div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Handwritten pages 2 and 3 (PDF 23 and 24) · the conditional distribution</span>
+    <p>Take <span class="m"><i>M</i> = {<i>X</i> &gt; <i>x</i>}</span> and find <span class="m"><i>F</i><sub><i>X</i>|<i>M</i></sub>(<i>t</i>) = <i>P</i>(<i>X</i> ≤ <i>t</i> | <i>X</i> &gt; <i>x</i>)</span>. This is <a href="L06-conditional-distributions.html#s3">Module 6's Example 3.1</a>, unchanged.</p>
+    <div class="eq"><i>F</i><sub><i>X</i>|<i>M</i></sub>(<i>t</i>) = 0 &nbsp;(<i>t</i> &lt; <i>x</i>), &nbsp;&nbsp; <i>P</i>(<i>x</i> &lt; <i>X</i> ≤ <i>t</i>) ⁄ <i>P</i>(<i>X</i> &gt; <i>x</i>) &nbsp;(<i>t</i> ≥ <i>x</i>)</div>
+    <p>Substituting <span class="m"><i>P</i>(<i>X</i> &gt; <i>x</i>) = <i>e</i><sup>−<i>λx</i></sup> = 1 − <i>F<sub>X</sub></i>(<i>x</i>)</span>,</p>
+    <div class="eq"><i>F</i><sub><i>X</i>|<i>M</i></sub>(<i>t</i>) = (<i>F<sub>X</sub></i>(<i>t</i>) − <i>F<sub>X</sub></i>(<i>x</i>)) ⁄ (1 − <i>F<sub>X</sub></i>(<i>x</i>)) = (<i>e</i><sup>−<i>λx</i></sup> − <i>e</i><sup>−<i>λt</i></sup>) ⁄ <i>e</i><sup>−<i>λx</i></sup> = 1 − <i>e</i><sup>−<i>λ</i>(<i>t</i>−<i>x</i>)</sup></div>
+    <p style="margin-bottom:0">and differentiating,</p>
+    <div class="eq" style="margin-bottom:0"><i>f</i><sub><i>X</i>|<i>M</i></sub>(<i>t</i>) = <i>λ</i> <i>e</i><sup>−<i>λ</i>(<i>t</i>−<i>x</i>)</sup>, &nbsp; <i>t</i> ≥ <i>x</i></div>
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">손글씨 4 (PDF 25쪽) · 조건부 평균</span>
+    <div class="eq"><i>E</i>[<i>X</i> | <i>M</i>] = ∫<sub><i>x</i></sub><sup>∞</sup> <i>t</i> · <i>λ</i> <i>e</i><sup>−<i>λ</i>(<i>t</i>−<i>x</i>)</sup> d<i>t</i></div>
+    <p><span class="m"><i>t</i>′ = <i>t</i> − <i>x</i></span>로 치환하면 적분 구간이 <span class="m">0</span>부터가 되고 <span class="m"><i>t</i> = <i>t</i>′ + <i>x</i></span>야.</p>
+    <div class="eq">= ∫<sub>0</sub><sup>∞</sup> (<i>t</i>′ + <i>x</i>) <i>λ</i> <i>e</i><sup>−<i>λt</i>′</sup> d<i>t</i>′ = ∫<sub>0</sub><sup>∞</sup> <i>t</i>′ <i>λe</i><sup>−<i>λt</i>′</sup> d<i>t</i>′ + <i>x</i> ∫<sub>0</sub><sup>∞</sup> <i>λe</i><sup>−<i>λt</i>′</sup> d<i>t</i>′</div>
+    <p>첫 항은 <strong>손글씨 1에서 이미 구한 <span class="m"><i>E</i>[<i>X</i>]</span></strong>이고, 둘째 적분은 밀도의 전체 적분이라 <span class="m">1</span>이야.</p>
+    <div class="eq" style="margin-bottom:0">= 1/<i>λ</i> + <i>x</i> · 1 = <i>x</i> + 1 ⁄ <i>λ</i></div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Handwritten page 4 (PDF 25) · the conditional mean</span>
+    <div class="eq"><i>E</i>[<i>X</i> | <i>M</i>] = ∫<sub><i>x</i></sub><sup>∞</sup> <i>t</i> · <i>λ</i> <i>e</i><sup>−<i>λ</i>(<i>t</i>−<i>x</i>)</sup> d<i>t</i></div>
+    <p>Substituting <span class="m"><i>t</i>′ = <i>t</i> − <i>x</i></span> moves the lower limit to <span class="m">0</span>, with <span class="m"><i>t</i> = <i>t</i>′ + <i>x</i></span>.</p>
+    <div class="eq">= ∫<sub>0</sub><sup>∞</sup> (<i>t</i>′ + <i>x</i>) <i>λ</i> <i>e</i><sup>−<i>λt</i>′</sup> d<i>t</i>′ = ∫<sub>0</sub><sup>∞</sup> <i>t</i>′ <i>λe</i><sup>−<i>λt</i>′</sup> d<i>t</i>′ + <i>x</i> ∫<sub>0</sub><sup>∞</sup> <i>λe</i><sup>−<i>λt</i>′</sup> d<i>t</i>′</div>
+    <p>The first term is <strong>the <span class="m"><i>E</i>[<i>X</i>]</span> already computed on handwritten page 1</strong>, and the second integral is a density integrated over everything, so it is <span class="m">1</span>.</p>
+    <div class="eq" style="margin-bottom:0">= 1/<i>λ</i> + <i>x</i> · 1 = <i>x</i> + 1 ⁄ <i>λ</i></div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 560 226" role="img" aria-label="An exponential density conditioned on X greater than t, and the same conditional density shifted back, landing exactly on the original">
+      <g transform="translate(16,0)">
+        <text class="svglab" x="0" y="20" lang="ko">X &gt; t 로 조건부</text>
+        <text class="svglab" x="0" y="20" lang="en">conditioned on X &gt; t</text>
+        <line x1="0" y1="170" x2="215" y2="170" stroke="var(--rule)" stroke-width="1.2"/>
+        <polyline points="0,60 12.5,84.3 25,103.3 37.5,118 50,129.5 62.5,138.5 75,145.5 87.5,150.9 100,155.1 112.5,158.4 125,161 137.5,163 150,164.5 162.5,165.7 175,166.7 187.5,167.4 200,168" fill="none" stroke="var(--pink)" stroke-width="2" stroke-linejoin="round"/>
+        <polyline points="50,60 62.5,84.3 75,103.3 87.5,118 100,129.5 112.5,138.5 125,145.5 137.5,150.9 150,155.1 162.5,158.4 175,161 187.5,163 200,164.5" fill="none" stroke="var(--blue)" stroke-width="2.4" stroke-linejoin="round"/>
+        <line x1="50" y1="170" x2="50" y2="56" stroke="var(--ink3)" stroke-width="1.2" stroke-dasharray="3 3"/>
+        <text class="svglab" x="6" y="188" text-anchor="middle">0</text>
+        <text class="svglab" x="50" y="188" text-anchor="middle">t</text>
+        <text class="svglab" x="14" y="50" style="fill:var(--pink)">f(x)</text>
+        <text class="svglab" x="112" y="56" style="fill:var(--blue)">f(x | X &gt; t)</text>
+      </g>
+
+      <g transform="translate(316,0)">
+        <text class="svglab" x="0" y="20" lang="ko">그걸 t 만큼 왼쪽으로</text>
+        <text class="svglab" x="0" y="20" lang="en">shifted back by t</text>
+        <line x1="0" y1="170" x2="215" y2="170" stroke="var(--rule)" stroke-width="1.2"/>
+        <polyline points="0,60 12.5,84.3 25,103.3 37.5,118 50,129.5 62.5,138.5 75,145.5 87.5,150.9 100,155.1 112.5,158.4 125,161 137.5,163 150,164.5 162.5,165.7 175,166.7 187.5,167.4 200,168" fill="none" stroke="var(--pink)" stroke-width="3.4" stroke-linejoin="round"/>
+        <polyline points="0,60 12.5,84.3 25,103.3 37.5,118 50,129.5 62.5,138.5 75,145.5 87.5,150.9 100,155.1 112.5,158.4 125,161 137.5,163 150,164.5" fill="none" stroke="var(--blue)" stroke-width="2" stroke-dasharray="6 4" stroke-linejoin="round"/>
+        <text class="svglab" x="6" y="188" text-anchor="middle">0</text>
+        <text class="svglab" x="110" y="52" text-anchor="middle" style="fill:var(--violet)" lang="ko">두 곡선이 겹친다</text>
+        <text class="svglab" x="110" y="52" text-anchor="middle" style="fill:var(--violet)" lang="en">the curves coincide</text>
+      </g>
+      <text class="svglab" x="280" y="212" text-anchor="middle" style="fill:var(--ink3)" lang="ko">이미 기다린 시간은 앞으로의 기다림에 대해 아무 정보도 주지 않는다</text>
+      <text class="svglab" x="280" y="212" text-anchor="middle" style="fill:var(--ink3)" lang="en">time already spent waiting says nothing about the wait still to come</text>
+    </svg>
+    <figcaption lang="ko">왼쪽은 <a href="L06-conditional-distributions.html#s3">Module 6의 재정규화</a>야. <span class="m"><i>t</i></span> 왼쪽을 버리고 남은 꼬리를 <span class="m">1/<i>e</i><sup>−<i>λt</i></sup></span>배 키운 거지. 오른쪽에서 그걸 <span class="m"><i>t</i></span>만큼 되돌리면 <strong>원래 곡선과 정확히 포개져.</strong> 지수분포에서만 일어나는 일이야.<br><br>식으로는 <span class="m"><i>f</i><sub><i>X</i>|<i>X</i>&gt;<i>t</i></sub>(<i>x</i>) = <i>λe</i><sup>−<i>λ</i>(<i>x</i>−<i>t</i>)</sup></span>가 <span class="m"><i>f<sub>X</sub></i>(<i>x</i> − <i>t</i>)</span>와 같다는 거고, 그래서 평균도 딱 <span class="m"><i>t</i></span>만큼 밀린 <span class="m"><i>t</i> + 1/<i>λ</i></span>가 돼.</figcaption>
+    <figcaption lang="en">The left panel is <a href="L06-conditional-distributions.html#s3">Module 6's renormalisation</a>: throw away everything left of <span class="m"><i>t</i></span> and scale the surviving tail by <span class="m">1/<i>e</i><sup>−<i>λt</i></sup></span>. Slide it back by <span class="m"><i>t</i></span> on the right and it <strong>lands exactly on the original curve.</strong> Only the exponential does this.<br><br>Algebraically, <span class="m"><i>f</i><sub><i>X</i>|<i>X</i>&gt;<i>t</i></sub>(<i>x</i>) = <i>λe</i><sup>−<i>λ</i>(<i>x</i>−<i>t</i>)</sup></span> equals <span class="m"><i>f<sub>X</sub></i>(<i>x</i> − <i>t</i>)</span>, so the mean is simply pushed along by <span class="m"><i>t</i></span>, landing at <span class="m"><i>t</i> + 1/<i>λ</i></span>.</figcaption>
+  </figure>
+
+  <div class="callout" lang="ko">
+    <strong>이산판은 이미 봤어.</strong> <a href="L06-conditional-distributions.html#s5">Module 6 예제 5.2</a>에서 geometric 분포를 <span class="m">{<i>X</i> &gt; 3}</span>으로 조건부 지었더니 같은 모양이 나왔잖아. <strong>두 분포가 각자의 세계에서 유일한 무기억 분포야.</strong> 교재 §1.6이 둘 다에 대해 그걸 명시해: <em>"이 성질을 가진 임의의 양의 정수값 확률변수는 geometric 분포를 따른다"</em>, <em>"이 성질을 가진 임의의 비음수 확률변수는 지수분포를 따른다."</em><br><br>
+    <strong>HW3 P2(e)의 <span class="m"><i>P</i>(<i>X</i> &gt; 10 | <i>X</i> &gt; 4)</span>가 이산판이야.</strong> 슬라이드 어디에도 둘이 나란히 놓인 적이 없는데, 시험에서는 한쪽을 물어놓고 다른 쪽 감각을 요구하는 일이 흔해.
+  </div>
+  <div class="callout" lang="en">
+    <strong>You have already seen the discrete version.</strong> <a href="L06-conditional-distributions.html#s5">Module 6's Example 5.2</a> conditioned a geometric on <span class="m">{<i>X</i> &gt; 3}</span> and got the same shape back. <strong>These two are the only memoryless distributions, each in its own world.</strong> Hajek §1.6 says so for both: <em>"any positive integer-valued random variable with this property has a geometric distribution"</em> and <em>"any nonnegative random variable with this property is exponentially distributed."</em><br><br>
+    <strong>HW3 P2(e)'s <span class="m"><i>P</i>(<i>X</i> &gt; 10 | <i>X</i> &gt; 4)</span> is the discrete half.</strong> No slide puts the two side by side, and exams routinely ask about one while expecting the intuition from the other.
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">함정</span>
+    <h4>무기억성을 "평균이 안 변한다"로 읽는다</h4>
+    <p>안 변하는 건 <strong>남은</strong> 대기시간의 평균이야. <span class="m"><i>E</i>[<i>X</i> − <i>x</i> | <i>X</i> &gt; <i>x</i>] = 1/<i>λ</i></span>. 반면 <span class="m"><i>E</i>[<i>X</i> | <i>X</i> &gt; <i>x</i>] = <i>x</i> + 1/<i>λ</i></span>는 <span class="m"><i>x</i></span>만큼 커져. <strong>둘을 섞으면 답이 통째로 틀려.</strong> 문제가 "총 대기시간"을 묻는지 "앞으로 더 기다릴 시간"을 묻는지 반드시 확인해.</p>
+    <h4>이게 모든 분포에 성립한다고 생각한다</h4>
+    <p>지수분포와 geometric 분포만이야. 예를 들어 대기시간이 <span class="m"><i>U</i>[0, 10]</span>이면 <span class="m"><i>E</i>[<i>X</i> − 6 | <i>X</i> &gt; 6] = 2</span>인데 <span class="m"><i>E</i>[<i>X</i>] = 5</span>야. <strong>기다릴수록 남은 시간이 줄어.</strong> 물리적으로도 그게 정상이고, 오히려 지수분포가 특이한 거야.</p>
+    <h4>조건부 기댓값은 숫자다, 아직은</h4>
+    <p style="margin-bottom:0"><span class="m"><i>E</i>[<i>X</i> | <i>M</i>]</span>에서 <span class="m"><i>M</i></span>은 고정된 사건이라 결과가 <strong>숫자 하나</strong>야. 나중에 <span class="m"><i>E</i>[<i>X</i> | <i>Y</i>]</span>가 나오면 그건 <strong>확률변수</strong>가 돼. 교재 §3.3이 그걸 다루고 거기서 성격이 완전히 달라져. 지금은 숫자로 받아들이면 돼.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Traps</span>
+    <h4>Reading memorylessness as "the mean does not change"</h4>
+    <p>What does not change is the mean of the <strong>remaining</strong> wait, <span class="m"><i>E</i>[<i>X</i> − <i>x</i> | <i>X</i> &gt; <i>x</i>] = 1/<i>λ</i></span>. Meanwhile <span class="m"><i>E</i>[<i>X</i> | <i>X</i> &gt; <i>x</i>] = <i>x</i> + 1/<i>λ</i></span> does grow, by exactly <span class="m"><i>x</i></span>. <strong>Confuse the two and the answer is entirely wrong.</strong> Always check whether the question wants the total wait or the wait still ahead.</p>
+    <h4>Assuming every distribution does this</h4>
+    <p>Only the exponential and the geometric. If the wait were <span class="m"><i>U</i>[0, 10]</span>, then <span class="m"><i>E</i>[<i>X</i> − 6 | <i>X</i> &gt; 6] = 2</span> while <span class="m"><i>E</i>[<i>X</i>] = 5</span>: <strong>the longer you have waited, the less remains.</strong> That is the physically ordinary behaviour, and the exponential is the odd one out.</p>
+    <h4>A conditional expectation is a number, for now</h4>
+    <p style="margin-bottom:0">In <span class="m"><i>E</i>[<i>X</i> | <i>M</i>]</span>, <span class="m"><i>M</i></span> is a fixed event, so the result is <strong>one number</strong>. Later, <span class="m"><i>E</i>[<i>X</i> | <i>Y</i>]</span> will be a <strong>random variable</strong>, with a completely different character; that is textbook §3.3. Take it as a number for now.</p>
+  </div>
+</section>
+
+<!-- ══ 09 ══ -->
+<section id="s9">
+  <div class="sec-head" data-slide="26-29"><span class="sec-num">09</span><h2 lang="ko">분산과 표준편차</h2><h2 lang="en">Variance and standard deviation</h2></div>
+  <p class="sec-sub" lang="ko">평균이 버린 것을 되찾는다. 퍼짐.</p>
+  <p class="sec-sub" lang="en">Recovering what the mean threw away: the spread.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드 26쪽</span>
+    <p>기댓값이 평균을 재고, <strong>분산</strong>이 그 평균 주위의 퍼짐을 재.</p>
+    <div class="eq" style="margin-bottom:0">Var(<i>X</i>) = <i>E</i>[(<i>X</i> − <i>μ</i>)<sup>2</sup>], &nbsp;&nbsp; <i>μ</i> = <i>E</i>[<i>X</i>]</div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Slide 26</span>
+    <p>Expectation measures the average; <strong>variance</strong> measures the spread around it.</p>
+    <div class="eq" style="margin-bottom:0">Var(<i>X</i>) = <i>E</i>[(<i>X</i> − <i>μ</i>)<sup>2</sup>], &nbsp;&nbsp; <i>μ</i> = <i>E</i>[<i>X</i>]</div>
+  </div>
+
+  <p lang="ko"><strong>이 정의가 05번의 <span class="m"><i>E</i>[<i>g</i>(<i>X</i>)]</span>야.</strong> <span class="m"><i>g</i>(<i>x</i>) = (<i>x</i> − <i>μ</i>)<sup>2</sup></span>인 경우지. 그러니까 계산법은 이미 배웠어.</p>
+  <p lang="en"><strong>This definition is §05's <span class="m"><i>E</i>[<i>g</i>(<i>X</i>)]</span></strong> with <span class="m"><i>g</i>(<i>x</i>) = (<i>x</i> − <i>μ</i>)<sup>2</sup></span>. So you already know how to compute it.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드 27쪽 · 계산용 공식</span>
+    <p>선형성을 쓰면 계산하기 훨씬 편한 형태가 나와.</p>
+    <div class="eq">Var(<i>X</i>) = <i>E</i>[<i>X</i><sup>2</sup>] − (<i>E</i>[<i>X</i>])<sup>2</sup></div>
+    <p><strong>표준편차</strong>는 그 제곱근이야.</p>
+    <div class="eq" style="margin-bottom:0"><i>σ</i> = √Var(<i>X</i>) <span class="note">X 와 물리 단위가 같다</span></div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Slide 27 · the computational form</span>
+    <p>Linearity turns the definition into something far easier to evaluate.</p>
+    <div class="eq">Var(<i>X</i>) = <i>E</i>[<i>X</i><sup>2</sup>] − (<i>E</i>[<i>X</i>])<sup>2</sup></div>
+    <p>and the <strong>standard deviation</strong> is its square root.</p>
+    <div class="eq" style="margin-bottom:0"><i>σ</i> = √Var(<i>X</i>) <span class="note">it carries the same physical units as X</span></div>
+  </div>
+
+  <p lang="ko">유도는 세 줄이고, <strong>07번의 선형성만 쓰면 돼.</strong> 전개하고, <span class="m"><i>E</i>[<i>X</i>] = <i>μ</i></span>가 <em>상수</em>라는 걸 쓰면 끝이야.</p>
+  <p lang="en">The derivation is three lines and <strong>uses nothing but §07's linearity.</strong> Expand, then use the fact that <span class="m"><i>E</i>[<i>X</i>] = <i>μ</i></span> is a <em>constant</em>.</p>
+
+  <div class="eq"><i>E</i>[(<i>X</i> − <i>μ</i>)<sup>2</sup>] = <i>E</i>[<i>X</i><sup>2</sup> − 2<i>μX</i> + <i>μ</i><sup>2</sup>] = <i>E</i>[<i>X</i><sup>2</sup>] − 2<i>μ</i> <i>E</i>[<i>X</i>] + <i>μ</i><sup>2</sup> = <i>E</i>[<i>X</i><sup>2</sup>] − <i>μ</i><sup>2</sup></div>
+
+  <div class="callout" lang="ko">
+    <strong>05번 함정의 숫자가 여기서 정확히 되돌아와.</strong> <span class="m"><i>X</i></span>가 <span class="m">{1, 3}</span>에 반반일 때 <span class="m"><i>E</i>[<i>X</i><sup>2</sup>] = 5</span>, <span class="m">(<i>E</i>[<i>X</i>])<sup>2</sup> = 4</span>였지. 차이가 <span class="m">1</span>이고, 그게 <span class="m">Var(<i>X</i>)</span>야. 실제로 값이 평균에서 항상 <span class="m">1</span>만큼 떨어져 있으니 <span class="m"><i>E</i>[(<i>X</i>−2)<sup>2</sup>] = 1</span>. 맞아.<br><br>
+    <strong>그래서 <span class="m"><i>E</i>[<i>X</i><sup>2</sup>] ≥ (<i>E</i>[<i>X</i>])<sup>2</sup></span>는 언제나 참이야.</strong> 차이가 분산인데 분산은 제곱의 평균이라 음수가 될 수 없거든. <strong>05번에서 Jensen 부등식이라고 부른 게 이 특수한 경우야.</strong> 그리고 등호는 <span class="m">Var(<i>X</i>) = 0</span>일 때, 즉 <span class="m"><i>X</i></span>가 상수일 때만 성립해.
+  </div>
+  <div class="callout" lang="en">
+    <strong>The numbers from §05's trap come back exactly here.</strong> For <span class="m"><i>X</i></span> uniform on <span class="m">{1, 3}</span> you had <span class="m"><i>E</i>[<i>X</i><sup>2</sup>] = 5</span> and <span class="m">(<i>E</i>[<i>X</i>])<sup>2</sup> = 4</span>. The gap of <span class="m">1</span> is <span class="m">Var(<i>X</i>)</span>, and indeed the value is always <span class="m">1</span> away from the mean, so <span class="m"><i>E</i>[(<i>X</i>−2)<sup>2</sup>] = 1</span>. It checks out.<br><br>
+    <strong>Which makes <span class="m"><i>E</i>[<i>X</i><sup>2</sup>] ≥ (<i>E</i>[<i>X</i>])<sup>2</sup></span> always true</strong>, since the gap is a variance and a variance is an average of squares. <strong>Jensen's inequality from §05 is this, in its special case.</strong> Equality holds only when <span class="m">Var(<i>X</i>) = 0</span>, that is when <span class="m"><i>X</i></span> is a constant.
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 480 206" role="img" aria-label="Two densities with the same mean and different variances, with their standard deviations drawn as bars below the axis">
+      <line x1="30" y1="150" x2="455" y2="150" stroke="var(--rule)" stroke-width="1.2"/>
+      <polyline points="40,145.9 60,143.4 90,137.8 120,130.0 150,120.4 180,111.0 210,103.9 240,101.2 270,103.9 300,111.0 330,120.4 360,130.0 390,137.8 420,143.4 440,145.9" fill="none" stroke="var(--pink)" stroke-width="2.2" stroke-linejoin="round"/>
+      <polyline points="100,149.8 120,148.8 140,145.2 160,135.1 180,114.4 200,83.5 220,53.2 240,40.3 260,53.2 280,83.5 300,114.4 320,135.1 340,145.2 360,148.8 380,149.8" fill="none" stroke="var(--blue)" stroke-width="2.2" stroke-linejoin="round"/>
+      <line x1="240" y1="150" x2="240" y2="34" stroke="var(--violet)" stroke-width="1.4" stroke-dasharray="4 4"/>
+      <text class="svgtxt it" x="240" y="26" text-anchor="middle" style="fill:var(--violet)">μ</text>
+      <rect x="200" y="162" width="80" height="7" rx="3" fill="var(--blue)"/>
+      <rect x="150" y="180" width="180" height="7" rx="3" fill="var(--pink)"/>
+      <text class="svglab" x="288" y="169" style="fill:var(--blue)">σ = 0.8 · Var = 0.64</text>
+      <text class="svglab" x="338" y="187" style="fill:var(--pink)">σ = 1.8 · Var = 3.24</text>
+    </svg>
+    <figcaption lang="ko">두 밀도의 <strong>평균이 똑같아.</strong> 질량중심이 같은 자리야. 그런데 하나는 뾰족하고 하나는 퍼져 있어. <strong>평균만으로는 이 둘을 구분할 수 없어.</strong> 그게 분산이 필요한 이유고, 이 모듈이 평균 다음에 바로 분산으로 가는 이유야.<br><br>아래 막대가 <span class="m"><i>μ</i> ± <i>σ</i></span>야. <strong>표준편차를 쓰는 이유가 여기 보여.</strong> 분산은 <span class="m">0.64</span>와 <span class="m">3.24</span>인데 이 숫자를 가로축 위에 그릴 수가 없어. 단위가 다르거든. <span class="m"><i>σ</i></span>는 가로축과 같은 단위라 그릴 수 있어.</figcaption>
+    <figcaption lang="en">The two densities have <strong>the same mean.</strong> Same centre of mass. Yet one is sharp and one is spread out, so <strong>the mean alone cannot tell them apart.</strong> That is why variance exists and why this module goes straight from one to the other.<br><br>The bars below are <span class="m"><i>μ</i> ± <i>σ</i></span>, and they show why the standard deviation is the thing people quote. The variances are <span class="m">0.64</span> and <span class="m">3.24</span>, numbers you cannot draw on the horizontal axis at all, because their units are wrong. <span class="m"><i>σ</i></span> shares the axis's units, so it can be drawn.</figcaption>
+  </figure>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드 28~29쪽 · 분산의 성질</span>
+    <table>
+      <tr><th>성질</th><th>기댓값과 비교</th></tr>
+      <tr><td><span class="m">Var(<i>X</i>) ≥ 0</span></td><td>기댓값은 음수일 수 있다</td></tr>
+      <tr><td><span class="m">Var(<i>aX</i> + <i>b</i>) = <i>a</i><sup>2</sup> Var(<i>X</i>)</span></td><td><span class="m"><i>E</i>[<i>aX</i> + <i>b</i>] = <i>aE</i>[<i>X</i>] + <i>b</i></span></td></tr>
+      <tr><td><span class="m">Var(<i>X</i> + <i>b</i>) = Var(<i>X</i>)</span></td><td><span class="m"><i>E</i>[<i>X</i> + <i>b</i>] = <i>E</i>[<i>X</i>] + <i>b</i></span></td></tr>
+    </table>
+    <p style="margin-bottom:0">슬라이드가 둘을 나란히 놓고 비교해. <strong><span class="m"><i>b</i></span>는 분산에서 사라지고 <span class="m"><i>a</i></span>는 제곱이 돼.</strong> 상수를 더하는 건 평균을 옮길 뿐 퍼짐을 바꾸지 않고, 곱하는 건 퍼짐을 늘리는데 제곱이 붙는 건 분산이 <em>제곱된</em> 양이라서야.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Slides 28 and 29 · properties of variance</span>
+    <table>
+      <tr><th>property</th><th>compare with expectation</th></tr>
+      <tr><td><span class="m">Var(<i>X</i>) ≥ 0</span></td><td>an expectation may be negative</td></tr>
+      <tr><td><span class="m">Var(<i>aX</i> + <i>b</i>) = <i>a</i><sup>2</sup> Var(<i>X</i>)</span></td><td><span class="m"><i>E</i>[<i>aX</i> + <i>b</i>] = <i>aE</i>[<i>X</i>] + <i>b</i></span></td></tr>
+      <tr><td><span class="m">Var(<i>X</i> + <i>b</i>) = Var(<i>X</i>)</span></td><td><span class="m"><i>E</i>[<i>X</i> + <i>b</i>] = <i>E</i>[<i>X</i>] + <i>b</i></span></td></tr>
+    </table>
+    <p style="margin-bottom:0">The slides set the two side by side. <strong>The <span class="m"><i>b</i></span> vanishes from the variance and the <span class="m"><i>a</i></span> gets squared.</strong> Adding a constant moves the mean without touching the spread; multiplying scales the spread, and the square appears because variance is a <em>squared</em> quantity.</p>
+  </div>
+
+  <div class="trap" lang="ko">
+    <span class="tag">함정</span>
+    <h4><span class="m">Var(<i>aX</i>) = <i>a</i> Var(<i>X</i>)</span>라고 쓴다</h4>
+    <p>선형성에 익숙해져서 저지르는 실수야. <strong>분산은 선형이 아니야.</strong> 단위로 검산하면 바로 걸려. <span class="m"><i>X</i></span>가 초 단위면 <span class="m">Var</span>는 초²이야. <span class="m">2<i>X</i></span>의 분산은 <span class="m">(2초)² = 4</span>초²이지 <span class="m">2</span>초²일 수 없어.</p>
+    <h4><span class="m">Var(<i>X</i> + <i>Y</i>) = Var(<i>X</i>) + Var(<i>Y</i>)</span>를 무조건 쓴다</h4>
+    <p><strong>이건 독립(정확히는 무상관)일 때만 성립해.</strong> 07번의 선형성은 조건이 없었지만 분산은 달라. 극단적인 예로 <span class="m"><i>Y</i> = −<i>X</i></span>면 <span class="m"><i>X</i> + <i>Y</i> = 0</span>이라 분산이 <span class="m">0</span>인데, <span class="m">Var(<i>X</i>) + Var(<i>Y</i>) = 2Var(<i>X</i>)</span>야. <strong>기댓값은 공짜고 분산은 아니다</strong>를 여기서 한 번 더 확인해.</p>
+    <h4>표준편차를 더한다</h4>
+    <p style="margin-bottom:0">독립이어도 <span class="m"><i>σ</i><sub><i>X</i>+<i>Y</i></sub> ≠ <i>σ<sub>X</sub></i> + <i>σ<sub>Y</sub></i></span>야. 더해지는 건 <strong>분산</strong>이고, 표준편차는 그걸 더한 뒤에 제곱근을 씌우는 거야. <span class="m">√(<i>σ<sub>X</sub></i><sup>2</sup> + <i>σ<sub>Y</sub></i><sup>2</sup>)</span>. 직각삼각형의 빗변 같은 모양이고, 실제로 그 비유가 나중에 (교재 §3.2의 직교성 원리에서) 정확한 뜻을 얻게 돼.</p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Traps</span>
+    <h4>Writing <span class="m">Var(<i>aX</i>) = <i>a</i> Var(<i>X</i>)</span></h4>
+    <p>The slip you make once you are used to linearity. <strong>Variance is not linear.</strong> A units check catches it immediately: if <span class="m"><i>X</i></span> is in seconds then <span class="m">Var</span> is in seconds², so the variance of <span class="m">2<i>X</i></span> has to be <span class="m">(2 s)² = 4</span> s², never <span class="m">2</span> s².</p>
+    <h4>Using <span class="m">Var(<i>X</i> + <i>Y</i>) = Var(<i>X</i>) + Var(<i>Y</i>)</span> unconditionally</h4>
+    <p><strong>It holds only when they are independent, or more precisely uncorrelated.</strong> §07's linearity carried no condition; variance does. In the extreme case <span class="m"><i>Y</i> = −<i>X</i></span> gives <span class="m"><i>X</i> + <i>Y</i> = 0</span> with variance <span class="m">0</span>, while <span class="m">Var(<i>X</i>) + Var(<i>Y</i>) = 2Var(<i>X</i>)</span>. <strong>Expectation is free and variance is not</strong>, confirmed once more.</p>
+    <h4>Adding standard deviations</h4>
+    <p style="margin-bottom:0">Even with independence, <span class="m"><i>σ</i><sub><i>X</i>+<i>Y</i></sub> ≠ <i>σ<sub>X</sub></i> + <i>σ<sub>Y</sub></i></span>. What adds is the <strong>variance</strong>; the standard deviation is the square root taken afterwards, <span class="m">√(<i>σ<sub>X</sub></i><sup>2</sup> + <i>σ<sub>Y</sub></i><sup>2</sup>)</span>. It looks like the hypotenuse of a right triangle, and that analogy later acquires a precise meaning in the orthogonality principle of textbook §3.2.</p>
+  </div>
+</section>
+
+<!-- ══ 10 ══ -->
+<section id="s10">
+  <div class="sec-head" data-slide="30-35"><span class="sec-num">10</span><h2 lang="ko">분포별 평균과 분산</h2><h2 lang="en">The distribution table</h2></div>
+  <p class="sec-sub" lang="ko">외울 건 외우되, 왜 그 값인지 감각도 같이 챙긴다.</p>
+  <p class="sec-sub" lang="en">Memorise what needs memorising, but carry the intuition with it.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드 30~33쪽</span>
+    <table>
+      <tr><th>분포</th><th><span class="m"><i>E</i>[<i>X</i>]</span></th><th>Var</th><th>감각</th></tr>
+      <tr><td>Gaussian <span class="m"><i>N</i>(<i>μ</i>, <i>σ</i><sup>2</sup>)</span></td><td><span class="m"><i>μ</i></span></td><td><span class="m"><i>σ</i><sup>2</sup></span></td><td>파라미터가 곧 답이다</td></tr>
+      <tr><td>Poisson <span class="m">Poisson(<i>λ</i>)</span></td><td><span class="m"><i>λ</i></span></td><td><span class="m"><i>λ</i></span></td><td><strong>둘이 같다.</strong> 이게 Poisson의 지문이다</td></tr>
+      <tr><td>Exponential <span class="m">Exp(<i>λ</i>)</span></td><td><span class="m">1/<i>λ</i></span></td><td><span class="m">1/<i>λ</i><sup>2</sup></span></td><td><span class="m"><i>σ</i> = <i>E</i>[<i>X</i>]</span>. 꼬리가 길다</td></tr>
+      <tr><td>Bernoulli <span class="m">Bernoulli(<i>p</i>)</span></td><td><span class="m"><i>p</i></span></td><td><span class="m"><i>p</i>(1−<i>p</i>)</span></td><td><span class="m"><i>p</i> = 1/2</span>에서 분산 최대</td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>Bernoulli의 평균이 <span class="m"><i>p</i></span>인 건 06번의 직접적인 결과야.</strong> Bernoulli 확률변수가 곧 지시함수거든. <span class="m"><i>E</i>[1<sub><i>A</i></sub>] = <i>P</i>(<i>A</i>)</span>.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Slides 30 to 33</span>
+    <table>
+      <tr><th>distribution</th><th><span class="m"><i>E</i>[<i>X</i>]</span></th><th>Var</th><th>intuition</th></tr>
+      <tr><td>Gaussian <span class="m"><i>N</i>(<i>μ</i>, <i>σ</i><sup>2</sup>)</span></td><td><span class="m"><i>μ</i></span></td><td><span class="m"><i>σ</i><sup>2</sup></span></td><td>the parameters are the answer</td></tr>
+      <tr><td>Poisson <span class="m">Poisson(<i>λ</i>)</span></td><td><span class="m"><i>λ</i></span></td><td><span class="m"><i>λ</i></span></td><td><strong>they are equal</strong>, which is Poisson's fingerprint</td></tr>
+      <tr><td>Exponential <span class="m">Exp(<i>λ</i>)</span></td><td><span class="m">1/<i>λ</i></span></td><td><span class="m">1/<i>λ</i><sup>2</sup></span></td><td><span class="m"><i>σ</i> = <i>E</i>[<i>X</i>]</span>: a long tail</td></tr>
+      <tr><td>Bernoulli <span class="m">Bernoulli(<i>p</i>)</span></td><td><span class="m"><i>p</i></span></td><td><span class="m"><i>p</i>(1−<i>p</i>)</span></td><td>variance is largest at <span class="m"><i>p</i> = 1/2</span></td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>Bernoulli having mean <span class="m"><i>p</i></span> is a direct consequence of §06</strong>, because a Bernoulli random variable <em>is</em> an indicator: <span class="m"><i>E</i>[1<sub><i>A</i></sub>] = <i>P</i>(<i>A</i>)</span>.</p>
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">교재가 더 주는 것 (Hajek §1.6)</span>
+    <p>교재 §1.6이 같은 표를 더 길게 실어놨어. 슬라이드에 없지만 시험에 나올 수 있는 것들이야.</p>
+    <table>
+      <tr><th>분포</th><th><span class="m"><i>E</i>[<i>X</i>]</span></th><th>Var</th><th>메모</th></tr>
+      <tr><td>Binomial <span class="m">Bi(<i>n</i>, <i>p</i>)</span></td><td><span class="m"><i>np</i></span></td><td><span class="m"><i>np</i>(1−<i>p</i>)</span></td><td>Bernoulli <span class="m"><i>n</i></span>개의 합. <a href="#s7">07번 선형성</a>으로 평균이 즉시 나온다</td></tr>
+      <tr><td>Geometric <span class="m">Geo(<i>p</i>)</span></td><td><span class="m">1/<i>p</i></span></td><td><span class="m">(1−<i>p</i>)/<i>p</i><sup>2</sup></span></td><td>Exp의 이산판. HW3 P2</td></tr>
+      <tr><td>Uniform <span class="m"><i>U</i>(<i>a</i>, <i>b</i>)</span></td><td><span class="m">(<i>a</i>+<i>b</i>)/2</span></td><td><span class="m">(<i>b</i>−<i>a</i>)<sup>2</sup>/12</span></td><td>평균은 대칭축. 분산에 <span class="m">12</span>가 나오는 건 외워두면 편하다</td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>대조해봤더니 슬라이드 네 줄은 교재와 정확히 일치해.</strong> 값도 표기도 다르지 않아. 다만 교재는 Gaussian에서 <span class="m"><i>Q</i>(<i>c</i>) = 1 − <i>Φ</i>(<i>c</i>)</span>라는 보조 기호를 더 쓰는데, 통신 쪽에서 오류율을 적을 때 계속 나오니 알아두면 좋아.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">What the textbook adds (Hajek §1.6)</span>
+    <p>§1.6 carries a longer version of the same table. These are not on the slides but can show up on an exam.</p>
+    <table>
+      <tr><th>distribution</th><th><span class="m"><i>E</i>[<i>X</i>]</span></th><th>Var</th><th>note</th></tr>
+      <tr><td>Binomial <span class="m">Bi(<i>n</i>, <i>p</i>)</span></td><td><span class="m"><i>np</i></span></td><td><span class="m"><i>np</i>(1−<i>p</i>)</span></td><td>a sum of <span class="m"><i>n</i></span> Bernoullis, so <a href="#s7">§07's linearity</a> gives the mean instantly</td></tr>
+      <tr><td>Geometric <span class="m">Geo(<i>p</i>)</span></td><td><span class="m">1/<i>p</i></span></td><td><span class="m">(1−<i>p</i>)/<i>p</i><sup>2</sup></span></td><td>the discrete exponential; HW3 P2</td></tr>
+      <tr><td>Uniform <span class="m"><i>U</i>(<i>a</i>, <i>b</i>)</span></td><td><span class="m">(<i>a</i>+<i>b</i>)/2</span></td><td><span class="m">(<i>b</i>−<i>a</i>)<sup>2</sup>/12</span></td><td>the mean is the axis of symmetry, and the <span class="m">12</span> is worth memorising</td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>Checked against the book, the slides' four rows match exactly</strong>, in values and in notation. The one addition is that Hajek also uses <span class="m"><i>Q</i>(<i>c</i>) = 1 − <i>Φ</i>(<i>c</i>)</span> for the Gaussian, which is worth knowing since error rates in communications are written with it constantly.</p>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>슬라이드 34~35쪽이 물리 단위 이야기를 해.</strong> <span class="m"><i>X</i></span>가 초 단위 지연이면 <span class="m"><i>E</i>[<i>X</i>]</span>는 초, <span class="m">Var(<i>X</i>)</span>는 <strong>초<sup>2</sup></strong>야. 그래서 <span class="m"><i>σ</i></span>가 다시 초가 되고, 그게 <em>"표준편차가 분산보다 물리적으로 해석하기 쉬운 이유"</em>라고 슬라이드가 적어.<br><br>
+    <strong>단위 검산은 이 과목에서 가장 값싼 검산법이야.</strong> 공식을 하나 썼는데 양변의 단위가 안 맞으면 그냥 틀린 거야. 09번의 <span class="m">Var(<i>aX</i>) = <i>a</i><sup>2</sup>Var(<i>X</i>)</span>도 단위만 보면 <span class="m"><i>a</i><sup>2</sup></span>일 수밖에 없다는 게 바로 보이고, 위 표의 <span class="m">Exp(<i>λ</i>)</span>에서 <span class="m"><i>λ</i></span>가 <span class="m">1/</span>초이니 <span class="m"><i>E</i> = 1/<i>λ</i></span>가 초, <span class="m">Var = 1/<i>λ</i><sup>2</sup></span>가 초<sup>2</sup>인 것도 자동으로 맞아떨어져.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Slides 34 and 35 are about physical units.</strong> If <span class="m"><i>X</i></span> is a delay in seconds then <span class="m"><i>E</i>[<i>X</i>]</span> is in seconds and <span class="m">Var(<i>X</i>)</span> is in <strong>seconds<sup>2</sup></strong>, which puts <span class="m"><i>σ</i></span> back in seconds. The slides call that <em>"one reason standard deviation is often easier to interpret physically than variance."</em><br><br>
+    <strong>A units check is the cheapest check available in this course.</strong> If the two sides of a formula do not carry the same units, the formula is wrong, full stop. Units alone force the <span class="m"><i>a</i><sup>2</sup></span> in <span class="m">Var(<i>aX</i>) = <i>a</i><sup>2</sup>Var(<i>X</i>)</span>, and in the table above, <span class="m"><i>λ</i></span> being in <span class="m">1/</span>seconds automatically makes <span class="m"><i>E</i> = 1/<i>λ</i></span> seconds and <span class="m">Var = 1/<i>λ</i><sup>2</sup></span> seconds<sup>2</sup>.
+  </div>
+
+  <div class="ex" lang="ko">
+    <span class="tag">예제 10.1 · Bernoulli 의 분산이 왜 <span class="m"><i>p</i>(1−<i>p</i>)</span>인가</span>
+    <p>표를 외우는 것보다 한 번 유도해두는 게 오래가. <span class="m"><i>X</i> ~ Bernoulli(<i>p</i>)</span>의 평균과 분산을 구해. 그리고 분산이 최대가 되는 <span class="m"><i>p</i></span>를 찾아.</p>
+    <details>
+      <summary>풀이 보기</summary>
+      <div class="body">
+        <p><span class="m"><i>X</i></span>는 <span class="m">1</span>을 확률 <span class="m"><i>p</i></span>로, <span class="m">0</span>을 확률 <span class="m">1−<i>p</i></span>로 가져.</p>
+        <div class="eq"><i>E</i>[<i>X</i>] = 1 · <i>p</i> + 0 · (1−<i>p</i>) = <i>p</i></div>
+        <p><strong>여기서 요령 하나.</strong> <span class="m"><i>X</i></span>가 <span class="m">0</span> 아니면 <span class="m">1</span>이라 <span class="m"><i>X</i><sup>2</sup> = <i>X</i></span>야. 그러니까 <span class="m"><i>E</i>[<i>X</i><sup>2</sup>] = <i>E</i>[<i>X</i>] = <i>p</i></span>. 계산할 게 없어.</p>
+        <div class="eq">Var(<i>X</i>) = <i>E</i>[<i>X</i><sup>2</sup>] − (<i>E</i>[<i>X</i>])<sup>2</sup> = <i>p</i> − <i>p</i><sup>2</sup> = <i>p</i>(1 − <i>p</i>)</div>
+        <p><strong>최대는 <span class="m"><i>p</i> = 1/2</span></strong>에서 <span class="m">1/4</span>이야. 미분해도 되고, <span class="m"><i>p</i>(1−<i>p</i>)</span>가 <span class="m"><i>p</i> = 0</span>과 <span class="m"><i>p</i> = 1</span>에서 0인 포물선이라 꼭짓점이 가운데라고 봐도 돼.</p>
+        <p style="margin-bottom:0"><strong>말이 되는지 확인해.</strong> <span class="m"><i>p</i> = 0</span>이나 <span class="m"><i>p</i> = 1</span>이면 결과가 확정이라 <span class="m"><i>X</i></span>가 상수야. 상수의 분산은 0이지. <strong>가장 예측하기 어려운 건 공정한 동전이고</strong>, 그때 분산이 최대야. 이 감각은 정보이론의 엔트로피와도 같은 모양이고, ECE 411에서 봤던 분기 예측기가 왜 50:50 분기에서 제일 애를 먹는지와도 같은 이야기야.</p>
+      </div>
+    </details>
+  </div>
+  <div class="ex" lang="en">
+    <span class="tag">Example 10.1 · why a Bernoulli has variance <span class="m"><i>p</i>(1−<i>p</i>)</span></span>
+    <p>Deriving it once beats memorising the row. Find the mean and variance of <span class="m"><i>X</i> ~ Bernoulli(<i>p</i>)</span>, then find the <span class="m"><i>p</i></span> that maximises the variance.</p>
+    <details>
+      <summary>show the solution</summary>
+      <div class="body">
+        <p><span class="m"><i>X</i></span> takes <span class="m">1</span> with probability <span class="m"><i>p</i></span> and <span class="m">0</span> with probability <span class="m">1−<i>p</i></span>.</p>
+        <div class="eq"><i>E</i>[<i>X</i>] = 1 · <i>p</i> + 0 · (1−<i>p</i>) = <i>p</i></div>
+        <p><strong>Here is the trick.</strong> Since <span class="m"><i>X</i></span> is either <span class="m">0</span> or <span class="m">1</span>, <span class="m"><i>X</i><sup>2</sup> = <i>X</i></span>, so <span class="m"><i>E</i>[<i>X</i><sup>2</sup>] = <i>E</i>[<i>X</i>] = <i>p</i></span> with nothing left to compute.</p>
+        <div class="eq">Var(<i>X</i>) = <i>E</i>[<i>X</i><sup>2</sup>] − (<i>E</i>[<i>X</i>])<sup>2</sup> = <i>p</i> − <i>p</i><sup>2</sup> = <i>p</i>(1 − <i>p</i>)</div>
+        <p><strong>The maximum is at <span class="m"><i>p</i> = 1/2</span></strong>, where it equals <span class="m">1/4</span>. Differentiate, or notice that <span class="m"><i>p</i>(1−<i>p</i>)</span> is a parabola vanishing at <span class="m"><i>p</i> = 0</span> and <span class="m"><i>p</i> = 1</span>, so its vertex is in the middle.</p>
+        <p style="margin-bottom:0"><strong>Sanity check it.</strong> At <span class="m"><i>p</i> = 0</span> or <span class="m"><i>p</i> = 1</span> the outcome is certain and <span class="m"><i>X</i></span> is a constant, whose variance is zero. <strong>The hardest thing to predict is a fair coin</strong>, and that is where the variance peaks. The shape is the same one entropy has in information theory, and it is the same story as why a branch predictor struggles most on a 50:50 branch.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ══ 11 ══ -->
+<section id="s11">
+  <div class="sec-head" data-slide="36-38"><span class="sec-num">11</span><h2 lang="ko">적률, 그리고 없을 때</h2><h2 lang="en">Moments, and when they fail</h2></div>
+  <p class="sec-sub" lang="ko">평균과 분산을 같은 틀 안에 넣는다. 그리고 그 틀이 깨지는 경우를 본다.</p>
+  <p class="sec-sub" lang="en">Putting mean and variance into one frame, then watching the frame break.</p>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드 36~37쪽</span>
+    <p><span class="m"><i>n</i></span>차 <strong>원점적률(raw moment)</strong>은 <span class="m"><i>E</i>[<i>X<sup>n</sup></i>]</span>, <span class="m"><i>n</i></span>차 <strong>중심적률(central moment)</strong>은 <span class="m"><i>E</i>[(<i>X</i> − <i>E</i>[<i>X</i>])<sup><i>n</i></sup>]</span>이야.</p>
+    <table>
+      <tr><th>식</th><th>이름</th></tr>
+      <tr><td><span class="m"><i>E</i>[<i>X</i>]</span></td><td>1차 적률 = 평균</td></tr>
+      <tr><td><span class="m"><i>E</i>[<i>X</i><sup>2</sup>]</span></td><td>2차 원점적률</td></tr>
+      <tr><td><span class="m"><i>E</i>[(<i>X</i> − <i>E</i>[<i>X</i>])<sup>2</sup>]</span></td><td>2차 중심적률 = 분산</td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>전부 05번의 <span class="m"><i>E</i>[<i>g</i>(<i>X</i>)]</span>야.</strong> <span class="m"><i>g</i></span>를 바꿔 끼우는 것뿐이고, 이 모듈에 새 계산법이 등장하지 않는다는 걸 여기서 확인하게 돼.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Slides 36 and 37</span>
+    <p>The <span class="m"><i>n</i></span>-th <strong>raw moment</strong> is <span class="m"><i>E</i>[<i>X<sup>n</sup></i>]</span> and the <span class="m"><i>n</i></span>-th <strong>central moment</strong> is <span class="m"><i>E</i>[(<i>X</i> − <i>E</i>[<i>X</i>])<sup><i>n</i></sup>]</span>.</p>
+    <table>
+      <tr><th>expression</th><th>name</th></tr>
+      <tr><td><span class="m"><i>E</i>[<i>X</i>]</span></td><td>first moment, the mean</td></tr>
+      <tr><td><span class="m"><i>E</i>[<i>X</i><sup>2</sup>]</span></td><td>second raw moment</td></tr>
+      <tr><td><span class="m"><i>E</i>[(<i>X</i> − <i>E</i>[<i>X</i>])<sup>2</sup>]</span></td><td>second central moment, the variance</td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>Every one of them is §05's <span class="m"><i>E</i>[<i>g</i>(<i>X</i>)]</span></strong> with a different <span class="m"><i>g</i></span> plugged in, which is the moment you notice that no new machinery appeared anywhere in this module.</p>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>왜 적률을 계속 세냐면, 하나씩 더 가져갈수록 분포를 더 많이 복원하기 때문이야.</strong> 1차는 중심, 2차는 퍼짐, 3차는 비대칭(왜도), 4차는 꼬리의 두께(첨도). <strong>충분히 많이 모으면 원래 분포를 되찾을 수 있는 경우도 있어.</strong><br><br>
+    그걸 한 번에 담는 도구가 <strong>특성함수(characteristic function)</strong> <span class="m"><i>Φ<sub>X</sub></i>(<i>u</i>) = <i>E</i>[<i>e</i><sup><i>juX</i></sup>]</span>고, 교재 §1.5 끝에 나와. <span class="m"><i>Φ<sub>X</sub></i></span>를 <span class="m"><i>u</i> = 0</span>에서 <span class="m"><i>k</i></span>번 미분하면 <span class="m"><i>j<sup>k</sup>E</i>[<i>X<sup>k</sup></i>]</span>가 나와서, <strong>적률 전부를 함수 하나가 들고 있어.</strong> 그리고 두 확률변수는 특성함수가 같을 때만 분포가 같아. <strong>강의계획서의 과목 주제 목록이 "mean, variance, moments, characteristic functions" 순서라 이게 다음 순서일 가능성이 높아.</strong> 슬라이드가 나오기 전이라 여기까지만 적어둘게.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Moments keep going because each one recovers a little more of the distribution.</strong> The first gives the centre, the second the spread, the third the asymmetry (skewness), the fourth the heaviness of the tails (kurtosis). <strong>Collect enough of them and in many cases the distribution itself comes back.</strong><br><br>
+    The object that packages them all is the <strong>characteristic function</strong> <span class="m"><i>Φ<sub>X</sub></i>(<i>u</i>) = <i>E</i>[<i>e</i><sup><i>juX</i></sup>]</span>, at the end of textbook §1.5. Differentiating <span class="m"><i>Φ<sub>X</sub></i></span> <span class="m"><i>k</i></span> times at <span class="m"><i>u</i> = 0</span> gives <span class="m"><i>j<sup>k</sup>E</i>[<i>X<sup>k</sup></i>]</span>, so <strong>one function carries every moment</strong>, and two random variables have the same distribution exactly when their characteristic functions agree. <strong>The syllabus lists the course topics as "mean, variance, moments, characteristic functions," so this is the likely next step.</strong> No slides yet, so that is as far as this note goes.
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">슬라이드 38쪽 · 기술적인 단서</span>
+    <p><strong>모든 확률변수가 유한한 기댓값을 갖는 건 아니야.</strong> 슬라이드가 예로 <span class="m"><i>E</i>[1/<i>X</i>]</span>, <span class="m"><i>X</i> ~ <i>U</i>(0, 1)</span>을 들어.</p>
+    <p>충분조건은 <strong>절댓값의 적분이 유한</strong>한 것.</p>
+    <div class="eq">∫<sub>−∞</sub><sup>∞</sup> |<i>x</i>| <i>f<sub>X</sub></i>(<i>x</i>) d<i>x</i> &lt; ∞, &nbsp;&nbsp; ∑<sub><i>x</i></sub> |<i>x</i>| <i>p<sub>X</sub></i>(<i>x</i>) &lt; ∞</div>
+    <p style="margin-bottom:0">슬라이드가 덧붙여. <em>이 과목의 대부분에서 <span class="m"><i>E</i>[<i>X</i>]</span>라고 쓸 때는 그것이 잘 정의되고 유한하다고 암묵적으로 가정한다.</em></p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Slide 38 · a technical remark</span>
+    <p><strong>Not every random variable has a finite expectation.</strong> The slide's example is <span class="m"><i>E</i>[1/<i>X</i>]</span> for <span class="m"><i>X</i> ~ <i>U</i>(0, 1)</span>.</p>
+    <p>A sufficient condition is that the <strong>integral of the absolute value</strong> is finite.</p>
+    <div class="eq">∫<sub>−∞</sub><sup>∞</sup> |<i>x</i>| <i>f<sub>X</sub></i>(<i>x</i>) d<i>x</i> &lt; ∞, &nbsp;&nbsp; ∑<sub><i>x</i></sub> |<i>x</i>| <i>p<sub>X</sub></i>(<i>x</i>) &lt; ∞</div>
+    <p style="margin-bottom:0">And the slide adds: <em>throughout most of this course, when we write <span class="m"><i>E</i>[<i>X</i>]</span> we implicitly assume the expectation is well defined and finite.</em></p>
+  </div>
+
+  <div class="ex" lang="ko">
+    <span class="tag">예제 11.1 · 슬라이드의 예를 확인해보기</span>
+    <p><span class="m"><i>X</i> ~ <i>U</i>(0, 1)</span>이고 <span class="m"><i>Y</i> = 1/<i>X</i></span>야. <span class="m"><i>E</i>[<i>Y</i>]</span>가 왜 무한대인지 계산으로 확인해. 그리고 <span class="m"><i>Y</i></span>가 <strong>확률 1로 유한한</strong> 값이라는 것도 같이 확인해.</p>
+    <details>
+      <summary>풀이 보기</summary>
+      <div class="body">
+        <p>05번의 <span class="m"><i>E</i>[<i>g</i>(<i>X</i>)]</span>를 쓰면 돼. <span class="m"><i>f<sub>X</sub></i>(<i>x</i>) = 1</span>, <span class="m">0 &lt; <i>x</i> &lt; 1</span>이니까</p>
+        <div class="eq"><i>E</i>[1/<i>X</i>] = ∫<sub>0</sub><sup>1</sup> (1/<i>x</i>) · 1 d<i>x</i> = [ln <i>x</i>]<sub>0</sub><sup>1</sup> = 0 − (−∞) = ∞</div>
+        <p><strong>발산의 원인이 어디인지가 중요해.</strong> <span class="m"><i>x</i> = 1</span> 쪽이 아니라 <span class="m"><i>x</i> = 0</span> 쪽이야. <span class="m"><i>X</i></span>가 0에 아주 가까울 확률은 작지만, 그때 <span class="m">1/<i>X</i></span>가 <strong>확률이 작아지는 것보다 더 빨리</strong> 커져. 그래서 곱이 안 죽어.</p>
+        <p><strong>그런데 <span class="m"><i>Y</i></span>는 언제나 유한해.</strong> <span class="m"><i>P</i>(<i>X</i> = 0) = 0</span>이니까 <span class="m"><i>Y</i> = 1/<i>X</i></span>는 확률 1로 잘 정의된 유한한 값이야. <strong>"확률변수가 항상 유한하다"와 "그 평균이 유한하다"는 완전히 다른 얘기야.</strong> 이게 이 슬라이드의 진짜 요점이야.</p>
+        <p style="margin-bottom:0"><strong>반대 방향도 확인해보면 좋아.</strong> <span class="m"><i>Y</i> = 1/√<i>X</i></span>였다면 <span class="m">∫<sub>0</sub><sup>1</sup> <i>x</i><sup>−1/2</sup> d<i>x</i> = 2</span>로 <strong>유한해.</strong> 같은 "0 근처에서 폭발"인데 속도가 느려서 살아남는 거야. <span class="m"><i>x</i><sup>−<i>α</i></sup></span>는 <span class="m"><i>α</i> &lt; 1</span>이면 적분 가능하고 <span class="m"><i>α</i> ≥ 1</span>이면 아니야. <a href="L07-functions-of-random-variables.html#s5">Module 7 §05</a>에서 <span class="m">1/(2√<i>y</i>)</span>가 발산해도 괜찮다고 한 게 정확히 <span class="m"><i>α</i> = 1/2</span>인 경우야.</p>
+      </div>
+    </details>
+  </div>
+  <div class="ex" lang="en">
+    <span class="tag">Example 11.1 · checking the slide's example</span>
+    <p><span class="m"><i>X</i> ~ <i>U</i>(0, 1)</span> and <span class="m"><i>Y</i> = 1/<i>X</i></span>. Verify by computation why <span class="m"><i>E</i>[<i>Y</i>]</span> is infinite, and also verify that <span class="m"><i>Y</i></span> is <strong>finite with probability 1</strong>.</p>
+    <details>
+      <summary>show the solution</summary>
+      <div class="body">
+        <p>Use §05's <span class="m"><i>E</i>[<i>g</i>(<i>X</i>)]</span>. With <span class="m"><i>f<sub>X</sub></i>(<i>x</i>) = 1</span> on <span class="m">0 &lt; <i>x</i> &lt; 1</span>,</p>
+        <div class="eq"><i>E</i>[1/<i>X</i>] = ∫<sub>0</sub><sup>1</sup> (1/<i>x</i>) · 1 d<i>x</i> = [ln <i>x</i>]<sub>0</sub><sup>1</sup> = 0 − (−∞) = ∞</div>
+        <p><strong>Where the divergence comes from matters.</strong> It is the <span class="m"><i>x</i> = 0</span> end, not <span class="m"><i>x</i> = 1</span>. The probability of <span class="m"><i>X</i></span> being very close to zero is small, but <span class="m">1/<i>X</i></span> grows <strong>faster than that probability shrinks</strong>, so the product never dies out.</p>
+        <p><strong>And yet <span class="m"><i>Y</i></span> is always finite.</strong> Since <span class="m"><i>P</i>(<i>X</i> = 0) = 0</span>, <span class="m"><i>Y</i> = 1/<i>X</i></span> is a well-defined finite number with probability 1. <strong>"The random variable is always finite" and "its mean is finite" are entirely different claims</strong>, and that is the real content of this slide.</p>
+        <p style="margin-bottom:0"><strong>Test the other direction too.</strong> Had it been <span class="m"><i>Y</i> = 1/√<i>X</i></span>, then <span class="m">∫<sub>0</sub><sup>1</sup> <i>x</i><sup>−1/2</sup> d<i>x</i> = 2</span>, perfectly <strong>finite.</strong> Same blow-up near zero, slow enough to survive. In general <span class="m"><i>x</i><sup>−<i>α</i></sup></span> is integrable for <span class="m"><i>α</i> &lt; 1</span> and not for <span class="m"><i>α</i> ≥ 1</span>. When <a href="L07-functions-of-random-variables.html#s5">Module 7 §05</a> said an unbounded <span class="m">1/(2√<i>y</i>)</span> was fine, that was exactly the <span class="m"><i>α</i> = 1/2</span> case.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ══ 12 ══ -->
+<section id="s12">
+  <div class="sec-head"><span class="sec-num">12</span><h2 lang="ko">교재가 더 주는 것</h2><h2 lang="en">What the textbook adds</h2></div>
+  <p class="sec-sub" lang="ko">슬라이드에는 없지만 §1.5 안에 있고, 시험에서 쓸모가 있다.</p>
+  <p class="sec-sub" lang="en">Not on the slides, sitting inside §1.5, and useful on an exam.</p>
+
+  <div class="trap" lang="ko">
+    <span class="tag">슬라이드 밖 내용</span>
+    <p style="margin-bottom:0">이 섹션은 전부 Hajek §1.5에서 가져온 거야. <strong>시험은 슬라이드 기준이니 여기 있는 걸 몰라서 틀리는 일은 없어.</strong> 다만 이름을 알면 다른 책과 논문이 읽히고, 꼬리 적분 공식은 계산을 실제로 줄여줘. <strong>강의가 나중에 다루면 그쪽 표기를 기준으로 삼아.</strong></p>
+  </div>
+  <div class="trap" lang="en">
+    <span class="tag">Beyond the slides</span>
+    <p style="margin-bottom:0">Everything here comes from Hajek §1.5. <strong>Exams follow the slides, so nothing in this section can cost you a mark by being unknown.</strong> Knowing the names makes other books and papers readable, and the tail-integral formula genuinely shortens calculations. <strong>If the lecture covers any of it later, follow the lecture's notation.</strong></p>
+  </div>
+
+  <h3 lang="ko">이름이 있다: LOTUS</h3>
+  <h3 lang="en">It has a name: LOTUS</h3>
+  <p lang="ko">05번의 <span class="m"><i>E</i>[<i>g</i>(<i>X</i>)] = ∫<i>g</i>(<i>x</i>)<i>f<sub>X</sub></i>(<i>x</i>)d<i>x</i></span>에는 표준적인 이름이 있어. 교재는 성질 E.5로 적으면서 <strong>Law of the unconscious statistician (LOTUS)</strong>라고 불러. 슬라이드는 이름을 안 붙이고 넘어가.</p>
+  <p lang="en">§05's <span class="m"><i>E</i>[<i>g</i>(<i>X</i>)] = ∫<i>g</i>(<i>x</i>)<i>f<sub>X</sub></i>(<i>x</i>)d<i>x</i></span> has a standard name. The textbook lists it as property E.5 and calls it the <strong>law of the unconscious statistician (LOTUS)</strong>. The slides use it without naming it.</p>
+  <p lang="ko"><strong>이름이 농담이야.</strong> "무의식적인 통계학자"란, <span class="m"><i>Y</i></span>의 분포를 구해야 한다는 생각조차 없이 <span class="m"><i>g</i></span>를 적분 안에 그냥 끼워 넣는 사람을 가리켜. 그런데 그게 맞는 방법이라서 붙은 이름이야. <strong>05번에서 "지름길"이라고 부른 게 정확히 이거고, 이 이름은 논문이나 다른 교재에서 자주 나와.</strong></p>
+  <p lang="en"><strong>The name is a joke.</strong> The "unconscious statistician" is the person who drops <span class="m"><i>g</i></span> inside the integral without it ever occurring to them that the distribution of <span class="m"><i>Y</i></span> might be needed. The name stuck because that move is correct. <strong>It is precisely what §05 called the shortcut, and you will meet the name in papers and other textbooks.</strong></p>
+
+  <h3 lang="ko">꼬리 적분 공식 (E.6)</h3>
+  <h3 lang="en">The tail-integral formula (E.6)</h3>
+  <div class="def" lang="ko">
+    <span class="tag">Hajek §1.5, 성질 E.6</span>
+    <div class="eq"><i>E</i>[<i>X</i>] = ∫<sub>0</sub><sup>∞</sup> (1 − <i>F<sub>X</sub></i>(<i>x</i>)) d<i>x</i> − ∫<sub>−∞</sub><sup>0</sup> <i>F<sub>X</sub></i>(<i>x</i>) d<i>x</i></div>
+    <p style="margin-bottom:0"><span class="m"><i>X</i> ≥ 0</span>이면 뒤 항이 사라져서 <strong>한 줄이 돼.</strong></p>
+    <div class="eq" style="margin-bottom:0"><i>E</i>[<i>X</i>] = ∫<sub>0</sub><sup>∞</sup> <i>P</i>(<i>X</i> &gt; <i>x</i>) d<i>x</i></div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Hajek §1.5, property E.6</span>
+    <div class="eq"><i>E</i>[<i>X</i>] = ∫<sub>0</sub><sup>∞</sup> (1 − <i>F<sub>X</sub></i>(<i>x</i>)) d<i>x</i> − ∫<sub>−∞</sub><sup>0</sup> <i>F<sub>X</sub></i>(<i>x</i>) d<i>x</i></div>
+    <p style="margin-bottom:0">For <span class="m"><i>X</i> ≥ 0</span> the second term vanishes and it becomes <strong>a single line.</strong></p>
+    <div class="eq" style="margin-bottom:0"><i>E</i>[<i>X</i>] = ∫<sub>0</sub><sup>∞</sup> <i>P</i>(<i>X</i> &gt; <i>x</i>) d<i>x</i></div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 480 204" role="img" aria-label="A CDF rising toward one, with the region between the line y equals one and the curve shaded: that area equals the expectation">
+      <line x1="40" y1="160" x2="452" y2="160" stroke="var(--rule)" stroke-width="1.2"/>
+      <line x1="40" y1="160" x2="40" y2="34" stroke="var(--rule)" stroke-width="1.2"/>
+      <path d="M40,40 L440,40 L440,42.2 L390,43.6 L340,46 L290,49.9 L240,56.2 L215,60.9 L190,66.8 L165,74.4 L140,84.1 L115,96.7 L90,112.8 L65,133.5 L40,160 Z" fill="rgba(var(--green-rgb),.20)"/>
+      <line x1="40" y1="40" x2="444" y2="40" stroke="var(--ink3)" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <polyline points="40,160 65,133.5 90,112.8 115,96.7 140,84.1 165,74.4 190,66.8 215,60.9 240,56.2 290,49.9 340,46 390,43.6 440,42.2" fill="none" stroke="var(--blue)" stroke-width="2.2" stroke-linejoin="round"/>
+      <line x1="296" y1="96" x2="250" y2="62" stroke="var(--ink3)" stroke-width="1"/>
+      <text class="svgtxt" x="302" y="102" style="fill:var(--green-deep)" lang="ko">E[X] = 이 넓이</text>
+      <text class="svgtxt" x="302" y="102" style="fill:var(--green-deep)" lang="en">E[X] = this area</text>
+      <text class="svglab" x="34" y="44" text-anchor="end" style="fill:var(--ink3)">1</text>
+      <text class="svglab" x="34" y="164" text-anchor="end" style="fill:var(--ink3)">0</text>
+      <text class="svgtxt" x="200" y="140" text-anchor="middle" style="fill:var(--blue)">F<tspan font-size="11" dy="4">X</tspan><tspan dy="-4">(x)</tspan></text>
+      <text class="svglab" x="446" y="178" text-anchor="end" style="fill:var(--ink3)">x</text>
+    </svg>
+    <figcaption lang="ko">교재 Figure 1.12를 다시 그린 거야. <strong>평균을 <span class="m"><i>x</i></span>축 방향으로 재는 대신 <span class="m"><i>y</i></span>축 방향으로 재는 셈이야.</strong> <span class="m">∫<i>xf</i>(<i>x</i>)d<i>x</i></span>는 밀도에 팔 길이를 곱해 더하는 거고, 이건 <span class="m">1 − <i>F</i></span>를 가로로 쌓아 올리는 거야.<br><br><strong>실전에서 쓸모가 있어.</strong> <span class="m">Exp(<i>λ</i>)</span>는 <span class="m"><i>P</i>(<i>X</i> &gt; <i>x</i>) = <i>e</i><sup>−<i>λx</i></sup></span>라 <span class="m">∫<sub>0</sub><sup>∞</sup><i>e</i><sup>−<i>λx</i></sup>d<i>x</i> = 1/<i>λ</i></span>로 <strong>부분적분 없이</strong> 끝나. <a href="#s8">08번의 손글씨 1</a>이 한 줄이 되는 거지. geometric도 <span class="m"><i>E</i>[<i>X</i>] = ∑<sub><i>i</i>≥0</sub> <i>P</i>(<i>X</i> &gt; <i>i</i>) = ∑(1−<i>p</i>)<sup><i>i</i></sup> = 1/<i>p</i></span>로 등비급수 한 번이면 돼.</figcaption>
+    <figcaption lang="en">This redraws the textbook's Figure 1.12. <strong>Instead of measuring the mean along the <span class="m"><i>x</i></span> axis you measure it along the <span class="m"><i>y</i></span> axis.</strong> <span class="m">∫<i>xf</i>(<i>x</i>)d<i>x</i></span> multiplies density by lever arm and adds; this stacks up <span class="m">1 − <i>F</i></span> horizontally instead.<br><br><strong>It earns its place in practice.</strong> For <span class="m">Exp(<i>λ</i>)</span>, <span class="m"><i>P</i>(<i>X</i> &gt; <i>x</i>) = <i>e</i><sup>−<i>λx</i></sup></span>, so <span class="m">∫<sub>0</sub><sup>∞</sup><i>e</i><sup>−<i>λx</i></sup>d<i>x</i> = 1/<i>λ</i></span> finishes it <strong>with no integration by parts at all</strong>, collapsing <a href="#s8">§08's first handwritten page</a> to one line. The geometric goes the same way: <span class="m"><i>E</i>[<i>X</i>] = ∑<sub><i>i</i>≥0</sub> <i>P</i>(<i>X</i> &gt; <i>i</i>) = ∑(1−<i>p</i>)<sup><i>i</i></sup> = 1/<i>p</i></span>, one geometric series.</figcaption>
+  </figure>
+
+  <h3 lang="ko">Markov 부등식과 Chebyshev 부등식</h3>
+  <h3 lang="en">The Markov and Chebyshev inequalities</h3>
+  <div class="def" lang="ko">
+    <span class="tag">Hajek §1.5</span>
+    <p><strong>Markov.</strong> <span class="m"><i>Y</i></span>가 비음수이고 <span class="m"><i>c</i> &gt; 0</span>이면</p>
+    <div class="eq"><i>P</i>(<i>Y</i> ≥ <i>c</i>) ≤ <i>E</i>[<i>Y</i>] ⁄ <i>c</i></div>
+    <p><strong>Chebyshev.</strong> <span class="m"><i>X</i></span>의 평균이 <span class="m"><i>μ</i></span>, 분산이 <span class="m"><i>σ</i><sup>2</sup></span>이고 <span class="m"><i>d</i> &gt; 0</span>이면</p>
+    <div class="eq" style="margin-bottom:0"><i>P</i>(|<i>X</i> − <i>μ</i>| ≥ <i>d</i>) ≤ <i>σ</i><sup>2</sup> ⁄ <i>d</i><sup>2</sup></div>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Hajek §1.5</span>
+    <p><strong>Markov.</strong> For nonnegative <span class="m"><i>Y</i></span> and <span class="m"><i>c</i> &gt; 0</span>,</p>
+    <div class="eq"><i>P</i>(<i>Y</i> ≥ <i>c</i>) ≤ <i>E</i>[<i>Y</i>] ⁄ <i>c</i></div>
+    <p><strong>Chebyshev.</strong> For <span class="m"><i>X</i></span> with mean <span class="m"><i>μ</i></span> and variance <span class="m"><i>σ</i><sup>2</sup></span>, and <span class="m"><i>d</i> &gt; 0</span>,</p>
+    <div class="eq" style="margin-bottom:0"><i>P</i>(|<i>X</i> − <i>μ</i>| ≥ <i>d</i>) ≤ <i>σ</i><sup>2</sup> ⁄ <i>d</i><sup>2</sup></div>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>Markov의 증명이 06번 지시함수 한 줄이야.</strong> <span class="m"><i>Y</i> ≥ 0</span>이면 언제나 <span class="m">1<sub>{<i>Y</i>≥<i>c</i>}</sub> ≤ <i>Y</i>/<i>c</i></span>가 성립해. <span class="m"><i>Y</i> ≥ <i>c</i></span>면 왼쪽이 1인데 오른쪽은 1 이상이고, <span class="m"><i>Y</i> &lt; <i>c</i></span>면 왼쪽이 0인데 오른쪽은 0 이상이니까. <strong>양변에 기댓값을 씌우면 끝이야.</strong> 왼쪽은 <span class="m"><i>P</i>(<i>Y</i> ≥ <i>c</i>)</span>가 되고 (06번), 오른쪽은 <span class="m"><i>E</i>[<i>Y</i>]/<i>c</i></span>가 돼 (07번 선형성).<br><br>
+    <strong>Chebyshev는 Markov에 <span class="m"><i>Y</i> = |<i>X</i> − <i>μ</i>|<sup>2</sup></span>, <span class="m"><i>c</i> = <i>d</i><sup>2</sup></span>을 넣은 것뿐이야.</strong> 두 부등식의 값어치는 <strong>분포를 몰라도 쓸 수 있다</strong>는 데 있어. 평균 하나만 알면 Markov가, 평균과 분산만 알면 Chebyshev가 꼬리 확률의 상한을 줘. 대신 느슨해. 정확한 분포를 안다면 항상 그쪽이 나아.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Markov's proof is one line of §06's indicator.</strong> For <span class="m"><i>Y</i> ≥ 0</span> the inequality <span class="m">1<sub>{<i>Y</i>≥<i>c</i>}</sub> ≤ <i>Y</i>/<i>c</i></span> always holds: if <span class="m"><i>Y</i> ≥ <i>c</i></span> the left side is 1 and the right side is at least 1, and if <span class="m"><i>Y</i> &lt; <i>c</i></span> the left side is 0 and the right side is at least 0. <strong>Take expectations of both sides and you are done.</strong> The left becomes <span class="m"><i>P</i>(<i>Y</i> ≥ <i>c</i>)</span> by §06 and the right becomes <span class="m"><i>E</i>[<i>Y</i>]/<i>c</i></span> by §07's linearity.<br><br>
+    <strong>Chebyshev is Markov with <span class="m"><i>Y</i> = |<i>X</i> − <i>μ</i>|<sup>2</sup></span> and <span class="m"><i>c</i> = <i>d</i><sup>2</sup></span>, nothing more.</strong> What both are worth is that <strong>they work without knowing the distribution.</strong> Know only the mean and Markov bounds the tail; know the mean and the variance and Chebyshev does. The price is that they are loose. If you actually know the distribution, use it instead.
+  </div>
+</section>
+
+<!-- ══ 13 ══ -->
+<section id="s13">
+  <div class="sec-head"><span class="sec-num">13</span><h2 lang="ko">직접 만져보기</h2><h2 lang="en">Try it yourself</h2></div>
+  <p class="sec-sub" lang="ko">분포를 직접 그려놓고 평균과 분산이 어디로 가는지 본다.</p>
+  <p class="sec-sub" lang="en">Draw a distribution by hand and watch where the mean and the variance go.</p>
+
+  <div class="play">
+    <div class="plab" lang="ko">분포를 그려서 균형점 찾기</div>
+    <div class="plab" lang="en">Draw a distribution and find its balance point</div>
+    <p style="font-size:14px;color:var(--ink2);margin:0 0 10px" lang="ko"><strong>막대 위에서 드래그하면 높이가 바뀌어.</strong> 높이는 자동으로 정규화돼서 합이 항상 1이야. 아래 삼각형이 <span class="m"><i>E</i>[<i>X</i>]</span>, 보라색 막대가 <span class="m"><i>μ</i> ± <i>σ</i></span>야.</p>
+    <p style="font-size:14px;color:var(--ink2);margin:0 0 10px" lang="en"><strong>Drag across the bars to change their heights.</strong> They are renormalised automatically so the total is always 1. The triangle below marks <span class="m"><i>E</i>[<i>X</i>]</span> and the violet bar is <span class="m"><i>μ</i> ± <i>σ</i></span>.</p>
+
+    <div class="presets">
+      <button type="button" class="act" data-p="flat" lang="ko">균등</button>
+      <button type="button" class="act" data-p="flat" lang="en">uniform</button>
+      <button type="button" data-p="skew" lang="ko">한쪽으로 치우침</button>
+      <button type="button" data-p="skew" lang="en">skewed</button>
+      <button type="button" data-p="split" lang="ko">양 끝에만</button>
+      <button type="button" data-p="split" lang="en">both ends only</button>
+      <button type="button" data-p="point" lang="ko">한 점에만</button>
+      <button type="button" data-p="point" lang="en">a single point</button>
+    </div>
+
+    <svg id="d8b-svg" viewBox="0 0 480 262" role="img" aria-label="An interactive probability mass function drawn on a beam, with a fulcrum at the mean and a bar showing one standard deviation either side">
+      <g id="d8b-bars"></g>
+      <line x1="30" y1="170" x2="434" y2="170" stroke="var(--ink2)" stroke-width="2.4"/>
+      <g id="d8b-klabs"></g>
+      <line id="d8b-stem" x1="232" y1="170" x2="232" y2="196" stroke="var(--violet)" stroke-width="1.2" stroke-dasharray="3 3"/>
+      <path id="d8b-pivot" d="M232,196 L220,216 L244,216 Z" fill="var(--violet)"/>
+      <rect id="d8b-sd" x="150" y="228" width="160" height="7" rx="3" fill="rgba(var(--violet-rgb),.5)"/>
+      <text class="svglab" x="30" y="252" style="fill:var(--violet)">μ ± σ</text>
+    </svg>
+
+    <div class="readout">
+      <div class="cell"><span class="k">E[X]</span><span class="v" id="d8b-mean">4.500</span></div>
+      <div class="cell"><span class="k">Var(X)</span><span class="v" id="d8b-var">5.250</span></div>
+      <div class="cell"><span class="k" lang="ko">표준편차 σ</span><span class="k" lang="en">std. dev. σ</span><span class="v" id="d8b-sdv">2.291</span></div>
+    </div>
+
+    <div class="hintline" id="d8b-hint"></div>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>네 가지를 확인해봐.</strong><br><br>
+    <strong>1. 양 끝에만 질량을 두면</strong> 평균이 정확히 가운데인데 <strong>거기엔 막대가 없어.</strong> <a href="#s3">03번</a>의 주사위와 같은 현상이고, 이쪽이 훨씬 극단적이야.<br>
+    <strong>2. 그 상태에서 분산이 최대야.</strong> 8개 막대로 만들 수 있는 가장 큰 분산이 <span class="m">(8−1)<sup>2</sup>/4 = 12.25</span>고, 양 끝에 반반일 때 거기 도달해. <a href="#s10">10번</a>의 Bernoulli가 <span class="m"><i>p</i> = 1/2</span>에서 분산이 최대인 것과 같은 이야기야.<br>
+    <strong>3. 한 점에만 두면 분산이 0이야.</strong> 무작위성이 없으니까. <a href="#s9">09번</a>에서 <span class="m"><i>E</i>[<i>X</i><sup>2</sup>] = (<i>E</i>[<i>X</i>])<sup>2</sup></span>의 등호가 이때만 성립한다고 한 게 이 상태야.<br>
+    <strong>4. 막대 하나를 멀리 떼어놓고 아주 낮게 만들어봐.</strong> 확률이 작아도 평균이 눈에 띄게 끌려가. <strong>먼 쪽의 팔이 길기 때문이고</strong>, 분산은 거리가 <em>제곱</em>으로 들어가서 훨씬 더 심하게 끌려가. 이게 이상치 하나가 평균보다 분산을 더 망가뜨리는 이유야.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Four things to check.</strong><br><br>
+    <strong>1. Put all the mass at the two ends</strong> and the mean lands exactly in the middle, where <strong>there is no bar at all.</strong> Same phenomenon as the die in <a href="#s3">§03</a>, just far more extreme.<br>
+    <strong>2. That same state maximises the variance.</strong> The largest variance eight bars can produce is <span class="m">(8−1)<sup>2</sup>/4 = 12.25</span>, reached with half the mass at each end. It is the same statement as the Bernoulli in <a href="#s10">§10</a> peaking at <span class="m"><i>p</i> = 1/2</span>.<br>
+    <strong>3. Put everything on one point and the variance is zero</strong>, because there is no randomness left. This is the only case where <a href="#s9">§09</a>'s <span class="m"><i>E</i>[<i>X</i><sup>2</sup>] = (<i>E</i>[<i>X</i>])<sup>2</sup></span> holds with equality.<br>
+    <strong>4. Put one bar far away and make it very short.</strong> Even with tiny probability it visibly drags the mean, <strong>because its lever arm is long</strong>, and it drags the variance far harder still, since distance enters <em>squared</em>. That is why a single outlier damages a variance more than a mean.
+  </div>
+</section>
+
+<!-- ══ 99 ══ -->
+<section id="s99">
+  <div class="sec-head" data-slide="39"><span class="sec-num">99</span><h2 lang="ko">정리 &amp; 다음 모듈</h2><h2 lang="en">Recap and what comes next</h2></div>
+
+  <p lang="ko">슬라이드 39쪽(인쇄 35쪽)의 요약은 이래. <em>기댓값이 평균을 재고 분산이 평균 주위의 퍼짐을 잰다. 가장 유용한 계산 도구는 <span class="m"><i>E</i>[<i>g</i>(<i>X</i>)] = ∫<i>g</i>(<i>x</i>)<i>f<sub>X</sub></i>(<i>x</i>)d<i>x</i></span>, 이산이면 <span class="m">∑<i>g</i>(<i>x<sub>k</sub></i>)<i>p<sub>X</sub></i>(<i>x<sub>k</sub></i>)</span>다.</em></p>
+  <p lang="en">Slide 39, printed 35, summarises it: <em>expectation measures the average, variance measures the spread around it, and the most useful computational tool is <span class="m"><i>E</i>[<i>g</i>(<i>X</i>)] = ∫<i>g</i>(<i>x</i>)<i>f<sub>X</sub></i>(<i>x</i>)d<i>x</i></span>, or <span class="m">∑<i>g</i>(<i>x<sub>k</sub></i>)<i>p<sub>X</sub></i>(<i>x<sub>k</sub></i>)</span> in the discrete case.</em></p>
+
+  <div class="def" lang="ko">
+    <span class="tag">한 장 요약</span>
+    <table>
+      <tr><th>식</th><th>뜻</th><th>기억할 것</th></tr>
+      <tr><td><span class="m"><i>E</i>[<i>X</i>] = ∫<i>xf</i>(<i>x</i>)d<i>x</i></span></td><td>질량중심</td><td>가능한 값이 아닐 수 있다</td></tr>
+      <tr><td><span class="m"><i>E</i>[<i>g</i>(<i>X</i>)] = ∫<i>g</i>(<i>x</i>)<i>f</i>(<i>x</i>)d<i>x</i></span></td><td>LOTUS · 지름길</td><td><span class="m"><i>f<sub>Y</sub></i></span>를 구할 필요가 없다</td></tr>
+      <tr><td><span class="m"><i>E</i>[<i>g</i>(<i>X</i>)] ≠ <i>g</i>(<i>E</i>[<i>X</i>])</span></td><td>—</td><td><strong>이 과목 최대의 실수.</strong> 아핀만 통과한다</td></tr>
+      <tr><td><span class="m"><i>P</i>(<i>X</i> ∈ <i>A</i>) = <i>E</i>[1<sub><i>A</i></sub>(<i>X</i>)]</span></td><td>확률 = 지시함수의 평균</td><td>기댓값은 확률의 일반화</td></tr>
+      <tr><td><span class="m"><i>E</i>[∑<i>a<sub>i</sub>X<sub>i</sub></i>] = ∑<i>a<sub>i</sub>E</i>[<i>X<sub>i</sub></i>]</span></td><td>선형성</td><td><strong>독립이 필요 없다</strong></td></tr>
+      <tr><td><span class="m">Var = <i>E</i>[<i>X</i><sup>2</sup>] − (<i>E</i>[<i>X</i>])<sup>2</sup></span></td><td>퍼짐</td><td><span class="m">Var(<i>aX</i>+<i>b</i>) = <i>a</i><sup>2</sup>Var(<i>X</i>)</span></td></tr>
+      <tr><td><span class="m"><i>E</i>[<i>X</i>|<i>M</i>]</span></td><td>조건부 세계의 평균</td><td>Module 6으로 <span class="m"><i>f</i><sub><i>X</i>|<i>M</i></sub></span>를 먼저 구한다</td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>검산 두 가지:</strong> 단위가 맞는가, 그리고 <span class="m">Var ≥ 0</span>인가.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">One-page recap</span>
+    <table>
+      <tr><th>expression</th><th>meaning</th><th>what to remember</th></tr>
+      <tr><td><span class="m"><i>E</i>[<i>X</i>] = ∫<i>xf</i>(<i>x</i>)d<i>x</i></span></td><td>centre of mass</td><td>need not be an attainable value</td></tr>
+      <tr><td><span class="m"><i>E</i>[<i>g</i>(<i>X</i>)] = ∫<i>g</i>(<i>x</i>)<i>f</i>(<i>x</i>)d<i>x</i></span></td><td>LOTUS, the shortcut</td><td>you never need <span class="m"><i>f<sub>Y</sub></i></span></td></tr>
+      <tr><td><span class="m"><i>E</i>[<i>g</i>(<i>X</i>)] ≠ <i>g</i>(<i>E</i>[<i>X</i>])</span></td><td>—</td><td><strong>the biggest error in the course.</strong> Only affine passes</td></tr>
+      <tr><td><span class="m"><i>P</i>(<i>X</i> ∈ <i>A</i>) = <i>E</i>[1<sub><i>A</i></sub>(<i>X</i>)]</span></td><td>probability = mean of an indicator</td><td>expectation generalises probability</td></tr>
+      <tr><td><span class="m"><i>E</i>[∑<i>a<sub>i</sub>X<sub>i</sub></i>] = ∑<i>a<sub>i</sub>E</i>[<i>X<sub>i</sub></i>]</span></td><td>linearity</td><td><strong>independence not required</strong></td></tr>
+      <tr><td><span class="m">Var = <i>E</i>[<i>X</i><sup>2</sup>] − (<i>E</i>[<i>X</i>])<sup>2</sup></span></td><td>spread</td><td><span class="m">Var(<i>aX</i>+<i>b</i>) = <i>a</i><sup>2</sup>Var(<i>X</i>)</span></td></tr>
+      <tr><td><span class="m"><i>E</i>[<i>X</i>|<i>M</i>]</span></td><td>the mean in the conditioned world</td><td>get <span class="m"><i>f</i><sub><i>X</i>|<i>M</i></sub></span> from Module 6 first</td></tr>
+    </table>
+    <p style="margin-bottom:0"><strong>Two checks:</strong> do the units match, and is <span class="m">Var ≥ 0</span>?</p>
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">이전 모듈이 여기서 하는 일</span>
+    <table>
+      <tr><th>어디서 왔나</th><th>여기서 뭘 하나</th></tr>
+      <tr><td><a href="L02-probability-space.html">Module 2</a> 확률 측도</td><td>06번에서 <span class="m"><i>P</i></span>가 <span class="m"><i>E</i></span>의 특수한 경우로 드러난다</td></tr>
+      <tr><td><a href="L04-independence.html">Module 4</a> 독립</td><td>07번은 독립이 필요 없고 09번의 <span class="m">Var(<i>X</i>+<i>Y</i>)</span>는 필요하다</td></tr>
+      <tr><td><a href="L05-random-variables.html">Module 5</a> PDF · PMF</td><td>기댓값의 가중치. <span class="m"><i>f</i>d<i>x</i></span>가 무게지 <span class="m"><i>f</i></span>가 아니다 (01번)</td></tr>
+      <tr><td><a href="L06-conditional-distributions.html">Module 6</a> 조건부 밀도</td><td>08번 전체. 무기억성 유도가 Module 6 예제 3.1 그대로다</td></tr>
+      <tr><td><a href="L07-functions-of-random-variables.html">Module 7</a> <span class="m"><i>Y</i> = <i>g</i>(<i>X</i>)</span></td><td>05번이 그걸 건너뛰는 법. 분포가 필요하면 여전히 Module 7이다</td></tr>
+    </table>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">What the earlier modules are doing here</span>
+    <table>
+      <tr><th>where it came from</th><th>what it does here</th></tr>
+      <tr><td><a href="L02-probability-space.html">Module 2</a>, probability measures</td><td>§06 exposes <span class="m"><i>P</i></span> as a special case of <span class="m"><i>E</i></span></td></tr>
+      <tr><td><a href="L04-independence.html">Module 4</a>, independence</td><td>§07 does not need it; §09's <span class="m">Var(<i>X</i>+<i>Y</i>)</span> does</td></tr>
+      <tr><td><a href="L05-random-variables.html">Module 5</a>, PDF and PMF</td><td>the weights in an expectation: <span class="m"><i>f</i>d<i>x</i></span>, not <span class="m"><i>f</i></span> (§01)</td></tr>
+      <tr><td><a href="L06-conditional-distributions.html">Module 6</a>, conditional densities</td><td>all of §08; the memorylessness derivation is Example 3.1 verbatim</td></tr>
+      <tr><td><a href="L07-functions-of-random-variables.html">Module 7</a>, <span class="m"><i>Y</i> = <i>g</i>(<i>X</i>)</span></td><td>§05 is how to skip it, though a distribution still needs Module 7</td></tr>
+    </table>
+  </div>
+
+  <div class="def" lang="ko">
+    <span class="tag">과제 대응</span>
+    <p><strong>HW3에는 이 모듈 범위가 없어.</strong> HW3은 확률변수, 조건부 분포, 확률변수의 함수까지고 기댓값은 묻지 않아. 이 모듈은 그 다음 과제 범위야.</p>
+    <p style="margin-bottom:0">다만 <strong>HW3 P2(e)의 <span class="m"><i>P</i>(<i>X</i> &gt; 10 | <i>X</i> &gt; 4)</span></strong>는 <a href="#s8">08번</a>의 무기억성과 같은 성질의 이산판이야. 확률로만 답하는 문제지만, 08번을 읽고 가면 "왜 그렇게 되는지"가 훨씬 선명해져. 문제 번호에서 출발하려면 <a href="HW3-random-variables-conditional-distributions-and-functions-of-random-variables.html">HW3 공략 페이지</a>를 봐.</p>
+  </div>
+  <div class="def" lang="en">
+    <span class="tag">Homework</span>
+    <p><strong>HW3 does not reach this module.</strong> It stops at random variables, conditional distributions and functions of random variables, and never asks for an expectation. This module belongs to the next assignment.</p>
+    <p style="margin-bottom:0">That said, <strong>HW3 P2(e)'s <span class="m"><i>P</i>(<i>X</i> &gt; 10 | <i>X</i> &gt; 4)</span></strong> is the discrete half of <a href="#s8">§08</a>'s memorylessness. The problem only asks for a probability, but reading §08 first makes the reason far clearer. To start from a problem number, use the <a href="HW3-random-variables-conditional-distributions-and-functions-of-random-variables.html">HW3 guide</a>.</p>
+  </div>
+
+  <div class="callout" lang="ko">
+    <strong>여기서 Module 5~8이 한 덩어리로 닫혀.</strong> 분포를 기술하고 (5), 정보로 바꾸고 (6), 함수로 바꾸고 (7), 숫자로 접었어 (8). <strong>확률변수 하나에 대해 할 수 있는 일이 대체로 끝났어.</strong><br><br>
+    남은 방향은 둘이야. <strong>하나는 적률을 한 함수에 담는 것</strong> (특성함수). <strong>다른 하나는 확률변수를 여럿 다루는 것</strong>이고, 그쪽이 훨씬 커. 결합분포, 상관, 확률벡터, 그리고 결국 시간에 따라 번호가 매겨진 무한히 많은 확률변수, 즉 <strong>확률과정</strong>으로 가. 강의계획서의 두 번째 줄이 그거야.<br><br>
+    <strong>그때 이 모듈의 선형성이 다시 나와.</strong> <span class="m"><i>E</i>[∑<i>X<sub>i</sub></i>] = ∑<i>E</i>[<i>X<sub>i</sub></i>]</span>가 독립을 요구하지 않는다는 게, 확률변수가 수십 개 얽혀 있을 때 유일하게 공짜로 쓸 수 있는 도구거든. 07번의 경고를 두 번 읽어둘 값어치가 있어.
+  </div>
+  <div class="callout" lang="en">
+    <strong>Modules 5 through 8 close as one block here.</strong> Describe a distribution (5), reshape it with information (6), reshape it with a function (7), fold it into a number (8). <strong>That is most of what can be done with a single random variable.</strong><br><br>
+    Two directions remain. <strong>One is packing all the moments into one function</strong> (characteristic functions). <strong>The other is handling several random variables at once</strong>, and it is much the larger: joint distributions, correlation, random vectors, and eventually infinitely many random variables indexed by time, which is a <strong>random process</strong>. That is the second line of the syllabus.<br><br>
+    <strong>Linearity from this module comes back there.</strong> That <span class="m"><i>E</i>[∑<i>X<sub>i</sub></i>] = ∑<i>E</i>[<i>X<sub>i</sub></i>]</span> needs no independence is the one tool that stays free when dozens of random variables are tangled together. §07's warning is worth reading twice.
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span lang="ko">EEE 554 Probability and Random Processes · Module 8<br>
+  강의: Nicolò Michelusi · School of Electrical, Computer and Energy Engineering, Arizona State University<br>
+  교재: Bruce Hajek, <em>Random Processes for Engineers</em> (Cambridge University Press, 2015) §1.5, §1.6<br>
+  이 노트 본문은 수강생이 강의 슬라이드를 재구성하고 보충해 만든 개인 학습 자료이며, 공식 강의 자료가 아닙니다.<br>
+  함께 실린 강의 슬라이드의 저작권은 Nicolò Michelusi 교수와 Arizona State University에 있습니다.</span><span lang="en">EEE 554 Probability and Random Processes · Module 8<br>
+  Course: Nicolò Michelusi · School of Electrical, Computer and Energy Engineering, Arizona State University<br>
+  Textbook: Bruce Hajek, <em>Random Processes for Engineers</em> (Cambridge University Press, 2015) §1.5 and §1.6<br>
+  These notes were written by a student who reorganised and expanded the lecture slides. They are not official course material.<br>
+  Copyright in the accompanying lecture slides belongs to Professor Nicolò Michelusi and Arizona State University.</span>
+</footer>
+
+</div>
+<button class="lang-btn" type="button">English</button>
+<button class="theme-btn" type="button">☾ 다크</button>
+
+<script>
+// 분포 그리기 도구. 막대를 끌어 확률질량함수를 만들면 평균(받침)과 표준편차(막대)가 따라온다.
+// 목적은 "평균은 받침이 놓여야 할 자리"라는 감각을 손으로 잡게 하는 것.
+(function () {
+  var SVG = document.getElementById('d8b-svg');
+  if (!SVG) return;
+  var L = function (ko, en) { return document.documentElement.dataset.lang === 'en' ? en : ko; };
+  var id = function (s) { return document.getElementById(s); };
+  var NS = 'http://www.w3.org/2000/svg';
+
+  var N = 8, BASE = 170, H = 140, X0 = 30, X1 = 434;
+  var PRE = {
+    flat:  [0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6],
+    skew:  [1.0, 0.72, 0.52, 0.37, 0.27, 0.19, 0.14, 0.10],
+    split: [1.0, 0, 0, 0, 0, 0, 0, 1.0],
+    point: [0, 0, 0, 1.0, 0, 0, 0, 0]
+  };
+  var W = PRE.flat.slice();
+
+  function px(k) { return 7 + k * 50; }          // k = 1 은 57, k = 8 은 407
+  function el(tag, attrs, txt) {
+    var e = document.createElementNS(NS, tag);
+    for (var a in attrs) e.setAttribute(a, attrs[a]);
+    if (txt != null) e.textContent = txt;
+    return e;
+  }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+
+  function paint() {
+    var i, sum = 0;
+    for (i = 0; i < N; i++) sum += W[i];
+
+    var bars = id('d8b-bars'), klab = id('d8b-klabs');
+    clear(bars); clear(klab);
+
+    if (sum <= 1e-6) {
+      // 질량이 하나도 없으면 평균도 분산도 말이 안 된다. 받침을 숨기고 안내만 띄운다.
+      id('d8b-pivot').setAttribute('opacity', '0');
+      id('d8b-stem').setAttribute('opacity', '0');
+      id('d8b-sd').setAttribute('opacity', '0');
+      id('d8b-mean').textContent = '—';
+      id('d8b-var').textContent = '—';
+      id('d8b-sdv').textContent = '—';
+      id('d8b-hint').textContent = L('막대가 전부 0이야. 질량이 없으면 평균을 말할 수 없어. 아무 막대나 끌어올려봐.',
+        'Every bar is zero. With no mass there is no mean to speak of. Drag any bar up.');
+      for (i = 1; i <= N; i++) klab.appendChild(el('text', { x: px(i), y: 186, 'text-anchor': 'middle', 'class': 'svglab' }, String(i)));
+      return;
+    }
+    id('d8b-pivot').setAttribute('opacity', '1');
+    id('d8b-stem').setAttribute('opacity', '1');
+    id('d8b-sd').setAttribute('opacity', '1');
+
+    var p = [], mx = 0, mean = 0, ex2 = 0;
+    for (i = 0; i < N; i++) {
+      p.push(W[i] / sum);
+      if (p[i] > mx) mx = p[i];
+      mean += (i + 1) * p[i];
+      ex2 += (i + 1) * (i + 1) * p[i];
+    }
+    var vr = Math.max(0, ex2 - mean * mean), sd = Math.sqrt(vr);
+
+    for (i = 1; i <= N; i++) {
+      var h = mx > 0 ? p[i - 1] / mx * H : 0;
+      bars.appendChild(el('rect', { x: px(i) - 17, y: BASE - h, width: 34, height: Math.max(h, 0.6),
+        rx: 2, fill: 'rgba(var(--blue-rgb),.32)', stroke: 'var(--blue)', 'stroke-width': 1.2 }));
+      bars.appendChild(el('text', { x: px(i), y: BASE - h - 6, 'text-anchor': 'middle', 'class': 'svglab',
+        style: 'fill:var(--ink3)' }, p[i - 1].toFixed(2)));
+      klab.appendChild(el('text', { x: px(i), y: 186, 'text-anchor': 'middle', 'class': 'svglab' }, String(i)));
+    }
+
+    var mxp = px(mean);
+    id('d8b-stem').setAttribute('x1', mxp);
+    id('d8b-stem').setAttribute('x2', mxp);
+    id('d8b-pivot').setAttribute('d', 'M' + mxp + ',196 L' + (mxp - 12) + ',216 L' + (mxp + 12) + ',216 Z');
+    var lo = Math.max(X0, px(mean - sd)), hi = Math.min(X1, px(mean + sd));
+    id('d8b-sd').setAttribute('x', lo);
+    id('d8b-sd').setAttribute('width', Math.max(hi - lo, 2));
+
+    id('d8b-mean').textContent = mean.toFixed(3);
+    id('d8b-var').textContent = vr.toFixed(3);
+    id('d8b-sdv').textContent = sd.toFixed(3);
+
+    // 안내 문구는 지금 만든 분포가 무엇을 보여주는지를 짚는다.
+    var near = Math.round(mean), msg;
+    if (vr < 1e-6) {
+      msg = L('질량이 한 곳에 몰려서 분산이 0이야. 무작위성이 없다는 뜻이고, E[X²] = (E[X])² 의 등호가 성립하는 유일한 경우야.',
+        'All the mass sits at one point, so the variance is 0. There is no randomness left, and this is the only case where E[X²] = (E[X])² holds with equality.');
+    } else if (near >= 1 && near <= N && p[near - 1] < 0.02) {
+      msg = L('평균이 ' + mean.toFixed(2) + ' 인데 그 근처에는 막대가 없어. 받침이 아무것도 없는 자리에 놓인 거야.',
+        'The mean is ' + mean.toFixed(2) + ' and there is no bar anywhere near it. The pivot is sitting where nothing lives.');
+    } else {
+      msg = L('평균 ' + mean.toFixed(2) + ', 표준편차 ' + sd.toFixed(2) + '. 보라색 막대가 값의 대략적인 범위를 보여줘.',
+        'Mean ' + mean.toFixed(2) + ', standard deviation ' + sd.toFixed(2) + '. The violet bar shows roughly where the values live.');
+    }
+    if (vr > 11) {
+      msg += L(' 분산이 거의 최대치(12.25)야. 양 끝에만 반반으로 두면 거기 도달해.',
+        ' The variance is near its maximum of 12.25, which is reached with half the mass at each end.');
+    }
+    id('d8b-hint').textContent = msg;
+  }
+
+  function toSvg(e) {
+    if (!SVG.createSVGPoint || !SVG.getScreenCTM) return null;
+    var pt = SVG.createSVGPoint();
+    pt.x = e.clientX; pt.y = e.clientY;
+    var m = SVG.getScreenCTM();
+    if (!m) return null;
+    return pt.matrixTransform(m.inverse());
+  }
+
+  function apply(e) {
+    var q = toSvg(e);
+    if (!q) return;
+    var k = Math.floor((q.x - 32) / 50) + 1;
+    if (k < 1 || k > N) return;
+    var w = (BASE - q.y) / H;
+    W[k - 1] = Math.max(0, Math.min(1, w));
+    paint();
+  }
+
+  var drag = false;
+  SVG.addEventListener('pointerdown', function (e) {
+    drag = true;
+    if (SVG.setPointerCapture) { try { SVG.setPointerCapture(e.pointerId); } catch (err) { /* 캡처 실패는 무시 */ } }
+    apply(e);
+    e.preventDefault();
+  });
+  SVG.addEventListener('pointermove', function (e) { if (drag) apply(e); });
+  SVG.addEventListener('pointerup', function () { drag = false; });
+  SVG.addEventListener('pointercancel', function () { drag = false; });
+
+  var btns = document.querySelectorAll('.presets button[data-p]');
+  Array.prototype.forEach.call(btns, function (b) {
+    b.addEventListener('click', function () {
+      var key = b.getAttribute('data-p');
+      W = PRE[key].slice();
+      // 같은 프리셋의 한국어 버튼과 영어 버튼을 함께 표시한다.
+      Array.prototype.forEach.call(btns, function (o) {
+        o.classList.toggle('act', o.getAttribute('data-p') === key);
+      });
+      paint();
+    });
+  });
+  window.addEventListener('langchange', paint);
+  paint();
+})();
+</script>
+<script>
+// 큰 제목이 화면에서 사라지면 목차 위 미니 헤더를 띄운다.
+(function () {
+  var title = document.querySelector('header.top h1.title');
+  var mini = document.querySelector('nav.toc .mini-head');
+  if (!title || !mini || !window.IntersectionObserver) return;
+  new IntersectionObserver(function (es) {
+    mini.classList.toggle('on', !es[0].isIntersecting);
+  }, { threshold: 0 }).observe(title);
+})();
+</script>
+<script>
+// 테마 토글. 기본은 OS 설정을 따르고, 누르면 그 반대로 고정한다.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.theme-btn');
+  if (!btn) return;
+  var osDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  function current() {
+    return root.dataset.theme || (osDark && osDark.matches ? 'dark' : 'light');
+  }
+  function paint() {
+    var dark = current() === 'dark';
+    btn.textContent = dark ? '☀ 라이트' : '☾ 다크';
+    btn.setAttribute('aria-label', dark ? '라이트 모드로' : '다크 모드로');
+  }
+  btn.addEventListener('click', function () {
+    root.dataset.theme = current() === 'dark' ? 'light' : 'dark';
+    paint();
+  });
+  if (osDark && osDark.addEventListener) osDark.addEventListener('change', paint);
+  paint();
+})();
+</script>
+<script>
+// 언어 토글. 기본은 한국어.
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.lang-btn');
+  if (!btn) return;
+  function paint() {
+    var en = root.dataset.lang === 'en';
+    btn.textContent = en ? '한국어' : 'English';
+    btn.setAttribute('aria-label', en ? '한국어로 보기' : 'View in English');
+    root.lang = en ? 'en' : 'ko';
+  }
+  btn.addEventListener('click', function () {
+    root.dataset.lang = root.dataset.lang === 'en' ? 'ko' : 'en';
+    paint();
+    window.dispatchEvent(new Event('langchange'));
+  });
+  paint();
+})();
+</script>
+<script src="reader.js" type="module"></script>
+</body>
+</html>

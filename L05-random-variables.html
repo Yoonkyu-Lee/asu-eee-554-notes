@@ -1176,9 +1176,11 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
       <tr><td>P2 Geometric</td><td><a href="#s8">08 이산 분포</a></td></tr>
       <tr><td>P3 연속 PDF</td><td><a href="#s7">07 PDF</a></td></tr>
       <tr><td>P4 확률 공간 위의 확률변수</td><td><a href="#s2">02 정의</a>, <a href="#s3">03 역상</a>, <a href="#s4">04 CDF</a></td></tr>
-      <tr><td>P5–P7 조건부 분포, 함수 변환</td><td><strong>아직 슬라이드가 없다</strong></td></tr>
+      <tr><td>P1(d)(e), P2(d), P3(f) 조건부</td><td><a href="L06-conditional-distributions.html#s5">M6 · 05 조건부 PMF</a>, <a href="L06-conditional-distributions.html#s3">03</a></td></tr>
+      <tr><td>P5 연속 관측 Bayes</td><td><a href="L06-conditional-distributions.html#s8">M6 · 08</a></td></tr>
+      <tr><td>P6, P7 확률변수의 함수</td><td><a href="L07-functions-of-random-variables.html#s3">M7 · 03</a>, <a href="L07-functions-of-random-variables.html#s5">05</a></td></tr>
     </table>
-    <p style="margin-bottom:0"><strong>주의: 이 모듈은 HW3의 절반만 커버해.</strong> P5(연속 관측에서의 Bayes), P6·P7(확률변수의 함수)은 다음 모듈 범위야. 마감이 9월 13일이니 슬라이드가 나오면 이어서 정리할게.</p>
+    <p style="margin-bottom:0"><strong>이 모듈은 HW3의 앞쪽 절반이야.</strong> 나머지 절반은 <a href="L06-conditional-distributions.html">Module 6</a>과 <a href="L07-functions-of-random-variables.html">Module 7</a>이 덮어. 문제 번호에서 출발하고 싶으면 <a href="HW3-random-variables-conditional-distributions-and-functions-of-random-variables.html">HW3 공략 페이지</a>를 봐.</p>
   </div>
   <div class="def" lang="en">
     <span class="tag">HW3 map</span>
@@ -1188,18 +1190,20 @@ html[data-lang="en"] [lang="ko"]{display:none!important}
       <tr><td>P2 Geometric</td><td><a href="#s8">08 discrete distributions</a></td></tr>
       <tr><td>P3 continuous PDF</td><td><a href="#s7">07 PDF</a></td></tr>
       <tr><td>P4 a random variable on a probability space</td><td><a href="#s2">02 definition</a>, <a href="#s3">03 preimages</a>, <a href="#s4">04 CDF</a></td></tr>
-      <tr><td>P5–P7 conditional distributions, transformations</td><td><strong>no slides yet</strong></td></tr>
+      <tr><td>the conditional parts of P1(d), P1(e), P2(d), P3(f)</td><td><a href="L06-conditional-distributions.html#s5">M6 · §05 conditional PMF</a> and <a href="L06-conditional-distributions.html#s3">§03</a></td></tr>
+      <tr><td>P5 Bayes with a continuous observation</td><td><a href="L06-conditional-distributions.html#s8">M6 · §08</a></td></tr>
+      <tr><td>P6 and P7 functions of random variables</td><td><a href="L07-functions-of-random-variables.html#s3">M7 · §03</a> and <a href="L07-functions-of-random-variables.html#s5">§05</a></td></tr>
     </table>
-    <p style="margin-bottom:0"><strong>Note that this module covers only half of HW3.</strong> P5 (Bayes with a continuous observation) and P6, P7 (functions of random variables) belong to the next module. It is due September 13, so those go in once the deck appears.</p>
+    <p style="margin-bottom:0"><strong>This module is the front half of HW3.</strong> The other half is covered by <a href="L06-conditional-distributions.html">Module 6</a> and <a href="L07-functions-of-random-variables.html">Module 7</a>. To start from a problem number instead, use the <a href="HW3-random-variables-conditional-distributions-and-functions-of-random-variables.html">HW3 guide</a>.</p>
   </div>
 
   <div class="callout" lang="ko">
-    <strong>다음은 확률변수를 <em>변형</em>하는 일이야.</strong> 이 모듈은 <span class="m"><i>X</i></span> 하나의 분포를 기술했어. 다음은 <span class="m"><i>Y</i> = <i>g</i>(<i>X</i>)</span>의 분포를 구하는 것, 그리고 조건부 분포야. HW3 P6의 <span class="m"><i>Y</i> = log<sub>2</sub>(1 + <i>X</i>)</span>가 정확히 그 유형이고, 통신에서 SNR을 스펙트럼 효율로 바꾸는 실제 계산이야.<br><br>
-    재밌는 건 <strong>10번의 역변환이 이미 그 특수한 경우</strong>라는 거야. <span class="m"><i>X</i> = <i>F</i><sup>−1</sup>(<i>u</i>)</span>도 확률변수의 함수거든. 다음 모듈은 그걸 일반화하는 셈이야.
+    <strong>다음은 확률변수를 <em>변형</em>하는 일이야.</strong> 이 모듈은 <span class="m"><i>X</i></span> 하나의 분포를 기술했어. 다음은 <a href="L06-conditional-distributions.html">조건부 분포</a>, 그리고 <a href="L07-functions-of-random-variables.html"><span class="m"><i>Y</i> = <i>g</i>(<i>X</i>)</span>의 분포를 구하는 것</a>이야. HW3 P6의 <span class="m"><i>Y</i> = log<sub>2</sub>(1 + <i>X</i>)</span>가 정확히 그 유형이고, 통신에서 SNR을 스펙트럼 효율로 바꾸는 실제 계산이야.<br><br>
+    재밌는 건 <strong>10번의 역변환이 이미 그 특수한 경우</strong>라는 거야. <span class="m"><i>X</i> = <i>F</i><sup>−1</sup>(<i>u</i>)</span>도 확률변수의 함수거든. <a href="L07-functions-of-random-variables.html">Module 7</a>이 그걸 일반화하는 셈이야.
   </div>
   <div class="callout" lang="en">
-    <strong>Next comes <em>transforming</em> random variables.</strong> This module described the distribution of a single <span class="m"><i>X</i></span>; next is finding the distribution of <span class="m"><i>Y</i> = <i>g</i>(<i>X</i>)</span>, along with conditional distributions. HW3 P6's <span class="m"><i>Y</i> = log<sub>2</sub>(1 + <i>X</i>)</span> is exactly that, and it is the real calculation that turns an SNR into a spectral efficiency.<br><br>
-    The neat part is that <strong>§10's inverse transform is already a special case</strong>: <span class="m"><i>X</i> = <i>F</i><sup>−1</sup>(<i>u</i>)</span> is a function of a random variable too. The next module generalises it.
+    <strong>Next comes <em>transforming</em> random variables.</strong> This module described the distribution of a single <span class="m"><i>X</i></span>; next is <a href="L06-conditional-distributions.html">conditional distributions</a> and then <a href="L07-functions-of-random-variables.html">finding the distribution of <span class="m"><i>Y</i> = <i>g</i>(<i>X</i>)</span></a>. HW3 P6's <span class="m"><i>Y</i> = log<sub>2</sub>(1 + <i>X</i>)</span> is exactly that, and it is the real calculation that turns an SNR into a spectral efficiency.<br><br>
+    The neat part is that <strong>§10's inverse transform is already a special case</strong>: <span class="m"><i>X</i> = <i>F</i><sup>−1</sup>(<i>u</i>)</span> is a function of a random variable too. <a href="L07-functions-of-random-variables.html">Module 7</a> generalises it.
   </div>
 </section>
 
